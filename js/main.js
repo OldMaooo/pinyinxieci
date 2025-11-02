@@ -36,6 +36,14 @@ const Main = {
         
         // 检查API配置
         this.checkAPIConfig();
+        
+        // 初始化题库范围选择器
+        if (typeof PracticeRange !== 'undefined') {
+            // 延迟初始化，确保Storage已初始化
+            setTimeout(() => {
+                PracticeRange.init();
+            }, 500);
+        }
     },
     
     /**
@@ -82,6 +90,13 @@ const Main = {
         if (targetPage) {
             targetPage.classList.remove('d-none');
             targetPage.classList.add('active');
+            
+            // 如果是练习页面，重新初始化范围选择器
+            if (pageId === 'practice' && typeof PracticeRange !== 'undefined') {
+                setTimeout(() => {
+                    PracticeRange.init();
+                }, 100);
+            }
         }
         
         // 更新导航状态

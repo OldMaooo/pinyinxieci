@@ -120,20 +120,39 @@ const Recognition = {
         const accessToken = await this.getBaiduAccessToken();
         
         try {
-            // 使用本地代理服务器
+            // 检测是否在GitHub Pages环境
+            const isGitHubPages = window.location.hostname.includes('github.io') || 
+                                  window.location.hostname.includes('github.com');
+            
+            // 使用本地代理服务器（本地环境）或直接调用API（会失败，但给出明确提示）
             const proxyUrl = 'http://localhost:3001/api/ocr/handwriting';
             
-            const response = await fetch(proxyUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    access_token: accessToken,
-                    image: base64Data
-                }),
-                mode: 'cors'
-            });
+            let response;
+            try {
+                response = await fetch(proxyUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        access_token: accessToken,
+                        image: base64Data
+                    }),
+                    mode: 'cors'
+                });
+                
+                // 检查是否是网络错误
+                if (!response.ok && response.status === 0) {
+                    throw new Error('NETWORK_ERROR');
+                }
+            } catch (fetchError) {
+                // 代理服务器不可用
+                if (isGitHubPages) {
+                    throw new Error('GitHub Pages无法运行代理服务器。请在本地使用，或使用支持Serverless Functions的平台（如Vercel）部署。');
+                } else {
+                    throw new Error('代理服务器未运行！请先运行: node proxy-server.js\n\n如果是在GitHub Pages，识别功能需要本地环境或支持Serverless的平台。');
+                }
+            }
             
             if (!response.ok) {
                 const errorText = await response.text();
@@ -168,8 +187,14 @@ const Recognition = {
             };
         } catch (error) {
             // 处理网络错误
-            if (error.message.includes('Failed to fetch') || error.message.includes('CORS')) {
-                throw new Error('代理服务器未运行！请先运行: node proxy-server.js');
+            if (error.message.includes('Failed to fetch') || error.message.includes('CORS') || error.message === 'NETWORK_ERROR') {
+                const isGitHubPages = window.location.hostname.includes('github.io') || 
+                                     window.location.hostname.includes('github.com');
+                if (isGitHubPages) {
+                    throw new Error('⚠️ GitHub Pages限制：无法运行代理服务器，识别功能不可用。\n\n解决方案：\n1. 在本地使用（运行 node proxy-server.js）\n2. 使用 Vercel 部署（支持 Serverless Functions）\n3. 或访问本地版本');
+                } else {
+                    throw new Error('代理服务器未运行！请先运行: node proxy-server.js');
+                }
             }
             throw error;
         }

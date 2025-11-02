@@ -24,15 +24,21 @@ const Practice = {
     async start() {
         const wordCount = parseInt(document.getElementById('word-count-select').value);
         const timeLimit = parseInt(document.getElementById('time-limit-input').value);
-        const range = document.getElementById('practice-range-select').value;
         
         this.timeLimit = timeLimit;
         
-        // 获取题目
-        let words = this.getWordsByRange(range);
+        // 获取题目（使用范围选择器）
+        let words = [];
+        if (typeof PracticeRange !== 'undefined' && PracticeRange.getSelectedWords) {
+            words = PracticeRange.getSelectedWords();
+        } else {
+            // 降级：使用原来的范围选择
+            const range = document.getElementById('practice-range-select')?.value || 'all';
+            words = this.getWordsByRange(range);
+        }
         
         if (words.length === 0) {
-            alert('题库为空，请先导入题库');
+            alert('请先选择练习范围！\n\n在"练习范围"区域勾选要练习的单元。');
             return;
         }
         

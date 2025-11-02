@@ -176,16 +176,16 @@ const Storage = {
      */
     importAll(data, merge = false) {
         if (!data || !data.version) {
-            throw new Error('无效的数据格式');
+            throw new Error('无效的数据格式，需要包含 version 字段');
         }
 
         if (merge) {
-            // 合并模式
+            // 合并模式：保留现有数据，合并新数据
             const existingWordBank = this.getWordBank();
             const newWordBank = [...existingWordBank];
             
             // 合并题库（去重）
-            if (data.wordBank) {
+            if (data.wordBank && Array.isArray(data.wordBank)) {
                 data.wordBank.forEach(word => {
                     const exists = newWordBank.find(w => 
                         w.word === word.word && 
@@ -201,23 +201,77 @@ const Storage = {
             
             this.saveWordBank(newWordBank);
             
-            // 合并练习记录和错题
-            if (data.practiceLogs) {
+            // 合并练习记录（保留所有记录）
+            if (data.practiceLogs && Array.isArray(data.practiceLogs)) {
                 const existingLogs = this.getPracticeLogs();
-                this.savePracticeLogs([...existingLogs, ...data.practiceLogs]);
+                const combinedLogs = [...existingLogs];
+                
+                // 按ID去重，避免重复导入
+                const existingIds = new Set(existingLogs.map(log => log.id));
+                data.practiceLogs.forEach(log => {
+                    if (!existingIds.has(log.id)) {
+                        combinedLogs.push(log);
+                    }
+                });
+                
+                // 按日期排序
+                combinedLogs.sort((a, b) => new Date(a.date) - new Date(b.date));
+                this.savePracticeLogs(combinedLogs);
             }
             
-            if (data.errorWords) {
+            // 合并错题（合并相同字的错题记录）
+            if (data.errorWords && Array.isArray(data.errorWords)) {
                 const existingErrors = this.getErrorWords();
-                this.saveErrorWords([...existingErrors, ...data.errorWords]);
+                const errorMap = new Map();
+                
+                // 先添加现有错题
+                existingErrors.forEach(error => {
+                    errorMap.set(error.wordId, error);
+                });
+                
+                // 合并新错题
+                data.errorWords.forEach(error => {
+                    const existing = errorMap.get(error.wordId);
+                    if (existing) {
+                        // 合并错误次数和快照
+                        existing.errorCount = Math.max(existing.errorCount, error.errorCount);
+                        if (error.lastErrorDate && new Date(error.lastErrorDate) > new Date(existing.lastErrorDate)) {
+                            existing.lastErrorDate = error.lastErrorDate;
+                        }
+                        // 合并快照（去重）
+                        if (error.handwritingSnapshots) {
+                            const snapshotMap = new Map();
+                            existing.handwritingSnapshots?.forEach(s => {
+                                snapshotMap.set(s.date, s);
+                            });
+                            error.handwritingSnapshots.forEach(s => {
+                                if (!snapshotMap.has(s.date)) {
+                                    snapshotMap.set(s.date, s);
+                                }
+                            });
+                            existing.handwritingSnapshots = Array.from(snapshotMap.values());
+                        }
+                    } else {
+                        errorMap.set(error.wordId, error);
+                    }
+                });
+                
+                this.saveErrorWords(Array.from(errorMap.values()));
             }
         } else {
-            // 替换模式
-            if (data.wordBank) this.saveWordBank(data.wordBank);
-            if (data.practiceLogs) this.savePracticeLogs(data.practiceLogs);
-            if (data.errorWords) this.saveErrorWords(data.errorWords);
+            // 替换模式：清空现有数据，使用新数据
+            if (data.wordBank && Array.isArray(data.wordBank)) {
+                this.saveWordBank(data.wordBank);
+            }
+            if (data.practiceLogs && Array.isArray(data.practiceLogs)) {
+                this.savePracticeLogs(data.practiceLogs);
+            }
+            if (data.errorWords && Array.isArray(data.errorWords)) {
+                this.saveErrorWords(data.errorWords);
+            }
         }
         
+        // 设置总是替换（不合并）
         if (data.settings) {
             this.saveSettings(data.settings);
         }
