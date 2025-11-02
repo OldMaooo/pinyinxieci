@@ -337,6 +337,16 @@ const Practice = {
             const word = this.currentWords[this.currentIndex];
             await this.recordError(word, null);
             this.practiceLog.errorCount++;
+            
+            // 保存当前题目到历史
+            if (this.currentIndex < this.currentWords.length) {
+                this.history.push({
+                    word: word,
+                    index: this.currentIndex,
+                    snapshot: null
+                });
+            }
+            
             this.currentIndex++;
             this.showNextWord();
         }
@@ -474,19 +484,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     if (skipBtn) {
-        skipBtn.addEventListener('click', () => {
-            // 保存当前题目到历史
-            if (Practice.currentIndex < Practice.currentWords.length) {
-                const word = Practice.currentWords[Practice.currentIndex];
-                Practice.history.push({
-                    word: word,
-                    index: Practice.currentIndex,
-                    snapshot: null
-                });
-            }
-            Practice.currentIndex++;
-            Practice.showNextWord();
-        });
+        skipBtn.addEventListener('click', () => Practice.skipQuestion());
     }
     
     if (endBtn) {
