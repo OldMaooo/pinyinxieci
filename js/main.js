@@ -8,22 +8,50 @@ const Main = {
      * 初始化
      */
     init() {
-        // 初始化配置
-        if (typeof Config !== 'undefined') {
-            Config.init();
+        try {
+            // 确保Storage先初始化
+            if (typeof Storage !== 'undefined') {
+                Storage.init();
+            }
+            
+            // 初始化配置
+            if (typeof Config !== 'undefined') {
+                Config.init();
+            }
+            
+            // 初始化手写输入（延迟，因为canvas可能还未渲染）
+            setTimeout(() => {
+                if (typeof Handwriting !== 'undefined') {
+                    Handwriting.init('handwriting-canvas');
+                }
+            }, 100);
+            
+            // 加载首页统计
+            if (typeof Statistics !== 'undefined') {
+                Statistics.updateHomeStats();
+            }
+            
+            // 加载题库列表
+            if (typeof WordBank !== 'undefined') {
+                WordBank.loadWordBank();
+            }
+            
+            // 加载错题本
+            if (typeof ErrorBook !== 'undefined') {
+                ErrorBook.load();
+            }
+        } catch (error) {
+            console.error('初始化失败:', error);
+            // 显示错误提示
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'alert alert-danger m-3';
+            errorDiv.innerHTML = `
+                <h5>初始化失败</h5>
+                <p>${error.message}</p>
+                <p>请刷新页面重试，或检查浏览器控制台查看详细错误。</p>
+            `;
+            document.body.insertBefore(errorDiv, document.body.firstChild);
         }
-        
-        // 初始化手写输入
-        Handwriting.init('handwriting-canvas');
-        
-        // 加载首页统计
-        Statistics.updateHomeStats();
-        
-        // 加载题库列表
-        WordBank.loadWordBank();
-        
-        // 加载错题本
-        ErrorBook.load();
         
         // 初始化路由
         this.initRouter();

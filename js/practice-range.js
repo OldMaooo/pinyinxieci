@@ -9,10 +9,25 @@ const PracticeRange = {
      */
     init() {
         const container = document.getElementById('practice-range-container');
-        if (!container) return;
+        if (!container) {
+            console.warn('practice-range-container not found');
+            return;
+        }
         
-        this.renderRangeSelector(container);
-        this.bindEvents();
+        // 确保Storage已初始化
+        if (typeof Storage === 'undefined' || !Storage.getWordBank) {
+            console.error('Storage未初始化，无法加载范围选择器');
+            container.innerHTML = '<div class="text-danger">数据加载失败，请刷新页面</div>';
+            return;
+        }
+        
+        try {
+            this.renderRangeSelector(container);
+            this.bindEvents();
+        } catch (error) {
+            console.error('初始化范围选择器失败:', error);
+            container.innerHTML = `<div class="text-danger">初始化失败: ${error.message}</div>`;
+        }
     },
     
     /**

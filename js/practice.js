@@ -6,6 +6,8 @@
 const Practice = {
     currentWords: [],
     currentIndex: 0,
+    // 记录之前的题目历史（用于返回上一题）
+    history: [],
     practiceLog: {
         totalWords: 0,
         correctCount: 0,
@@ -49,6 +51,7 @@ const Practice = {
         
         this.currentWords = words;
         this.currentIndex = 0;
+        this.history = []; // 重置历史记录
         
         // 初始化练习记录
         this.practiceLog = {
@@ -115,6 +118,16 @@ const Practice = {
         }
         
         const word = this.currentWords[this.currentIndex];
+        
+        // 保存当前题目到历史（如果是从下一题来的）
+        if (this.currentIndex > 0 && this.history.length < this.currentIndex) {
+            // 说明是正常前进，保存上一题的信息
+            const prevWord = this.currentWords[this.currentIndex - 1];
+            this.history.push({
+                word: prevWord,
+                index: this.currentIndex - 1
+            });
+        }
         
         // 显示拼音和词组
         const pinyinDisplay = document.getElementById('pinyin-display');
@@ -187,6 +200,14 @@ const Practice = {
         
         // 2秒后下一题
         setTimeout(() => {
+            // 保存当前题目到历史（超时也算）
+            if (this.currentIndex < this.currentWords.length) {
+                this.history.push({
+                    word: word,
+                    index: this.currentIndex,
+                    snapshot: null // 超时没有快照
+                });
+            }
             this.currentIndex++;
             this.showNextWord();
         }, 2000);
@@ -242,6 +263,14 @@ const Practice = {
             
             // 2秒后下一题
             setTimeout(() => {
+                // 保存当前题目到历史
+                if (this.currentIndex < this.currentWords.length) {
+                    this.history.push({
+                        word: word,
+                        index: this.currentIndex,
+                        snapshot: snapshot
+                    });
+                }
                 this.currentIndex++;
                 this.showNextWord();
             }, 2000);
@@ -265,13 +294,24 @@ const Practice = {
                 </div>
             `;
         } else {
+            // 显示正确答案（更突出）
+            let recognizedInfo = '';
+            if (recognized && recognized !== '时间到') {
+                recognizedInfo = `<div class="mt-2 text-muted">
+                    <small>识别结果：<span class="text-dark">${recognized}</span></small>
+                </div>`;
+            }
+            
             feedbackArea.innerHTML = `
                 <div class="feedback-error">
                     <i class="bi bi-x-circle-fill"></i> 错误
                 </div>
-                <div class="mt-2">
-                    <strong>正确答案：</strong> ${word.word}
-                    ${recognized ? `<br><strong>识别结果：</strong> ${recognized}` : ''}
+                <div class="mt-3 p-3 bg-light rounded border border-danger">
+                    <div class="text-center">
+                        <div class="text-muted small mb-2">正确答案是：</div>
+                        <div class="display-4 fw-bold text-danger">${word.word}</div>
+                    </div>
+                    ${recognizedInfo}
                 </div>
             `;
         }
@@ -337,6 +377,70 @@ const Practice = {
     },
     
     /**
+     * 返回上一题
+     */
+    showPreviousWord() {
+        if (this.history.length === 0) {
+            alert('已经是第一题了');
+            return;
+        }
+        
+        // 停止当前计时器
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+        }
+        
+        // 从历史中取出上一题
+        const prevItem = this.history.pop();
+        this.currentIndex = prevItem.index;
+        
+        // 显示上一题
+        const word = prevItem.word;
+        
+        // 显示拼音和词组
+        const pinyinDisplay = document.getElementById('pinyin-display');
+        if (pinyinDisplay) {
+            let displayText = word.pinyin || '';
+            if (typeof WordGroups !== 'undefined') {
+                displayText = WordGroups.getDisplayText(word.word, word.pinyin || '');
+            }
+            pinyinDisplay.textContent = displayText;
+        }
+        
+        // 更新进度
+        document.getElementById('progress-badge').textContent = 
+            `${this.currentIndex + 1}/${this.currentWords.length}`;
+        
+        // 清除画布
+        Handwriting.clear();
+        
+        // 清除反馈
+        document.getElementById('feedback-area').innerHTML = '';
+        
+        // 如果有快照，显示提示（但不自动显示快照，让用户重新写）
+        if (prevItem.snapshot) {
+            // 可以在这里显示提示："这是上一题的正确答案"
+            const feedbackArea = document.getElementById('feedback-area');
+            if (feedbackArea) {
+                feedbackArea.innerHTML = `
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> 返回上一题：${word.word}
+                    </div>
+                `;
+                // 2秒后自动清除提示
+                setTimeout(() => {
+                    feedbackArea.innerHTML = '';
+                }, 2000);
+            }
+        }
+        
+        // 重新开始计时
+        const wordStartTime = Date.now();
+        this.startTimer(wordStartTime);
+    },
+    
+    /**
      * 数组随机打乱
      */
     shuffleArray(array) {
@@ -370,10 +474,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     if (skipBtn) {
-        skipBtn.addEventListener('click', () => Practice.skipQuestion());
+        skipBtn.addEventListener('click', () => {
+            // 保存当前题目到历史
+            if (Practice.currentIndex < Practice.currentWords.length) {
+                const word = Practice.currentWords[Practice.currentIndex];
+                Practice.history.push({
+                    word: word,
+                    index: Practice.currentIndex,
+                    snapshot: null
+                });
+            }
+            Practice.currentIndex++;
+            Practice.showNextWord();
+        });
     }
     
     if (endBtn) {
         endBtn.addEventListener('click', () => Practice.end());
+    }
+    
+    const prevBtn = document.getElementById('prev-question-btn');
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => Practice.showPreviousWord());
     }
 });
