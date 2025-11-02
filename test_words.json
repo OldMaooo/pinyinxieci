@@ -1,0 +1,74 @@
+{
+  "wordBank": [
+    {
+      "word": "人",
+      "pinyin": "rén",
+      "grade": 3,
+      "semester": "上",
+      "unit": 1
+    },
+    {
+      "word": "大",
+      "pinyin": "dà",
+      "grade": 3,
+      "semester": "上",
+      "unit": 1
+    },
+    {
+      "word": "小",
+      "pinyin": "xiǎo",
+      "grade": 3,
+      "semester": "上",
+      "unit": 1
+    },
+    {
+      "word": "上",
+      "pinyin": "shàng",
+      "grade": 3,
+      "semester": "上",
+      "unit": 1
+    },
+    {
+      "word": "下",
+      "pinyin": "xià",
+      "grade": 3,
+      "semester": "上",
+      "unit": 1
+    },
+    {
+      "word": "天",
+      "pinyin": "tiān",
+      "grade": 3,
+      "semester": "上",
+      "unit": 1
+    },
+    {
+      "word": "地",
+      "pinyin": "dì",
+      "grade": 3,
+      "semester": "上",
+      "unit": 1
+    },
+    {
+      "word": "山",
+      "pinyin": "shān",
+      "grade": 3,
+      "semester": "上",
+      "unit": 1
+    },
+    {
+      "word": "水",
+      "pinyin": "shuǐ",
+      "grade": 3,
+      "semester": "上",
+      "unit": 1
+    },
+    {
+      "word": "火",
+      "pinyin": "huǒ",
+      "grade": 3,
+      "semester": "上",
+      "unit": 1
+    }
+  ]
+}

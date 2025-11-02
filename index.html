@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>看拼音写词 - 生词练习</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#home">
+                <i class="bi bi-pencil-square"></i> 看拼音写词
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#practice">开始练习</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#errorbook">错题本</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#wordbank">题库管理</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <div class="container-fluid mt-4">
+        
+        <!-- 首页 -->
+        <section id="home" class="page-section">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="text-center mb-4">
+                        <i class="bi bi-book"></i> 看拼音写词练习
+                    </h1>
+                    <p class="text-center text-muted mb-5">
+                        通过手写练习掌握生词，实现自主学习闭环
+                    </p>
+                </div>
+            </div>
+            
+            <div class="row g-4">
+                <!-- 开始练习卡片 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-play-circle display-1 text-primary mb-3"></i>
+                            <h5 class="card-title">开始练习</h5>
+                            <p class="card-text text-muted">选择题目范围，开始手写练习</p>
+                            <a href="#practice" class="btn btn-primary">开始</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 错题本卡片 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-journal-x display-1 text-danger mb-3"></i>
+                            <h5 class="card-title">错题本</h5>
+                            <p class="card-text text-muted">查看和复习错题</p>
+                            <a href="#errorbook" class="btn btn-danger">查看</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 题库管理卡片 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-database display-1 text-success mb-3"></i>
+                            <h5 class="card-title">题库管理</h5>
+                            <p class="card-text text-muted">导入、管理生词题库</p>
+                            <a href="#wordbank" class="btn btn-success">管理</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 统计信息 -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-graph-up"></i> 学习统计</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-md-3">
+                                    <div class="stat-item">
+                                        <div class="stat-value" id="stat-total-words">0</div>
+                                        <div class="stat-label">总词数</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stat-item">
+                                        <div class="stat-value" id="stat-practiced">0</div>
+                                        <div class="stat-label">已练习</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stat-item">
+                                        <div class="stat-value" id="stat-accuracy">0%</div>
+                                        <div class="stat-label">正确率</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stat-item">
+                                        <div class="stat-value" id="stat-error-words">0</div>
+                                        <div class="stat-label">错题数</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 练习页面 -->
+        <section id="practice" class="page-section d-none">
+            <!-- 练习设置 -->
+            <div class="card mb-4" id="practice-settings">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-gear"></i> 练习设置</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">题目数量</label>
+                            <select class="form-select" id="word-count-select">
+                                <option value="10">10个</option>
+                                <option value="20" selected>20个</option>
+                                <option value="50">50个</option>
+                                <option value="all">全部</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">时间限制（秒/字）</label>
+                            <input type="number" class="form-control" id="time-limit-input" value="30" min="10" max="120">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">练习范围</label>
+                            <select class="form-select" id="practice-range-select">
+                                <option value="all">全部题库</option>
+                                <option value="error">错题本</option>
+                                <option value="grade">按年级</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn btn-primary btn-lg" id="start-practice-btn">
+                            <i class="bi bi-play-fill"></i> 开始练习
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 练习界面 -->
+            <div class="card d-none" id="practice-area">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-primary" id="progress-badge">1/20</span>
+                        <span class="badge bg-info ms-2" id="timer-badge">30秒</span>
+                    </div>
+                    <button class="btn btn-sm btn-secondary" id="end-practice-btn">结束练习</button>
+                </div>
+                <div class="card-body text-center">
+                    <!-- 拼音显示 -->
+                    <div class="mb-4">
+                        <h2 class="display-3 text-primary" id="pinyin-display">rén</h2>
+                    </div>
+                    
+                    <!-- 手写输入区 -->
+                    <div class="handwriting-container mb-4">
+                        <canvas id="handwriting-canvas"></canvas>
+                        <div class="canvas-controls mt-3">
+                            <button class="btn btn-outline-danger" id="clear-canvas-btn">
+                                <i class="bi bi-eraser"></i> 清除
+                            </button>
+                            <button class="btn btn-success" id="submit-answer-btn">
+                                <i class="bi bi-check-circle"></i> 提交
+                            </button>
+                            <button class="btn btn-outline-secondary" id="skip-question-btn">
+                                <i class="bi bi-skip-forward"></i> 跳过
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 反馈区域 -->
+                    <div id="feedback-area" class="mt-3"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 结果页面 -->
+        <section id="results" class="page-section d-none">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-clipboard-check"></i> 练习结果</h5>
+                </div>
+                <div class="card-body">
+                    <!-- 统计数据 -->
+                    <div class="row mb-4">
+                        <div class="col-md-3 text-center">
+                            <div class="stat-box">
+                                <div class="stat-number" id="result-total">0</div>
+                                <div class="stat-text">总题数</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="stat-box">
+                                <div class="stat-number text-success" id="result-correct">0</div>
+                                <div class="stat-text">正确</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="stat-box">
+                                <div class="stat-number text-danger" id="result-error">0</div>
+                                <div class="stat-text">错误</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="stat-box">
+                                <div class="stat-number" id="result-accuracy">0%</div>
+                                <div class="stat-text">正确率</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6 text-center">
+                            <div class="stat-box">
+                                <div class="stat-number" id="result-total-time">0秒</div>
+                                <div class="stat-text">总用时</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <div class="stat-box">
+                                <div class="stat-number" id="result-avg-time">0秒</div>
+                                <div class="stat-text">平均每字</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 错题列表 -->
+                    <div id="error-words-list" class="mb-4"></div>
+                    
+                    <!-- 操作按钮 -->
+                    <div class="text-center">
+                        <button class="btn btn-primary btn-lg me-2" id="review-errors-btn">
+                            <i class="bi bi-arrow-repeat"></i> 复习错题
+                        </button>
+                        <button class="btn btn-secondary btn-lg me-2" id="practice-again-btn">
+                            <i class="bi bi-arrow-clockwise"></i> 再练一次
+                        </button>
+                        <a href="#home" class="btn btn-outline-secondary btn-lg">
+                            <i class="bi bi-house"></i> 返回首页
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 错题本页面 -->
+        <section id="errorbook" class="page-section d-none">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-journal-x"></i> 错题本</h5>
+                    <div>
+                        <button class="btn btn-sm btn-outline-danger" id="clear-mastered-btn">
+                            清除已掌握
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="errorbook-list"></div>
+                    <div id="errorbook-empty" class="text-center text-muted py-5">
+                        <i class="bi bi-inbox display-1"></i>
+                        <p class="mt-3">还没有错题，继续保持！</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 题库管理页面 -->
+        <section id="wordbank" class="page-section d-none">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-database"></i> 题库管理</h5>
+                </div>
+                <div class="card-body">
+                    <!-- 导入导出 -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">导入题库</div>
+                                <div class="card-body">
+                                    <input type="file" class="form-control mb-2" id="import-file-input" accept=".json">
+                                    <button class="btn btn-primary" id="import-btn">
+                                        <i class="bi bi-upload"></i> 导入
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">导出题库</div>
+                                <div class="card-body">
+                                    <button class="btn btn-success" id="export-btn">
+                                        <i class="bi bi-download"></i> 导出
+                                    </button>
+                                    <p class="text-muted small mt-2">导出所有数据（题库、练习记录、错题）</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 题库列表 -->
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>生字</th>
+                                    <th>拼音</th>
+                                    <th>年级</th>
+                                    <th>学期</th>
+                                    <th>单元</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wordbank-table-body">
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">暂无数据，请先导入题库</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Toast 提示 -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="toast" class="toast" role="alert">
+            <div class="toast-header">
+                <strong class="me-auto">提示</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body" id="toast-body"></div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- 项目JS模块 -->
+    <script src="js/storage.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/word-groups.js"></script>
+    <script src="js/recognition.js"></script>
+    <script src="js/wordbank.js"></script>
+    <script src="js/handwriting.js"></script>
+    <script src="js/practice.js"></script>
+    <script src="js/statistics.js"></script>
+    <script src="js/errorbook.js"></script>
+    <script src="js/init-data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // 初始化配置和数据（确保在Recognition加载后）
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof Config !== 'undefined') {
+                Config.init();
+            }
+            if (typeof InitData !== 'undefined') {
+                InitData.init();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "看拼音写词-proxy",
+  "version": "1.0.0",
+  "description": "本地代理服务器，解决百度API CORS问题",
+  "main": "proxy-server.js",
+  "scripts": {
+    "start": "node proxy-server.js",
+    "proxy": "node proxy-server.js"
+  },
+  "keywords": ["proxy", "cors", "baidu-api"],
+  "author": "",
+  "license": "MIT"
+}
