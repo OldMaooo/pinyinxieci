@@ -31,7 +31,7 @@ const Config = {
                 provider: 'baidu',
                 apiKey: this.baidu.apiKey,
                 apiSecret: this.baidu.apiSecret,
-                threshold: 0.85
+                threshold: 0.6  // 降低阈值，提高容错率，允许字迹不太美观但正确的字通过
             });
         }
     },
@@ -49,7 +49,7 @@ const Config = {
                 provider: 'baidu',
                 apiKey: this.baidu.apiKey,
                 apiSecret: this.baidu.apiSecret,
-                threshold: 0.85
+                threshold: 0.6  // 降低阈值，提高容错率，允许字迹不太美观但正确的字通过
             });
         }
     }

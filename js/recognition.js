@@ -14,7 +14,7 @@ const Recognition = {
         provider: 'baidu', // 'baidu' | 'tencent' | 'iflytek'
         apiKey: '',
         apiSecret: '',
-        threshold: 0.85 // 置信度阈值
+        threshold: 0.6 // 置信度阈值（降低以提高容错率）
     },
     
     /**
@@ -76,9 +76,22 @@ const Recognition = {
                 match = true; // 包含目标字
             }
             
-            // 降低阈值，提高容错率（因为手写识别本身有误差）
-            const effectiveThreshold = Math.min(this.apiConfig.threshold, 0.7);
-            const passed = match && result.confidence >= effectiveThreshold;
+            // 降低阈值，提高容错率（允许字迹不太美观但正确的字通过）
+            // 置信度阈值从0.85降至0.6，因为手写识别本身有误差，且孩子字迹可能不够美观
+            const effectiveThreshold = Math.min(this.apiConfig.threshold, 0.6);
+            const minThreshold = 0.5; // 最低容忍度
+            
+            // 如果匹配且置信度在最低容忍度以上，就通过
+            // 即使置信度略低（0.5-0.6），只要字匹配就通过（防止字迹不美观但正确的字被判错）
+            let passed = false;
+            if (match) {
+                if (result.confidence >= effectiveThreshold) {
+                    passed = true; // 标准通过
+                } else if (result.confidence >= minThreshold) {
+                    passed = true; // 容错通过（字匹配但置信度略低）
+                    console.log(`字匹配但置信度较低(${result.confidence.toFixed(2)})，容错通过`);
+                }
+            }
             
             return {
                 success: true,

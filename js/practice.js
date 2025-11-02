@@ -112,11 +112,19 @@ const Practice = {
         
         // 显示拼音和词组
         const pinyinDisplay = document.getElementById('pinyin-display');
-        if (typeof WordGroups !== 'undefined') {
-            pinyinDisplay.textContent = WordGroups.getDisplayText(word.word, word.pinyin || '');
-        } else {
-            pinyinDisplay.textContent = word.pinyin || '';
+        if (!pinyinDisplay) {
+            console.error('pinyin-display元素不存在');
+            return;
         }
+        
+        let displayText = word.pinyin || '';
+        if (typeof WordGroups !== 'undefined') {
+            displayText = WordGroups.getDisplayText(word.word, word.pinyin || '');
+        }
+        
+        // 使用textContent确保正确显示
+        pinyinDisplay.textContent = displayText;
+        console.log('显示词组:', displayText, 'Word:', word.word);
         
         // 更新进度
         document.getElementById('progress-badge').textContent = 
