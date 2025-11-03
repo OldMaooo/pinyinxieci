@@ -187,6 +187,22 @@ const Main = {
                 }
             });
         }
+
+        // 主题切换
+        const themeBtn = document.getElementById('theme-toggle-btn');
+        if (themeBtn) {
+            const applyTheme = (mode) => {
+                document.documentElement.setAttribute('data-bs-theme', mode);
+                localStorage.setItem('theme', mode);
+                themeBtn.innerHTML = mode === 'dark' ? '<i class="bi bi-moon"></i> 深色' : '<i class="bi bi-brightness-high"></i> 浅色';
+            };
+            const saved = localStorage.getItem('theme') || 'light';
+            applyTheme(saved);
+            themeBtn.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-bs-theme') || 'light';
+                applyTheme(current === 'light' ? 'dark' : 'light');
+            });
+        }
     },
     
     /**

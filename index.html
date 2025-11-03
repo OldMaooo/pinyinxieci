@@ -25,8 +25,8 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item me-2">
-                        <button class="btn btn-sm btn-outline-warning" id="admin-mode-btn">
-                            <i class="bi bi-shield-lock"></i> 管理模式
+                        <button class="btn btn-sm btn-outline-secondary" id="theme-toggle-btn">
+                            <i class="bi bi-brightness-high"></i> 主题
                         </button>
                     </li>
                     <li class="nav-item">
@@ -63,38 +63,67 @@
             </div>
             
             <div class="row g-4">
-                <!-- 开始练习卡片 -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body text-center">
-                            <i class="bi bi-play-circle display-1 text-primary mb-3"></i>
-                            <h5 class="card-title">开始练习</h5>
-                            <p class="card-text text-muted">选择题目范围，开始手写练习</p>
-                            <a href="#practice" class="btn btn-primary">开始</a>
+                <div class="col-lg-6">
+                    <a class="btn btn-primary mb-3" href="#practice"><i class="bi bi-play"></i> 去设置并开始练习</a>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-gear"></i> 题目设置</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">题目数量（自定义）</label>
+                                    <input type="number" class="form-control" id="word-count-input-home" value="20" min="1" placeholder="如：30">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">时间限制（秒/字）</label>
+                                    <input type="number" class="form-control" id="time-limit-input-home" value="30" min="5" max="120">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">练习范围</label>
+                                    <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
+                                        <div id="practice-range-container-home"></div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-primary" id="start-practice-btn-home"><i class="bi bi-play-fill"></i> 开始练习</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- 错题本卡片 -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body text-center">
-                            <i class="bi bi-journal-x display-1 text-danger mb-3"></i>
-                            <h5 class="card-title">错题本</h5>
-                            <p class="card-text text-muted">查看和复习错题</p>
-                            <a href="#errorbook" class="btn btn-danger">查看</a>
+                <div class="col-lg-6">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-graph-up"></i> 学习统计</h5>
                         </div>
-                    </div>
-                </div>
-                
-                <!-- 题库管理卡片 -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body text-center">
-                            <i class="bi bi-database display-1 text-success mb-3"></i>
-                            <h5 class="card-title">题库管理</h5>
-                            <p class="card-text text-muted">导入、管理生词题库</p>
-                            <a href="#wordbank" class="btn btn-success">管理</a>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-3">
+                                    <div class="stat-item">
+                                        <div class="stat-value" id="stat-total-words">0</div>
+                                        <div class="stat-label">总词数</div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="stat-item">
+                                        <div class="stat-value" id="stat-practiced">0</div>
+                                        <div class="stat-label">已练习</div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="stat-item">
+                                        <div class="stat-value" id="stat-accuracy">0%</div>
+                                        <div class="stat-label">正确率</div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="stat-item">
+                                        <div class="stat-value" id="stat-error-words">0</div>
+                                        <div class="stat-label">错题数</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -150,13 +179,8 @@
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <label class="form-label">题目数量</label>
-                            <select class="form-select" id="word-count-select">
-                                <option value="10">10个</option>
-                                <option value="20" selected>20个</option>
-                                <option value="50">50个</option>
-                                <option value="all">全部</option>
-                            </select>
+                            <label class="form-label">题目数量（自定义）</label>
+                            <input type="number" class="form-control" id="word-count-input" value="20" min="1" placeholder="如：30">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">时间限制（秒/字）</label>
@@ -296,6 +320,9 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0"><i class="bi bi-journal-x"></i> 错题本</h5>
                     <div class="d-flex align-items-center gap-2">
+                        <button class="btn btn-sm btn-outline-warning" id="admin-mode-btn">
+                            <i class="bi bi-shield-lock"></i> 管理模式
+                        </button>
                         <button class="btn btn-sm btn-primary" id="errorbook-practice-all-btn">
                             <i class="bi bi-play"></i> 一键练习
                         </button>

@@ -28,6 +28,17 @@ const PracticeRange = {
             console.error('初始化范围选择器失败:', error);
             container.innerHTML = `<div class="text-danger">初始化失败: ${error.message}</div>`;
         }
+
+        // 首页范围容器
+        const homeContainer = document.getElementById('practice-range-container-home');
+        if (homeContainer) {
+            try {
+                this.renderRangeSelector(homeContainer);
+                this.bindEvents();
+            } catch (error) {
+                homeContainer.innerHTML = `<div class="text-danger">初始化失败: ${error.message}</div>`;
+            }
+        }
     },
     
     /**

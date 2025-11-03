@@ -74,6 +74,9 @@ const Handwriting = {
         this.ctx.lineWidth = 3;
         this.ctx.lineCap = 'round';
         this.ctx.lineJoin = 'round';
+
+        // 绘制田字格背景
+        this.drawTianZiGrid();
     },
     
     /**
@@ -175,6 +178,7 @@ const Handwriting = {
         const height = this.canvas.height / (window.devicePixelRatio || 1);
         this.ctx.clearRect(0, 0, width, height);
         this.currentPath = [];
+        this.drawTianZiGrid();
     },
     
     /**
@@ -199,4 +203,43 @@ const Handwriting = {
         }
         return false;
     }
+};
+
+/**
+ * 绘制田字格（边框+虚线中线）
+ */
+Handwriting.drawTianZiGrid = function () {
+    if (!this.canvas || !this.ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const width = this.canvas.width / dpr;
+    const height = this.canvas.height / dpr;
+    const padding = 10;
+    const size = Math.min(width, height) - padding * 2;
+    const x = (width - size) / 2;
+    const y = (height - size) / 2;
+    const ctx = this.ctx;
+    
+    // 清空背景（避免反复缩放导致残影）
+    ctx.save();
+    ctx.clearRect(0, 0, width, height);
+    ctx.restore();
+    
+    // 外边框
+    ctx.save();
+    ctx.strokeStyle = '#ced4da';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x, y, size, size);
+    
+    // 中横中竖虚线
+    ctx.setLineDash([6, 6]);
+    ctx.beginPath();
+    // 竖线
+    ctx.moveTo(x + size / 2, y);
+    ctx.lineTo(x + size / 2, y + size);
+    // 横线
+    ctx.moveTo(x, y + size / 2);
+    ctx.lineTo(x + size, y + size / 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
 };

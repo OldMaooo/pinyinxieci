@@ -24,7 +24,12 @@ const Practice = {
      * 开始练习
      */
     async start() {
-        const wordCount = parseInt(document.getElementById('word-count-select').value);
+        const countInput = document.getElementById('word-count-input');
+        const countSelect = document.getElementById('word-count-select');
+        let wordCount = countInput ? parseInt(countInput.value) : NaN;
+        if (isNaN(wordCount)) {
+            wordCount = countSelect ? (countSelect.value === 'all' ? 'all' : parseInt(countSelect.value)) : 'all';
+        }
         const timeLimit = parseInt(document.getElementById('time-limit-input').value);
         
         this.timeLimit = timeLimit;
