@@ -44,7 +44,8 @@ const Practice = {
             // 重置标记
             localStorage.removeItem('practice_error_only');
         } else if (typeof PracticeRange !== 'undefined' && PracticeRange.getSelectedWords) {
-            words = PracticeRange.getSelectedWords();
+            // 仅读取练习页容器中的选择，避免与首页重复
+            words = PracticeRange.getSelectedWords('practice-range-container');
         } else {
             // 降级：使用原来的范围选择
             const range = document.getElementById('practice-range-select')?.value || 'all';

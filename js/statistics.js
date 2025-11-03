@@ -106,16 +106,10 @@ const Statistics = {
                             <span class="badge bg-danger">错误 ${errorWord.errorCount} 次</span>
                         </div>
                         ${latestSnapshot ? `
-                            <div class="error-comparison">
-                                <div class="error-comparison-item">
-                                    <div class="label">你的书写</div>
-                                    <img src="${latestSnapshot.snapshot}" alt="手写" style="max-width: 150px; border: 2px solid #dc3545; border-radius: 4px;">
-                                </div>
-                                <div class="error-comparison-item">
-                                    <div class="label">正确答案</div>
-                                    <div style="font-size: 100px; font-family: 'KaiTi', '楷体', serif; border: 2px solid #198754; border-radius: 4px; padding: 10px; background: white;">
-                                        ${word.word}
-                                    </div>
+                            <div class="d-flex gap-3 align-items-center mt-2">
+                                <div class="word-box"><img class="snapshot-invert" src="${latestSnapshot.snapshot}" alt="手写" style="max-width: 90%; max-height: 90%; object-fit: contain;"></div>
+                                <div class="word-box standard-dark-box text-center">
+                                    <div class="standard-dark-text" style="font-size: 2.6rem; font-family: 'KaiTi','楷体',serif;">${word.word}</div>
                                 </div>
                             </div>
                         ` : ''}

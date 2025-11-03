@@ -203,6 +203,10 @@ const Main = {
                     navbar.classList.toggle('navbar-light', mode !== 'dark');
                     navbar.classList.toggle('bg-light', mode !== 'dark');
                 }
+                // 更新画布笔迹颜色与网格
+                if (typeof Handwriting !== 'undefined') {
+                    setTimeout(() => Handwriting.updateInkAndGrid && Handwriting.updateInkAndGrid(), 0);
+                }
             };
             const saved = localStorage.getItem('theme') || 'light';
             applyTheme(saved);
@@ -218,20 +222,26 @@ const Main = {
             startHome.addEventListener('click', () => {
                 // 同步首页设置到练习页输入
                 const countHome = document.getElementById('word-count-input-home');
+                const countSelectHome = document.getElementById('word-count-select-home');
                 const timeHome = document.getElementById('time-limit-input-home');
                 const count = countHome ? parseInt(countHome.value) : 20;
                 const time = timeHome ? parseInt(timeHome.value) : 30;
                 const countInput = document.getElementById('word-count-input');
+                const countSelect = document.getElementById('word-count-select');
                 const timeInput = document.getElementById('time-limit-input');
                 if (countInput) countInput.value = isFinite(count) && count > 0 ? String(count) : '20';
+                if (countSelect && countSelectHome) countSelect.value = countSelectHome.value;
                 if (timeInput) timeInput.value = isFinite(time) && time > 0 ? String(time) : '30';
-                // 直接开始
-                if (typeof Practice !== 'undefined') {
-                    Practice.start();
-                } else {
-                    // 回退：跳转到练习页
-                    this.showPage('practice');
-                }
+                // 跳到练习页并同步范围选择
+                this.showPage('practice');
+                setTimeout(() => {
+                    if (typeof PracticeRange !== 'undefined' && PracticeRange.syncSelection) {
+                        PracticeRange.syncSelection('practice-range-container-home', 'practice-range-container');
+                    }
+                    if (typeof Practice !== 'undefined') {
+                        Practice.start();
+                    }
+                }, 150);
             });
         }
     },

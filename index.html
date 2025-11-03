@@ -23,12 +23,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item me-2">
-                        <button class="btn btn-sm btn-outline-secondary" id="theme-toggle-btn">
-                            <i class="bi bi-brightness-high"></i> 主题
-                        </button>
-                    </li>
+                <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
                         <a class="nav-link" href="#home">首页</a>
                     </li>
@@ -40,6 +35,11 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#wordbank">题库管理</a>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <button class="btn btn-sm btn-outline-secondary align-self-center" id="theme-toggle-btn">
+                            <i class="bi bi-brightness-high"></i> 主题
+                        </button>
                     </li>
                 </ul>
             </div>
@@ -71,8 +71,17 @@
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label">题目数量（自定义）</label>
-                                    <input type="number" class="form-control" id="word-count-input-home" value="20" min="1" placeholder="如：30">
+                                    <label class="form-label">题目数量</label>
+                                    <div class="input-group">
+                                        <select class="form-select" id="word-count-select-home" style="max-width: 140px;">
+                                            <option value="10">10</option>
+                                            <option value="20" selected>20</option>
+                                            <option value="50">50</option>
+                                            <option value="all">全部</option>
+                                        </select>
+                                        <input type="number" class="form-control" id="word-count-input-home" value="" min="1" placeholder="或手动填写数量">
+                                    </div>
+                                    <div class="form-text">填写数字优先生效；留空则按下拉选择。</div>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">时间限制（秒/字）</label>
@@ -178,8 +187,17 @@
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <label class="form-label">题目数量（自定义）</label>
-                            <input type="number" class="form-control" id="word-count-input" value="20" min="1" placeholder="如：30">
+                            <label class="form-label">题目数量</label>
+                            <div class="input-group">
+                                <select class="form-select" id="word-count-select" style="max-width: 140px;">
+                                    <option value="10">10</option>
+                                    <option value="20" selected>20</option>
+                                    <option value="50">50</option>
+                                    <option value="all">全部</option>
+                                </select>
+                                <input type="number" class="form-control" id="word-count-input" value="" min="1" placeholder="或手动填写数量">
+                            </div>
+                            <div class="form-text">填写数字优先生效；留空则按下拉选择。</div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">时间限制（秒/字）</label>
@@ -328,7 +346,7 @@
                         <button class="btn btn-sm btn-outline-secondary d-none" id="errorbook-delete-selected-btn">
                             <i class="bi bi-trash"></i> 删除所选
                         </button>
-                        <button class="btn btn-sm btn-outline-danger" id="clear-mastered-btn">
+                        <button class="btn btn-sm btn-outline-danger d-none" id="clear-mastered-btn">
                             清除已掌握
                         </button>
                     </div>
@@ -400,7 +418,7 @@
                                     </div>
                                     
                                     <!-- 数据统计 -->
-                                    <div class="mt-3 p-3 bg-light rounded">
+                                    <div class="mt-3 p-3 bg-body-tertiary rounded border">
                                         <h6 class="mb-2">当前数据统计</h6>
                                         <div class="row text-center">
                                             <div class="col-3">

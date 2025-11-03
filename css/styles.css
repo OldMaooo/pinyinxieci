@@ -1,3 +1,16 @@
+[data-bs-theme="dark"] .handwriting-container { background-color: transparent; }
+[data-bs-theme="dark"] #handwriting-canvas { background-color: transparent; }
+.snapshot-invert { filter: none; }
+[data-bs-theme="dark"] .snapshot-invert { filter: invert(1) grayscale(1) contrast(1.1); }
+.standard-dark-box { background-color: #f8f9fa; }
+.standard-dark-text { color: #212529; }
+[data-bs-theme="dark"] .standard-dark-box { background-color: #212529; }
+[data-bs-theme="dark"] .standard-dark-text { color: #fff; }
+
+/* 统一错题卡中文字框尺寸与边框 */
+.word-box { width: 96px; height: 96px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--bs-border-color); border-radius: 4px; background: var(--bs-body-bg); }
+[data-bs-theme="dark"] .word-box { background: #212529; }
+
 /* 自定义样式 */
 
 /* 页面切换 */
@@ -112,6 +125,10 @@
     background-color: #f8f9fa;
     border-radius: 4px;
     padding-left: 5px;
+}
+
+[data-bs-theme="dark"] .unit-item:hover {
+    background-color: rgba(255,255,255,0.08);
 }
 
 .unit-checkbox, .semester-checkbox {

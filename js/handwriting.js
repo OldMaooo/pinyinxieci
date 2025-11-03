@@ -33,6 +33,13 @@ const Handwriting = {
         
         // 绑定事件
         this.bindEvents();
+
+        // 监听主题切换，更新画笔与网格
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'theme') {
+                this.updateInkAndGrid();
+            }
+        });
     },
     
     /**
@@ -69,8 +76,8 @@ const Handwriting = {
         this.canvas.style.width = width + 'px';
         this.canvas.style.height = height + 'px';
         
-        // 重新设置画笔样式
-        this.ctx.strokeStyle = '#000000';
+        // 重新设置画笔样式（根据主题）
+        this.ctx.strokeStyle = this.getInkColor();
         this.ctx.lineWidth = 3;
         this.ctx.lineCap = 'round';
         this.ctx.lineJoin = 'round';
@@ -202,6 +209,23 @@ const Handwriting = {
             }
         }
         return false;
+    },
+
+    /**
+     * 获取当前主题下的画笔颜色
+     */
+    getInkColor() {
+        const isDark = (document.documentElement.getAttribute('data-bs-theme') || 'light') === 'dark';
+        return isDark ? '#ffffff' : '#000000';
+    },
+
+    /**
+     * 根据主题更新画笔与网格
+     */
+    updateInkAndGrid() {
+        if (!this.ctx) return;
+        this.ctx.strokeStyle = this.getInkColor();
+        this.drawTianZiGrid();
     }
 };
 

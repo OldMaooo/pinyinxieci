@@ -324,8 +324,9 @@ const PracticeRange = {
     /**
      * 获取选中的字
      */
-    getSelectedWords() {
-        const checkedUnits = document.querySelectorAll('.unit-checkbox:checked');
+    getSelectedWords(rootId) {
+        const root = rootId ? document.getElementById(rootId) : document;
+        const checkedUnits = root.querySelectorAll('.unit-checkbox:checked');
         const wordBank = Storage.getWordBank();
         const grouped = this.groupWordsBySemesterUnit(wordBank);
         
@@ -340,6 +341,22 @@ const PracticeRange = {
         });
         
         return selectedWords;
+    },
+    
+    /**
+     * 从一个范围选择容器同步选择状态到另一个容器
+     */
+    syncSelection(fromId, toId) {
+        const fromRoot = document.getElementById(fromId);
+        const toRoot = document.getElementById(toId);
+        if (!fromRoot || !toRoot) return;
+        const fromChecks = fromRoot.querySelectorAll('.unit-checkbox');
+        fromChecks.forEach(fromCb => {
+            const sel = fromCb.getAttribute('data-semester');
+            const unit = fromCb.getAttribute('data-unit');
+            const target = toRoot.querySelector(`.unit-checkbox[data-semester="${sel}"][data-unit="${unit}"]`);
+            if (target) target.checked = fromCb.checked;
+        });
     }
 };
 

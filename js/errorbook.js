@@ -46,15 +46,15 @@ const ErrorBook = {
                             </div>
                             ${latestSnapshot ? `
                                 <div class="d-flex gap-2 align-items-center mt-2">
-                                    <img src="${latestSnapshot.snapshot}" alt="手写" style="width: 90px; height: 90px; object-fit: contain; border: 1px solid #eee; border-radius: 4px;">
-                                    <div class="border rounded p-1 text-center" style="min-width:90px; background:#fff;">
-                                        <div style="font-size: 2.8rem; font-family: 'KaiTi','楷体',serif;">${word.word}</div>
+                                    <div class="word-box"><img class="snapshot-invert" src="${latestSnapshot.snapshot}" alt="手写" style="max-width: 90%; max-height: 90%; object-fit: contain;"></div>
+                                    <div class="word-box standard-dark-box text-center">
+                                        <div class="standard-dark-text" style="font-size: 2.6rem; font-family: 'KaiTi','楷体',serif;">${word.word}</div>
                                     </div>
                                 </div>
                             ` : ''}
                         </div>
                         ${adminMode ? `
-                        <div class=\"card-footer bg-white border-0 pt-0 d-flex justify-content-between gap-2\">
+                        <div class=\"card-footer bg-transparent border-0 pt-0 d-flex justify-content-between gap-2\">
                             <button class=\"btn btn-sm btn-primary flex-fill\" onclick=\"ErrorBook.practiceWord('${errorWord.wordId}')\">练习</button>
                             <button class=\"btn btn-sm btn-outline-danger flex-fill\" onclick=\"ErrorBook.removeWord('${errorWord.wordId}')\">已掌握</button>
                         </div>` : ''}
@@ -71,9 +71,13 @@ const ErrorBook = {
         
         // 管理模式下显示批量删除按钮
         const delBtn = document.getElementById('errorbook-delete-selected-btn');
+        const clearBtn = document.getElementById('clear-mastered-btn');
         if (delBtn) {
             delBtn.classList.toggle('d-none', !adminMode);
             delBtn.onclick = () => this.deleteSelected();
+        }
+        if (clearBtn) {
+            clearBtn.classList.toggle('d-none', !adminMode);
         }
     },
     
