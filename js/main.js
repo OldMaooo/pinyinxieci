@@ -195,12 +195,43 @@ const Main = {
                 document.documentElement.setAttribute('data-bs-theme', mode);
                 localStorage.setItem('theme', mode);
                 themeBtn.innerHTML = mode === 'dark' ? '<i class="bi bi-moon"></i> 深色' : '<i class="bi bi-brightness-high"></i> 浅色';
+                // 导航栏配色
+                const navbar = document.querySelector('nav.navbar');
+                if (navbar) {
+                    navbar.classList.toggle('navbar-dark', mode === 'dark');
+                    navbar.classList.toggle('bg-dark', mode === 'dark');
+                    navbar.classList.toggle('navbar-light', mode !== 'dark');
+                    navbar.classList.toggle('bg-light', mode !== 'dark');
+                }
             };
             const saved = localStorage.getItem('theme') || 'light';
             applyTheme(saved);
             themeBtn.addEventListener('click', () => {
                 const current = document.documentElement.getAttribute('data-bs-theme') || 'light';
                 applyTheme(current === 'light' ? 'dark' : 'light');
+            });
+        }
+
+        // 首页开始按钮：使用首页设置直接开始练习
+        const startHome = document.getElementById('start-practice-btn-home');
+        if (startHome) {
+            startHome.addEventListener('click', () => {
+                // 同步首页设置到练习页输入
+                const countHome = document.getElementById('word-count-input-home');
+                const timeHome = document.getElementById('time-limit-input-home');
+                const count = countHome ? parseInt(countHome.value) : 20;
+                const time = timeHome ? parseInt(timeHome.value) : 30;
+                const countInput = document.getElementById('word-count-input');
+                const timeInput = document.getElementById('time-limit-input');
+                if (countInput) countInput.value = isFinite(count) && count > 0 ? String(count) : '20';
+                if (timeInput) timeInput.value = isFinite(time) && time > 0 ? String(time) : '30';
+                // 直接开始
+                if (typeof Practice !== 'undefined') {
+                    Practice.start();
+                } else {
+                    // 回退：跳转到练习页
+                    this.showPage('practice');
+                }
             });
         }
     },

@@ -226,7 +226,8 @@ Handwriting.drawTianZiGrid = function () {
     
     // 外边框
     ctx.save();
-    ctx.strokeStyle = '#ced4da';
+    const isDark = (document.documentElement.getAttribute('data-bs-theme') || 'light') === 'dark';
+    ctx.strokeStyle = isDark ? '#495057' : '#ced4da';
     ctx.lineWidth = 1;
     ctx.strokeRect(x, y, size, size);
     
@@ -239,6 +240,7 @@ Handwriting.drawTianZiGrid = function () {
     // 横线
     ctx.moveTo(x, y + size / 2);
     ctx.lineTo(x + size, y + size / 2);
+    ctx.strokeStyle = isDark ? '#495057' : '#adb5bd';
     ctx.stroke();
     ctx.setLineDash([]);
     ctx.restore();

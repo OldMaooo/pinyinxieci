@@ -127,6 +127,13 @@
 .card .card-body.p-2 { padding: 0.5rem !important; }
 .card .card-footer { padding: 0.5rem 0.5rem; }
 
+/* 深色模式细节优化 */
+[data-bs-theme="dark"] .card { background-color: var(--bs-body-bg); }
+[data-bs-theme="dark"] .card-header { background-color: var(--bs-tertiary-bg); }
+[data-bs-theme="dark"] .border { border-color: var(--bs-border-color) !important; }
+[data-bs-theme="dark"] .form-control, [data-bs-theme="dark"] .form-select { background-color: var(--bs-body-bg); color: var(--bs-body-color); border-color: var(--bs-border-color); }
+[data-bs-theme="dark"] .table { --bs-table-bg: transparent; --bs-table-striped-bg: rgba(255,255,255,0.05); }
+
 .feedback-correct {
     color: #198754;
     font-size: 2rem;
