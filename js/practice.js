@@ -425,25 +425,23 @@ const Practice = {
         // 清除画布
         Handwriting.clear();
         
-        // 清除反馈
-        document.getElementById('feedback-area').innerHTML = '';
-        
-        // 如果有快照，显示提示（但不自动显示快照，让用户重新写）
-        if (prevItem.snapshot) {
-            // 可以在这里显示提示："这是上一题的正确答案"
-            const feedbackArea = document.getElementById('feedback-area');
-            if (feedbackArea) {
-                feedbackArea.innerHTML = `
-                    <div class="alert alert-info">
-                        <i class="bi bi-info-circle"></i> 返回上一题：${word.word}
+        // 在反馈区显示正确答案，帮助回看怎么写
+        const feedbackArea = document.getElementById('feedback-area');
+        if (feedbackArea) {
+            feedbackArea.innerHTML = `
+                <div class="feedback-error">
+                    <i class="bi bi-arrow-90deg-left"></i> 返回上一题
+                </div>
+                <div class="mt-3 p-3 bg-light rounded border border-primary">
+                    <div class="text-center">
+                        <div class="text-muted small mb-2">正确答案是：</div>
+                        <div class="display-4 fw-bold text-primary">${word.word}</div>
                     </div>
-                `;
-                // 2秒后自动清除提示
-                setTimeout(() => {
-                    feedbackArea.innerHTML = '';
-                }, 2000);
-            }
+                </div>
+            `;
         }
+        
+        // 可选：如果有快照，后续可在这里增加对比视图（当前不自动展示以免干扰）
         
         // 重新开始计时
         const wordStartTime = Date.now();

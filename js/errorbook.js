@@ -21,60 +21,48 @@ const ErrorBook = {
         
         const wordBank = Storage.getWordBank();
         
-        list.innerHTML = errorWords.map(errorWord => {
+        // 网格卡片布局，提升密度
+        const cardsHtml = errorWords.map(errorWord => {
             const word = wordBank.find(w => w.id === errorWord.wordId);
             if (!word) return '';
-            
             const latestSnapshot = errorWord.handwritingSnapshots[errorWord.handwritingSnapshots.length - 1];
+            const groupsText = typeof WordGroups !== 'undefined' ? 
+                WordGroups.getDisplayText(word.word, word.pinyin || '') : (word.pinyin || '');
             
             return `
-                <div class="error-word-item">
-                    <div class="error-word-header">
-                        <div class="error-word-info">
-                            <strong style="font-size: 2rem;">${word.word}</strong>
-                            <span class="text-muted ms-2">
-                                ${typeof WordGroups !== 'undefined' ? 
-                                    WordGroups.getDisplayText(word.word, word.pinyin || '') : 
-                                    word.pinyin || ''}
-                            </span>
-                            <br>
-                            <small class="text-muted">
-                                ${word.grade || ''}年级 ${word.semester || ''}学期 第${word.unit || ''}单元
-                            </small>
-                        </div>
-                        <div>
-                            <span class="badge bg-danger">错误 ${errorWord.errorCount} 次</span>
-                            <br>
-                            <small class="text-muted">
-                                最近错误: ${new Date(errorWord.lastErrorDate).toLocaleDateString()}
-                            </small>
-                        </div>
-                    </div>
-                    ${latestSnapshot ? `
-                        <div class="error-comparison mt-3">
-                            <div class="error-comparison-item">
-                                <div class="label">你的书写</div>
-                                <img src="${latestSnapshot.snapshot}" alt="手写" style="max-width: 150px; border: 2px solid #dc3545; border-radius: 4px;">
-                            </div>
-                            <div class="error-comparison-item">
-                                <div class="label">正确答案</div>
-                                <div style="font-size: 100px; font-family: 'KaiTi', '楷体', serif; border: 2px solid #198754; border-radius: 4px; padding: 10px; background: white;">
-                                    ${word.word}
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body p-2">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="fw-bold" style="font-size: 1.75rem; line-height: 1;">${word.word}</div>
+                                    <div class="text-muted small mt-1" title="${groupsText}">${groupsText}</div>
                                 </div>
+                                <span class="badge bg-danger">${errorWord.errorCount}</span>
                             </div>
+                            ${latestSnapshot ? `
+                                <div class="d-flex gap-2 align-items-center mt-2">
+                                    <img src="${latestSnapshot.snapshot}" alt="手写" style="width: 64px; height: 64px; object-fit: contain; border: 1px solid #eee; border-radius: 4px;">
+                                    <div class="border rounded p-1 text-center" style="min-width:64px; background:#fff;">
+                                        <div style="font-size: 2rem; font-family: 'KaiTi','楷体',serif;">${word.word}</div>
+                                    </div>
+                                </div>
+                            ` : ''}
                         </div>
-                    ` : ''}
-                    <div class="mt-3">
-                        <button class="btn btn-sm btn-primary" onclick="ErrorBook.practiceWord('${errorWord.wordId}')">
-                            练习这个字
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="ErrorBook.removeWord('${errorWord.wordId}')">
-                            标记为已掌握
-                        </button>
+                        <div class="card-footer bg-white border-0 pt-0 d-grid gap-1">
+                            <button class="btn btn-sm btn-primary" onclick="ErrorBook.practiceWord('${errorWord.wordId}')">练习</button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="ErrorBook.removeWord('${errorWord.wordId}')">已掌握</button>
+                        </div>
                     </div>
                 </div>
             `;
         }).join('');
+
+        list.innerHTML = `
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">
+                ${cardsHtml}
+            </div>
+        `;
     },
     
     /**

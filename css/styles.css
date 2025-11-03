@@ -118,6 +118,15 @@
     cursor: pointer;
 }
 
+.error-word-item { /* legacy layout: keep minimal spacing if used */
+    margin-bottom: 12px;
+}
+
+/* 错题卡片紧凑样式 */
+.card .btn.btn-sm { padding-top: 2px; padding-bottom: 2px; }
+.card .card-body.p-2 { padding: 0.5rem !important; }
+.card .card-footer { padding: 0.5rem 0.5rem; }
+
 .feedback-correct {
     color: #198754;
     font-size: 2rem;
