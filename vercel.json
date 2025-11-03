@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "functions": {
+    "api/baidu-proxy.js": {
+      "runtime": "nodejs20.x"
+    }
+  }
+}
+
+

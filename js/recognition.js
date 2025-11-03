@@ -124,20 +124,23 @@ const Recognition = {
             const isGitHubPages = window.location.hostname.includes('github.io') || 
                                   window.location.hostname.includes('github.com');
             
-            // 使用本地代理服务器（本地环境）或直接调用API（会失败，但给出明确提示）
-            const proxyUrl = 'http://localhost:3001/api/ocr/handwriting';
+            // 优先使用同源 Serverless（Vercel 部署）/api/baidu-proxy；
+            // GitHub Pages 环境则尝试使用设置里的代理地址（APP设置或localStorage: proxyBase）
+            const configuredBase = (window.APP_CONFIG && window.APP_CONFIG.proxyBase) || localStorage.getItem('proxyBase') || '';
+            const sameOriginUrl = '/api/baidu-proxy';
+            const proxyUrl = isGitHubPages
+                ? (configuredBase ? `${configuredBase.replace(/\/$/, '')}/api/baidu-proxy` : '')
+                : sameOriginUrl;
             
             let response;
             try {
+                if (!proxyUrl) throw new Error('NO_PROXY_CONFIG');
                 response = await fetch(proxyUrl, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
+                        'Content-Type': 'application/json'
                     },
-                    body: new URLSearchParams({
-                        access_token: accessToken,
-                        image: base64Data
-                    }),
+                    body: JSON.stringify({ imageBase64: imageBase64, options: {} }),
                     mode: 'cors'
                 });
                 
@@ -148,7 +151,7 @@ const Recognition = {
             } catch (fetchError) {
                 // 代理服务器不可用
                 if (isGitHubPages) {
-                    throw new Error('GitHub Pages无法运行代理服务器。请在本地使用，或使用支持Serverless Functions的平台（如Vercel）部署。');
+                    throw new Error('GitHub Pages需使用云端代理。请在设置中配置 proxyBase 为你的 Vercel 域名，例如：https://你的项目.vercel.app');
                 } else {
                     throw new Error('代理服务器未运行！请先运行: node proxy-server.js\n\n如果是在GitHub Pages，识别功能需要本地环境或支持Serverless的平台。');
                 }
