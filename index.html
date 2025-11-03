@@ -24,6 +24,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                    <li class="nav-item me-2">
+                        <button class="btn btn-sm btn-outline-warning" id="admin-mode-btn">
+                            <i class="bi bi-shield-lock"></i> 管理模式
+                        </button>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#home">首页</a>
                     </li>
@@ -290,7 +295,13 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0"><i class="bi bi-journal-x"></i> 错题本</h5>
-                    <div>
+                    <div class="d-flex align-items-center gap-2">
+                        <button class="btn btn-sm btn-primary" id="errorbook-practice-all-btn">
+                            <i class="bi bi-play"></i> 一键练习
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary d-none" id="errorbook-delete-selected-btn">
+                            <i class="bi bi-trash"></i> 删除所选
+                        </button>
                         <button class="btn btn-sm btn-outline-danger" id="clear-mastered-btn">
                             清除已掌握
                         </button>
@@ -453,5 +464,25 @@
             }
         });
     </script>
+    
+    <!-- 管理模式验证弹窗 -->
+    <div class="modal fade" id="adminModeModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"><i class="bi bi-shield-lock"></i> 进入管理模式</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p class="text-muted">请输入「管理模式」四个字以确认进入：</p>
+            <input type="text" class="form-control" id="admin-mode-input" placeholder="管理模式">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary" id="admin-mode-confirm">确认</button>
+          </div>
+        </div>
+      </div>
+    </div>
 </body>
 </html>

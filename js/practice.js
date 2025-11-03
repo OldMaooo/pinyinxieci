@@ -29,9 +29,16 @@ const Practice = {
         
         this.timeLimit = timeLimit;
         
-        // 获取题目（使用范围选择器）
+        // 获取题目（支持错题集一键练习）
         let words = [];
-        if (typeof PracticeRange !== 'undefined' && PracticeRange.getSelectedWords) {
+        const errorOnly = localStorage.getItem('practice_error_only') === '1';
+        if (errorOnly) {
+            const errorWords = Storage.getErrorWords();
+            const wordBank = Storage.getWordBank();
+            words = wordBank.filter(w => errorWords.some(ew => ew.wordId === w.id));
+            // 重置标记
+            localStorage.removeItem('practice_error_only');
+        } else if (typeof PracticeRange !== 'undefined' && PracticeRange.getSelectedWords) {
             words = PracticeRange.getSelectedWords();
         } else {
             // 降级：使用原来的范围选择

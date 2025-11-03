@@ -98,8 +98,8 @@ const Main = {
             this.showPage(hash);
         });
         
-        // 初始页面
-        const hash = window.location.hash.substring(1) || 'home';
+        // 初始页面：默认进入练习设置页
+        const hash = window.location.hash.substring(1) || 'practice';
         this.showPage(hash);
     },
     
@@ -157,6 +157,36 @@ const Main = {
                 }
             });
         });
+        
+        // 管理模式按钮
+        const adminBtn = document.getElementById('admin-mode-btn');
+        if (adminBtn) {
+            adminBtn.addEventListener('click', () => {
+                const modalEl = document.getElementById('adminModeModal');
+                if (!modalEl) return;
+                const modal = new bootstrap.Modal(modalEl);
+                modal.show();
+                const input = document.getElementById('admin-mode-input');
+                if (input) input.value = '';
+            });
+        }
+        const adminConfirm = document.getElementById('admin-mode-confirm');
+        if (adminConfirm) {
+            adminConfirm.addEventListener('click', () => {
+                const input = document.getElementById('admin-mode-input');
+                const text = (input && input.value || '').trim();
+                if (text === '管理模式') {
+                    localStorage.setItem('adminMode', '1');
+                    document.querySelector('#adminModeModal .btn-close')?.click();
+                    // 重新渲染错题本按钮显示
+                    if (typeof ErrorBook !== 'undefined') {
+                        ErrorBook.load();
+                    }
+                } else {
+                    alert('验证失败，请输入：管理模式');
+                }
+            });
+        }
     },
     
     /**
