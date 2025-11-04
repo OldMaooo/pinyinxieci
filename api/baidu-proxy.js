@@ -72,17 +72,15 @@ export default async function handler(req, res) {
       return;
     }
 
+    // 与本地代理服务器保持一致：只传递最基本的参数
+    // 本地代理服务器只传递 access_token 和 image，没有其他参数
     const params = new URLSearchParams({
-      image: base64Data,
-      language_type: 'CHN_ENG',
-      detect_direction: 'false',
-      probability: 'true',
-      recognize_granularity: 'big', // 识别粒度：大（适合单个字符）
-      ...Object.fromEntries(Object.entries(options || {}).map(([k, v]) => [k, String(v)])),
+      access_token: token,
+      image: base64Data
     });
 
     // 使用手写识别接口
-    const ocrUrl = `https://aip.baidubce.com/rest/2.0/ocr/v1/handwriting?access_token=${encodeURIComponent(token)}`;
+    const ocrUrl = `https://aip.baidubce.com/rest/2.0/ocr/v1/handwriting`;
     const resp = await fetch(ocrUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
