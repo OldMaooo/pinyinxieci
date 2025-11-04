@@ -252,11 +252,26 @@ const Practice = {
             '<div class="loading"></div> 识别中...';
         
         try {
+            // 调试日志
+            if (typeof Debug !== 'undefined') {
+                Debug.log('info', `开始识别字符: ${word.word}`, 'recognition');
+                Debug.log('info', `图片快照大小: ${(snapshot.length / 1024).toFixed(2)}KB`, 'recognition');
+            }
+            
             // 调用识别
             const result = await Recognition.recognize(snapshot, word.word);
             
+            // 调试日志
+            if (typeof Debug !== 'undefined') {
+                Debug.log('info', `识别结果: ${JSON.stringify(result)}`, 'recognition');
+            }
+            
             if (!result.success) {
-                throw new Error(result.error || '识别失败');
+                const error = new Error(result.error || '识别失败');
+                if (typeof Debug !== 'undefined') {
+                    Debug.logError(error, '识别返回失败');
+                }
+                throw error;
             }
             
             // 记录时间
@@ -289,8 +304,29 @@ const Practice = {
             }, 2000);
         } catch (error) {
             console.error('提交失败:', error);
+            
+            // 详细的调试日志
+            if (typeof Debug !== 'undefined') {
+                Debug.logError(error, '练习提交异常');
+                Debug.log('error', `错误完整信息: ${JSON.stringify({
+                    name: error.name,
+                    message: error.message,
+                    stack: error.stack,
+                    toString: error.toString()
+                })}`, 'error');
+            }
+            
+            // 显示错误（简化显示，详细错误在调试面板）
+            let displayMsg = error.message;
+            if (error.message.includes('load failed') || error.message.includes('Failed to fetch')) {
+                displayMsg = '网络连接失败，请检查调试面板查看详情';
+            }
+            
             document.getElementById('feedback-area').innerHTML = 
-                `<div class="text-danger">识别出错: ${error.message}</div>`;
+                `<div class="text-danger">
+                    <i class="bi bi-exclamation-triangle"></i> 识别出错: ${displayMsg}
+                    <br><small class="text-muted">点击导航栏"调试"按钮查看详细错误信息</small>
+                </div>`;
         }
     },
     

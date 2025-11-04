@@ -173,38 +173,73 @@ const Recognition = {
             
             let response;
             try {
-                if (!proxyUrl) throw new Error('NO_PROXY_CONFIG');
+                if (!proxyUrl) {
+                    const err = new Error('NO_PROXY_CONFIG');
+                    if (typeof Debug !== 'undefined') {
+                        Debug.logError(err, '代理URL未配置');
+                        Debug.log('error', `代理配置为空！isGitHubPages=${isGitHubPages}, configuredBase=${configuredBase}`, 'proxy');
+                    }
+                    throw err;
+                }
                 
                 const startTime = Date.now();
-                response = await fetch(proxyUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ imageBase64: imageBase64, options: {} }),
-                    mode: 'cors'
-                });
+                const requestBody = { imageBase64: imageBase64, options: {} };
+                const bodySize = JSON.stringify(requestBody).length;
+                
+                // 调试日志 - 请求前
+                if (typeof Debug !== 'undefined') {
+                    Debug.log('info', `准备发送POST请求，请求体大小: ${(bodySize / 1024).toFixed(2)}KB`, 'network');
+                }
+                
+                try {
+                    response = await fetch(proxyUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestBody),
+                        mode: 'cors'
+                    });
+                } catch (fetchErr) {
+                    // 捕获 fetch 本身的错误（网络错误、CORS等）
+                    if (typeof Debug !== 'undefined') {
+                        Debug.logError(fetchErr, 'Fetch请求失败');
+                        Debug.log('error', `错误类型: ${fetchErr.name}, 消息: ${fetchErr.message}`, 'network');
+                        Debug.log('error', `错误堆栈: ${fetchErr.stack || '无堆栈信息'}`, 'network');
+                        Debug.log('error', `请求URL: ${proxyUrl}`, 'network');
+                        Debug.log('error', `请求方法: POST, 模式: cors`, 'network');
+                    }
+                    throw fetchErr;
+                }
+                
                 const endTime = Date.now();
                 
-                // 调试日志
+                // 调试日志 - 响应后
                 if (typeof Debug !== 'undefined') {
                     Debug.log('info', `请求耗时: ${endTime - startTime}ms`, 'network');
-                    Debug.logNetworkResponse(proxyUrl, response);
+                    Debug.log('info', `响应状态: ${response.status} ${response.statusText}`, 'network');
+                    Debug.log('info', `响应头: ${JSON.stringify(Object.fromEntries(response.headers.entries()))}`, 'network');
                 }
                 
                 // 检查是否是网络错误
                 if (!response.ok && response.status === 0) {
-                    throw new Error('NETWORK_ERROR');
+                    throw new Error('NETWORK_ERROR - 响应状态为0');
                 }
             } catch (fetchError) {
-                // 调试日志
+                // 调试日志 - 捕获所有错误
                 if (typeof Debug !== 'undefined') {
-                    Debug.logError(fetchError, '识别请求失败');
+                    Debug.logError(fetchError, '识别请求异常');
+                    Debug.log('error', `错误名称: ${fetchError.name}`, 'error');
+                    Debug.log('error', `错误消息: ${fetchError.message}`, 'error');
+                    Debug.log('error', `是否网络错误: ${fetchError.message.includes('fetch') || fetchError.message.includes('Failed') || fetchError.message.includes('Network')}`, 'error');
                 }
                 
                 // 代理服务器不可用
                 if (isGitHubPages) {
-                    throw new Error('GitHub Pages需使用云端代理。请在设置中配置 proxyBase 为你的 Vercel 域名，例如：https://你的项目.vercel.app');
+                    const errorMsg = fetchError.message.includes('Failed to fetch') || fetchError.message.includes('load failed')
+                        ? `网络连接失败: ${fetchError.message}\n\n请检查:\n1. 代理地址是否正确: ${configuredBase || '未配置'}\n2. 网络是否正常\n3. Vercel 服务是否可用`
+                        : 'GitHub Pages需使用云端代理。请在设置中配置 proxyBase 为你的 Vercel 域名，例如：https://你的项目.vercel.app';
+                    throw new Error(errorMsg);
                 } else {
                     throw new Error('代理服务器未运行！请先运行: node proxy-server.js\n\n如果是在GitHub Pages，识别功能需要本地环境或支持Serverless的平台。');
                 }
