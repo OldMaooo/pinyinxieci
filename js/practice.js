@@ -33,6 +33,13 @@ const Practice = {
         const timeLimit = parseInt(document.getElementById('time-limit-input').value);
         
         this.timeLimit = timeLimit;
+
+        // 记忆设置
+        if (typeof Storage !== 'undefined') {
+            const settings = Storage.getSettings() || {};
+            settings.practice = { wordCount, timeLimit };
+            Storage.saveSettings(settings);
+        }
         
         // 获取题目（支持错题集一键练习）
         let words = [];
@@ -521,6 +528,20 @@ const Practice = {
             [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
         }
         return shuffled;
+    },
+
+    loadSettings() {
+        if (typeof Storage === 'undefined') return;
+        const settings = Storage.getSettings() || {};
+        const p = settings.practice || {};
+        const countSelect = document.getElementById('word-count-select');
+        const countInput = document.getElementById('word-count-input');
+        const timeInput = document.getElementById('time-limit-input');
+        if (p.wordCount !== undefined) {
+            if (countSelect) countSelect.value = (p.wordCount === 'all' ? 'all' : String(p.wordCount || '20'));
+            if (countInput) countInput.value = (p.wordCount && p.wordCount !== 'all') ? String(p.wordCount) : '';
+        }
+        if (p.timeLimit !== undefined && timeInput) timeInput.value = p.timeLimit;
     }
 };
 
@@ -555,5 +576,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevBtn = document.getElementById('prev-question-btn');
     if (prevBtn) {
         prevBtn.addEventListener('click', () => Practice.showPreviousWord());
+    }
+
+    // 加载上次练习设置
+    if (Practice.loadSettings) {
+        Practice.loadSettings();
     }
 });

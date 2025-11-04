@@ -4,6 +4,8 @@
  */
 
 const Handwriting = {
+    GRID_SIZE: 360, // 固定田字格边长（CSS像素）
+    GRID_RATIO_IN_CANVAS: 0.95, // 田字格在画布中占比
     canvas: null,
     ctx: null,
     isDrawing: false,
@@ -51,17 +53,15 @@ const Handwriting = {
         const container = this.canvas.parentElement;
         const containerRect = container ? container.getBoundingClientRect() : null;
         
-        // 如果没有容器或者容器尺寸为0，使用默认尺寸
-        let width = 500;
-        let height = 400;
-        
-        if (containerRect && containerRect.width > 0) {
-            width = Math.min(containerRect.width, 500);
-            height = 400;
-            if (window.innerWidth >= 768) {
-                height = 500;
-            }
+        // 以固定田字格尺寸为基准，计算画布尺寸，使田字格≈95%占比
+        const gridSize = this.GRID_SIZE;
+        let side = Math.round(gridSize / this.GRID_RATIO_IN_CANVAS);
+        // 避免超出容器：如容器较窄，则按容器宽度等比缩放（同时保持固定网格相对比例）
+        if (containerRect && containerRect.width > 0 && side > containerRect.width) {
+            side = Math.floor(containerRect.width);
         }
+        let width = side;
+        let height = side;
         
         const dpr = window.devicePixelRatio || 1;
         
@@ -78,7 +78,7 @@ const Handwriting = {
         
         // 重新设置画笔样式（根据主题）
         this.ctx.strokeStyle = this.getInkColor();
-        this.ctx.lineWidth = 3;
+        this.ctx.lineWidth = 10;
         this.ctx.lineCap = 'round';
         this.ctx.lineJoin = 'round';
 
@@ -205,8 +205,8 @@ const Handwriting = {
         const canvasHeight = this.canvas.height;
         
         // 创建临时canvas，适度放大（不超过400px）
-        const maxSize = 400;
-        const scale = Math.min(2, maxSize / Math.max(canvasWidth, canvasHeight));
+        const maxSize = 320; // 降低处理分辨率以提速
+        const scale = Math.min(1.5, maxSize / Math.max(canvasWidth, canvasHeight));
         const tempCanvas = document.createElement('canvas');
         tempCanvas.width = Math.round(canvasWidth * scale);
         tempCanvas.height = Math.round(canvasHeight * scale);
@@ -434,8 +434,8 @@ const Handwriting = {
         const dpr = window.devicePixelRatio || 1;
         const width = this.canvas.width / dpr;
         const height = this.canvas.height / dpr;
-        const padding = 2;
-        const size = Math.min(width, height) * 0.6 - padding * 2; // 与网格一致，60%
+        const padding = Math.round(Math.min(width, height) * 0.025); // 约等于5%边距
+        const size = Math.min(width, height) * this.GRID_RATIO_IN_CANVAS - padding * 2; // 田字格≈95%
         const x = (width - size) / 2;
         const y = (height - size) / 2;
         
@@ -469,9 +469,8 @@ Handwriting.drawTianZiGrid = function () {
     const dpr = window.devicePixelRatio || 1;
     const width = this.canvas.width / dpr;
     const height = this.canvas.height / dpr;
-    const padding = 2; // 田字格边界的padding（只是外边框的间距）
-    // 缩小整体田字格尺寸，置中对齐
-    const size = Math.min(width, height) * 0.6 - padding * 2;
+    const padding = Math.round(Math.min(width, height) * 0.025);
+    const size = Math.min(width, height) * Handwriting.GRID_RATIO_IN_CANVAS - padding * 2;
     const x = (width - size) / 2;
     const y = (height - size) / 2;
     const ctx = this.ctx;

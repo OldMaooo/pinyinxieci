@@ -18,7 +18,7 @@
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#home">
                 <i class="bi bi-pencil-square"></i> 看拼音写词
-                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.11</span>
+                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.12</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -198,44 +198,7 @@
                 </div>
             </div>
             
-            <!-- 统计信息 -->
-            <div class="row mt-5">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0"><i class="bi bi-graph-up"></i> 学习统计</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row text-center">
-                                <div class="col-md-3">
-                                    <div class="stat-item">
-                                        <div class="stat-value" id="stat-total-words">0</div>
-                                        <div class="stat-label">总词数</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="stat-item">
-                                        <div class="stat-value" id="stat-practiced">0</div>
-                                        <div class="stat-label">已练习</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="stat-item">
-                                        <div class="stat-value" id="stat-accuracy">0%</div>
-                                        <div class="stat-label">正确率</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="stat-item">
-                                        <div class="stat-value" id="stat-error-words">0</div>
-                                        <div class="stat-label">错题数</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </section>
 
         <!-- 练习页面 -->
@@ -299,7 +262,7 @@
                     </div>
                     
                     <!-- 手写输入区 -->
-                    <div class="mb-4">
+                    <div class="mb-4 d-flex justify-content-center align-items-center flex-column">
                         <canvas id="handwriting-canvas"></canvas>
                         <div class="canvas-controls mt-2">
                             <button class="btn btn-outline-info" id="prev-question-btn" title="返回上一题">
