@@ -110,20 +110,38 @@ const Recognition = {
                 match = true; // 包含目标字
             }
             
-            // 降低阈值，提高容错率（允许字迹不太美观但正确的字通过）
-            // 置信度阈值从0.85降至0.6，因为手写识别本身有误差，且孩子字迹可能不够美观
-            const effectiveThreshold = Math.min(this.apiConfig.threshold, 0.50);
-            const minThreshold = 0.35; // 最低容忍度进一步降低
+            // 大幅降低阈值用于测试（临时）
+            const effectiveThreshold = 0.1; // 临时降低到0.1用于测试
+            const minThreshold = 0.05; // 最低容忍度降到0.05
+            
+            // 调试日志 - 匹配和阈值判断
+            if (typeof Debug !== 'undefined') {
+                Debug.log('info', `匹配判断: match=${match}, recognized="${result.recognized}", expected="${expectedWord}"`, 'recognition');
+                Debug.log('info', `置信度: ${result.confidence.toFixed(3)}, 阈值: effective=${effectiveThreshold}, min=${minThreshold}`, 'recognition');
+            }
             
             // 如果匹配且置信度在最低容忍度以上，就通过
-            // 即使置信度略低（0.5-0.6），只要字匹配就通过（防止字迹不美观但正确的字被判错）
+            // 即使置信度略低，只要字匹配就通过（防止字迹不美观但正确的字被判错）
             let passed = false;
             if (match) {
                 if (result.confidence >= effectiveThreshold) {
                     passed = true; // 标准通过
+                    if (typeof Debug !== 'undefined') {
+                        Debug.log('success', `✅ 标准通过: 置信度 ${result.confidence.toFixed(3)} >= ${effectiveThreshold}`, 'recognition');
+                    }
                 } else if (result.confidence >= minThreshold) {
                     passed = true; // 容错通过（字匹配但置信度略低）
-                    console.log(`字匹配但置信度较低(${result.confidence.toFixed(2)})，容错通过`);
+                    if (typeof Debug !== 'undefined') {
+                        Debug.log('success', `✅ 容错通过: 置信度 ${result.confidence.toFixed(3)} >= ${minThreshold}`, 'recognition');
+                    }
+                } else {
+                    if (typeof Debug !== 'undefined') {
+                        Debug.log('warning', `❌ 置信度过低: ${result.confidence.toFixed(3)} < ${minThreshold}`, 'recognition');
+                    }
+                }
+            } else {
+                if (typeof Debug !== 'undefined') {
+                    Debug.log('warning', `❌ 字不匹配: recognized="${result.recognized}" !== expected="${expectedWord}"`, 'recognition');
                 }
             }
             
@@ -284,6 +302,12 @@ const Recognition = {
             
             const data = await response.json();
             
+            // 调试日志 - 记录完整响应
+            if (typeof Debug !== 'undefined') {
+                Debug.log('info', `百度API响应: ${JSON.stringify(data).substring(0, 500)}`, 'network');
+                Debug.log('info', `响应结构: words_result=${data.words_result ? data.words_result.length : 'null'}`, 'network');
+            }
+            
             if (data.error_code) {
                 throw new Error(`百度API错误: ${data.error_msg}`);
             }
@@ -292,16 +316,32 @@ const Recognition = {
             if (data.words_result && data.words_result.length > 0) {
                 let word = data.words_result[0].words.trim();
                 
+                // 调试日志
+                if (typeof Debug !== 'undefined') {
+                    Debug.log('info', `识别到的文字: "${word}"`, 'recognition');
+                }
+                
             // 如果识别结果是词组，提取第一个字
             // 因为题目要求写单个字，识别可能返回词组
             // 但先保留原结果，让对比逻辑来处理
             // word保持原样，在对比时处理
                 
                 const confidence = data.words_result[0].probability?.average || 0.8;
+                
+                // 调试日志
+                if (typeof Debug !== 'undefined') {
+                    Debug.log('info', `置信度: ${confidence}`, 'recognition');
+                }
+                
                 return {
                     recognized: word,
                     confidence: confidence
                 };
+            }
+            
+            // 没有识别结果
+            if (typeof Debug !== 'undefined') {
+                Debug.log('warning', `百度API返回空结果。完整响应: ${JSON.stringify(data)}`, 'recognition');
             }
             
             return {
