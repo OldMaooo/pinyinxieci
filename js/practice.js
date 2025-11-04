@@ -343,6 +343,11 @@ const Practice = {
                 </div>
             `;
         } else {
+            // 在田字格中显示正确答案
+            if (typeof Handwriting !== 'undefined' && Handwriting.drawCorrectWord) {
+                Handwriting.drawCorrectWord(word.word);
+            }
+            
             // 显示正确答案（更突出）
             let recognizedInfo = '';
             if (recognized && recognized !== '时间到') {

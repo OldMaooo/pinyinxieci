@@ -25,9 +25,9 @@ const Handwriting = {
         this.resizeCanvas();
         window.addEventListener('resize', () => this.resizeCanvas());
         
-        // 设置画笔样式
+        // 设置画笔样式（加粗）
         this.ctx.strokeStyle = '#000000';
-        this.ctx.lineWidth = 3;
+        this.ctx.lineWidth = 5; // 加粗笔迹
         this.ctx.lineCap = 'round';
         this.ctx.lineJoin = 'round';
         
@@ -193,7 +193,7 @@ const Handwriting = {
      * 优化：生成高对比度图片，便于识别
      */
     getSnapshot() {
-        // 创建一个新的Canvas用于生成识别用的图片
+        // 简化处理：只做基本优化，避免过度处理导致识别失败
         const dpr = window.devicePixelRatio || 1;
         const width = this.canvas.width / dpr;
         const height = this.canvas.height / dpr;
@@ -215,62 +215,21 @@ const Handwriting = {
             0, 0, tempCanvas.width, tempCanvas.height
         );
         
-        // 增强对比度：将文字部分转换为纯黑色，背景设为纯白色
-        const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
-        const data = imageData.data;
+        // 简化处理：只处理深色模式的颜色反转，不过度处理对比度
         const isDark = (document.documentElement.getAttribute('data-bs-theme') || 'light') === 'dark';
-        
-        for (let i = 0; i < data.length; i += 4) {
-            const r = data[i];
-            const g = data[i + 1];
-            const b = data[i + 2];
-            const a = data[i + 3];
-            
-            if (a > 10) { // 有透明度，可能是文字或网格
-                // 计算亮度
-                const brightness = (r * 0.299 + g * 0.587 + b * 0.114);
-                
-                if (isDark) {
-                    // 深色模式：白色文字，需要转换为黑色
-                    // 如果亮度高（接近白色），说明是文字
-                    if (brightness > 150) {
-                        data[i] = 0;     // R - 黑色
-                        data[i + 1] = 0; // G
-                        data[i + 2] = 0; // B
-                        data[i + 3] = 255; // A - 完全不透明
-                    } else {
-                        // 低亮度或网格线，设为白色背景
-                        data[i] = 255;
-                        data[i + 1] = 255;
-                        data[i + 2] = 255;
-                        data[i + 3] = 255;
-                    }
-                } else {
-                    // 浅色模式：黑色文字
-                    // 如果亮度低（接近黑色），说明是文字
-                    if (brightness < 200) {
-                        data[i] = 0;     // R - 黑色
-                        data[i + 1] = 0; // G
-                        data[i + 2] = 0; // B
-                        data[i + 3] = 255; // A - 完全不透明
-                    } else {
-                        // 高亮度或网格线，设为白色背景
-                        data[i] = 255;
-                        data[i + 1] = 255;
-                        data[i + 2] = 255;
-                        data[i + 3] = 255;
-                    }
-                }
-            } else {
-                // 完全透明，设为白色背景
-                data[i] = 255;
-                data[i + 1] = 255;
-                data[i + 2] = 255;
-                data[i + 3] = 255;
+        if (isDark) {
+            // 深色模式：反转颜色（白色文字变黑色）
+            const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+            const data = imageData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                // 反转RGB（保留透明度）
+                data[i] = 255 - data[i];     // R
+                data[i + 1] = 255 - data[i + 1]; // G
+                data[i + 2] = 255 - data[i + 2]; // B
+                // A 保持不变
             }
+            tempCtx.putImageData(imageData, 0, 0);
         }
-        
-        tempCtx.putImageData(imageData, 0, 0);
         
         // 生成高质量PNG（质量1.0）
         return tempCanvas.toDataURL('image/png', 1.0);
@@ -306,7 +265,41 @@ const Handwriting = {
     updateInkAndGrid() {
         if (!this.ctx) return;
         this.ctx.strokeStyle = this.getInkColor();
+        this.ctx.lineWidth = 5; // 保持加粗笔迹
         this.drawTianZiGrid();
+    },
+    
+    /**
+     * 在田字格中心绘制文字（用于显示正确答案）
+     */
+    drawCorrectWord(word) {
+        if (!this.canvas || !this.ctx) return;
+        
+        const dpr = window.devicePixelRatio || 1;
+        const width = this.canvas.width / dpr;
+        const height = this.canvas.height / dpr;
+        const padding = 2;
+        const size = Math.min(width, height) * 0.75 - padding * 2;
+        const x = (width - size) / 2;
+        const y = (height - size) / 2;
+        
+        // 保存当前状态
+        this.ctx.save();
+        
+        // 设置文字样式
+        const isDark = (document.documentElement.getAttribute('data-bs-theme') || 'light') === 'dark';
+        this.ctx.fillStyle = isDark ? '#ffffff' : '#000000';
+        this.ctx.font = `bold ${size * 0.6}px "PingFang SC", "Microsoft YaHei", sans-serif`;
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
+        
+        // 在田字格中心绘制文字
+        const centerX = x + size / 2;
+        const centerY = y + size / 2;
+        this.ctx.fillText(word, centerX, centerY);
+        
+        // 恢复状态
+        this.ctx.restore();
     }
 };
 
@@ -319,7 +312,7 @@ Handwriting.drawTianZiGrid = function () {
     const width = this.canvas.width / dpr;
     const height = this.canvas.height / dpr;
     const padding = 2; // 上下左右相等的padding
-    const size = Math.min(width, height) * 0.9 - padding * 2; // 缩小到90%
+    const size = Math.min(width, height) * 0.75 - padding * 2; // 缩小到75%，确保按钮可见
     const x = (width - size) / 2;
     const y = (height - size) / 2;
     const ctx = this.ctx;
