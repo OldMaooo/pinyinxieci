@@ -7,6 +7,8 @@ const Debug = {
     logs: [],
     maxLogs: 100,
     lastImage: null, // 保存最后一次发送的图片
+    imageHistory: [], // 图片历史记录
+    currentImageIndex: -1, // 当前查看的图片索引
     
     /**
      * 初始化调试面板
@@ -287,48 +289,77 @@ ${logsText}`;
     },
     
     /**
-     * 查看最后一次发送的图片
+     * 查看图片（支持历史记录切换）
      */
-    viewLastImage() {
-        if (!this.lastImage) {
+    viewLastImage(index = null) {
+        // 如果没有指定索引，使用当前索引
+        if (index === null) {
+            index = this.currentImageIndex >= 0 ? this.currentImageIndex : this.imageHistory.length - 1;
+        }
+        
+        if (this.imageHistory.length === 0) {
             this.log('warning', '暂无图片数据，请先进行一次识别', 'env');
             return;
         }
         
-        // 创建模态框显示图片
-        const modal = document.createElement('div');
-        modal.className = 'modal fade';
-        modal.id = 'debug-image-modal';
+        // 确保索引在有效范围内
+        if (index < 0) index = 0;
+        if (index >= this.imageHistory.length) index = this.imageHistory.length - 1;
+        this.currentImageIndex = index;
+        
+        const imageData = this.imageHistory[index];
+        const hasPrev = index > 0;
+        const hasNext = index < this.imageHistory.length - 1;
+        
+        // 创建或更新模态框显示图片
+        let modal = document.getElementById('debug-image-modal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.className = 'modal fade';
+            modal.id = 'debug-image-modal';
+            document.body.appendChild(modal);
+        }
+        
         modal.innerHTML = `
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">发送给百度API的图片</h5>
+                        <h5 class="modal-title">发送给百度API的图片 (${index + 1}/${this.imageHistory.length})</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body text-center">
-                        <img src="${this.lastImage}" class="img-fluid" alt="识别图片" style="max-width: 100%; border: 1px solid #ddd; border-radius: 4px;">
-                        <div class="mt-3">
-                            <button class="btn btn-sm btn-primary" onclick="navigator.clipboard.writeText('${this.lastImage}').then(() => alert('图片Base64已复制到剪贴板'))">
+                        <div class="mb-2">
+                            <small class="text-muted">时间: ${imageData.timestamp}</small>
+                        </div>
+                        <img src="${imageData.image}" class="img-fluid" alt="识别图片" style="max-width: 100%; border: 1px solid #ddd; border-radius: 4px; background: white;">
+                        <div class="mt-3 d-flex justify-content-center gap-2">
+                            <button class="btn btn-sm btn-outline-secondary" ${!hasPrev ? 'disabled' : ''} onclick="Debug.viewImage(${index - 1})">
+                                <i class="bi bi-chevron-left"></i> 上一张
+                            </button>
+                            <button class="btn btn-sm btn-primary" onclick="navigator.clipboard.writeText('${imageData.image}').then(() => alert('图片Base64已复制到剪贴板'))">
                                 <i class="bi bi-clipboard"></i> 复制Base64
                             </button>
-                            <a href="${this.lastImage}" download="recognition-image.png" class="btn btn-sm btn-success ms-2">
-                                <i class="bi bi-download"></i> 下载图片
+                            <a href="${imageData.image}" download="recognition-image-${index + 1}.png" class="btn btn-sm btn-success">
+                                <i class="bi bi-download"></i> 下载
                             </a>
+                            <button class="btn btn-sm btn-outline-secondary" ${!hasNext ? 'disabled' : ''} onclick="Debug.viewImage(${index + 1})">
+                                下一张 <i class="bi bi-chevron-right"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         `;
         
-        document.body.appendChild(modal);
         const bsModal = new bootstrap.Modal(modal);
         bsModal.show();
-        
-        // 关闭后移除
-        modal.addEventListener('hidden.bs.modal', () => {
-            document.body.removeChild(modal);
-        });
+    },
+    
+    /**
+     * 查看指定索引的图片（用于切换）
+     */
+    viewImage(index) {
+        this.viewLastImage(index);
     },
     
     /**
@@ -336,6 +367,17 @@ ${logsText}`;
      */
     setLastImage(imageBase64) {
         this.lastImage = imageBase64;
+        // 添加到历史记录
+        this.imageHistory.push({
+            image: imageBase64,
+            timestamp: new Date().toLocaleString('zh-CN')
+        });
+        // 限制历史记录数量（保留最近20张）
+        if (this.imageHistory.length > 20) {
+            this.imageHistory.shift();
+        }
+        // 更新当前索引为最新一张
+        this.currentImageIndex = this.imageHistory.length - 1;
     },
     
     /**

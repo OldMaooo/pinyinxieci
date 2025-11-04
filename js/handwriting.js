@@ -333,22 +333,50 @@ const Handwriting = {
                 croppedCanvas.height = cropHeight;
                 const croppedCtx = croppedCanvas.getContext('2d');
                 
-                // 设置白色背景
+                // 确保白色背景（先填充白色）
                 croppedCtx.fillStyle = '#ffffff';
                 croppedCtx.fillRect(0, 0, cropWidth, cropHeight);
                 
-                // 绘制裁剪区域
+                // 绘制裁剪区域（已经二值化处理过的，文字是黑色，背景是白色）
                 croppedCtx.drawImage(
                     tempCanvas,
                     minX, minY, cropWidth, cropHeight,
                     0, 0, cropWidth, cropHeight
                 );
                 
+                // 再次确保背景是白色（处理可能的透明度问题）
+                const croppedImageData = croppedCtx.getImageData(0, 0, cropWidth, cropHeight);
+                const croppedData = croppedImageData.data;
+                for (let i = 0; i < croppedData.length; i += 4) {
+                    // 如果像素不是纯黑（文字），则设为纯白（背景）
+                    if (!(croppedData[i] === 0 && croppedData[i + 1] === 0 && croppedData[i + 2] === 0)) {
+                        croppedData[i] = 255;     // R
+                        croppedData[i + 1] = 255; // G
+                        croppedData[i + 2] = 255; // B
+                        croppedData[i + 3] = 255; // A
+                    }
+                }
+                croppedCtx.putImageData(croppedImageData, 0, 0);
+                
                 return croppedCanvas.toDataURL('image/png', 1.0);
             }
         }
         
         // 如果没有检测到文字，返回处理后的原图（至少是二值化的白底）
+        // 确保最终图片是白底
+        const finalImageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+        const finalData = finalImageData.data;
+        for (let i = 0; i < finalData.length; i += 4) {
+            // 如果像素不是纯黑（文字），则设为纯白（背景）
+            if (!(finalData[i] === 0 && finalData[i + 1] === 0 && finalData[i + 2] === 0)) {
+                finalData[i] = 255;
+                finalData[i + 1] = 255;
+                finalData[i + 2] = 255;
+                finalData[i + 3] = 255;
+            }
+        }
+        tempCtx.putImageData(finalImageData, 0, 0);
+        
         return tempCanvas.toDataURL('image/png', 1.0);
     },
     
@@ -396,7 +424,7 @@ const Handwriting = {
         const width = this.canvas.width / dpr;
         const height = this.canvas.height / dpr;
         const padding = 2;
-        const size = Math.min(width, height) - padding * 2;
+        const size = Math.min(width, height) * 0.7 - padding * 2; // 田字格缩小到70%
         const x = padding;
         const y = padding;
         
@@ -431,7 +459,7 @@ Handwriting.drawTianZiGrid = function () {
     const width = this.canvas.width / dpr;
     const height = this.canvas.height / dpr;
     const padding = 2; // 田字格边界的padding（只是外边框的间距）
-    const size = Math.min(width, height) - padding * 2; // 田字格大小 = 画布大小 - 2px padding
+    const size = Math.min(width, height) * 0.7 - padding * 2; // 田字格缩小到70%
     const x = padding; // 从padding位置开始
     const y = padding;
     const ctx = this.ctx;
