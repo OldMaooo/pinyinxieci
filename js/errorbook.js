@@ -60,21 +60,52 @@ const ErrorBook = {
         if (!roundsEl) return;
         const logs = (Storage.getPracticeLogs() || []).slice().reverse();
         const wordBank = Storage.getWordBank();
+        const errorMap = new Map((Storage.getErrorWords() || []).map(e => [e.wordId, e]));
         const html = logs.map((log, idx) => {
             const date = new Date(log.date);
             const timeStr = date.toLocaleString('zh-CN');
             const acc = log.totalWords > 0 ? Math.round((log.correctCount / log.totalWords) * 100) : 0;
             const speed = log.totalWords > 0 ? (log.totalTime / log.totalWords).toFixed(1) : '-';
             const title = `第${logs.length - idx}轮 · ${timeStr} · ${log.totalTime.toFixed(0)}s · 正确${log.correctCount}/${log.totalWords} · 准确率${acc}% · 速度${speed}s/字`;
-            const words = (log.errorWords || []).map(id => {
+            const cards = (log.errorWords || []).map(id => {
                 const w = wordBank.find(x => x.id === id);
                 if (!w) return '';
-                return `<label class="me-1 mb-1">${adminMode ? `<input type="checkbox" class="form-check-input error-select me-1" data-id="${id}">` : ''}<span class="badge bg-danger-subtle text-danger border">${w.word}</span></label>`;
+                const ew = errorMap.get(id);
+                const latestSnapshot = ew?.handwritingSnapshots?.[ew.handwritingSnapshots.length - 1]?.snapshot || '';
+                const groupsText = typeof WordGroups !== 'undefined' ? WordGroups.getDisplayText(w.word, w.pinyin || '') : (w.pinyin || '');
+                return `
+                    <div class="col">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body p-2">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="d-flex align-items-start gap-2">
+                                        ${adminMode ? `<input type=\"checkbox\" class=\"form-check-input mt-2 error-select\" data-id=\"${id}\">` : ''}
+                                        <div>
+                                            <div class="fw-bold" style="font-size: 1.5rem; line-height: 1;">${w.word}</div>
+                                            <div class="text-muted small mt-1" title="${groupsText}">${groupsText}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2 align-items-center mt-2">
+                                    <div class="word-box">${latestSnapshot ? `<img class=\"snapshot-invert\" src=\"${latestSnapshot}\" alt=\"手写\" style=\"max-width: 90%; max-height: 90%; object-fit: contain;\">` : '<span class=\"text-muted small\">无快照</span>'}</div>
+                                    <div class="word-box standard-dark-box text-center">
+                                        <div class="standard-dark-text" style="font-size: 2.2rem; font-family: 'KaiTi','楷体',serif;">${w.word}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            ${adminMode ? `
+                            <div class=\"card-footer bg-transparent border-0 pt-0 d-flex justify-content-between gap-2\">
+                                <button class=\"btn btn-sm btn-primary flex-fill\" onclick=\"ErrorBook.practiceWord('${id}')\">练习</button>
+                                <button class=\"btn btn-sm btn-outline-danger flex-fill\" onclick=\"ErrorBook.removeWord('${id}')\">已掌握</button>
+                            </div>` : ''}
+                        </div>
+                    </div>
+                `;
             }).join('');
             return `
                 <div class="mb-3">
-                    <div class="small text-muted mb-1">${title}</div>
-                    <div>${words || '<span class="text-muted small">本轮无错题</span>'}</div>
+                    <div class="small text-muted mb-2">${title}</div>
+                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">${cards || '<div class=\"text-muted small\">本轮无错题</div>'}</div>
                 </div>
             `;
         }).join('');

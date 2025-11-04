@@ -123,23 +123,13 @@ const WordGroups = {
     },
     
     /**
-     * 获取格式化的词组显示文本（目标字用下划线代替）
+     * 获取格式化的词组显示文本：将目标字替换为拼音
+     * 例如：枫 → feng叶，feng树，feng林
      */
     getDisplayText(word, pinyin) {
         const groups = this.getGroups(word);
-        if (groups.length === 0) {
-            // 如果没有词组，只显示拼音
-            return pinyin;
-        }
-        
-        // 把词组中的目标字替换为下划线
-        // 例如：恒星 → ___星，永恒 → 永___，恒定 → ___定
-        const processedGroups = groups.slice(0, 3).map(group => {
-            return group.replace(new RegExp(word, 'g'), '___');
-        });
-        
-        // 格式：拼音 (___星，永___，___定)
-        const groupsText = processedGroups.join('，');
-        return `${pinyin} (${groupsText})`;
+        if (groups.length === 0) return pinyin;
+        const processedGroups = groups.slice(0, 3).map(group => group.replace(new RegExp(word, 'g'), pinyin));
+        return processedGroups.join('，');
     }
 };
