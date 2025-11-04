@@ -251,13 +251,17 @@ const Handwriting = {
             const gridDistance = Math.abs(r - gridColor.r) + Math.abs(g - gridColor.g) + Math.abs(b - gridColor.b);
             const isGrid = gridDistance < 50 && a > 30; // 放宽阈值，确保能识别网格线
             
-            // 判断是否为文字（非白色、非网格、有透明度）
-            const isWhite = r > 240 && g > 240 && b > 240; // 放宽白色判断，避免误判
+            // 判断是否为文字
+            // 深色模式下：白色文字（RGB接近255）且有透明度
+            // 浅色模式下：黑色文字（RGB接近0）且有透明度
+            const isWhite = r > 240 && g > 240 && b > 240;
+            const isBlack = r < 50 && g < 50 && b < 50;
             const hasAlpha = a > 30; // 放宽透明度要求
             
-            // 在深色模式下，文字是白色的；在浅色模式下，文字是黑色的
-            // 文字应该是：有透明度，不是纯白，不是网格
-            const isText = hasAlpha && !isWhite && !isGrid;
+            // 判断是否为文字：有透明度，不是网格，且符合当前主题的文字颜色
+            const isText = hasAlpha && !isGrid && (
+                isDark ? isWhite : isBlack  // 深色模式识别白色，浅色模式识别黑色
+            );
             
             if (isText) {
                 hasContent = true;
@@ -279,10 +283,13 @@ const Handwriting = {
             const gridDistance = Math.abs(r - gridColor.r) + Math.abs(g - gridColor.g) + Math.abs(b - gridColor.b);
             const isGrid = gridDistance < 50 && a > 30;
             
-            // 判断是否为文字（使用与扫描时相同的阈值）
+            // 判断是否为文字（使用与扫描时相同的逻辑）
             const isWhite = r > 240 && g > 240 && b > 240;
+            const isBlack = r < 50 && g < 50 && b < 50;
             const hasAlpha = a > 30;
-            const isText = hasAlpha && !isWhite && !isGrid;
+            const isText = hasAlpha && !isGrid && (
+                isDark ? isWhite : isBlack  // 深色模式识别白色，浅色模式识别黑色
+            );
             
             if (isText) {
                 // 文字：统一转为纯黑（深色模式下的白字需要反转）
