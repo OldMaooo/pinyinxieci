@@ -9,6 +9,15 @@ const Main = {
      */
     init() {
         try {
+            // 更新版本号显示
+            if (typeof APP_VERSION !== 'undefined') {
+                const versionEl = document.getElementById('app-version');
+                if (versionEl) {
+                    versionEl.textContent = `v${APP_VERSION.version}`;
+                    versionEl.title = `版本 ${APP_VERSION.version}\n构建日期: ${APP_VERSION.buildDate}`;
+                }
+            }
+            
             // 确保Storage先初始化
             if (typeof Storage !== 'undefined') {
                 Storage.init();
