@@ -311,12 +311,17 @@ WordBank.initProxyConfig = function() {
         if (proxyInput) {
             proxyInput.value = currentProxy;
         }
-        this.updateProxyStatus();
+        // 延迟更新状态，确保 DOM 已准备好
+        setTimeout(() => this.updateProxyStatus(), 100);
     };
     
     // 更新状态显示
     this.updateProxyStatus = () => {
-        if (!proxyStatusText) return;
+        if (!proxyStatusText) {
+            // 如果状态文本不存在，延迟重试
+            setTimeout(() => this.updateProxyStatus(), 200);
+            return;
+        }
         
         const isGitHubPages = window.location.hostname.includes('github.io') || 
                               window.location.hostname.includes('github.com');
@@ -336,7 +341,7 @@ WordBank.initProxyConfig = function() {
     
     // 测试代理连接
     this.testProxy = async () => {
-        if (!proxyInput) return;
+        if (!proxyInput || !testProxyBtn) return;
         
         const proxyUrl = proxyInput.value.trim();
         if (!proxyUrl) {
@@ -345,31 +350,66 @@ WordBank.initProxyConfig = function() {
         }
         
         const testUrl = `${proxyUrl.replace(/\/$/, '')}/api/baidu-proxy`;
+        const originalText = testProxyBtn.innerHTML;
         testProxyBtn.disabled = true;
         testProxyBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> 测试中...';
         
+        if (proxyStatusText) {
+            proxyStatusText.textContent = '测试中...';
+            proxyStatusText.className = 'text-info';
+        }
+        
+        // 调试日志
+        if (typeof Debug !== 'undefined') {
+            Debug.log('info', `开始测试代理连接: ${testUrl}`, 'network');
+        }
+        
         try {
-            const response = await fetch(testUrl, { method: 'GET' });
-            const data = await response.json();
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
+            
+            const response = await fetch(testUrl, { 
+                method: 'GET',
+                signal: controller.signal,
+                mode: 'cors'
+            });
+            
+            clearTimeout(timeoutId);
+            
+            if (!response.ok) {
+                const errorText = await response.text().catch(() => '');
+                throw new Error(`HTTP ${response.status}: ${errorText || '服务器错误'}`);
+            }
+            
+            const data = await response.json().catch(() => ({}));
             
             if (data.ok || response.ok) {
                 this.showToast('success', '✅ 代理连接正常！');
                 if (proxyStatusText) {
-                    proxyStatusText.textContent = '连接正常';
+                    proxyStatusText.textContent = '✅ 连接正常';
                     proxyStatusText.className = 'text-success';
                 }
+                // 自动保存配置
+                localStorage.setItem('proxyBase', proxyUrl);
             } else {
                 throw new Error('代理响应异常');
             }
         } catch (error) {
-            this.showToast('danger', `❌ 连接失败: ${error.message}`);
+            let errorMsg = error.message;
+            if (error.name === 'AbortError') {
+                errorMsg = '连接超时（10秒）';
+            } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                errorMsg = '网络错误：无法连接到代理服务器。请检查地址是否正确，或网络是否正常';
+            }
+            
+            this.showToast('danger', `❌ 连接失败: ${errorMsg}`);
             if (proxyStatusText) {
-                proxyStatusText.textContent = '连接失败';
+                proxyStatusText.textContent = `❌ 连接失败: ${errorMsg}`;
                 proxyStatusText.className = 'text-danger';
             }
         } finally {
             testProxyBtn.disabled = false;
-            testProxyBtn.innerHTML = '<i class="bi bi-check-circle"></i> 测试连接';
+            testProxyBtn.innerHTML = originalText;
         }
     };
     

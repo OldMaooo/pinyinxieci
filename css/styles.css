@@ -258,3 +258,92 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
 }
+
+/* 调试面板样式 */
+.debug-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background: var(--bs-body-bg);
+    border-top: 3px solid #ffc107;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.debug-header {
+    background: #ffc107;
+    color: #000;
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+.debug-content {
+    padding: 1rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.debug-logs {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+.debug-logs .log-item {
+    padding: 0.25rem 0.5rem;
+    margin-bottom: 0.25rem;
+    border-left: 3px solid #6c757d;
+    background: rgba(0,0,0,0.02);
+}
+
+[data-bs-theme="dark"] .debug-logs .log-item {
+    background: rgba(255,255,255,0.05);
+}
+
+.debug-logs .log-item.log-info {
+    border-left-color: #0dcaf0;
+    background: rgba(13, 202, 240, 0.1);
+}
+
+.debug-logs .log-item.log-success {
+    border-left-color: #198754;
+    background: rgba(25, 135, 84, 0.1);
+}
+
+.debug-logs .log-item.log-warning {
+    border-left-color: #ffc107;
+    background: rgba(255, 193, 7, 0.1);
+}
+
+.debug-logs .log-item.log-error {
+    border-left-color: #dc3545;
+    background: rgba(220, 53, 69, 0.1);
+}
+
+.debug-logs .log-time {
+    color: #6c757d;
+    font-size: 0.75rem;
+    margin-right: 0.5rem;
+}
+
+.debug-logs .log-tag {
+    display: inline-block;
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
+.debug-logs .log-tag.tag-env { background: #0dcaf0; color: #000; }
+.debug-logs .log-tag.tag-proxy { background: #198754; color: #fff; }
+.debug-logs .log-tag.tag-network { background: #ffc107; color: #000; }
+.debug-logs .log-tag.tag-error { background: #dc3545; color: #fff; }
+.debug-logs .log-tag.tag-recognition { background: #6f42c1; color: #fff; }

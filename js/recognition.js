@@ -54,6 +54,9 @@ const Recognition = {
         const defaultProxy = 'https://pinyinxieci.vercel.app';
         localStorage.setItem('proxyBase', defaultProxy);
         console.log('✅ 已自动配置云端识别代理:', defaultProxy);
+        if (typeof Debug !== 'undefined') {
+            Debug.log('success', `已自动配置云端识别代理: ${defaultProxy}`, 'proxy');
+        }
     },
     
     /**
@@ -158,9 +161,21 @@ const Recognition = {
                 ? (configuredBase ? `${configuredBase.replace(/\/$/, '')}/api/baidu-proxy` : '')
                 : sameOriginUrl;
             
+            // 调试日志
+            if (typeof Debug !== 'undefined') {
+                Debug.log('info', `识别请求 - 环境: ${isGitHubPages ? 'GitHub Pages' : '本地/Vercel'}`, 'recognition');
+                Debug.log('info', `代理配置: ${configuredBase || '(未配置)'}`, 'proxy');
+                Debug.log('info', `请求URL: ${proxyUrl || '(未配置)'}`, 'network');
+                Debug.logNetworkRequest(proxyUrl || 'NO_URL', 'POST', { 
+                    body: { imageBase64: imageBase64.substring(0, 50) + '...', options: {} }
+                });
+            }
+            
             let response;
             try {
                 if (!proxyUrl) throw new Error('NO_PROXY_CONFIG');
+                
+                const startTime = Date.now();
                 response = await fetch(proxyUrl, {
                     method: 'POST',
                     headers: {
@@ -169,12 +184,24 @@ const Recognition = {
                     body: JSON.stringify({ imageBase64: imageBase64, options: {} }),
                     mode: 'cors'
                 });
+                const endTime = Date.now();
+                
+                // 调试日志
+                if (typeof Debug !== 'undefined') {
+                    Debug.log('info', `请求耗时: ${endTime - startTime}ms`, 'network');
+                    Debug.logNetworkResponse(proxyUrl, response);
+                }
                 
                 // 检查是否是网络错误
                 if (!response.ok && response.status === 0) {
                     throw new Error('NETWORK_ERROR');
                 }
             } catch (fetchError) {
+                // 调试日志
+                if (typeof Debug !== 'undefined') {
+                    Debug.logError(fetchError, '识别请求失败');
+                }
+                
                 // 代理服务器不可用
                 if (isGitHubPages) {
                     throw new Error('GitHub Pages需使用云端代理。请在设置中配置 proxyBase 为你的 Vercel 域名，例如：https://你的项目.vercel.app');
