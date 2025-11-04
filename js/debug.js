@@ -18,6 +18,7 @@ const Debug = {
         const testProxyBtn = document.getElementById('debug-test-proxy-btn');
         const clearBtn = document.getElementById('debug-clear-btn');
         const exportBtn = document.getElementById('debug-export-btn');
+        const copyAllBtn = document.getElementById('debug-copy-all-btn');
         
         if (toggleBtn) {
             toggleBtn.addEventListener('click', () => this.toggle());
@@ -41,6 +42,10 @@ const Debug = {
         
         if (exportBtn) {
             exportBtn.addEventListener('click', () => this.exportLogs());
+        }
+        
+        if (copyAllBtn) {
+            copyAllBtn.addEventListener('click', () => this.copyAllLogs());
         }
         
         // 初始化显示
@@ -226,6 +231,76 @@ const Debug = {
         URL.revokeObjectURL(url);
         
         this.log('success', '日志已导出', 'env');
+    },
+    
+    /**
+     * 复制所有日志到剪贴板
+     */
+    copyAllLogs() {
+        const logsText = this.logs.map(log => {
+            const tagStr = log.tag ? `[${log.tag}] ` : '';
+            return `${log.timestamp} ${tagStr}${log.message}`;
+        }).reverse().join('\n');
+        
+        // 添加环境信息
+        const envInfo = `=== 调试日志 ===
+时间: ${new Date().toLocaleString('zh-CN')}
+URL: ${window.location.href}
+环境: ${window.location.hostname.includes('github.io') ? 'GitHub Pages' : window.location.hostname.includes('vercel.app') ? 'Vercel' : '本地'}
+代理: ${localStorage.getItem('proxyBase') || '(未配置)'}
+
+=== 日志内容 ===
+${logsText}`;
+        
+        // 使用 Clipboard API
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(envInfo).then(() => {
+                this.log('success', '✅ 所有日志已复制到剪贴板', 'env');
+                // 临时更新按钮文本
+                const copyBtn = document.getElementById('debug-copy-all-btn');
+                if (copyBtn) {
+                    const originalText = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="bi bi-check"></i> 已复制';
+                    copyBtn.classList.add('btn-success');
+                    copyBtn.classList.remove('btn-outline-dark');
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalText;
+                        copyBtn.classList.remove('btn-success');
+                        copyBtn.classList.add('btn-outline-dark');
+                    }, 2000);
+                }
+            }).catch(err => {
+                this.log('error', `复制失败: ${err.message}`, 'error');
+                // 降级方案：使用传统方法
+                this.fallbackCopy(envInfo);
+            });
+        } else {
+            // 降级方案：使用传统方法
+            this.fallbackCopy(envInfo);
+        }
+    },
+    
+    /**
+     * 降级复制方法（兼容旧浏览器）
+     */
+    fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        textarea.style.left = '-999999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            this.log('success', '✅ 所有日志已复制到剪贴板（降级方法）', 'env');
+        } catch (err) {
+            this.log('error', `复制失败: ${err.message}`, 'error');
+            // 如果都失败了，显示文本让用户手动复制
+            alert('自动复制失败，请手动选择并复制以下文本：\n\n' + text.substring(0, 500) + '...');
+        } finally {
+            document.body.removeChild(textarea);
+        }
     },
     
     /**

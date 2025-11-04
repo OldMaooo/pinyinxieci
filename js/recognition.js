@@ -67,6 +67,11 @@ const Recognition = {
      */
     async recognize(imageBase64, expectedWord) {
         try {
+            // 调试日志 - 识别开始
+            if (typeof Debug !== 'undefined') {
+                Debug.log('info', `识别模块开始 - 提供商: ${this.apiConfig.provider}, 期望字: ${expectedWord}`, 'recognition');
+            }
+            
             let result;
             
             switch (this.apiConfig.provider) {
@@ -131,6 +136,20 @@ const Recognition = {
             };
         } catch (error) {
             console.error('识别失败:', error);
+            
+            // 详细的调试日志
+            if (typeof Debug !== 'undefined') {
+                Debug.logError(error, '识别模块异常');
+                Debug.log('error', `错误类型: ${error.name}`, 'error');
+                Debug.log('error', `错误消息: ${error.message}`, 'error');
+                Debug.log('error', `错误堆栈: ${error.stack || '无堆栈信息'}`, 'error');
+                Debug.log('error', `错误完整对象: ${JSON.stringify({
+                    name: error.name,
+                    message: error.message,
+                    stack: error.stack
+                })}`, 'error');
+            }
+            
             return {
                 success: false,
                 error: error.message
