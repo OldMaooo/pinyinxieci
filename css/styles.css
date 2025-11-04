@@ -233,6 +233,12 @@
     }
 }
 
+/* 答题数量和计时器样式 - 无背景色 */
+#progress-badge, #timer-badge {
+    background-color: transparent !important;
+    color: inherit;
+}
+
 /* 加载动画 */
 .loading {
     display: inline-block;

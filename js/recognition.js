@@ -238,6 +238,7 @@ const Recognition = {
                 
             // 调试日志 - 请求前
             if (typeof Debug !== 'undefined') {
+                Debug.setLastImage(imageBase64); // 保存图片供查看
                 Debug.log('info', `准备发送POST请求，请求体大小: ${(bodySize / 1024).toFixed(2)}KB`, 'network');
                 Debug.log('info', `图片数据检查:`, 'network');
                 Debug.log('info', `- 原始数据长度: ${imageBase64.length}`, 'network');

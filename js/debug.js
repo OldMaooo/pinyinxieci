@@ -6,6 +6,7 @@
 const Debug = {
     logs: [],
     maxLogs: 100,
+    lastImage: null, // 保存最后一次发送的图片
     
     /**
      * 初始化调试面板
@@ -19,6 +20,7 @@ const Debug = {
         const clearBtn = document.getElementById('debug-clear-btn');
         const exportBtn = document.getElementById('debug-export-btn');
         const copyAllBtn = document.getElementById('debug-copy-all-btn');
+        const viewImageBtn = document.getElementById('debug-view-image-btn');
         
         if (toggleBtn) {
             toggleBtn.addEventListener('click', () => this.toggle());
@@ -46,6 +48,10 @@ const Debug = {
         
         if (copyAllBtn) {
             copyAllBtn.addEventListener('click', () => this.copyAllLogs());
+        }
+        
+        if (viewImageBtn) {
+            viewImageBtn.addEventListener('click', () => this.viewLastImage());
         }
         
         // 初始化显示
@@ -278,6 +284,58 @@ ${logsText}`;
             // 降级方案：使用传统方法
             this.fallbackCopy(envInfo);
         }
+    },
+    
+    /**
+     * 查看最后一次发送的图片
+     */
+    viewLastImage() {
+        if (!this.lastImage) {
+            this.log('warning', '暂无图片数据，请先进行一次识别', 'env');
+            return;
+        }
+        
+        // 创建模态框显示图片
+        const modal = document.createElement('div');
+        modal.className = 'modal fade';
+        modal.id = 'debug-image-modal';
+        modal.innerHTML = `
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">发送给百度API的图片</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img src="${this.lastImage}" class="img-fluid" alt="识别图片" style="max-width: 100%; border: 1px solid #ddd; border-radius: 4px;">
+                        <div class="mt-3">
+                            <button class="btn btn-sm btn-primary" onclick="navigator.clipboard.writeText('${this.lastImage}').then(() => alert('图片Base64已复制到剪贴板'))">
+                                <i class="bi bi-clipboard"></i> 复制Base64
+                            </button>
+                            <a href="${this.lastImage}" download="recognition-image.png" class="btn btn-sm btn-success ms-2">
+                                <i class="bi bi-download"></i> 下载图片
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        const bsModal = new bootstrap.Modal(modal);
+        bsModal.show();
+        
+        // 关闭后移除
+        modal.addEventListener('hidden.bs.modal', () => {
+            document.body.removeChild(modal);
+        });
+    },
+    
+    /**
+     * 设置最后一次发送的图片
+     */
+    setLastImage(imageBase64) {
+        this.lastImage = imageBase64;
     },
     
     /**

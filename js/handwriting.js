@@ -279,17 +279,19 @@ const Handwriting = {
         const width = this.canvas.width / dpr;
         const height = this.canvas.height / dpr;
         const padding = 2;
-        const size = Math.min(width, height) * 0.75 - padding * 2;
-        const x = (width - size) / 2;
-        const y = (height - size) / 2;
+        const size = Math.min(width, height) - padding * 2;
+        const x = padding;
+        const y = padding;
         
         // 保存当前状态
         this.ctx.save();
         
-        // 设置文字样式
+        // 设置文字样式 - 使用楷体，撑满田字格
         const isDark = (document.documentElement.getAttribute('data-bs-theme') || 'light') === 'dark';
         this.ctx.fillStyle = isDark ? '#ffffff' : '#000000';
-        this.ctx.font = `bold ${size * 0.6}px "PingFang SC", "Microsoft YaHei", sans-serif`;
+        // 使用楷体，字体大小约为田字格的80-90%，确保撑满
+        const fontSize = size * 0.85;
+        this.ctx.font = `bold ${fontSize}px "KaiTi", "Kaiti SC", "楷体", "STKaiti", serif`;
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
         
@@ -311,10 +313,10 @@ Handwriting.drawTianZiGrid = function () {
     const dpr = window.devicePixelRatio || 1;
     const width = this.canvas.width / dpr;
     const height = this.canvas.height / dpr;
-    const padding = 2; // 上下左右相等的padding
-    const size = Math.min(width, height) * 0.75 - padding * 2; // 缩小到75%，确保按钮可见
-    const x = (width - size) / 2;
-    const y = (height - size) / 2;
+    const padding = 2; // 田字格边界的padding（只是外边框的间距）
+    const size = Math.min(width, height) - padding * 2; // 田字格大小 = 画布大小 - 2px padding
+    const x = padding; // 从padding位置开始
+    const y = padding;
     const ctx = this.ctx;
     
     // 清空背景（避免反复缩放导致残影）
