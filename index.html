@@ -444,6 +444,50 @@
                         </div>
                     </div>
                     
+                    <!-- 识别服务配置 -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card border-info">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0"><i class="bi bi-cloud-check"></i> 识别服务配置</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="alert alert-info">
+                                        <i class="bi bi-info-circle"></i> 
+                                        GitHub Pages 环境需要配置云端代理才能使用手写识别功能。系统已自动检测并配置，你也可以手动修改。
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">云端代理地址：</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="proxy-base-input" 
+                                                   placeholder="https://pinyinxieci.vercel.app" 
+                                                   value="https://pinyinxieci.vercel.app">
+                                            <button class="btn btn-outline-primary" id="test-proxy-btn">
+                                                <i class="bi bi-check-circle"></i> 测试连接
+                                            </button>
+                                            <button class="btn btn-primary" id="save-proxy-btn">
+                                                <i class="bi bi-save"></i> 保存
+                                            </button>
+                                        </div>
+                                        <div class="form-text">
+                                            当前状态：<span id="proxy-status-text" class="text-muted">检测中...</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-sm btn-outline-secondary" id="reset-proxy-btn">
+                                            <i class="bi bi-arrow-clockwise"></i> 恢复默认
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-info" id="auto-detect-proxy-btn">
+                                            <i class="bi bi-magic"></i> 自动检测
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <!-- 题库列表 -->
                     <div class="table-responsive">
                         <table class="table table-hover">

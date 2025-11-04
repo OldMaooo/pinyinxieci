@@ -291,4 +291,177 @@ document.addEventListener('DOMContentLoaded', () => {
             WordBank.exportWordBankOnly();
         });
     }
+    
+    // 识别服务配置
+    WordBank.initProxyConfig();
 });
+
+// 识别服务配置相关方法
+WordBank.initProxyConfig = function() {
+    const proxyInput = document.getElementById('proxy-base-input');
+    const proxyStatusText = document.getElementById('proxy-status-text');
+    const testProxyBtn = document.getElementById('test-proxy-btn');
+    const saveProxyBtn = document.getElementById('save-proxy-btn');
+    const resetProxyBtn = document.getElementById('reset-proxy-btn');
+    const autoDetectProxyBtn = document.getElementById('auto-detect-proxy-btn');
+    
+    // 加载当前配置
+    const loadProxyConfig = () => {
+        const currentProxy = localStorage.getItem('proxyBase') || 'https://pinyinxieci.vercel.app';
+        if (proxyInput) {
+            proxyInput.value = currentProxy;
+        }
+        this.updateProxyStatus();
+    };
+    
+    // 更新状态显示
+    this.updateProxyStatus = () => {
+        if (!proxyStatusText) return;
+        
+        const isGitHubPages = window.location.hostname.includes('github.io') || 
+                              window.location.hostname.includes('github.com');
+        const currentProxy = localStorage.getItem('proxyBase');
+        
+        if (!isGitHubPages) {
+            proxyStatusText.textContent = '本地环境，使用同源代理';
+            proxyStatusText.className = 'text-success';
+        } else if (currentProxy && currentProxy.trim()) {
+            proxyStatusText.textContent = `已配置: ${currentProxy}`;
+            proxyStatusText.className = 'text-success';
+        } else {
+            proxyStatusText.textContent = '未配置，识别功能不可用';
+            proxyStatusText.className = 'text-danger';
+        }
+    };
+    
+    // 测试代理连接
+    this.testProxy = async () => {
+        if (!proxyInput) return;
+        
+        const proxyUrl = proxyInput.value.trim();
+        if (!proxyUrl) {
+            this.showToast('warning', '请先输入代理地址');
+            return;
+        }
+        
+        const testUrl = `${proxyUrl.replace(/\/$/, '')}/api/baidu-proxy`;
+        testProxyBtn.disabled = true;
+        testProxyBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> 测试中...';
+        
+        try {
+            const response = await fetch(testUrl, { method: 'GET' });
+            const data = await response.json();
+            
+            if (data.ok || response.ok) {
+                this.showToast('success', '✅ 代理连接正常！');
+                if (proxyStatusText) {
+                    proxyStatusText.textContent = '连接正常';
+                    proxyStatusText.className = 'text-success';
+                }
+            } else {
+                throw new Error('代理响应异常');
+            }
+        } catch (error) {
+            this.showToast('danger', `❌ 连接失败: ${error.message}`);
+            if (proxyStatusText) {
+                proxyStatusText.textContent = '连接失败';
+                proxyStatusText.className = 'text-danger';
+            }
+        } finally {
+            testProxyBtn.disabled = false;
+            testProxyBtn.innerHTML = '<i class="bi bi-check-circle"></i> 测试连接';
+        }
+    };
+    
+    // 保存代理配置
+    this.saveProxyConfig = () => {
+        if (!proxyInput) return;
+        
+        const proxyUrl = proxyInput.value.trim();
+        if (!proxyUrl) {
+            this.showToast('warning', '请输入有效的代理地址');
+            return;
+        }
+        
+        // 验证URL格式
+        try {
+            new URL(proxyUrl);
+        } catch (e) {
+            this.showToast('danger', '无效的URL格式，请以 http:// 或 https:// 开头');
+            return;
+        }
+        
+        localStorage.setItem('proxyBase', proxyUrl);
+        this.updateProxyStatus();
+        this.showToast('success', '代理配置已保存');
+        
+        // 触发自动配置（如果识别模块已初始化）
+        if (typeof Recognition !== 'undefined' && Recognition.autoConfigureProxy) {
+            // 已自动配置，这里只更新状态
+        }
+    };
+    
+    // 恢复默认配置
+    this.resetProxyConfig = () => {
+        const defaultProxy = 'https://pinyinxieci.vercel.app';
+        if (proxyInput) {
+            proxyInput.value = defaultProxy;
+        }
+        localStorage.setItem('proxyBase', defaultProxy);
+        this.updateProxyStatus();
+        this.showToast('info', '已恢复默认配置');
+    };
+    
+    // 自动检测
+    this.autoDetectProxy = () => {
+        const isGitHubPages = window.location.hostname.includes('github.io') || 
+                              window.location.hostname.includes('github.com');
+        
+        if (!isGitHubPages) {
+            this.showToast('info', '本地环境，无需配置云端代理');
+            return;
+        }
+        
+        // 触发自动配置
+        if (typeof Recognition !== 'undefined' && Recognition.autoConfigureProxy) {
+            Recognition.autoConfigureProxy();
+            loadProxyConfig();
+            this.showToast('success', '已自动检测并配置');
+        } else {
+            this.resetProxyConfig();
+        }
+    };
+    
+    // 绑定事件
+    if (testProxyBtn) {
+        testProxyBtn.addEventListener('click', () => this.testProxy());
+    }
+    
+    if (saveProxyBtn) {
+        saveProxyBtn.addEventListener('click', () => this.saveProxyConfig());
+    }
+    
+    if (resetProxyBtn) {
+        resetProxyBtn.addEventListener('click', () => this.resetProxyConfig());
+    }
+    
+    if (autoDetectProxyBtn) {
+        autoDetectProxyBtn.addEventListener('click', () => this.autoDetectProxy());
+    }
+    
+    // 初始化加载
+    loadProxyConfig();
+    
+    // 监听页面显示时刷新状态
+    const observer = new MutationObserver(() => {
+        const wordbankSection = document.getElementById('wordbank');
+        if (wordbankSection && !wordbankSection.classList.contains('d-none')) {
+            loadProxyConfig();
+        }
+    });
+    
+    const container = document.querySelector('.container-fluid');
+    if (container) {
+        observer.observe(container, { attributes: true, attributeFilter: ['class'] });
+    }
+};

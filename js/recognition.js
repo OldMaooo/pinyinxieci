@@ -28,6 +28,32 @@ const Recognition = {
         if (settings.recognitionThreshold) {
             this.apiConfig.threshold = settings.recognitionThreshold;
         }
+        
+        // 自动检测并配置云端代理（GitHub Pages 环境）
+        this.autoConfigureProxy();
+    },
+    
+    /**
+     * 自动配置云端代理（仅在 GitHub Pages 环境且未配置时）
+     */
+    autoConfigureProxy() {
+        const isGitHubPages = window.location.hostname.includes('github.io') || 
+                              window.location.hostname.includes('github.com');
+        
+        if (!isGitHubPages) {
+            return; // 非 GitHub Pages 环境，使用同源代理
+        }
+        
+        // 检查是否已配置
+        const existingProxy = localStorage.getItem('proxyBase');
+        if (existingProxy && existingProxy.trim()) {
+            return; // 已配置，不覆盖
+        }
+        
+        // 自动设置默认 Vercel 代理
+        const defaultProxy = 'https://pinyinxieci.vercel.app';
+        localStorage.setItem('proxyBase', defaultProxy);
+        console.log('✅ 已自动配置云端识别代理:', defaultProxy);
     },
     
     /**
