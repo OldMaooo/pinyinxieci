@@ -212,24 +212,48 @@ const Handwriting = {
         tempCanvas.height = Math.round(canvasHeight * scale);
         const tempCtx = tempCanvas.getContext('2d');
         
-        // 设置白色背景
-        tempCtx.fillStyle = '#ffffff';
-        tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+        // 深色模式特殊处理：先绘制原canvas（包含深色背景和白色文字）
+        if (isDark) {
+            // 深色模式：直接绘制原canvas（深色背景+白色文字）
+            tempCtx.drawImage(
+                this.canvas,
+                0, 0, canvasWidth, canvasHeight,
+                0, 0, tempCanvas.width, tempCanvas.height
+            );
+            
+            // 对整个图片进行反转：深色背景变白色，白色文字变黑色
+            const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+            const data = imageData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                // 反转RGB（保留透明度）
+                data[i] = 255 - data[i];     // R
+                data[i + 1] = 255 - data[i + 1]; // G
+                data[i + 2] = 255 - data[i + 2]; // B
+                // A 保持不变
+            }
+            tempCtx.putImageData(imageData, 0, 0);
+            
+            // 浅色模式：设置白色背景，然后绘制原canvas（黑色文字）
+        } else {
+            // 设置白色背景
+            tempCtx.fillStyle = '#ffffff';
+            tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+            
+            // 将原canvas内容绘制到临时canvas
+            tempCtx.drawImage(
+                this.canvas,
+                0, 0, canvasWidth, canvasHeight,
+                0, 0, tempCanvas.width, tempCanvas.height
+            );
+        }
         
-        // 将原canvas内容绘制到临时canvas（使用实际像素尺寸）
-        tempCtx.drawImage(
-            this.canvas,
-            0, 0, canvasWidth, canvasHeight,  // 源尺寸：使用canvas的实际像素尺寸
-            0, 0, tempCanvas.width, tempCanvas.height  // 目标尺寸：缩放后的尺寸
-        );
-        
-        // 第二步：获取图像数据，分离笔画和网格
+        // 第二步：获取图像数据，分离笔画和网格（此时已经是白底黑字）
         const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
         const data = imageData.data;
         
-        // 田字格的颜色（浅色模式：灰色，深色模式：深灰色）
+        // 田字格的颜色（浅色模式：灰色，深色模式：反转后是浅灰色）
         const gridColorLight = { r: 173, g: 181, b: 189 }; // #adb5bd
-        const gridColorDark = { r: 73, g: 80, b: 87 };    // #495057
+        const gridColorDark = { r: 182, g: 175, b: 168 };  // 反转后的#6c757d
         const gridColor = isDark ? gridColorDark : gridColorLight;
         
         // 找到文字的边界框
@@ -252,16 +276,13 @@ const Handwriting = {
             const isGrid = gridDistance < 50 && a > 30; // 放宽阈值，确保能识别网格线
             
             // 判断是否为文字
-            // 深色模式下：白色文字（RGB接近255）且有透明度
-            // 浅色模式下：黑色文字（RGB接近0）且有透明度
-            const isWhite = r > 240 && g > 240 && b > 240;
+            // 注意：深色模式下已经反转，所以现在是白底黑字（黑色文字）
+            // 浅色模式下也是白底黑字（黑色文字）
             const isBlack = r < 50 && g < 50 && b < 50;
             const hasAlpha = a > 30; // 放宽透明度要求
             
-            // 判断是否为文字：有透明度，不是网格，且符合当前主题的文字颜色
-            const isText = hasAlpha && !isGrid && (
-                isDark ? isWhite : isBlack  // 深色模式识别白色，浅色模式识别黑色
-            );
+            // 判断是否为文字：有透明度，不是网格，且是黑色（反转后都是黑色文字）
+            const isText = hasAlpha && !isGrid && isBlack;
             
             if (isText) {
                 hasContent = true;
@@ -284,26 +305,16 @@ const Handwriting = {
             const isGrid = gridDistance < 50 && a > 30;
             
             // 判断是否为文字（使用与扫描时相同的逻辑）
-            const isWhite = r > 240 && g > 240 && b > 240;
+            // 注意：深色模式下已经反转，所以现在是白底黑字
             const isBlack = r < 50 && g < 50 && b < 50;
             const hasAlpha = a > 30;
-            const isText = hasAlpha && !isGrid && (
-                isDark ? isWhite : isBlack  // 深色模式识别白色，浅色模式识别黑色
-            );
+            const isText = hasAlpha && !isGrid && isBlack;
             
             if (isText) {
-                // 文字：统一转为纯黑（深色模式下的白字需要反转）
-                if (isDark) {
-                    // 深色模式：白色文字，反转成黑色
-                    data[i] = 0;     // R
-                    data[i + 1] = 0; // G
-                    data[i + 2] = 0; // B
-                } else {
-                    // 浅色模式：黑色文字，直接设为黑色
-                    data[i] = 0;
-                    data[i + 1] = 0;
-                    data[i + 2] = 0;
-                }
+                // 文字：统一转为纯黑（反转后已经是黑色，直接设为纯黑）
+                data[i] = 0;     // R
+                data[i + 1] = 0; // G
+                data[i + 2] = 0; // B
                 data[i + 3] = 255; // A
             } else {
                 // 背景或网格：纯白
@@ -469,14 +480,12 @@ Handwriting.drawTianZiGrid = function () {
     ctx.clearRect(0, 0, width, height);
     ctx.restore();
     
-    // 外边框
+    // 去掉外边框，只绘制田字格内部虚线（增强对比度）
     ctx.save();
     const isDark = (document.documentElement.getAttribute('data-bs-theme') || 'light') === 'dark';
-    ctx.strokeStyle = isDark ? '#495057' : '#ced4da';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(x, y, size, size);
-    
-    // 中横中竖虚线
+    // 增强虚线对比度：深色模式用更亮的灰色，浅色模式用更深的灰色
+    ctx.strokeStyle = isDark ? '#6c757d' : '#868e96'; // 增强对比度
+    ctx.lineWidth = 1.5; // 稍微加粗以增强对比度
     ctx.setLineDash([6, 6]);
     ctx.beginPath();
     // 竖线
@@ -485,7 +494,6 @@ Handwriting.drawTianZiGrid = function () {
     // 横线
     ctx.moveTo(x, y + size / 2);
     ctx.lineTo(x + size, y + size / 2);
-    ctx.strokeStyle = isDark ? '#495057' : '#adb5bd';
     ctx.stroke();
     ctx.setLineDash([]);
     ctx.restore();
