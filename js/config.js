@@ -31,7 +31,7 @@ const Config = {
                 provider: 'baidu',
                 apiKey: this.baidu.apiKey,
                 apiSecret: this.baidu.apiSecret,
-                threshold: 0.55  // 降低阈值，提高容错率
+                threshold: 0.6  // 正常阈值
             });
         }
     },
@@ -49,7 +49,7 @@ const Config = {
                 provider: 'baidu',
                 apiKey: this.baidu.apiKey,
                 apiSecret: this.baidu.apiSecret,
-                threshold: 0.55  // 降低阈值，提高容错率
+                threshold: 0.6  // 正常阈值
             });
         }
     }
