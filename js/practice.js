@@ -74,7 +74,8 @@ const Practice = {
             totalTime: 0,
             startTime: Date.now(),
             wordTimes: [],
-            errorWords: []
+            errorWords: [],
+            details: [] // 每题详情 {wordId, correct, snapshot}
         };
         
         // 隐藏设置，显示练习界面
@@ -207,6 +208,10 @@ const Practice = {
         // 记录为错题
         const word = this.currentWords[this.currentIndex];
         await this.recordError(word, null); // 超时，没有快照
+        // 保存详情
+        if (this.practiceLog && this.practiceLog.details) {
+            this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null });
+        }
         
         // 显示反馈
         this.showFeedback(false, word, '时间到');
@@ -281,11 +286,14 @@ const Practice = {
             if (result.passed) {
                 // 正确
                 this.practiceLog.correctCount++;
+                // 保存详情（保留正确也保留快照）
+                this.practiceLog.details.push({ wordId: word.id, correct: true, snapshot });
                 this.showFeedback(true, word, '');
             } else {
                 // 错误
                 this.practiceLog.errorCount++;
                 await this.recordError(word, snapshot);
+                this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot });
                 this.showFeedback(false, word, result.recognized);
             }
             

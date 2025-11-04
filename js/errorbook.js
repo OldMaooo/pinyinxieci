@@ -69,11 +69,12 @@ const ErrorBook = {
             const title = `第${logs.length - idx}轮 · ${timeStr} · ${log.totalTime.toFixed(0)}s · 正确${log.correctCount}/${log.totalWords} · 准确率${acc}% · 速度${speed}s/字`;
             const collapseId = `err-round-${idx}`;
             const expanded = idx < 5; // 默认展开最近5轮
-            const cards = (log.errorWords || []).map(id => {
+            const cards = (log.details && log.details.length ? log.details : (log.errorWords||[]).map(id=>({wordId:id,correct:false,snapshot:(errorMap.get(id)?.handwritingSnapshots?.slice(-1)[0]?.snapshot)||''}))).map(d => {
+                const id = d.wordId;
                 const w = wordBank.find(x => x.id === id);
                 if (!w) return '';
                 const ew = errorMap.get(id);
-                const latestSnapshot = ew?.handwritingSnapshots?.[ew.handwritingSnapshots.length - 1]?.snapshot || '';
+                const latestSnapshot = d.snapshot || ew?.handwritingSnapshots?.[ew.handwritingSnapshots.length - 1]?.snapshot || '';
                 const groupsText = typeof WordGroups !== 'undefined' ? WordGroups.getDisplayText(w.word, w.pinyin || '') : (w.pinyin || '');
                 return `
                     <div class="col">
@@ -83,7 +84,7 @@ const ErrorBook = {
                                     <div class="d-flex align-items-start gap-2">
                                         ${adminMode ? `<input type="checkbox" class="form-check-input mt-2 error-select" data-id="${id}">` : ''}
                                         <div>
-                                            <div class="fw-bold" style="font-size: 1.5rem; line-height: 1;">${w.word} <span title="错误">❌</span></div>
+                                            <div class="fw-bold" style="font-size: 1.5rem; line-height: 1;">${w.word} <span title="${d.correct ? '正确' : '错误'}">${d.correct ? '✅' : '❌'}</span></div>
                                             <div class="text-muted small mt-1" title="${groupsText}">${groupsText}</div>
                                         </div>
                                     </div>

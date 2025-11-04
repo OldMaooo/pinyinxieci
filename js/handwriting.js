@@ -25,9 +25,9 @@ const Handwriting = {
         this.resizeCanvas();
         window.addEventListener('resize', () => this.resizeCanvas());
         
-        // 设置画笔样式（加粗）
+        // 设置画笔样式（加粗 x2）
         this.ctx.strokeStyle = '#000000';
-        this.ctx.lineWidth = 5; // 加粗笔迹
+        this.ctx.lineWidth = 10; // 加粗笔迹
         this.ctx.lineCap = 'round';
         this.ctx.lineJoin = 'round';
         
@@ -421,7 +421,7 @@ const Handwriting = {
     updateInkAndGrid() {
         if (!this.ctx) return;
         this.ctx.strokeStyle = this.getInkColor();
-        this.ctx.lineWidth = 5; // 保持加粗笔迹
+        this.ctx.lineWidth = 10; // 保持加粗笔迹
         this.drawTianZiGrid();
     },
     
