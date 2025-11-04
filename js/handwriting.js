@@ -193,12 +193,12 @@ const Handwriting = {
      * 优化：生成高对比度图片，便于识别
      */
     getSnapshot() {
-        // 简化处理：只做基本优化，避免过度处理导致识别失败
+        // 参考其他成功案例：二值化 + 裁剪文字区域
         const dpr = window.devicePixelRatio || 1;
         const width = this.canvas.width / dpr;
         const height = this.canvas.height / dpr;
         
-        // 创建一个临时canvas，尺寸放大2倍以提高识别准确率
+        // 第一步：创建临时canvas，放大2倍
         const tempCanvas = document.createElement('canvas');
         tempCanvas.width = width * 2;
         tempCanvas.height = height * 2;
@@ -215,23 +215,93 @@ const Handwriting = {
             0, 0, tempCanvas.width, tempCanvas.height
         );
         
-        // 简化处理：只处理深色模式的颜色反转，不过度处理对比度
+        // 第二步：二值化处理（转为纯黑白）
+        const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+        const data = imageData.data;
         const isDark = (document.documentElement.getAttribute('data-bs-theme') || 'light') === 'dark';
-        if (isDark) {
-            // 深色模式：反转颜色（白色文字变黑色）
-            const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
-            const data = imageData.data;
-            for (let i = 0; i < data.length; i += 4) {
-                // 反转RGB（保留透明度）
-                data[i] = 255 - data[i];     // R
-                data[i + 1] = 255 - data[i + 1]; // G
-                data[i + 2] = 255 - data[i + 2]; // B
-                // A 保持不变
+        
+        // 找到文字的边界框（用于裁剪）
+        let minX = tempCanvas.width, minY = tempCanvas.height, maxX = 0, maxY = 0;
+        let hasContent = false;
+        
+        for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            const a = data[i + 3];
+            
+            // 计算亮度
+            const brightness = (r * 0.299 + g * 0.587 + b * 0.114);
+            const x = (i / 4) % tempCanvas.width;
+            const y = Math.floor((i / 4) / tempCanvas.width);
+            
+            if (a > 10) { // 有内容
+                // 判断是否为文字（根据亮度和主题）
+                const isText = isDark ? brightness > 100 : brightness < 150;
+                
+                if (isText) {
+                    hasContent = true;
+                    // 记录文字边界
+                    if (x < minX) minX = x;
+                    if (x > maxX) maxX = x;
+                    if (y < minY) minY = y;
+                    if (y > maxY) maxY = y;
+                    
+                    // 二值化：文字转为纯黑(0)，其他转为纯白(255)
+                    data[i] = 0;     // R
+                    data[i + 1] = 0; // G
+                    data[i + 2] = 0; // B
+                    data[i + 3] = 255; // A
+                } else {
+                    // 背景或网格线：纯白
+                    data[i] = 255;
+                    data[i + 1] = 255;
+                    data[i + 2] = 255;
+                    data[i + 3] = 255;
+                }
+            } else {
+                // 透明区域：纯白
+                data[i] = 255;
+                data[i + 1] = 255;
+                data[i + 2] = 255;
+                data[i + 3] = 255;
             }
-            tempCtx.putImageData(imageData, 0, 0);
         }
         
-        // 生成高质量PNG（质量1.0）
+        tempCtx.putImageData(imageData, 0, 0);
+        
+        // 第三步：裁剪到文字区域（如果有内容）
+        if (hasContent) {
+            // 添加一些边距（10px）
+            const padding = 20;
+            minX = Math.max(0, minX - padding);
+            minY = Math.max(0, minY - padding);
+            maxX = Math.min(tempCanvas.width, maxX + padding);
+            maxY = Math.min(tempCanvas.height, maxY + padding);
+            
+            const cropWidth = maxX - minX;
+            const cropHeight = maxY - minY;
+            
+            // 确保最小尺寸（百度API要求）
+            if (cropWidth >= 15 && cropHeight >= 15) {
+                // 创建裁剪后的canvas
+                const croppedCanvas = document.createElement('canvas');
+                croppedCanvas.width = cropWidth;
+                croppedCanvas.height = cropHeight;
+                const croppedCtx = croppedCanvas.getContext('2d');
+                
+                // 绘制裁剪区域
+                croppedCtx.drawImage(
+                    tempCanvas,
+                    minX, minY, cropWidth, cropHeight,
+                    0, 0, cropWidth, cropHeight
+                );
+                
+                return croppedCanvas.toDataURL('image/png', 1.0);
+            }
+        }
+        
+        // 如果没有检测到文字或裁剪失败，返回原图
         return tempCanvas.toDataURL('image/png', 1.0);
     },
     
