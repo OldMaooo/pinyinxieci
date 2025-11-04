@@ -67,6 +67,8 @@ const ErrorBook = {
             const acc = log.totalWords > 0 ? Math.round((log.correctCount / log.totalWords) * 100) : 0;
             const speed = log.totalWords > 0 ? (log.totalTime / log.totalWords).toFixed(1) : '-';
             const title = `第${logs.length - idx}轮 · ${timeStr} · ${log.totalTime.toFixed(0)}s · 正确${log.correctCount}/${log.totalWords} · 准确率${acc}% · 速度${speed}s/字`;
+            const collapseId = `err-round-${idx}`;
+            const expanded = idx < 5; // 默认展开最近5轮
             const cards = (log.errorWords || []).map(id => {
                 const w = wordBank.find(x => x.id === id);
                 if (!w) return '';
@@ -79,33 +81,39 @@ const ErrorBook = {
                             <div class="card-body p-2">
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="d-flex align-items-start gap-2">
-                                        ${adminMode ? `<input type=\"checkbox\" class=\"form-check-input mt-2 error-select\" data-id=\"${id}\">` : ''}
+                                        ${adminMode ? `<input type="checkbox" class="form-check-input mt-2 error-select" data-id="${id}">` : ''}
                                         <div>
-                                            <div class="fw-bold" style="font-size: 1.5rem; line-height: 1;">${w.word}</div>
+                                            <div class="fw-bold" style="font-size: 1.5rem; line-height: 1;">${w.word} <span title="错误">❌</span></div>
                                             <div class="text-muted small mt-1" title="${groupsText}">${groupsText}</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="d-flex gap-2 align-items-center mt-2">
-                                    <div class="word-box">${latestSnapshot ? `<img class=\"snapshot-invert\" src=\"${latestSnapshot}\" alt=\"手写\" style=\"max-width: 90%; max-height: 90%; object-fit: contain;\">` : '<span class=\"text-muted small\">无快照</span>'}</div>
+                                    <div class="word-box">${latestSnapshot ? `<img class="snapshot-invert" src="${latestSnapshot}" alt="手写" style="max-width: 90%; max-height: 90%; object-fit: contain;">` : '<span class="text-muted small">无快照</span>'}</div>
                                     <div class="word-box standard-dark-box text-center">
                                         <div class="standard-dark-text" style="font-size: 2.2rem; font-family: 'KaiTi','楷体',serif;">${w.word}</div>
                                     </div>
                                 </div>
                             </div>
                             ${adminMode ? `
-                            <div class=\"card-footer bg-transparent border-0 pt-0 d-flex justify-content-between gap-2\">
-                                <button class=\"btn btn-sm btn-primary flex-fill\" onclick=\"ErrorBook.practiceWord('${id}')\">练习</button>
-                                <button class=\"btn btn-sm btn-outline-danger flex-fill\" onclick=\"ErrorBook.removeWord('${id}')\">已掌握</button>
+                            <div class="card-footer bg-transparent border-0 pt-0 d-flex justify-content-between gap-2">
+                                <button class="btn btn-sm btn-primary flex-fill" onclick="ErrorBook.practiceWord('${id}')">练习</button>
+                                <button class="btn btn-sm btn-outline-danger flex-fill" onclick="ErrorBook.removeWord('${id}')">已掌握</button>
                             </div>` : ''}
                         </div>
                     </div>
                 `;
             }).join('');
             return `
-                <div class="mb-3">
-                    <div class="small text-muted mb-2">${title}</div>
-                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">${cards || '<div class=\"text-muted small\">本轮无错题</div>'}</div>
+                <div class="mb-2">
+                    <div class="small text-muted">
+                        <a class="text-decoration-none" data-bs-toggle="collapse" href="#${collapseId}" role="button" aria-expanded="${expanded}" aria-controls="${collapseId}">
+                            <i class="bi bi-caret-${expanded ? 'down' : 'right'}-fill"></i> ${title}
+                        </a>
+                    </div>
+                    <div class="collapse ${expanded ? 'show' : ''} ms-3" id="${collapseId}">
+                        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">${cards || '<div class="text-muted small">本轮无错题</div>'}</div>
+                    </div>
                 </div>
             `;
         }).join('');
@@ -116,26 +124,28 @@ const ErrorBook = {
         const summaryEl = document.getElementById('errorbook-summary');
         if (!summaryEl) return;
         const wordBank = Storage.getWordBank();
-        const logs = Storage.getPracticeLogs() || [];
-        const counter = new Map();
-        logs.forEach(log => (log.errorWords || []).forEach(id => counter.set(id, (counter.get(id) || 0) + 1)));
-        const rows = Array.from(counter.entries()).sort((a,b)=>b[1]-a[1]).map(([id,count]) => {
-            const w = wordBank.find(x=>x.id===id);
+        const errors = Storage.getErrorWords() || [];
+        const rows = errors.map(ew => {
+            const w = wordBank.find(x=>x.id===ew.wordId);
             if (!w) return '';
+            const snaps = (ew.handwritingSnapshots || []).slice().reverse().map(s => `
+                <div class="word-box me-1 mb-1"><img class="snapshot-invert" src="${s.snapshot}" style="max-width: 90%; max-height: 90%; object-fit: contain;"></div>
+            `).join('');
             return `<tr>
-                <td>${adminMode ? `<input type="checkbox" class="form-check-input error-select" data-id="${id}">` : ''}</td>
+                <td>${adminMode ? `<input type="checkbox" class="form-check-input error-select" data-id="${ew.wordId}">` : ''}</td>
                 <td class="fw-bold">${w.word}</td>
                 <td class="text-muted">${w.pinyin||''}</td>
-                <td><span class="badge bg-danger">${count}</span></td>
+                <td><span class="badge bg-danger">${ew.errorCount}</span></td>
+                <td><div class="d-flex flex-wrap">${snaps || '<span class="text-muted small">暂无快照</span>'}</div></td>
             </tr>`;
         }).join('');
         summaryEl.innerHTML = `
             <div class="table-responsive">
             <table class="table table-sm align-middle">
                 <thead>
-                    <tr><th style="width:40px;"></th><th>字</th><th>拼音</th><th>错误次数</th></tr>
+                    <tr><th style="width:40px;"></th><th>字</th><th>拼音</th><th>错误次数</th><th>错题笔迹</th></tr>
                 </thead>
-                <tbody>${rows || '<tr><td colspan="4" class="text-muted small">暂无数据</td></tr>'}</tbody>
+                <tbody>${rows || '<tr><td colspan="5" class="text-muted small">暂无数据</td></tr>'}</tbody>
             </table>
             </div>
         `;
