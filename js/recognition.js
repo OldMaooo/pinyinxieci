@@ -14,7 +14,7 @@ const Recognition = {
         provider: 'baidu', // 'baidu' | 'tencent' | 'iflytek'
         apiKey: '',
         apiSecret: '',
-        threshold: 0.55 // 置信度阈值（降低以提高容错率）
+        threshold: 0.6 // 置信度阈值（正常值）
     },
     
     /**
@@ -110,9 +110,9 @@ const Recognition = {
                 match = true; // 包含目标字
             }
             
-            // 大幅降低阈值用于测试（临时）
-            const effectiveThreshold = 0.1; // 临时降低到0.1用于测试
-            const minThreshold = 0.05; // 最低容忍度降到0.05
+            // 使用正常阈值（提高识别准确率）
+            const effectiveThreshold = this.apiConfig.threshold || 0.6; // 标准阈值
+            const minThreshold = Math.max(0.5, effectiveThreshold * 0.85); // 最低容忍度（标准阈值的85%）
             
             // 调试日志 - 匹配和阈值判断
             if (typeof Debug !== 'undefined') {

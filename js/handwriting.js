@@ -481,6 +481,7 @@ Handwriting.drawTianZiGrid = function () {
     ctx.restore();
     
     // 去掉外边框，只绘制田字格内部虚线（增强对比度）
+    // 绘制田字格的边界作为虚线（增强对比度）
     ctx.save();
     const isDark = (document.documentElement.getAttribute('data-bs-theme') || 'light') === 'dark';
     // 增强虚线对比度：深色模式用更亮的灰色，浅色模式用更深的灰色
@@ -488,12 +489,21 @@ Handwriting.drawTianZiGrid = function () {
     ctx.lineWidth = 1.5; // 稍微加粗以增强对比度
     ctx.setLineDash([6, 6]);
     ctx.beginPath();
-    // 竖线
+    // 竖线（从顶部到底部）
     ctx.moveTo(x + size / 2, y);
     ctx.lineTo(x + size / 2, y + size);
-    // 横线
+    // 横线（从左到右）
     ctx.moveTo(x, y + size / 2);
     ctx.lineTo(x + size, y + size / 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    
+    // 绘制田字格外边框（使用虚线，增强对比度）
+    ctx.strokeStyle = isDark ? '#6c757d' : '#868e96';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([8, 4]); // 外边框用稍长的虚线
+    ctx.beginPath();
+    ctx.rect(x, y, size, size);
     ctx.stroke();
     ctx.setLineDash([]);
     ctx.restore();
