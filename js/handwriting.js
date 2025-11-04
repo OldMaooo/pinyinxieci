@@ -193,14 +193,17 @@ const Handwriting = {
      * 优化：生成高对比度图片，便于识别
      */
     getSnapshot() {
-        // 修复：正确区分文字和背景，避免全黑图片
+        // 分离显示逻辑和提交逻辑：
+        // 1. 只提取笔画，排除田字格
+        // 2. 统一转换为白底黑字（深色模式下的白字需要反转）
+        // 3. 裁剪到文字区域
         const dpr = window.devicePixelRatio || 1;
         const width = this.canvas.width / dpr;
         const height = this.canvas.height / dpr;
         const isDark = (document.documentElement.getAttribute('data-bs-theme') || 'light') === 'dark';
         
         // 第一步：创建临时canvas，适度放大（不超过400px）
-        const maxSize = 400; // 限制最大尺寸，避免图片过大
+        const maxSize = 400;
         const scale = Math.min(2, maxSize / Math.max(width, height));
         const tempCanvas = document.createElement('canvas');
         tempCanvas.width = Math.round(width * scale);
@@ -218,15 +221,20 @@ const Handwriting = {
             0, 0, tempCanvas.width, tempCanvas.height
         );
         
-        // 第二步：获取图像数据并处理
+        // 第二步：获取图像数据，分离笔画和网格
         const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
         const data = imageData.data;
         
-        // 找到文字的边界框（用于裁剪）
+        // 田字格的颜色（浅色模式：灰色，深色模式：深灰色）
+        const gridColorLight = { r: 173, g: 181, b: 189 }; // #adb5bd
+        const gridColorDark = { r: 73, g: 80, b: 87 };    // #495057
+        const gridColor = isDark ? gridColorDark : gridColorLight;
+        
+        // 找到文字的边界框
         let minX = tempCanvas.width, minY = tempCanvas.height, maxX = 0, maxY = 0;
         let hasContent = false;
         
-        // 先找出所有非白色像素（文字区域）
+        // 先扫描一遍，找出文字区域（排除网格）
         for (let i = 0; i < data.length; i += 4) {
             const r = data[i];
             const g = data[i + 1];
@@ -236,16 +244,19 @@ const Handwriting = {
             const x = (i / 4) % tempCanvas.width;
             const y = Math.floor((i / 4) / tempCanvas.width);
             
-            // 判断是否为文字像素：
-            // 1. 透明度足够（非完全透明）
-            // 2. 不是纯白色（RGB接近255）
-            const isWhite = r > 250 && g > 250 && b > 250;
-            const hasAlpha = a > 50; // 有足够的不透明度
+            // 判断是否为网格线（颜色接近网格颜色）
+            const gridDistance = Math.abs(r - gridColor.r) + Math.abs(g - gridColor.g) + Math.abs(b - gridColor.b);
+            const isGrid = gridDistance < 30 && a > 50; // 颜色接近且不透明
             
-            if (hasAlpha && !isWhite) {
-                // 这是文字或网格线
+            // 判断是否为文字（非白色、非网格、有透明度）
+            const isWhite = r > 250 && g > 250 && b > 250;
+            const hasAlpha = a > 50;
+            
+            // 在深色模式下，文字是白色的；在浅色模式下，文字是黑色的
+            const isText = hasAlpha && !isWhite && !isGrid;
+            
+            if (isText) {
                 hasContent = true;
-                // 记录文字边界
                 if (x < minX) minX = x;
                 if (x > maxX) maxX = x;
                 if (y < minY) minY = y;
@@ -253,28 +264,38 @@ const Handwriting = {
             }
         }
         
-        // 第三步：二值化处理（只处理文字区域）
+        // 第三步：二值化处理（只保留文字，排除网格）
         for (let i = 0; i < data.length; i += 4) {
             const r = data[i];
             const g = data[i + 1];
             const b = data[i + 2];
             const a = data[i + 3];
             
-            const x = (i / 4) % tempCanvas.width;
-            const y = Math.floor((i / 4) / tempCanvas.width);
+            // 判断是否为网格线
+            const gridDistance = Math.abs(r - gridColor.r) + Math.abs(g - gridColor.g) + Math.abs(b - gridColor.b);
+            const isGrid = gridDistance < 30 && a > 50;
             
-            // 判断是否为文字像素
+            // 判断是否为文字
             const isWhite = r > 250 && g > 250 && b > 250;
             const hasAlpha = a > 50;
+            const isText = hasAlpha && !isWhite && !isGrid;
             
-            if (hasAlpha && !isWhite) {
-                // 文字：转为纯黑
-                data[i] = 0;     // R
-                data[i + 1] = 0; // G
-                data[i + 2] = 0; // B
+            if (isText) {
+                // 文字：统一转为纯黑（深色模式下的白字需要反转）
+                if (isDark) {
+                    // 深色模式：白色文字，反转成黑色
+                    data[i] = 0;     // R
+                    data[i + 1] = 0; // G
+                    data[i + 2] = 0; // B
+                } else {
+                    // 浅色模式：黑色文字，直接设为黑色
+                    data[i] = 0;
+                    data[i + 1] = 0;
+                    data[i + 2] = 0;
+                }
                 data[i + 3] = 255; // A
             } else {
-                // 背景：纯白
+                // 背景或网格：纯白
                 data[i] = 255;
                 data[i + 1] = 255;
                 data[i + 2] = 255;
@@ -284,9 +305,8 @@ const Handwriting = {
         
         tempCtx.putImageData(imageData, 0, 0);
         
-        // 第四步：裁剪到文字区域（如果有内容）
+        // 第四步：裁剪到文字区域
         if (hasContent && minX < maxX && minY < maxY) {
-            // 添加边距
             const padding = 15;
             minX = Math.max(0, minX - padding);
             minY = Math.max(0, minY - padding);
@@ -296,9 +316,7 @@ const Handwriting = {
             const cropWidth = maxX - minX;
             const cropHeight = maxY - minY;
             
-            // 确保最小尺寸（百度API要求≥15px）
             if (cropWidth >= 15 && cropHeight >= 15) {
-                // 创建裁剪后的canvas
                 const croppedCanvas = document.createElement('canvas');
                 croppedCanvas.width = cropWidth;
                 croppedCanvas.height = cropHeight;
@@ -319,7 +337,7 @@ const Handwriting = {
             }
         }
         
-        // 如果没有检测到文字或裁剪失败，返回处理后的原图（至少是二值化的）
+        // 如果没有检测到文字，返回处理后的原图（至少是二值化的白底）
         return tempCanvas.toDataURL('image/png', 1.0);
     },
     
