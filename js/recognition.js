@@ -236,10 +236,16 @@ const Recognition = {
                 const requestBody = { imageBase64: imageBase64, options: {} };
                 const bodySize = JSON.stringify(requestBody).length;
                 
-                // 调试日志 - 请求前
-                if (typeof Debug !== 'undefined') {
-                    Debug.log('info', `准备发送POST请求，请求体大小: ${(bodySize / 1024).toFixed(2)}KB`, 'network');
-                }
+            // 调试日志 - 请求前
+            if (typeof Debug !== 'undefined') {
+                Debug.log('info', `准备发送POST请求，请求体大小: ${(bodySize / 1024).toFixed(2)}KB`, 'network');
+                Debug.log('info', `图片数据检查:`, 'network');
+                Debug.log('info', `- 原始数据长度: ${imageBase64.length}`, 'network');
+                Debug.log('info', `- 是否有data:前缀: ${imageBase64.startsWith('data:')}`, 'network');
+                const base64Only = imageBase64.replace(/^data:image\/\w+;base64,/, '');
+                Debug.log('info', `- Base64数据长度: ${base64Only.length}`, 'network');
+                Debug.log('info', `- Base64前50字符: ${base64Only.substring(0, 50)}...`, 'network');
+            }
                 
                 try {
                     response = await fetch(proxyUrl, {
@@ -300,16 +306,55 @@ const Recognition = {
                 throw new Error(`HTTP ${response.status}: ${errorText}`);
             }
             
-            const data = await response.json();
-            
-            // 调试日志 - 记录完整响应
-            if (typeof Debug !== 'undefined') {
-                Debug.log('info', `百度API响应: ${JSON.stringify(data).substring(0, 500)}`, 'network');
-                Debug.log('info', `响应结构: words_result=${data.words_result ? data.words_result.length : 'null'}`, 'network');
+            let data;
+            try {
+                data = await response.json();
+            } catch (jsonError) {
+                // 如果JSON解析失败，尝试读取原始文本
+                const text = await response.text();
+                if (typeof Debug !== 'undefined') {
+                    Debug.log('error', `JSON解析失败，原始响应: ${text.substring(0, 1000)}`, 'error');
+                }
+                throw new Error(`响应解析失败: ${jsonError.message}\n原始响应: ${text.substring(0, 200)}`);
             }
             
-            if (data.error_code) {
-                throw new Error(`百度API错误: ${data.error_msg}`);
+            // 调试日志 - 记录完整响应（不截断）
+            if (typeof Debug !== 'undefined') {
+                const fullResponse = JSON.stringify(data, null, 2);
+                Debug.log('info', `百度API完整响应:`, 'network');
+                Debug.log('info', fullResponse, 'network');
+                Debug.log('info', `响应结构分析:`, 'network');
+                Debug.log('info', `- error_code: ${data.error_code || 'null'}`, 'network');
+                Debug.log('info', `- error_msg: ${data.error_msg || 'null'}`, 'network');
+                Debug.log('info', `- words_result: ${data.words_result ? `${data.words_result.length}个结果` : 'null/undefined'}`, 'network');
+                if (data.words_result && data.words_result.length > 0) {
+                    Debug.log('info', `- 第一个结果: ${JSON.stringify(data.words_result[0])}`, 'network');
+                }
+            }
+            
+            // 检查是否有错误代码（包括代理返回的调试信息）
+            if (data.error_code || data._proxy_info?.has_error_code) {
+                const errorCode = data.error_code || data._proxy_info?.error_code;
+                const errorMsg = data.error_msg || data._proxy_info?.error_msg || '未知错误';
+                const fullErrorMsg = `百度API错误 [${errorCode}]: ${errorMsg}`;
+                if (typeof Debug !== 'undefined') {
+                    Debug.log('error', fullErrorMsg, 'error');
+                    if (data._proxy_info) {
+                        Debug.log('error', `代理调试信息: ${JSON.stringify(data._proxy_info)}`, 'error');
+                    }
+                }
+                throw new Error(fullErrorMsg);
+            }
+            
+            // 检查是否有其他错误字段
+            if (data.error) {
+                if (typeof Debug !== 'undefined') {
+                    Debug.log('error', `Vercel代理错误: ${data.error}`, 'error');
+                    if (data.details) {
+                        Debug.log('error', `详细信息: ${data.details}`, 'error');
+                    }
+                }
+                throw new Error(`代理错误: ${data.error}`);
             }
             
             // 解析结果

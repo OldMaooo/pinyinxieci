@@ -62,6 +62,15 @@ export default async function handler(req, res) {
 
     const token = await getAccessToken();
     const base64Data = String(imageBase64).replace(/^data:image\/\w+;base64,/, '');
+    
+    // 验证base64数据
+    if (!base64Data || base64Data.length < 100) {
+      res.status(400).json({ 
+        error: 'Invalid image data', 
+        details: `Base64 data length: ${base64Data ? base64Data.length : 0}` 
+      });
+      return;
+    }
 
     const params = new URLSearchParams({
       image: base64Data,
@@ -77,11 +86,24 @@ export default async function handler(req, res) {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: params.toString(),
     });
+    
     const data = await resp.json();
-    if (!resp.ok) {
-      res.status(resp.status).json(data);
+    
+    // 如果百度API返回错误，也返回给前端，但添加更多调试信息
+    if (!resp.ok || data.error_code) {
+      res.status(resp.ok ? 200 : resp.status).json({
+        ...data,
+        _proxy_info: {
+          baidu_response_status: resp.status,
+          has_error_code: !!data.error_code,
+          error_code: data.error_code,
+          error_msg: data.error_msg
+        }
+      });
       return;
     }
+    
+    // 成功响应，返回数据
     res.status(200).json(data);
   } catch (err) {
     res.status(500).json({ error: String(err.message || err) });
