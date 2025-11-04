@@ -164,9 +164,6 @@ const Recognition = {
         // 移除data:image/png;base64,前缀（如果存在）
         const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, '');
         
-        // 获取access_token
-        const accessToken = await this.getBaiduAccessToken();
-        
         try {
             // 检测是否在GitHub Pages环境
             const isGitHubPages = window.location.hostname.includes('github.io') || 
@@ -179,6 +176,22 @@ const Recognition = {
             const proxyUrl = isGitHubPages
                 ? (configuredBase ? `${configuredBase.replace(/\/$/, '')}/api/baidu-proxy` : '')
                 : sameOriginUrl;
+            
+            // 注意：使用 Vercel 代理时，不需要前端获取 token（Vercel 函数内部已处理）
+            // 只有在本地代理服务器环境下才需要获取 token
+            let accessToken = null;
+            if (!isGitHubPages && !window.location.hostname.includes('vercel.app')) {
+                // 本地环境，需要获取 token
+                if (typeof Debug !== 'undefined') {
+                    Debug.log('info', '本地环境，需要获取 Baidu Access Token', 'recognition');
+                }
+                accessToken = await this.getBaiduAccessToken();
+            } else {
+                // Vercel 代理环境，跳过 token 获取
+                if (typeof Debug !== 'undefined') {
+                    Debug.log('info', '使用 Vercel 代理，跳过前端 token 获取（服务端已处理）', 'recognition');
+                }
+            }
             
             // 调试日志
             if (typeof Debug !== 'undefined') {
