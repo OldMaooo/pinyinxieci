@@ -19,6 +19,7 @@ const Practice = {
     },
     timer: null,
     timeLimit: 30,
+    isActive: false,
     
     /**
      * 开始练习
@@ -84,6 +85,7 @@ const Practice = {
             errorWords: [],
             details: [] // 每题详情 {wordId, correct, snapshot}
         };
+        this.isActive = true;
         
         // 隐藏设置，显示练习界面
         const settingsEl = document.getElementById('practice-settings');
@@ -109,6 +111,27 @@ const Practice = {
         
         // 开始第一题
         this.showNextWord();
+    },
+
+    savePartialIfActive() {
+        if (!this.isActive || !this.practiceLog || this.practiceLog.totalWords === 0) return;
+        try {
+            const log = {
+                totalWords: this.practiceLog.totalWords,
+                correctCount: this.practiceLog.correctCount,
+                errorCount: this.practiceLog.errorCount,
+                totalTime: this.practiceLog.totalTime,
+                averageTime: (this.practiceLog.totalWords > 0 ? this.practiceLog.totalTime / this.practiceLog.totalWords : 0),
+                errorWords: this.practiceLog.errorWords,
+                details: this.practiceLog.details || [],
+                status: 'partial'
+            };
+            Storage.addPracticeLog(log);
+        } catch(e) {
+            console.warn('保存未完成练习失败:', e);
+        } finally {
+            this.isActive = false;
+        }
     },
     
     /**
@@ -438,8 +461,10 @@ const Practice = {
             averageTime: this.practiceLog.totalWords > 0 ? 
                 this.practiceLog.totalTime / this.practiceLog.totalWords : 0,
             errorWords: this.practiceLog.errorWords,
-            details: this.practiceLog.details || []
+            details: this.practiceLog.details || [],
+            status: 'completed'
         });
+        this.isActive = false;
         
         // 跳转到结果页面
         if (typeof Main !== 'undefined') {

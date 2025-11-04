@@ -18,7 +18,7 @@
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#home">
                 <i class="bi bi-pencil-square"></i> 看拼音写词
-                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.13</span>
+                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.14</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -257,14 +257,14 @@
                 </div>
                 <div class="card-body text-center py-3">
                     <!-- 拼音显示 -->
-                    <div class="mb-4 d-flex flex-column align-items-center">
-                        <h2 class="display-3 text-primary" id="pinyin-display">rén</h2>
+                    <div class="mb-2 d-flex flex-column align-items-center">
+                        <h2 class="display-4 text-primary mb-1" id="pinyin-display">rén</h2>
                     </div>
                     
                     <!-- 手写输入区 -->
-                    <div class="mb-3 d-flex justify-content-center align-items-center flex-column">
-                        <!-- 反馈区域：移到田字格上方 -->
-                        <div id="feedback-area" class="mb-2"></div>
+                    <div class="mb-2 d-flex justify-content-center align-items-center flex-column">
+                        <!-- 反馈区域：移到田字格上方，间距更小 -->
+                        <div id="feedback-area" class="mb-1"></div>
                         <canvas id="handwriting-canvas"></canvas>
                         <div class="canvas-controls mt-2">
                             <button class="btn btn-outline-info" id="prev-question-btn" title="返回上一题">

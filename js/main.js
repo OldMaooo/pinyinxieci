@@ -116,6 +116,14 @@ const Main = {
      * 显示指定页面
      */
     showPage(pageId) {
+        // 如果离开练习页，保存未完成练习
+        const currentVisible = document.querySelector('.page-section.active');
+        if (currentVisible && currentVisible.id === 'practice' && pageId !== 'practice') {
+            if (typeof Practice !== 'undefined' && Practice.savePartialIfActive) {
+                Practice.savePartialIfActive();
+            }
+        }
+
         // 隐藏所有页面
         document.querySelectorAll('.page-section').forEach(section => {
             section.classList.add('d-none');

@@ -25,7 +25,7 @@ const Handwriting = {
         
         // 设置Canvas尺寸
         this.resizeCanvas();
-        window.addEventListener('resize', () => this.resizeCanvas());
+        window.addEventListener('resize', () => this.resizeCanvas(true));
         
         // 设置画笔样式（加粗 x2）
         this.ctx.strokeStyle = '#000000';
@@ -47,10 +47,15 @@ const Handwriting = {
     /**
      * 调整Canvas尺寸（响应式）
      */
-    resizeCanvas() {
+    resizeCanvas(preserve = false) {
         if (!this.canvas) return;
         
         const container = this.canvas.parentElement;
+        // 需要保留内容则先截图
+        let prevImage = null;
+        if (preserve) {
+            try { prevImage = this.canvas.toDataURL('image/png'); } catch(e) { prevImage = null; }
+        }
         const containerRect = container ? container.getBoundingClientRect() : null;
         
         // 以固定田字格尺寸为基准，计算画布尺寸，使田字格≈95%占比
@@ -70,6 +75,7 @@ const Handwriting = {
         this.canvas.height = height * dpr;
         
         // 缩放上下文
+        this.ctx.setTransform(1,0,0,1,0,0);
         this.ctx.scale(dpr, dpr);
         
         // 设置显示尺寸
@@ -84,6 +90,14 @@ const Handwriting = {
 
         // 绘制田字格背景
         this.drawTianZiGrid();
+        // 恢复之前笔迹
+        if (preserve && prevImage) {
+            const img = new Image();
+            img.onload = () => {
+                this.ctx.drawImage(img, 0, 0, width, height);
+            };
+            img.src = prevImage;
+        }
     },
     
     /**
