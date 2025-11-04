@@ -240,6 +240,13 @@ const Main = {
                 const timeInput = document.getElementById('time-limit-input');
                 if (countInput) countInput.value = isFinite(count) && count > 0 ? String(count) : '20';
                 if (countSelect && countSelectHome) countSelect.value = countSelectHome.value;
+                // 保存设置
+                if (typeof Storage !== 'undefined') {
+                    const settings = Storage.getSettings() || {};
+                    const resolvedCount = (countHome && countHome.value) ? parseInt(countHome.value) : (countSelectHome ? (countSelectHome.value === 'all' ? 'all' : parseInt(countSelectHome.value)) : 20);
+                    settings.practice = { wordCount: resolvedCount, timeLimit: time };
+                    Storage.saveSettings(settings);
+                }
                 if (timeInput) timeInput.value = isFinite(time) && time > 0 ? String(time) : '30';
                 // 跳到练习页并同步范围选择
                 this.showPage('practice');
@@ -252,6 +259,22 @@ const Main = {
                     }
                 }, 150);
             });
+        }
+
+        // 加载保存的设置到首页表单
+        const countSelectHomeEl = document.getElementById('word-count-select-home');
+        const countInputHomeEl = document.getElementById('word-count-input-home');
+        const timeHomeEl = document.getElementById('time-limit-input-home');
+        if (typeof Storage !== 'undefined') {
+            const settings = Storage.getSettings() || {};
+            const p = settings.practice || {};
+            if (countSelectHomeEl && p.wordCount !== undefined) {
+                countSelectHomeEl.value = (p.wordCount === 'all' ? 'all' : String(p.wordCount || '20'));
+            }
+            if (countInputHomeEl && p.wordCount && p.wordCount !== 'all') {
+                countInputHomeEl.value = String(p.wordCount);
+            }
+            if (timeHomeEl && p.timeLimit !== undefined) timeHomeEl.value = p.timeLimit;
         }
     },
     
