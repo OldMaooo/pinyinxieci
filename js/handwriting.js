@@ -447,7 +447,7 @@ const Handwriting = {
         this.ctx.fillStyle = isDark ? '#ffffff' : '#000000';
         // 使用楷体，字体大小约为田字格的80-90%，确保撑满
         const fontSize = size * 0.85;
-        this.ctx.font = `bold ${fontSize}px "KaiTi", "Kaiti SC", "楷体", "STKaiti", serif`;
+        this.ctx.font = `bold ${fontSize}px "KaiTi", "Kaiti SC", "楷体", "STKaiti", "Songti SC", "Songti", "宋体", "SimSun", "Heiti SC", "黑体", "SimHei", serif`;
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
         
