@@ -190,9 +190,90 @@ const Handwriting = {
     
     /**
      * 获取Canvas快照（Base64图片）
+     * 优化：生成高对比度图片，便于识别
      */
     getSnapshot() {
-        return this.canvas.toDataURL('image/png');
+        // 创建一个新的Canvas用于生成识别用的图片
+        const dpr = window.devicePixelRatio || 1;
+        const width = this.canvas.width / dpr;
+        const height = this.canvas.height / dpr;
+        
+        // 创建一个临时canvas，尺寸放大2倍以提高识别准确率
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = width * 2;
+        tempCanvas.height = height * 2;
+        const tempCtx = tempCanvas.getContext('2d');
+        
+        // 设置白色背景
+        tempCtx.fillStyle = '#ffffff';
+        tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+        
+        // 将原canvas内容绘制到临时canvas（放大2倍）
+        tempCtx.drawImage(
+            this.canvas,
+            0, 0, width, height,
+            0, 0, tempCanvas.width, tempCanvas.height
+        );
+        
+        // 增强对比度：将文字部分转换为纯黑色，背景设为纯白色
+        const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+        const data = imageData.data;
+        const isDark = (document.documentElement.getAttribute('data-bs-theme') || 'light') === 'dark';
+        
+        for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            const a = data[i + 3];
+            
+            if (a > 10) { // 有透明度，可能是文字或网格
+                // 计算亮度
+                const brightness = (r * 0.299 + g * 0.587 + b * 0.114);
+                
+                if (isDark) {
+                    // 深色模式：白色文字，需要转换为黑色
+                    // 如果亮度高（接近白色），说明是文字
+                    if (brightness > 150) {
+                        data[i] = 0;     // R - 黑色
+                        data[i + 1] = 0; // G
+                        data[i + 2] = 0; // B
+                        data[i + 3] = 255; // A - 完全不透明
+                    } else {
+                        // 低亮度或网格线，设为白色背景
+                        data[i] = 255;
+                        data[i + 1] = 255;
+                        data[i + 2] = 255;
+                        data[i + 3] = 255;
+                    }
+                } else {
+                    // 浅色模式：黑色文字
+                    // 如果亮度低（接近黑色），说明是文字
+                    if (brightness < 200) {
+                        data[i] = 0;     // R - 黑色
+                        data[i + 1] = 0; // G
+                        data[i + 2] = 0; // B
+                        data[i + 3] = 255; // A - 完全不透明
+                    } else {
+                        // 高亮度或网格线，设为白色背景
+                        data[i] = 255;
+                        data[i + 1] = 255;
+                        data[i + 2] = 255;
+                        data[i + 3] = 255;
+                    }
+                }
+            } else {
+                // 完全透明，设为白色背景
+                data[i] = 255;
+                data[i + 1] = 255;
+                data[i + 2] = 255;
+                data[i + 3] = 255;
+            }
+        }
+        
+        tempCtx.putImageData(imageData, 0, 0);
+        
+        // 生成高质量PNG（质量1.0）
+        return tempCanvas.toDataURL('image/png', 1.0);
     },
     
     /**

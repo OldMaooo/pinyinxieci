@@ -77,9 +77,11 @@ export default async function handler(req, res) {
       language_type: 'CHN_ENG',
       detect_direction: 'false',
       probability: 'true',
+      recognize_granularity: 'big', // 识别粒度：大（适合单个字符）
       ...Object.fromEntries(Object.entries(options || {}).map(([k, v]) => [k, String(v)])),
     });
 
+    // 使用手写识别接口
     const ocrUrl = `https://aip.baidubce.com/rest/2.0/ocr/v1/handwriting?access_token=${encodeURIComponent(token)}`;
     const resp = await fetch(ocrUrl, {
       method: 'POST',
