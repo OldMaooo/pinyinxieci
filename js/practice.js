@@ -430,7 +430,8 @@ const Practice = {
             totalTime: this.practiceLog.totalTime,
             averageTime: this.practiceLog.totalWords > 0 ? 
                 this.practiceLog.totalTime / this.practiceLog.totalWords : 0,
-            errorWords: this.practiceLog.errorWords
+            errorWords: this.practiceLog.errorWords,
+            details: this.practiceLog.details || []
         });
         
         // 跳转到结果页面

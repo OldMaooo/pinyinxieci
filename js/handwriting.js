@@ -435,9 +435,9 @@ const Handwriting = {
         const width = this.canvas.width / dpr;
         const height = this.canvas.height / dpr;
         const padding = 2;
-        const size = Math.min(width, height) * 0.7 - padding * 2; // 田字格缩小到70%
-        const x = padding;
-        const y = padding;
+        const size = Math.min(width, height) * 0.6 - padding * 2; // 与网格一致，60%
+        const x = (width - size) / 2;
+        const y = (height - size) / 2;
         
         // 保存当前状态
         this.ctx.save();
@@ -470,10 +470,10 @@ Handwriting.drawTianZiGrid = function () {
     const width = this.canvas.width / dpr;
     const height = this.canvas.height / dpr;
     const padding = 2; // 田字格边界的padding（只是外边框的间距）
-    // 缩小整体田字格尺寸，避免占满画布
+    // 缩小整体田字格尺寸，置中对齐
     const size = Math.min(width, height) * 0.6 - padding * 2;
-    const x = padding; // 左上无多余留白
-    const y = padding;
+    const x = (width - size) / 2;
+    const y = (height - size) / 2;
     const ctx = this.ctx;
     
     // 清空背景（避免反复缩放导致残影）

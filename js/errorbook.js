@@ -84,7 +84,7 @@ const ErrorBook = {
                                     <div class="d-flex align-items-start gap-2">
                                         ${adminMode ? `<input type="checkbox" class="form-check-input mt-2 error-select" data-id="${id}">` : ''}
                                         <div>
-                                            <div class="fw-bold" style="font-size: 1.5rem; line-height: 1;">${w.word} <span title="${d.correct ? '正确' : '错误'}">${d.correct ? '✅' : '❌'}</span></div>
+                                            <div class="fw-bold" style="font-size: 1.5rem; line-height: 1;">${w.word} ${d.correct ? '' : '<span title="错误">❌</span>'}</div>
                                             <div class="text-muted small mt-1" title="${groupsText}">${groupsText}</div>
                                         </div>
                                     </div>
