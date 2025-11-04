@@ -193,74 +193,88 @@ const Handwriting = {
      * 优化：生成高对比度图片，便于识别
      */
     getSnapshot() {
-        // 参考其他成功案例：二值化 + 裁剪文字区域
+        // 修复：正确区分文字和背景，避免全黑图片
         const dpr = window.devicePixelRatio || 1;
         const width = this.canvas.width / dpr;
         const height = this.canvas.height / dpr;
+        const isDark = (document.documentElement.getAttribute('data-bs-theme') || 'light') === 'dark';
         
-        // 第一步：创建临时canvas，放大2倍
+        // 第一步：创建临时canvas，适度放大（不超过400px）
+        const maxSize = 400; // 限制最大尺寸，避免图片过大
+        const scale = Math.min(2, maxSize / Math.max(width, height));
         const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = width * 2;
-        tempCanvas.height = height * 2;
+        tempCanvas.width = Math.round(width * scale);
+        tempCanvas.height = Math.round(height * scale);
         const tempCtx = tempCanvas.getContext('2d');
         
         // 设置白色背景
         tempCtx.fillStyle = '#ffffff';
         tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
         
-        // 将原canvas内容绘制到临时canvas（放大2倍）
+        // 将原canvas内容绘制到临时canvas
         tempCtx.drawImage(
             this.canvas,
             0, 0, width, height,
             0, 0, tempCanvas.width, tempCanvas.height
         );
         
-        // 第二步：二值化处理（转为纯黑白）
+        // 第二步：获取图像数据并处理
         const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
         const data = imageData.data;
-        const isDark = (document.documentElement.getAttribute('data-bs-theme') || 'light') === 'dark';
         
         // 找到文字的边界框（用于裁剪）
         let minX = tempCanvas.width, minY = tempCanvas.height, maxX = 0, maxY = 0;
         let hasContent = false;
         
+        // 先找出所有非白色像素（文字区域）
         for (let i = 0; i < data.length; i += 4) {
             const r = data[i];
             const g = data[i + 1];
             const b = data[i + 2];
             const a = data[i + 3];
             
-            // 计算亮度
-            const brightness = (r * 0.299 + g * 0.587 + b * 0.114);
             const x = (i / 4) % tempCanvas.width;
             const y = Math.floor((i / 4) / tempCanvas.width);
             
-            if (a > 10) { // 有内容
-                // 判断是否为文字（根据亮度和主题）
-                const isText = isDark ? brightness > 100 : brightness < 150;
-                
-                if (isText) {
-                    hasContent = true;
-                    // 记录文字边界
-                    if (x < minX) minX = x;
-                    if (x > maxX) maxX = x;
-                    if (y < minY) minY = y;
-                    if (y > maxY) maxY = y;
-                    
-                    // 二值化：文字转为纯黑(0)，其他转为纯白(255)
-                    data[i] = 0;     // R
-                    data[i + 1] = 0; // G
-                    data[i + 2] = 0; // B
-                    data[i + 3] = 255; // A
-                } else {
-                    // 背景或网格线：纯白
-                    data[i] = 255;
-                    data[i + 1] = 255;
-                    data[i + 2] = 255;
-                    data[i + 3] = 255;
-                }
+            // 判断是否为文字像素：
+            // 1. 透明度足够（非完全透明）
+            // 2. 不是纯白色（RGB接近255）
+            const isWhite = r > 250 && g > 250 && b > 250;
+            const hasAlpha = a > 50; // 有足够的不透明度
+            
+            if (hasAlpha && !isWhite) {
+                // 这是文字或网格线
+                hasContent = true;
+                // 记录文字边界
+                if (x < minX) minX = x;
+                if (x > maxX) maxX = x;
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+            }
+        }
+        
+        // 第三步：二值化处理（只处理文字区域）
+        for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            const a = data[i + 3];
+            
+            const x = (i / 4) % tempCanvas.width;
+            const y = Math.floor((i / 4) / tempCanvas.width);
+            
+            // 判断是否为文字像素
+            const isWhite = r > 250 && g > 250 && b > 250;
+            const hasAlpha = a > 50;
+            
+            if (hasAlpha && !isWhite) {
+                // 文字：转为纯黑
+                data[i] = 0;     // R
+                data[i + 1] = 0; // G
+                data[i + 2] = 0; // B
+                data[i + 3] = 255; // A
             } else {
-                // 透明区域：纯白
+                // 背景：纯白
                 data[i] = 255;
                 data[i + 1] = 255;
                 data[i + 2] = 255;
@@ -270,10 +284,10 @@ const Handwriting = {
         
         tempCtx.putImageData(imageData, 0, 0);
         
-        // 第三步：裁剪到文字区域（如果有内容）
-        if (hasContent) {
-            // 添加一些边距（10px）
-            const padding = 20;
+        // 第四步：裁剪到文字区域（如果有内容）
+        if (hasContent && minX < maxX && minY < maxY) {
+            // 添加边距
+            const padding = 15;
             minX = Math.max(0, minX - padding);
             minY = Math.max(0, minY - padding);
             maxX = Math.min(tempCanvas.width, maxX + padding);
@@ -282,13 +296,17 @@ const Handwriting = {
             const cropWidth = maxX - minX;
             const cropHeight = maxY - minY;
             
-            // 确保最小尺寸（百度API要求）
+            // 确保最小尺寸（百度API要求≥15px）
             if (cropWidth >= 15 && cropHeight >= 15) {
                 // 创建裁剪后的canvas
                 const croppedCanvas = document.createElement('canvas');
                 croppedCanvas.width = cropWidth;
                 croppedCanvas.height = cropHeight;
                 const croppedCtx = croppedCanvas.getContext('2d');
+                
+                // 设置白色背景
+                croppedCtx.fillStyle = '#ffffff';
+                croppedCtx.fillRect(0, 0, cropWidth, cropHeight);
                 
                 // 绘制裁剪区域
                 croppedCtx.drawImage(
@@ -301,7 +319,7 @@ const Handwriting = {
             }
         }
         
-        // 如果没有检测到文字或裁剪失败，返回原图
+        // 如果没有检测到文字或裁剪失败，返回处理后的原图（至少是二值化的）
         return tempCanvas.toDataURL('image/png', 1.0);
     },
     
