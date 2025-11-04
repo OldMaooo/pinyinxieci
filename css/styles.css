@@ -66,7 +66,7 @@
 }
 
 #handwriting-canvas {
-    border: 3px solid #dee2e6;
+    border: none; /* 去掉外部白色描边，交由绘制的田字格外框控制 */
     border-radius: 8px;
     background: white;
     cursor: crosshair;

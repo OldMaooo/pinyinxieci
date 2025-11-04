@@ -413,7 +413,30 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div id="errorbook-list"></div>
+                    <!-- 视图切换 -->
+                    <ul class="nav nav-pills mb-3" id="errorbook-tabs">
+                        <li class="nav-item">
+                            <button class="nav-link active" id="tab-rounds" type="button">按轮视图</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="tab-summary" type="button">汇总视图</button>
+                        </li>
+                    </ul>
+
+                    <!-- 批量操作工具栏（两个视图共用） -->
+                    <div class="d-flex gap-2 mb-2" id="errorbook-batch-toolbar" style="display:none;">
+                        <button class="btn btn-sm btn-outline-secondary" id="errorbook-select-all">全选</button>
+                        <button class="btn btn-sm btn-outline-secondary" id="errorbook-clear-select">清空选择</button>
+                        <button class="btn btn-sm btn-outline-danger" id="errorbook-batch-remove">批量设为已掌握</button>
+                        <button class="btn btn-sm btn-outline-warning" id="errorbook-batch-add">批量设为错题</button>
+                    </div>
+
+                    <!-- 按轮视图 -->
+                    <div id="errorbook-rounds" class="mb-3"></div>
+
+                    <!-- 汇总视图 -->
+                    <div id="errorbook-summary" class="d-none"></div>
+
                     <div id="errorbook-empty" class="text-center text-muted py-5">
                         <i class="bi bi-inbox display-1"></i>
                         <p class="mt-3">还没有错题，继续保持！</p>
