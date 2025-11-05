@@ -388,24 +388,11 @@ const Practice = {
                 Handwriting.drawCorrectWord(word.word);
             }
             
-            // 显示正确答案（更突出）
-            let recognizedInfo = '';
-            if (recognized && recognized !== '时间到') {
-                recognizedInfo = `<div class="mt-2 text-muted">
-                    <small>识别结果：<span class="text-dark">${recognized}</span></small>
-                </div>`;
-            }
-            
+            // 简化正确答案显示：仅红色大字，减少高度
+            const recognizedInfo = (recognized && recognized !== '时间到') ? `<small class="text-muted ms-2">(识别：${recognized})</small>` : '';
             feedbackArea.innerHTML = `
-                <div class="feedback-error">
-                    <i class="bi bi-x-circle-fill"></i> 错误
-                </div>
-                <div class="mt-3 p-3 bg-light rounded border border-danger">
-                    <div class="text-center">
-                        <div class="text-muted small mb-2">正确答案是：</div>
-                        <div class="display-4 fw-bold text-danger">${word.word}</div>
-                    </div>
-                    ${recognizedInfo}
+                <div class="fw-bold text-danger" style="font-size: 2rem; line-height: 1;">
+                    ${word.word}${recognizedInfo}
                 </div>
             `;
         }
