@@ -70,6 +70,18 @@ const Main = {
         
         // 绑定结果页面按钮
         this.bindResultButtons();
+
+        // 调试模式开关兜底初始化（Debug 会在自身 init 中处理，这里确保一致性）
+        const dbgSwitch = document.getElementById('debug-mode-switch');
+        if (dbgSwitch) {
+            try {
+                const enabled = localStorage.getItem('debugMode') === '1';
+                if (typeof Debug !== 'undefined' && Debug.setEnabled) {
+                    if (dbgSwitch.checked !== enabled) dbgSwitch.checked = enabled;
+                    dbgSwitch.addEventListener('change', (e) => Debug.setEnabled(e.target.checked));
+                }
+            } catch(e) {}
+        }
         
         // 检查API配置
         this.checkAPIConfig();

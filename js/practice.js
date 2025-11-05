@@ -115,6 +115,8 @@ const Practice = {
 
     savePartialIfActive() {
         if (!this.isActive || !this.practiceLog || this.practiceLog.totalWords === 0) return;
+        // 调试模式下不记录
+        try { if (localStorage.getItem('debugMode') === '1') { this.isActive = false; return; } } catch(e) {}
         try {
             const log = {
                 totalWords: this.practiceLog.totalWords,
@@ -451,6 +453,8 @@ const Practice = {
         if (this.timer) {
             clearInterval(this.timer);
         }
+        // 调试模式下不记录
+        try { if (localStorage.getItem('debugMode') === '1') { this.isActive = false; return; } } catch(e) {}
         
         // 保存练习记录
         const log = Storage.addPracticeLog({

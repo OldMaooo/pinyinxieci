@@ -4,6 +4,7 @@
  */
 
 const Debug = {
+    isEnabled: false,
     logs: [],
     maxLogs: 100,
     lastImage: null, // 保存最后一次发送的图片
@@ -56,9 +57,33 @@ const Debug = {
             viewImageBtn.addEventListener('click', () => this.viewLastImage());
         }
         
+        // 初始化开关状态
+        try { this.isEnabled = localStorage.getItem('debugMode') === '1'; } catch(e) { this.isEnabled = false; }
+        const switchEl = document.getElementById('debug-mode-switch');
+        if (switchEl) {
+            switchEl.checked = this.isEnabled;
+            switchEl.addEventListener('change', (e) => {
+                this.setEnabled(e.target.checked);
+            });
+        }
+
         // 初始化显示
         this.refresh();
         this.log('info', '调试面板已初始化', 'env');
+        this.applyVisibility();
+    },
+
+    setEnabled(enabled) {
+        this.isEnabled = !!enabled;
+        try { localStorage.setItem('debugMode', this.isEnabled ? '1' : '0'); } catch(e) {}
+        this.applyVisibility();
+    },
+
+    applyVisibility() {
+        const panel = document.getElementById('debug-panel');
+        if (panel) {
+            panel.classList.toggle('d-none', !this.isEnabled);
+        }
     },
     
     /**
