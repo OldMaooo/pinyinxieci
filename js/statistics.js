@@ -62,8 +62,12 @@ const Statistics = {
         document.getElementById('result-avg-time').textContent = 
             `${Math.round(log.averageTime || 0)}秒`;
         
-        // 显示错题列表
-        this.showErrorWordsList(log.errorWords || []);
+        // 结果页错题卡片：复用错题本卡片样式
+        if (typeof ErrorBook !== 'undefined' && ErrorBook.renderCardsForLog) {
+            ErrorBook.renderCardsForLog(log, false);
+        } else {
+            this.showErrorWordsList(log.errorWords || []);
+        }
         
         // 显示结果页面
         if (typeof Main !== 'undefined') {

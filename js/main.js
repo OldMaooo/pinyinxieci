@@ -275,6 +275,7 @@ const Main = {
                 const countHome = document.getElementById('word-count-input-home');
                 const countSelectHome = document.getElementById('word-count-select-home');
                 const timeHome = document.getElementById('time-limit-input-home');
+                const modeHome = document.getElementById('practice-mode-select-home');
                 const count = countHome ? parseInt(countHome.value) : 20;
                 const time = timeHome ? parseInt(timeHome.value) : 30;
                 const countInput = document.getElementById('word-count-input');
@@ -286,7 +287,7 @@ const Main = {
                 if (typeof Storage !== 'undefined') {
                     const settings = Storage.getSettings() || {};
                     const resolvedCount = (countHome && countHome.value) ? parseInt(countHome.value) : (countSelectHome ? (countSelectHome.value === 'all' ? 'all' : parseInt(countSelectHome.value)) : 20);
-                    settings.practice = { wordCount: resolvedCount, timeLimit: time };
+                    settings.practice = { wordCount: resolvedCount, timeLimit: time, mode: (modeHome && modeHome.value) || 'normal' };
                     Storage.saveSettings(settings);
                 }
                 if (timeInput) timeInput.value = isFinite(time) && time > 0 ? String(time) : '30';

@@ -20,6 +20,8 @@ const Practice = {
     timer: null,
     timeLimit: 30,
     isActive: false,
+    isPaused: false,
+    mode: 'normal',
     
     /**
      * 开始练习
@@ -32,6 +34,8 @@ const Practice = {
             wordCount = countSelect ? (countSelect.value === 'all' ? 'all' : parseInt(countSelect.value)) : 'all';
         }
         const timeLimit = parseInt(document.getElementById('time-limit-input').value);
+        const modeHome = document.getElementById('practice-mode-select-home');
+        this.mode = (modeHome && modeHome.value) || 'normal';
         
         this.timeLimit = timeLimit;
 
@@ -247,6 +251,26 @@ const Practice = {
             }
         }, 1000);
     },
+
+    pause() {
+        if (!this.isActive || this.isPaused) return;
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+        }
+        this.isPaused = true;
+        const btn = document.getElementById('pause-practice-btn');
+        if (btn) btn.textContent = '继续';
+    },
+
+    resume() {
+        if (!this.isActive || !this.isPaused) return;
+        this.isPaused = false;
+        const btn = document.getElementById('pause-practice-btn');
+        if (btn) btn.textContent = '暂停';
+        const wordStartTime = Date.now();
+        this.startTimer(wordStartTime);
+    },
     
     /**
      * 时间到
@@ -255,12 +279,16 @@ const Practice = {
         const wordTime = (Date.now() - startTime) / 1000;
         this.practiceLog.wordTimes.push(wordTime);
         
-        // 记录为错题
         const word = this.currentWords[this.currentIndex];
-        await this.recordError(word, null); // 超时，没有快照
-        // 保存详情
-        if (this.practiceLog && this.practiceLog.details) {
-            this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null });
+        if (this.mode === 'normal') {
+            // 记录为错题
+            await this.recordError(word, null); // 超时，没有快照
+            // 保存详情
+            if (this.practiceLog && this.practiceLog.details) {
+                this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null });
+            }
+        } else {
+            // 纸质模式：不记录错题/详情
         }
         
         // 显示反馈
@@ -288,13 +316,13 @@ const Practice = {
      * 提交答案
      */
     async submitAnswer() {
-        if (!Handwriting.hasContent()) {
+        if (this.mode === 'normal' && !Handwriting.hasContent()) {
             alert('请先书写');
             return;
         }
         
         const word = this.currentWords[this.currentIndex];
-        const snapshot = Handwriting.getSnapshot();
+        const snapshot = this.mode === 'normal' ? Handwriting.getSnapshot() : null;
         const wordStartTime = this.practiceLog.wordTimes.length > 0 ? 
             Date.now() - (this.practiceLog.wordTimes[this.practiceLog.wordTimes.length - 1] * 1000 + this.practiceLog.startTime) : 
             Date.now() - this.practiceLog.startTime;
@@ -316,8 +344,14 @@ const Practice = {
                 Debug.log('info', `图片快照大小: ${(snapshot.length / 1024).toFixed(2)}KB`, 'recognition');
             }
             
-            // 调用识别
-            const result = await Recognition.recognize(snapshot, word.word);
+            let result = { success: true, passed: false, recognized: '' };
+            if (this.mode === 'normal') {
+                // 调用识别
+                result = await Recognition.recognize(snapshot, word.word);
+            } else {
+                // 纸质模式：直接通过到下一题
+                result = { success: true, passed: true, recognized: '' };
+            }
             
             // 调试日志
             if (typeof Debug !== 'undefined') {
@@ -338,16 +372,25 @@ const Practice = {
             
             if (result.passed) {
                 // 正确
-                this.practiceLog.correctCount++;
-                // 保存详情（保留正确也保留快照）
-                this.practiceLog.details.push({ wordId: word.id, correct: true, snapshot });
-                this.showFeedback(true, word, '');
+                if (this.mode === 'normal') {
+                    this.practiceLog.correctCount++;
+                    // 保存详情（保留正确也保留快照）
+                    this.practiceLog.details.push({ wordId: word.id, correct: true, snapshot });
+                    this.showFeedback(true, word, '');
+                } else {
+                    // 纸质模式：不反馈对错，快速进入下一题
+                    document.getElementById('feedback-area').innerHTML = '';
+                }
             } else {
                 // 错误
-                this.practiceLog.errorCount++;
-                await this.recordError(word, snapshot);
-                this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot });
-                this.showFeedback(false, word, result.recognized);
+                if (this.mode === 'normal') {
+                    this.practiceLog.errorCount++;
+                    await this.recordError(word, snapshot);
+                    this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot });
+                    this.showFeedback(false, word, result.recognized);
+                } else {
+                    document.getElementById('feedback-area').innerHTML = '';
+                }
             }
             // 持续草稿保存
             this.saveAutosaveDraft();
@@ -364,7 +407,7 @@ const Practice = {
                 }
                 this.currentIndex++;
                 this.showNextWord();
-            }, 2000);
+            }, this.mode === 'normal' ? 2000 : 300);
         } catch (error) {
             console.error('提交失败:', error);
             
@@ -584,11 +627,13 @@ const Practice = {
         const countSelect = document.getElementById('word-count-select');
         const countInput = document.getElementById('word-count-input');
         const timeInput = document.getElementById('time-limit-input');
+        const modeHome = document.getElementById('practice-mode-select-home');
         if (p.wordCount !== undefined) {
             if (countSelect) countSelect.value = (p.wordCount === 'all' ? 'all' : String(p.wordCount || '20'));
             if (countInput) countInput.value = (p.wordCount && p.wordCount !== 'all') ? String(p.wordCount) : '';
         }
         if (p.timeLimit !== undefined && timeInput) timeInput.value = p.timeLimit;
+        if (p.mode && modeHome) modeHome.value = p.mode;
     }
 };
 
@@ -618,6 +663,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (endBtn) {
         endBtn.addEventListener('click', () => Practice.end());
+    }
+    const pauseBtn = document.getElementById('pause-practice-btn');
+    if (pauseBtn) {
+        pauseBtn.addEventListener('click', () => {
+            if (Practice.isPaused) Practice.resume(); else Practice.pause();
+        });
     }
     
     const prevBtn = document.getElementById('prev-question-btn');

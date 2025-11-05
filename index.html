@@ -18,7 +18,7 @@
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#home">
                 <i class="bi bi-pencil-square"></i> 看拼音写词
-                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.18</span>
+                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.19</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -154,12 +154,19 @@
                                     <label class="form-label">时间限制（秒/字）</label>
                                     <input type="number" class="form-control" id="time-limit-input-home" value="30" min="5" max="120">
                                 </div>
-                                <div class="col-12">
+                        <div class="col-12">
                                     <label class="form-label">练习范围</label>
                                     <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
                                         <div id="practice-range-container-home"></div>
                                     </div>
                                 </div>
+                        <div class="col-12">
+                            <label class="form-label">练习模式</label>
+                            <select class="form-select" id="practice-mode-select-home" style="max-width: 220px;">
+                                <option value="normal" selected>标准模式（识别+判题）</option>
+                                <option value="paper">纸质书写模式（不判题）</option>
+                            </select>
+                        </div>
                                 <div class="col-12">
                                     <button class="btn btn-primary" id="start-practice-btn-home"><i class="bi bi-play-fill"></i> 开始练习</button>
                                 </div>
@@ -259,7 +266,10 @@
                         <span class="badge bg-transparent text-primary border border-primary" id="progress-badge">1/20</span>
                         <span class="badge bg-transparent text-info border border-info ms-2" id="timer-badge">30秒</span>
                     </div>
-                    <button class="btn btn-sm btn-secondary" id="end-practice-btn">结束练习</button>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-secondary" id="pause-practice-btn">暂停</button>
+                        <button class="btn btn-sm btn-secondary" id="end-practice-btn">结束练习</button>
+                    </div>
                 </div>
                 <div class="card-body text-center py-3">
                     <!-- 拼音显示 -->
@@ -389,6 +399,12 @@
                         </li>
                         <li class="nav-item">
                             <button class="nav-link" id="tab-summary" type="button">汇总视图</button>
+                        </li>
+                        <li class="ms-auto d-flex align-items-center">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="errorbook-only-wrong">
+                                <label class="form-check-label small" for="errorbook-only-wrong">只显示错题</label>
+                            </div>
                         </li>
                     </ul>
 

@@ -13,6 +13,8 @@ const ErrorBook = {
         const roundsEl = document.getElementById('errorbook-rounds');
         const summaryEl = document.getElementById('errorbook-summary');
         const batchBar = document.getElementById('errorbook-batch-toolbar');
+        const onlyWrongToggle = document.getElementById('errorbook-only-wrong');
+        const onlyWrong = !!(onlyWrongToggle && onlyWrongToggle.checked);
 
         if (!errorWords || errorWords.length === 0) {
             if (roundsEl) roundsEl.innerHTML = '';
@@ -25,7 +27,7 @@ const ErrorBook = {
         empty.style.display = 'none';
         if (batchBar) batchBar.style.display = adminMode ? 'flex' : 'none';
 
-        this.renderRoundsView(adminMode);
+        this.renderRoundsView(adminMode, { onlyWrong });
         this.renderSummaryView(adminMode);
 
         const tabRounds = document.getElementById('tab-rounds');
@@ -53,9 +55,14 @@ const ErrorBook = {
         if (clrSel) clrSel.onclick = () => this.toggleSelectAll(false);
         if (batchRemove) batchRemove.onclick = () => this.batchRemove();
         if (batchAdd) batchAdd.onclick = () => this.batchAdd();
+
+        if (onlyWrongToggle) {
+            onlyWrongToggle.onchange = () => this.load();
+        }
     },
 
-    renderRoundsView(adminMode) {
+    renderRoundsView(adminMode, opts = {}) {
+        const onlyWrong = !!opts.onlyWrong;
         const roundsEl = document.getElementById('errorbook-rounds');
         if (!roundsEl) return;
         const logs = ((Storage.getPracticeLogsFiltered && Storage.getPracticeLogsFiltered()) || Storage.getPracticeLogs() || []).slice().reverse();
@@ -69,7 +76,9 @@ const ErrorBook = {
             const title = `第${logs.length - idx}轮 · ${timeStr} · ${log.totalTime.toFixed(0)}s · 正确${log.correctCount}/${log.totalWords} · 准确率${acc}% · 速度${speed}s/字`;
             const collapseId = `err-round-${idx}`;
             const expanded = idx < 5; // 默认展开最近5轮
-            const cards = (log.details && log.details.length ? log.details : (log.errorWords||[]).map(id=>({wordId:id,correct:false,snapshot:(errorMap.get(id)?.handwritingSnapshots?.slice(-1)[0]?.snapshot)||''}))).map(d => {
+            const items = (log.details && log.details.length ? log.details : (log.errorWords||[]).map(id=>({wordId:id,correct:false,snapshot:(errorMap.get(id)?.handwritingSnapshots?.slice(-1)[0]?.snapshot)||''})));
+            const filtered = onlyWrong ? items.filter(d => d.correct === false) : items;
+            const cards = filtered.map(d => {
                 const id = d.wordId;
                 const w = wordBank.find(x => x.id === id);
                 if (!w) return '';
@@ -119,6 +128,45 @@ const ErrorBook = {
             `;
         }).join('');
         roundsEl.innerHTML = html || '<div class="text-muted small">暂无练习记录</div>';
+    },
+
+    // 提供给结果页复用的渲染：仅一轮
+    renderCardsForLog(log, adminMode = false) {
+        const container = document.getElementById('error-words-list');
+        if (!container || !log) return;
+        const wordBank = Storage.getWordBank();
+        const errorMap = new Map((Storage.getErrorWords() || []).map(e => [e.wordId, e]));
+        const items = (log.details && log.details.length ? log.details : (log.errorWords||[]).map(id=>({wordId:id,correct:false,snapshot:(errorMap.get(id)?.handwritingSnapshots?.slice(-1)[0]?.snapshot)||''})));
+        const cards = items.map(d => {
+            const w = wordBank.find(x=>x.id===d.wordId);
+            if (!w) return '';
+            const ew = errorMap.get(d.wordId);
+            const latestSnapshot = d.snapshot || ew?.handwritingSnapshots?.[ew.handwritingSnapshots.length - 1]?.snapshot || '';
+            const groupsText = typeof WordGroups !== 'undefined' ? WordGroups.getDisplayText(w.word, w.pinyin || '') : (w.pinyin || '');
+            return `
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body p-2">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="d-flex align-items-start gap-2">
+                                ${adminMode ? `<input type=\"checkbox\" class=\"form-check-input mt-2 error-select\" data-id=\"${w.id}\">` : ''}
+                                <div>
+                                    <div class="fw-bold" style="font-size: 1.5rem; line-height: 1;">${w.word} ${d.correct ? '' : '<span title=\"错误\">❌</span>'}</div>
+                                    <div class="text-muted small mt-1" title="${groupsText}">${groupsText}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 align-items-center mt-2">
+                            <div class="word-box">${latestSnapshot ? `<img class=\"snapshot-invert\" src=\"${latestSnapshot}\" style=\"max-width: 90%; max-height: 90%; object-fit: contain;\">` : '<span class=\"text-muted small\">无快照</span>'}</div>
+                            <div class="word-box standard-dark-box text-center">
+                                <div class="standard-dark-text" style="font-size: 2.2rem; font-family: 'KaiTi','楷体',serif;">${w.word}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+        container.innerHTML = `<div class=\"row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3\">${cards || '<div class=\"text-muted small\">暂无错题</div>'}</div>`;
     },
 
     renderSummaryView(adminMode) {
