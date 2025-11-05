@@ -9,7 +9,8 @@ const Storage = {
         WORD_BANK: 'wordbank_data',
         PRACTICE_LOGS: 'practice_logs',
         ERROR_WORDS: 'error_words',
-        SETTINGS: 'practice_settings'
+        SETTINGS: 'practice_settings',
+        PRACTICE_AUTOSAVE: 'practice_autosave'
     },
 
     /**
@@ -104,6 +105,17 @@ const Storage = {
         logs.push(newLog);
         this.savePracticeLogs(logs);
         return newLog;
+    },
+
+    // 练习自动保存草稿
+    setPracticeAutosave(draft) {
+        try { localStorage.setItem(this.KEYS.PRACTICE_AUTOSAVE, JSON.stringify(draft)); } catch(e) {}
+    },
+    getPracticeAutosave() {
+        try { return JSON.parse(localStorage.getItem(this.KEYS.PRACTICE_AUTOSAVE) || 'null'); } catch(e) { return null; }
+    },
+    clearPracticeAutosave() {
+        try { localStorage.removeItem(this.KEYS.PRACTICE_AUTOSAVE); } catch(e) {}
     },
 
     /**

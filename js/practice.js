@@ -136,6 +136,24 @@ const Practice = {
         }
     },
     
+    /** autosave draft of current progress to localStorage */
+    saveAutosaveDraft() {
+        if (!this.practiceLog) return;
+        const snapshot = {
+            totalWords: this.practiceLog.totalWords,
+            correctCount: this.practiceLog.correctCount,
+            errorCount: this.practiceLog.errorCount,
+            totalTime: this.practiceLog.totalTime,
+            averageTime: this.practiceLog.totalWords > 0 ? this.practiceLog.totalTime / this.practiceLog.totalWords : 0,
+            errorWords: this.practiceLog.errorWords,
+            details: this.practiceLog.details,
+            status: 'partial'
+        };
+        if (typeof Storage !== 'undefined' && Storage.setPracticeAutosave) {
+            Storage.setPracticeAutosave(snapshot);
+        }
+    },
+    
     /**
      * 根据范围获取题目
      */
@@ -261,6 +279,9 @@ const Practice = {
             this.currentIndex++;
             this.showNextWord();
         }, 2000);
+        
+        // 持续草稿保存
+        this.saveAutosaveDraft();
     },
     
     /**
@@ -328,6 +349,8 @@ const Practice = {
                 this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot });
                 this.showFeedback(false, word, result.recognized);
             }
+            // 持续草稿保存
+            this.saveAutosaveDraft();
             
             // 2秒后下一题
             setTimeout(() => {
@@ -430,6 +453,9 @@ const Practice = {
             
             this.currentIndex++;
             this.showNextWord();
+            
+            // 持续草稿保存
+            this.saveAutosaveDraft();
         }
     },
     
@@ -460,6 +486,11 @@ const Practice = {
         // 跳转到结果页面
         if (typeof Main !== 'undefined') {
             Main.showResults(log.id);
+        }
+        
+        // 清除草稿
+        if (typeof Storage !== 'undefined' && Storage.clearPracticeAutosave) {
+            Storage.clearPracticeAutosave();
         }
     },
     

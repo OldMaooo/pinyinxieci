@@ -71,6 +71,28 @@ const Main = {
         // 绑定结果页面按钮
         this.bindResultButtons();
 
+        // 页面可见性与退出时的自动保存
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && typeof Practice !== 'undefined' && Practice.savePartialIfActive) {
+                Practice.savePartialIfActive();
+            }
+        });
+        window.addEventListener('beforeunload', () => {
+            if (typeof Practice !== 'undefined' && Practice.savePartialIfActive) {
+                Practice.savePartialIfActive();
+            }
+        });
+
+        // 启动时检查是否存在未提交草稿，入库为 partial 并清除
+        if (typeof Storage !== 'undefined' && Storage.getPracticeAutosave) {
+            const draft = Storage.getPracticeAutosave();
+            if (draft && draft.totalWords) {
+                let isDebug = false; try { isDebug = localStorage.getItem('debugMode') === '1'; } catch(e) {}
+                Storage.addPracticeLog({ ...draft, status: 'partial', isDebug });
+                Storage.clearPracticeAutosave && Storage.clearPracticeAutosave();
+            }
+        }
+
         // 调试模式开关兜底初始化（Debug 会在自身 init 中处理，这里确保一致性）
         const dbgSwitch = document.getElementById('debug-mode-switch');
         if (dbgSwitch) {
