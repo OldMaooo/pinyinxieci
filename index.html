@@ -18,17 +18,19 @@
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#home">
                 <i class="bi bi-pencil-square"></i> 看拼音写词
-                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.15</span>
-                <div class="ms-3 form-check form-switch d-none d-md-flex align-items-center">
-                    <input class="form-check-input" type="checkbox" id="debug-mode-switch" aria-label="切换调试模式">
-                    <label class="form-check-label ms-2 small" for="debug-mode-switch">调试</label>
-                </div>
+                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.16</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item d-none d-md-flex align-items-center me-2">
+                        <div class="form-check form-switch m-0" onclick="event.stopPropagation();">
+                            <input class="form-check-input" type="checkbox" id="debug-mode-switch" aria-label="切换调试模式">
+                            <label class="form-check-label ms-2 small" for="debug-mode-switch">调试</label>
+                        </div>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#home">首页</a>
                     </li>

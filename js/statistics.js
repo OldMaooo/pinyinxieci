@@ -8,7 +8,7 @@ const Statistics = {
      */
     updateHomeStats() {
         const wordBank = Storage.getWordBank();
-        const logs = Storage.getPracticeLogs();
+        const logs = (Storage.getPracticeLogsFiltered && Storage.getPracticeLogsFiltered()) || Storage.getPracticeLogs();
         const errorWords = Storage.getErrorWords();
         
         // 总词数
@@ -40,7 +40,7 @@ const Statistics = {
      * 显示练习结果
      */
     showResults(logId) {
-        const logs = Storage.getPracticeLogs();
+        const logs = (Storage.getPracticeLogsFiltered && Storage.getPracticeLogsFiltered()) || Storage.getPracticeLogs();
         const log = logs.find(l => l.id === logId);
         
         if (!log) {

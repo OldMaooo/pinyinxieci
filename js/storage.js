@@ -78,6 +78,18 @@ const Storage = {
         return data ? JSON.parse(data) : [];
     },
 
+    /**
+     * 获取练习记录（根据当前调试模式过滤）
+     * - 调试模式关闭时：自动过滤掉 isDebug=true 的记录
+     * - 调试模式开启时：返回全部记录
+     */
+    getPracticeLogsFiltered() {
+        const logs = this.getPracticeLogs();
+        let debugOn = false; try { debugOn = localStorage.getItem('debugMode') === '1'; } catch(e) {}
+        if (debugOn) return logs;
+        return logs.filter(l => !l.isDebug);
+    },
+
     savePracticeLogs(logs) {
         localStorage.setItem(this.KEYS.PRACTICE_LOGS, JSON.stringify(logs));
     },

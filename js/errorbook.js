@@ -58,7 +58,7 @@ const ErrorBook = {
     renderRoundsView(adminMode) {
         const roundsEl = document.getElementById('errorbook-rounds');
         if (!roundsEl) return;
-        const logs = (Storage.getPracticeLogs() || []).slice().reverse();
+        const logs = ((Storage.getPracticeLogsFiltered && Storage.getPracticeLogsFiltered()) || Storage.getPracticeLogs() || []).slice().reverse();
         const wordBank = Storage.getWordBank();
         const errorMap = new Map((Storage.getErrorWords() || []).map(e => [e.wordId, e]));
         const html = logs.map((log, idx) => {
