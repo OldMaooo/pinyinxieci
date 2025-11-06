@@ -10,6 +10,7 @@ const Handwriting = {
     ctx: null,
     isDrawing: false,
     currentPath: [],
+    paths: [], // 所有笔画路径历史
     
     /**
      * 初始化Canvas
@@ -187,6 +188,10 @@ const Handwriting = {
     stopDrawing() {
         if (this.isDrawing) {
             this.isDrawing = false;
+            // 保存当前路径到历史
+            if (this.currentPath.length > 0) {
+                this.paths.push([...this.currentPath]);
+            }
             this.ctx.beginPath();
         }
     },
@@ -199,7 +204,36 @@ const Handwriting = {
         const height = this.canvas.height / (window.devicePixelRatio || 1);
         this.ctx.clearRect(0, 0, width, height);
         this.currentPath = [];
+        this.paths = [];
         this.drawTianZiGrid();
+    },
+
+    /**
+     * 撤销最后一笔
+     */
+    undo() {
+        if (this.paths.length === 0) return;
+        // 移除最后一条路径
+        this.paths.pop();
+        // 重绘画布
+        const width = this.canvas.width / (window.devicePixelRatio || 1);
+        const height = this.canvas.height / (window.devicePixelRatio || 1);
+        this.ctx.clearRect(0, 0, width, height);
+        this.drawTianZiGrid();
+        // 重新绘制所有路径
+        this.ctx.strokeStyle = this.getInkColor();
+        this.ctx.lineWidth = 10;
+        this.ctx.lineCap = 'round';
+        this.ctx.lineJoin = 'round';
+        this.paths.forEach(path => {
+            if (path.length === 0) return;
+            this.ctx.beginPath();
+            this.ctx.moveTo(path[0].x, path[0].y);
+            for (let i = 1; i < path.length; i++) {
+                this.ctx.lineTo(path[i].x, path[i].y);
+            }
+            this.ctx.stroke();
+        });
     },
     
     /**

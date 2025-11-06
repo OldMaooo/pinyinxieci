@@ -276,17 +276,46 @@ const Main = {
                 const countSelectHome = document.getElementById('word-count-select-home');
                 const timeHome = document.getElementById('time-limit-input-home');
                 const modeHome = document.getElementById('practice-mode-select-home');
-                const count = countHome ? parseInt(countHome.value) : 20;
+                
+                // 优先使用输入框值，否则使用下拉框值
+                let resolvedCount = 'all';
+                if (countHome && countHome.value && countHome.value.trim() !== '') {
+                    const inputVal = parseInt(countHome.value);
+                    if (isFinite(inputVal) && inputVal > 0) {
+                        resolvedCount = inputVal;
+                    }
+                } else if (countSelectHome && countSelectHome.value) {
+                    if (countSelectHome.value === 'all') {
+                        resolvedCount = 'all';
+                    } else {
+                        const selectVal = parseInt(countSelectHome.value);
+                        if (isFinite(selectVal) && selectVal > 0) {
+                            resolvedCount = selectVal;
+                        }
+                    }
+                }
+                
                 const time = timeHome ? parseInt(timeHome.value) : 30;
                 const countInput = document.getElementById('word-count-input');
                 const countSelect = document.getElementById('word-count-select');
                 const timeInput = document.getElementById('time-limit-input');
-                if (countInput) countInput.value = isFinite(count) && count > 0 ? String(count) : '20';
-                if (countSelect && countSelectHome) countSelect.value = countSelectHome.value;
+                if (countInput) {
+                    if (resolvedCount === 'all') {
+                        countInput.value = '';
+                    } else {
+                        countInput.value = String(resolvedCount);
+                    }
+                }
+                if (countSelect) {
+                    if (resolvedCount === 'all') {
+                        countSelect.value = 'all';
+                    } else {
+                        countSelect.value = String(resolvedCount);
+                    }
+                }
                 // 保存设置
                 if (typeof Storage !== 'undefined') {
                     const settings = Storage.getSettings() || {};
-                    const resolvedCount = (countHome && countHome.value) ? parseInt(countHome.value) : (countSelectHome ? (countSelectHome.value === 'all' ? 'all' : parseInt(countSelectHome.value)) : 20);
                     settings.practice = { wordCount: resolvedCount, timeLimit: time, mode: (modeHome && modeHome.value) || 'normal' };
                     Storage.saveSettings(settings);
                 }
@@ -312,12 +341,27 @@ const Main = {
             const settings = Storage.getSettings() || {};
             const p = settings.practice || {};
             if (countSelectHomeEl && p.wordCount !== undefined) {
-                countSelectHomeEl.value = (p.wordCount === 'all' ? 'all' : String(p.wordCount || '20'));
-            }
-            if (countInputHomeEl && p.wordCount && p.wordCount !== 'all') {
-                countInputHomeEl.value = String(p.wordCount);
+                if (p.wordCount === 'all') {
+                    countSelectHomeEl.value = 'all';
+                    if (countInputHomeEl) countInputHomeEl.value = '';
+                } else {
+                    countSelectHomeEl.value = String(p.wordCount || '20');
+                    if (countInputHomeEl) countInputHomeEl.value = String(p.wordCount || '20');
+                }
             }
             if (timeHomeEl && p.timeLimit !== undefined) timeHomeEl.value = p.timeLimit;
+        }
+        
+        // 下拉框变更时自动填入输入框
+        if (countSelectHomeEl && countInputHomeEl) {
+            countSelectHomeEl.addEventListener('change', (e) => {
+                const val = e.target.value;
+                if (val === 'all' || val === '') {
+                    countInputHomeEl.value = '';
+                } else {
+                    countInputHomeEl.value = val;
+                }
+            });
         }
     },
     

@@ -609,6 +609,35 @@ const Practice = {
     },
     
     /**
+     * 跳转到下一题（手动）
+     */
+    showNextQuestion() {
+        if (this.currentIndex >= this.currentWords.length - 1) {
+            alert('已经是最后一题了');
+            return;
+        }
+        
+        // 停止当前计时器
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+        }
+        
+        // 保存当前题目到历史
+        const word = this.currentWords[this.currentIndex];
+        if (this.currentIndex < this.currentWords.length) {
+            this.history.push({
+                word: word,
+                index: this.currentIndex,
+                snapshot: null
+            });
+        }
+        
+        this.currentIndex++;
+        this.showNextWord();
+    },
+    
+    /**
      * 数组随机打乱
      */
     shuffleArray(array) {
@@ -674,6 +703,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevBtn = document.getElementById('prev-question-btn');
     if (prevBtn) {
         prevBtn.addEventListener('click', () => Practice.showPreviousWord());
+    }
+    
+    const nextBtn = document.getElementById('next-question-btn');
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => Practice.showNextQuestion());
+    }
+    
+    const undoBtn = document.getElementById('undo-stroke-btn');
+    if (undoBtn) {
+        undoBtn.addEventListener('click', () => {
+            if (typeof Handwriting !== 'undefined' && Handwriting.undo) {
+                Handwriting.undo();
+            }
+        });
     }
 
     // 加载上次练习设置

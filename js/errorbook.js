@@ -137,21 +137,24 @@ const ErrorBook = {
         const wordBank = Storage.getWordBank();
         const errorMap = new Map((Storage.getErrorWords() || []).map(e => [e.wordId, e]));
         const items = (log.details && log.details.length ? log.details : (log.errorWords||[]).map(id=>({wordId:id,correct:false,snapshot:(errorMap.get(id)?.handwritingSnapshots?.slice(-1)[0]?.snapshot)||''})));
-        const cards = items.map(d => {
+        const cards = items.map((d, idx) => {
             const w = wordBank.find(x=>x.id===d.wordId);
             if (!w) return '';
             const ew = errorMap.get(d.wordId);
             const latestSnapshot = d.snapshot || ew?.handwritingSnapshots?.[ew.handwritingSnapshots.length - 1]?.snapshot || '';
             const groupsText = typeof WordGroups !== 'undefined' ? WordGroups.getDisplayText(w.word, w.pinyin || '') : (w.pinyin || '');
+            const isWrong = !d.correct;
             return `
             <div class="col">
                 <div class="card h-100 shadow-sm">
-                    <div class="card-body p-2">
+                    <div class="card-body p-2 position-relative">
+                        <div class="position-absolute top-0 end-0 me-2 mt-1">
+                            <input type="checkbox" class="form-check-input result-correct-toggle" data-log-id="${log.id}" data-word-id="${w.id}" data-item-idx="${idx}" ${isWrong ? 'checked' : ''} title="点击修改对错状态">
+                        </div>
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="d-flex align-items-start gap-2">
-                                ${adminMode ? `<input type=\"checkbox\" class=\"form-check-input mt-2 error-select\" data-id=\"${w.id}\">` : ''}
                                 <div>
-                                    <div class="fw-bold" style="font-size: 1.5rem; line-height: 1;">${w.word} ${d.correct ? '' : '<span title=\"错误\">❌</span>'}</div>
+                                    <div class="fw-bold" style="font-size: 1.5rem; line-height: 1;">${w.word}</div>
                                     <div class="text-muted small mt-1" title="${groupsText}">${groupsText}</div>
                                 </div>
                             </div>
@@ -167,6 +170,19 @@ const ErrorBook = {
             </div>`;
         }).join('');
         container.innerHTML = `<div class=\"row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3\">${cards || '<div class=\"text-muted small\">暂无错题</div>'}</div>`;
+        
+        // 绑定复选框事件
+        container.querySelectorAll('.result-correct-toggle').forEach(cb => {
+            cb.addEventListener('change', (e) => {
+                const logId = e.target.getAttribute('data-log-id');
+                const wordId = e.target.getAttribute('data-word-id');
+                const itemIdx = parseInt(e.target.getAttribute('data-item-idx'));
+                const isChecked = e.target.checked; // checked = 错误
+                if (typeof Statistics !== 'undefined' && Statistics.updateResultItemStatus) {
+                    Statistics.updateResultItemStatus(logId, itemIdx, !isChecked);
+                }
+            });
+        });
     },
 
     renderSummaryView(adminMode) {

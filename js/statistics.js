@@ -123,5 +123,50 @@ const Statistics = {
         });
         
         errorList.innerHTML = html;
+    },
+    
+    /**
+     * 更新结果页中单个题目的对错状态
+     */
+    updateResultItemStatus(logId, itemIdx, isCorrect) {
+        const logs = Storage.getPracticeLogs();
+        const log = logs.find(l => l.id === logId);
+        if (!log || !log.details || itemIdx >= log.details.length) return;
+        
+        const item = log.details[itemIdx];
+        const wasCorrect = item.correct;
+        item.correct = isCorrect;
+        
+        // 更新统计计数
+        if (wasCorrect && !isCorrect) {
+            log.correctCount = Math.max(0, (log.correctCount || 0) - 1);
+            log.errorCount = (log.errorCount || 0) + 1;
+            if (!log.errorWords) log.errorWords = [];
+            if (!log.errorWords.includes(item.wordId)) {
+                log.errorWords.push(item.wordId);
+            }
+        } else if (!wasCorrect && isCorrect) {
+            log.correctCount = (log.correctCount || 0) + 1;
+            log.errorCount = Math.max(0, (log.errorCount || 0) - 1);
+            if (log.errorWords) {
+                const idx = log.errorWords.indexOf(item.wordId);
+                if (idx >= 0) log.errorWords.splice(idx, 1);
+            }
+        }
+        
+        // 保存
+        Storage.savePracticeLogs(logs);
+        
+        // 更新显示
+        document.getElementById('result-correct').textContent = log.correctCount || 0;
+        document.getElementById('result-error').textContent = log.errorCount || 0;
+        const accuracy = log.totalWords > 0 ? 
+            Math.round((log.correctCount / log.totalWords) * 100) : 0;
+        document.getElementById('result-accuracy').textContent = `${accuracy}%`;
+        
+        // 更新卡片显示（重新渲染）
+        if (typeof ErrorBook !== 'undefined' && ErrorBook.renderCardsForLog) {
+            ErrorBook.renderCardsForLog(log, false);
+        }
     }
 };
