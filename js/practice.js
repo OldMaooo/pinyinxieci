@@ -282,22 +282,45 @@ const Practice = {
         const word = this.currentWords[this.currentIndex];
         let snapshot = null;
         if (this.mode === 'normal') {
-            // 获取当前快照（即使超时也要保存）
-            if (typeof Handwriting !== 'undefined' && Handwriting.hasContent && Handwriting.hasContent()) {
+            // 获取当前快照（有内容则识别，无内容直接判错）
+            const hasInk = (typeof Handwriting !== 'undefined' && Handwriting.hasContent && Handwriting.hasContent());
+            if (hasInk) {
                 snapshot = Handwriting.getSnapshot();
-            }
-            // 记录为错题
-            await this.recordError(word, snapshot);
-            // 保存详情
-            if (this.practiceLog && this.practiceLog.details) {
-                this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: snapshot });
+                // 自动提交并判断对错
+                try {
+                    if (typeof Debug !== 'undefined') {
+                        Debug.log('info', `超时自动识别字符: ${word.word}`, 'recognition');
+                        Debug.log('info', `图片快照大小: ${(snapshot.length / 1024).toFixed(2)}KB`, 'recognition');
+                    }
+                    const result = await Recognition.recognize(snapshot, word.word);
+                    // 记录时间
+                    this.practiceLog.totalTime += wordTime;
+                    if (result.success && result.passed) {
+                        this.practiceLog.correctCount++;
+                        this.practiceLog.details.push({ wordId: word.id, correct: true, snapshot });
+                        this.showFeedback(true, word, '');
+                    } else {
+                        this.practiceLog.errorCount++;
+                        await this.recordError(word, snapshot);
+                        this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot });
+                        this.showFeedback(false, word, result.recognized || '时间到');
+                    }
+                } catch (e) {
+                    this.practiceLog.errorCount++;
+                    await this.recordError(word, snapshot);
+                    this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot });
+                    this.showFeedback(false, word, '时间到');
+                }
+            } else {
+                // 无内容：直接判错
+                this.practiceLog.errorCount++;
+                await this.recordError(word, null);
+                this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null });
+                this.showFeedback(false, word, '时间到');
             }
         } else {
             // 纸质模式：不记录错题/详情
         }
-        
-        // 显示反馈
-        this.showFeedback(false, word, '时间到');
         
         // 2秒后下一题
         setTimeout(() => {
@@ -622,6 +645,12 @@ const Practice = {
             return;
         }
         
+        // 如果当前有未提交的笔迹，自动提交并判断
+        if (this.mode === 'normal' && typeof Handwriting !== 'undefined' && Handwriting.hasContent && Handwriting.hasContent()) {
+            this.submitAnswer();
+            return;
+        }
+
         // 停止当前计时器
         if (this.timer) {
             clearInterval(this.timer);

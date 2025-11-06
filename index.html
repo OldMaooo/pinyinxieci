@@ -18,7 +18,7 @@
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#home">
                 <i class="bi bi-pencil-square"></i> 看拼音写词
-                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.21</span>
+                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.22</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -130,14 +130,15 @@
         <!-- 首页 -->
         <section id="home" class="page-section">
             <div class="row g-4">
+                <!-- 左栏：设置项（竖排） -->
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0"><i class="bi bi-gear"></i> 题目设置</h5>
                         </div>
                         <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-md-6">
+                            <div class="row g-3 flex-column">
+                                <div class="col-12">
                                     <label class="form-label">题目数量</label>
                                     <div class="input-group">
                                         <input type="number" class="form-control" id="word-count-input-home" value="20" min="1" placeholder="输入数量">
@@ -151,17 +152,11 @@
                                     </div>
                                     <div class="form-text">可直接输入或从下拉选择快捷选项</div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12">
                                     <label class="form-label">时间限制（秒/字）</label>
                                     <input type="number" class="form-control" id="time-limit-input-home" value="30" min="5" max="120">
                                 </div>
-                        <div class="col-12">
-                                    <label class="form-label">练习范围</label>
-                                    <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
-                                        <div id="practice-range-container-home"></div>
-                                    </div>
-                                </div>
-                        <div class="col-12">
+                                <div class="col-12">
                             <label class="form-label">练习模式</label>
                             <select class="form-select" id="practice-mode-select-home" style="max-width: 220px;">
                                 <option value="normal" selected>标准模式（识别+判题）</option>
@@ -175,44 +170,55 @@
                         </div>
                     </div>
                 </div>
+                <!-- 右栏：练习范围 -->
                 <div class="col-lg-6">
                     <div class="card h-100">
                         <div class="card-header">
-                            <h5 class="mb-0"><i class="bi bi-graph-up"></i> 学习统计</h5>
+                            <h5 class="mb-0"><i class="bi bi-layers"></i> 练习范围</h5>
                         </div>
                         <div class="card-body">
-                            <div class="row text-center">
-                                <div class="col-3">
-                                    <div class="stat-item">
-                                        <div class="stat-value" id="stat-total-words">0</div>
-                                        <div class="stat-label">总词数</div>
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="stat-item">
-                                        <div class="stat-value" id="stat-practiced">0</div>
-                                        <div class="stat-label">已练习</div>
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="stat-item">
-                                        <div class="stat-value" id="stat-accuracy">0%</div>
-                                        <div class="stat-label">正确率</div>
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="stat-item">
-                                        <div class="stat-value" id="stat-error-words">0</div>
-                                        <div class="stat-label">错题数</div>
-                                    </div>
-                                </div>
+                            <div class="border rounded p-3" style="max-height: 420px; overflow-y: auto;">
+                                <div id="practice-range-container-home"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            
+            <!-- 学习统计：移动到页面底部 -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-graph-up"></i> 学习统计</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-3">
+                            <div class="stat-item">
+                                <div class="stat-value" id="stat-total-words">0</div>
+                                <div class="stat-label">总词数</div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="stat-item">
+                                <div class="stat-value" id="stat-practiced">0</div>
+                                <div class="stat-label">已练习</div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="stat-item">
+                                <div class="stat-value" id="stat-accuracy">0%</div>
+                                <div class="stat-label">正确率</div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="stat-item">
+                                <div class="stat-value" id="stat-error-words">0</div>
+                                <div class="stat-label">错题数</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- 练习页面 -->
