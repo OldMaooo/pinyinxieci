@@ -87,13 +87,33 @@ python extract_pdf.py
 ├── js/
 │   ├── main.js         # 主入口
 │   ├── storage.js      # 数据存储
-│   ├── handwriting.js # 手写输入
+│   ├── handwriting.js  # 手写输入
 │   ├── recognition.js  # 识别API
 │   ├── wordbank.js     # 题库管理
 │   ├── practice.js     # 练习逻辑
 │   ├── statistics.js   # 统计功能
-│   └── errorbook.js    # 错题本
-├── extract_pdf.py      # PDF提取工具
+│   ├── errorbook.js    # 错题本
+│   ├── config.js       # 配置文件
+│   ├── debug.js        # 调试模块
+│   ├── version.js      # 版本信息
+│   └── ...             # 其他模块
+├── api/
+│   └── baidu-proxy.js  # Vercel代理函数
+├── docs/               # 文档目录
+│   ├── 需求文档.md
+│   ├── 项目结构.md
+│   ├── chat.md         # 聊天记录总结
+│   └── ...             # 其他文档
+├── scripts/            # 脚本目录
+│   ├── extract_pdf.py  # PDF提取工具
+│   ├── proxy-server.js # 本地代理服务器
+│   └── ...             # 其他脚本
+├── data/               # 数据目录
+│   ├── backup/         # 备份文件
+│   └── *.json          # 题库数据文件
+├── upload/             # 上传目录（PDF文件）
+├── requirements.txt    # Python依赖
+├── chat.md            # 聊天记录总结
 └── README.md
 ```
 
