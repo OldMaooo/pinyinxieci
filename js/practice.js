@@ -280,12 +280,17 @@ const Practice = {
         this.practiceLog.wordTimes.push(wordTime);
         
         const word = this.currentWords[this.currentIndex];
+        let snapshot = null;
         if (this.mode === 'normal') {
+            // 获取当前快照（即使超时也要保存）
+            if (typeof Handwriting !== 'undefined' && Handwriting.hasContent && Handwriting.hasContent()) {
+                snapshot = Handwriting.getSnapshot();
+            }
             // 记录为错题
-            await this.recordError(word, null); // 超时，没有快照
+            await this.recordError(word, snapshot);
             // 保存详情
             if (this.practiceLog && this.practiceLog.details) {
-                this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null });
+                this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: snapshot });
             }
         } else {
             // 纸质模式：不记录错题/详情
@@ -301,7 +306,7 @@ const Practice = {
                 this.history.push({
                     word: word,
                     index: this.currentIndex,
-                    snapshot: null // 超时没有快照
+                    snapshot: snapshot
                 });
             }
             this.currentIndex++;

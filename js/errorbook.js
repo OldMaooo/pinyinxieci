@@ -140,8 +140,8 @@ const ErrorBook = {
         const cards = items.map((d, idx) => {
             const w = wordBank.find(x=>x.id===d.wordId);
             if (!w) return '';
-            const ew = errorMap.get(d.wordId);
-            const latestSnapshot = d.snapshot || ew?.handwritingSnapshots?.[ew.handwritingSnapshots.length - 1]?.snapshot || '';
+            // 优先使用本次练习的快照，而不是错题本历史快照
+            const latestSnapshot = d.snapshot || '';
             const groupsText = typeof WordGroups !== 'undefined' ? WordGroups.getDisplayText(w.word, w.pinyin || '') : (w.pinyin || '');
             const isWrong = !d.correct;
             return `

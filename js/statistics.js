@@ -3,6 +3,9 @@
  */
 
 const Statistics = {
+    currentLogId: null,
+    hasChanges: false,
+    
     /**
      * 更新首页统计
      */
@@ -48,19 +51,11 @@ const Statistics = {
             return;
         }
         
+        this.currentLogId = logId;
+        this.hasChanges = false;
+        
         // 显示统计数据
-        document.getElementById('result-total').textContent = log.totalWords || 0;
-        document.getElementById('result-correct').textContent = log.correctCount || 0;
-        document.getElementById('result-error').textContent = log.errorCount || 0;
-        
-        const accuracy = log.totalWords > 0 ? 
-            Math.round((log.correctCount / log.totalWords) * 100) : 0;
-        document.getElementById('result-accuracy').textContent = `${accuracy}%`;
-        
-        document.getElementById('result-total-time').textContent = 
-            `${Math.round(log.totalTime || 0)}秒`;
-        document.getElementById('result-avg-time').textContent = 
-            `${Math.round(log.averageTime || 0)}秒`;
+        this.updateResultStats(log);
         
         // 结果页错题卡片：复用错题本卡片样式
         if (typeof ErrorBook !== 'undefined' && ErrorBook.renderCardsForLog) {
@@ -69,10 +64,42 @@ const Statistics = {
             this.showErrorWordsList(log.errorWords || []);
         }
         
+        // 绑定确认修改按钮
+        const confirmBtn = document.getElementById('confirm-changes-btn');
+        if (confirmBtn) {
+            confirmBtn.disabled = true;
+            confirmBtn.onclick = () => {
+                if (this.hasChanges) {
+                    this.hasChanges = false;
+                    confirmBtn.disabled = true;
+                    // 更新首页统计
+                    this.updateHomeStats();
+                    alert('修改已保存');
+                }
+            };
+        }
+        
         // 显示结果页面
         if (typeof Main !== 'undefined') {
             Main.showPage('results');
         }
+    },
+    
+    /**
+     * 更新结果页统计显示
+     */
+    updateResultStats(log) {
+        document.getElementById('result-total').textContent = log.totalWords || 0;
+        const correct = log.correctCount || 0;
+        const error = log.errorCount || 0;
+        const accuracy = log.totalWords > 0 ? 
+            Math.round((correct / log.totalWords) * 100) : 0;
+        document.getElementById('result-accuracy').textContent = `${accuracy}%`;
+        document.getElementById('result-correct-error').textContent = `正确${correct}，错误${error}`;
+        document.getElementById('result-total-time').textContent = 
+            `${Math.round(log.totalTime || 0)}秒`;
+        document.getElementById('result-avg-time').textContent = 
+            `${Math.round(log.averageTime || 0)}秒`;
     },
     
     /**
@@ -157,12 +184,15 @@ const Statistics = {
         // 保存
         Storage.savePracticeLogs(logs);
         
+        // 标记有修改并启用确认按钮
+        this.hasChanges = true;
+        const confirmBtn = document.getElementById('confirm-changes-btn');
+        if (confirmBtn) {
+            confirmBtn.disabled = false;
+        }
+        
         // 更新显示
-        document.getElementById('result-correct').textContent = log.correctCount || 0;
-        document.getElementById('result-error').textContent = log.errorCount || 0;
-        const accuracy = log.totalWords > 0 ? 
-            Math.round((log.correctCount / log.totalWords) * 100) : 0;
-        document.getElementById('result-accuracy').textContent = `${accuracy}%`;
+        this.updateResultStats(log);
         
         // 更新卡片显示（重新渲染）
         if (typeof ErrorBook !== 'undefined' && ErrorBook.renderCardsForLog) {

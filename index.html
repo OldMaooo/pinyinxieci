@@ -18,7 +18,7 @@
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#home">
                 <i class="bi bi-pencil-square"></i> 看拼音写词
-                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.20</span>
+                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.21</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -316,45 +316,23 @@
                 </div>
                 <div class="card-body">
                     <!-- 统计数据 -->
-                    <div class="row mb-4">
-                        <div class="col-md-3 text-center">
-                            <div class="stat-box">
-                                <div class="stat-number" id="result-total">0</div>
-                                <div class="stat-text">总题数</div>
-                            </div>
+                    <div class="d-flex justify-content-around align-items-center mb-4 flex-wrap gap-3">
+                        <div class="text-center">
+                            <div class="stat-number" id="result-total">0</div>
+                            <div class="stat-text">总题数</div>
                         </div>
-                        <div class="col-md-3 text-center">
-                            <div class="stat-box">
-                                <div class="stat-number text-success" id="result-correct">0</div>
-                                <div class="stat-text">正确</div>
-                            </div>
+                        <div class="text-center">
+                            <div class="stat-number" id="result-accuracy">0%</div>
+                            <div class="stat-text">正确率</div>
+                            <div class="small text-muted mt-1" id="result-correct-error">正确0，错误0</div>
                         </div>
-                        <div class="col-md-3 text-center">
-                            <div class="stat-box">
-                                <div class="stat-number text-danger" id="result-error">0</div>
-                                <div class="stat-text">错误</div>
-                            </div>
+                        <div class="text-center">
+                            <div class="stat-number" id="result-total-time">0秒</div>
+                            <div class="stat-text">总用时</div>
                         </div>
-                        <div class="col-md-3 text-center">
-                            <div class="stat-box">
-                                <div class="stat-number" id="result-accuracy">0%</div>
-                                <div class="stat-text">正确率</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row mb-4">
-                        <div class="col-md-6 text-center">
-                            <div class="stat-box">
-                                <div class="stat-number" id="result-total-time">0秒</div>
-                                <div class="stat-text">总用时</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 text-center">
-                            <div class="stat-box">
-                                <div class="stat-number" id="result-avg-time">0秒</div>
-                                <div class="stat-text">平均每字</div>
-                            </div>
+                        <div class="text-center">
+                            <div class="stat-number" id="result-avg-time">0秒</div>
+                            <div class="stat-text">平均每字</div>
                         </div>
                     </div>
                     
@@ -363,15 +341,15 @@
                     
                     <!-- 操作按钮 -->
                     <div class="text-center">
+                        <button class="btn btn-success btn-lg me-2" id="confirm-changes-btn" disabled>
+                            <i class="bi bi-check-circle"></i> 确认修改
+                        </button>
                         <button class="btn btn-primary btn-lg me-2" id="review-errors-btn">
                             <i class="bi bi-arrow-repeat"></i> 复习错题
                         </button>
-                        <button class="btn btn-secondary btn-lg me-2" id="practice-again-btn">
+                        <button class="btn btn-secondary btn-lg" id="practice-again-btn">
                             <i class="bi bi-arrow-clockwise"></i> 再练一次
                         </button>
-                        <a href="#home" class="btn btn-outline-secondary btn-lg">
-                            <i class="bi bi-house"></i> 返回首页
-                        </a>
                     </div>
                 </div>
             </div>
