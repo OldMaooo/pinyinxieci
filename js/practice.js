@@ -238,7 +238,22 @@ const Practice = {
                 }
             }
             // 每次练习随机抽取2个词语，词库上限4个
-            displayText = WordGroups.getDisplayText(word.word, word.pinyin || '', 2, 4);
+            const groupsText = WordGroups.getDisplayText(word.word, word.pinyin || '', 2, 4);
+            // 如果返回了有效文本，使用它；否则使用拼音或字本身
+            if (groupsText && groupsText.trim()) {
+                displayText = groupsText;
+            } else {
+                // 如果词组返回空，使用拼音或字本身
+                displayText = word.pinyin || word.word || '';
+            }
+        } else {
+            // 如果没有WordGroups，使用拼音或字本身
+            displayText = word.pinyin || word.word || '';
+        }
+        
+        // 确保displayText不为空
+        if (!displayText || !displayText.trim()) {
+            displayText = word.word || '';
         }
         
         // 使用textContent确保正确显示
@@ -646,8 +661,22 @@ const Practice = {
                         console.warn('显示上一题时加载词组数据失败:', e);
                     }
                 }
-                displayText = WordGroups.getDisplayText(word.word, word.pinyin || '', 2, 4);
+                const groupsText = WordGroups.getDisplayText(word.word, word.pinyin || '', 2, 4);
+                // 如果返回了有效文本，使用它；否则使用拼音或字本身
+                if (groupsText && groupsText.trim()) {
+                    displayText = groupsText;
+                } else {
+                    displayText = word.pinyin || word.word || '';
+                }
+            } else {
+                displayText = word.pinyin || word.word || '';
             }
+            
+            // 确保displayText不为空
+            if (!displayText || !displayText.trim()) {
+                displayText = word.word || '';
+            }
+            
             pinyinDisplay.textContent = displayText;
         }
         

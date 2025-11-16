@@ -203,7 +203,17 @@ const WordGroups = {
                 [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
             }
             const picked = shuffled.slice(0, Math.min(pickCount, shuffled.length));
-            return picked.join('，');
+            // 如果picked为空，返回字本身
+            if (picked.length === 0) {
+                console.warn('[WordGroups.getDisplayText] 没有拼音时picked为空，返回字:', word);
+                return word;
+            }
+            const result = picked.join('，');
+            // 确保结果不为空
+            if (!result || !result.trim()) {
+                return word;
+            }
+            return result;
         }
         
         // 有拼音时，替换字为拼音（确保 finalPinyin 是字符串）
@@ -216,12 +226,26 @@ const WordGroups = {
             [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
         }
         const picked = shuffled.slice(0, Math.min(pickCount, shuffled.length));
+        
+        // 如果picked为空，返回拼音或字本身
+        if (picked.length === 0) {
+            console.warn('[WordGroups.getDisplayText] picked为空，返回拼音或字:', finalPinyin || word);
+            return finalPinyin || word;
+        }
+        
         const processed = picked.map(group => {
             // 确保替换的是字符串
             const pinyinStr = String(finalPinyin);
             return group.replace(new RegExp(word, 'g'), pinyinStr);
         });
         const result = processed.join('，');
+        
+        // 确保结果不为空
+        if (!result || !result.trim()) {
+            console.warn('[WordGroups.getDisplayText] 处理后的结果为空，返回拼音或字:', finalPinyin || word);
+            return finalPinyin || word;
+        }
+        
         console.log('[WordGroups.getDisplayText] 返回词组:', result);
         return result;
     }
