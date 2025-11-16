@@ -604,6 +604,13 @@
     <script src="js/practice-range.js"></script>
     <script src="js/main.js"></script>
     <script>
+        // 检查WordGroups是否正确定义
+        if (typeof WordGroups === 'undefined') {
+            console.error('[ERROR] WordGroups未定义！请检查js/word-groups.js是否正确加载');
+        } else {
+            console.log('[OK] WordGroups已定义');
+        }
+        
         // 初始化配置和数据（确保在Recognition加载后）
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof Config !== 'undefined') {

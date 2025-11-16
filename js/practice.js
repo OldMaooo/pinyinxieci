@@ -231,7 +231,9 @@ const Practice = {
         console.log('[Practice.showNextWord] WordGroups检查:', {
             wordGroupsDefined: typeof WordGroups !== 'undefined',
             word: word.word,
-            pinyin: word.pinyin
+            pinyin: word.pinyin,
+            windowWordGroups: typeof window.WordGroups !== 'undefined',
+            globalWordGroups: typeof globalThis.WordGroups !== 'undefined'
         });
         
         if (typeof WordGroups !== 'undefined') {
