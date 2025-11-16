@@ -57,8 +57,8 @@ const WordGroups = {
                     .catch(error => {
                         console.warn(`[WordGroups] 加载词组数据失败: ${source}`, error);
                         return {};
-                    })
-            )
+                    });
+            })
         ).then(() => {
             this._loaded = true;
             this._loading = false;
