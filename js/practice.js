@@ -243,13 +243,15 @@ const Practice = {
                 hasWord: word.word in WordGroups.groups
             });
             
+            // 确保词组数据已加载（如果未加载，先加载）
             if (!WordGroups._loaded && WordGroups.load) {
                 try {
                     console.log('[Practice.showNextWord] 开始加载词组数据...');
                     await WordGroups.load();
                     console.log('[Practice.showNextWord] 词组数据加载完成:', {
                         _loaded: WordGroups._loaded,
-                        groupsCount: Object.keys(WordGroups.groups).length
+                        groupsCount: Object.keys(WordGroups.groups).length,
+                        hasWord: word.word in WordGroups.groups
                     });
                 } catch (e) {
                     console.error('显示题目时加载词组数据失败:', e);
