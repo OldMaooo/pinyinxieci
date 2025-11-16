@@ -166,6 +166,15 @@ const WordGroups = {
         }
         
         const groups = this.getGroups(word);
+        console.log('[WordGroups.getDisplayText]', {
+            word: word,
+            pinyin: pinyin,
+            groups: groups,
+            groupsLength: groups.length,
+            _loaded: this._loaded,
+            totalGroups: Object.keys(this.groups).length
+        });
+        
         if (groups.length === 0) {
             // 如果没有词组，尝试生成拼音
             if (!pinyin) {
@@ -173,6 +182,7 @@ const WordGroups = {
                 pinyin = String(pinyin || '').trim();
             }
             // 返回拼音（如果拼音为空，返回字本身）
+            console.log('[WordGroups.getDisplayText] 没有词组，返回拼音:', pinyin || word);
             return pinyin || word;
         }
         
@@ -211,6 +221,8 @@ const WordGroups = {
             const pinyinStr = String(finalPinyin);
             return group.replace(new RegExp(word, 'g'), pinyinStr);
         });
-        return processed.join('，');
+        const result = processed.join('，');
+        console.log('[WordGroups.getDisplayText] 返回词组:', result);
+        return result;
     }
 };

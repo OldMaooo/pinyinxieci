@@ -27,13 +27,27 @@ const Practice = {
      * 开始练习
      */
     async start() {
-        // 确保词组数据已加载
-        if (typeof WordGroups !== 'undefined' && WordGroups.load && !WordGroups._loaded) {
+        // 确保词组数据已加载（无论是否已加载，都重新加载以确保最新）
+        if (typeof WordGroups !== 'undefined' && WordGroups.load) {
             try {
+                console.log('[Practice.start] 开始加载词组数据，当前状态:', {
+                    _loaded: WordGroups._loaded,
+                    _loading: WordGroups._loading,
+                    groupsCount: Object.keys(WordGroups.groups).length
+                });
+                // 强制重新加载，确保数据是最新的
+                WordGroups._loaded = false;
                 await WordGroups.load();
+                console.log('[Practice.start] 词组数据加载完成，状态:', {
+                    _loaded: WordGroups._loaded,
+                    groupsCount: Object.keys(WordGroups.groups).length,
+                    sampleWords: Object.keys(WordGroups.groups).slice(0, 5)
+                });
             } catch (e) {
-                console.warn('加载词组数据失败，继续练习:', e);
+                console.error('加载词组数据失败，继续练习:', e);
             }
+        } else {
+            console.warn('[Practice.start] WordGroups 未定义或没有 load 方法');
         }
         
         const countInput = document.getElementById('word-count-input');
