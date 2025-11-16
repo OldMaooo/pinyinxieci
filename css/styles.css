@@ -6,8 +6,7 @@
 /* 应用楷体字体的元素 */
 .word-box,
 .error-word-info,
-.error-comparison-item,
-#pinyin-display {
+.error-comparison-item {
     /* 优先使用系统楷体，fallback到加载的字体 */
     font-family: var(--kaiti-font-family, 'KaiTi_GB2312', 'KaiTi', 'Kaiti SC', '楷体', 'STKaiti', 'STKaiti SC', 'SimKai', serif);
 }
@@ -183,6 +182,10 @@
 #pinyin-display {
     line-height: 1.4;
     word-break: keep-all;
+    /* 拼音使用系统默认字体，不使用楷体 */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: 0.02em;
+    word-spacing: 0.1em;
 }
 
 /* 题库范围旧样式（保留基本交互） */

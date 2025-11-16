@@ -187,7 +187,7 @@ const WordGroups = {
         
         // 如果还是没有拼音，直接显示原始词组（不替换）
         if (!pinyin) {
-            const result = groups.slice(0, 3).join('，');
+            const result = groups.slice(0, 3).join(', ');
             console.log('[WordGroups.getDisplayText] 无拼音，显示原始词组:', result);
             return result;
         }
@@ -196,7 +196,7 @@ const WordGroups = {
         const processedGroups = groups.slice(0, 3).map(group => {
             return group.replace(new RegExp(word, 'g'), pinyin);
         });
-        const result = processedGroups.join('，');
+        const result = processedGroups.join(', ');
         console.log('[WordGroups.getDisplayText] 有拼音，替换后:', result);
         return result;
     }
