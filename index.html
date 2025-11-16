@@ -604,9 +604,25 @@
     <script src="js/practice-range.js"></script>
     <script src="js/main.js"></script>
     <script>
-        // 检查WordGroups是否正确定义
+        // 检查所有关键模块是否正确定义
+        console.log('[Module Check]', {
+            WordGroups: typeof WordGroups !== 'undefined',
+            Storage: typeof Storage !== 'undefined',
+            Practice: typeof Practice !== 'undefined',
+            Config: typeof Config !== 'undefined',
+            InitData: typeof InitData !== 'undefined'
+        });
+        
+        // 如果WordGroups未定义，尝试延迟检查（可能脚本还在加载）
         if (typeof WordGroups === 'undefined') {
-            console.error('[ERROR] WordGroups未定义！请检查js/word-groups.js是否正确加载');
+            console.error('[ERROR] WordGroups未定义！');
+            setTimeout(() => {
+                if (typeof WordGroups === 'undefined') {
+                    console.error('[ERROR] WordGroups仍然未定义！请检查js/word-groups.js是否有语法错误');
+                } else {
+                    console.log('[OK] WordGroups延迟加载成功');
+                }
+            }, 1000);
         } else {
             console.log('[OK] WordGroups已定义');
         }
