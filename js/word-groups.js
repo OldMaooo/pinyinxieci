@@ -143,110 +143,43 @@ const WordGroups = {
     
     /**
      * 获取格式化的词组显示文本：将目标字替换为拼音
-     * 例如：枫 → feng叶，feng树，feng林
+     * 例如：枫 → fēng叶，fēng树，fēng林
      * 
-     * pickCount: 每次随机展示的词语数量（默认2）
-     * maxPerChar: 每个字最多使用的候选词（默认4；若词库少于4则使用全部）
+     * 简化版本：取前3个词组，将字替换为拼音
      */
-    getDisplayText(word, pinyin, pickCount = 2, maxPerChar = 4) {
+    getDisplayText(word, pinyin) {
         // 确保 word 和 pinyin 都是字符串
         word = String(word || '');
         pinyin = String(pinyin || '').trim();
         
-        // 如果词组数据未加载，尝试加载（但这是同步方法，所以只能返回拼音）
-        // 注意：实际加载应该在调用此方法前完成
+        // 如果词组数据未加载，返回拼音
         if (!this._loaded && Object.keys(this.groups).length === 0) {
-            // 如果正在加载中，等待一下（但这是同步方法，所以直接返回拼音）
-            if (this._loading) {
-                // 正在加载，返回拼音
-                return pinyin || word;
-            }
-            // 未加载且未在加载，返回拼音
             return pinyin || word;
         }
         
         const groups = this.getGroups(word);
-        console.log('[WordGroups.getDisplayText]', {
-            word: word,
-            pinyin: pinyin,
-            groups: groups,
-            groupsLength: groups.length,
-            _loaded: this._loaded,
-            totalGroups: Object.keys(this.groups).length
-        });
         
+        // 如果没有词组，返回拼音
         if (groups.length === 0) {
-            // 如果没有词组，尝试生成拼音
+            // 如果拼音为空，尝试生成拼音
             if (!pinyin) {
                 pinyin = this._generatePinyin(word);
                 pinyin = String(pinyin || '').trim();
             }
-            // 返回拼音（如果拼音为空，返回字本身）
-            console.log('[WordGroups.getDisplayText] 没有词组，返回拼音:', pinyin || word);
             return pinyin || word;
         }
         
-        // 如果拼音为空，尝试动态生成拼音
-        let finalPinyin = String(pinyin || '').trim();
-        if (!finalPinyin) {
-            finalPinyin = this._generatePinyin(word);
-            // 确保返回的是字符串
-            finalPinyin = String(finalPinyin || '').trim();
+        // 如果拼音为空，尝试生成拼音
+        if (!pinyin) {
+            pinyin = this._generatePinyin(word);
+            pinyin = String(pinyin || '').trim();
         }
         
-        // 如果还是没有拼音，直接显示词组（不替换）
-        if (!finalPinyin) {
-            const pool = groups.slice(0, Math.max(1, maxPerChar));
-            const shuffled = [...pool];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            const picked = shuffled.slice(0, Math.min(pickCount, shuffled.length));
-            // 如果picked为空，返回字本身
-            if (picked.length === 0) {
-                console.warn('[WordGroups.getDisplayText] 没有拼音时picked为空，返回字:', word);
-                return word;
-            }
-            const result = picked.join('，');
-            // 确保结果不为空
-            if (!result || !result.trim()) {
-                return word;
-            }
-            return result;
-        }
-        
-        // 有拼音时，替换字为拼音（确保 finalPinyin 是字符串）
-        finalPinyin = String(finalPinyin);
-        const pool = groups.slice(0, Math.max(1, maxPerChar));
-        // 随机抽取不重复的项
-        const shuffled = [...pool];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        const picked = shuffled.slice(0, Math.min(pickCount, shuffled.length));
-        
-        // 如果picked为空，返回拼音或字本身
-        if (picked.length === 0) {
-            console.warn('[WordGroups.getDisplayText] picked为空，返回拼音或字:', finalPinyin || word);
-            return finalPinyin || word;
-        }
-        
-        const processed = picked.map(group => {
-            // 确保替换的是字符串
-            const pinyinStr = String(finalPinyin);
-            return group.replace(new RegExp(word, 'g'), pinyinStr);
+        // 取前3个词组，将字替换为拼音
+        const processedGroups = groups.slice(0, 3).map(group => {
+            return group.replace(new RegExp(word, 'g'), pinyin || word);
         });
-        const result = processed.join('，');
         
-        // 确保结果不为空
-        if (!result || !result.trim()) {
-            console.warn('[WordGroups.getDisplayText] 处理后的结果为空，返回拼音或字:', finalPinyin || word);
-            return finalPinyin || word;
-        }
-        
-        console.log('[WordGroups.getDisplayText] 返回词组:', result);
-        return result;
+        return processedGroups.join('，');
     }
 };

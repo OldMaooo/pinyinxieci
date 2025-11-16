@@ -255,13 +255,8 @@ const Practice = {
                     console.error('显示题目时加载词组数据失败:', e);
                 }
             }
-            // 每次练习随机抽取2个词语，词库上限4个
-            console.log('[Practice.showNextWord] 调用getDisplayText:', {
-                word: word.word,
-                pinyin: word.pinyin || ''
-            });
-            const groupsText = WordGroups.getDisplayText(word.word, word.pinyin || '', 2, 4);
-            console.log('[Practice.showNextWord] getDisplayText返回:', groupsText);
+            // 获取词组显示文本（将字替换为拼音，例如：fēng叶，fēng树，fēng林）
+            const groupsText = WordGroups.getDisplayText(word.word, word.pinyin || '');
             // 如果返回了有效文本，使用它；否则使用拼音或字本身
             if (groupsText && groupsText.trim()) {
                 displayText = groupsText;
@@ -686,7 +681,7 @@ const Practice = {
                         console.warn('显示上一题时加载词组数据失败:', e);
                     }
                 }
-                const groupsText = WordGroups.getDisplayText(word.word, word.pinyin || '', 2, 4);
+                const groupsText = WordGroups.getDisplayText(word.word, word.pinyin || '');
                 // 如果返回了有效文本，使用它；否则使用拼音或字本身
                 if (groupsText && groupsText.trim()) {
                     displayText = groupsText;
