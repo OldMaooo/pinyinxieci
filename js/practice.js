@@ -299,6 +299,10 @@ const Practice = {
         // 清除反馈
         document.getElementById('feedback-area').innerHTML = '';
         
+        // 保存当前显示文本和字，用于后续反馈时替换
+        this._currentDisplayText = displayText;
+        this._currentWord = word.word;
+        
         // 开始计时
         const wordStartTime = Date.now();
         this.startTimer(wordStartTime);
@@ -542,29 +546,54 @@ const Practice = {
     
     /**
      * 显示反馈
+     * 错误时：不显示feedback-area，将正确的字代入拼音显示中（红字）
+     * 正确时：不显示feedback-area，将正确的字代入拼音显示中（绿字）
      */
     showFeedback(isCorrect, word, recognized) {
         const feedbackArea = document.getElementById('feedback-area');
+        const pinyinDisplay = document.getElementById('pinyin-display');
         
-        if (isCorrect) {
-            feedbackArea.innerHTML = `
-                <div class="feedback-correct">
-                    <i class="bi bi-check-circle-fill"></i> 正确！
-                </div>
-            `;
-        } else {
-            // 在田字格中显示正确答案
-            if (typeof Handwriting !== 'undefined' && Handwriting.drawCorrectWord) {
-                Handwriting.drawCorrectWord(word.word);
+        // 清空反馈区域（不显示红框内容）
+        feedbackArea.innerHTML = '';
+        
+        // 在拼音显示区域中，将正确的字替换到词组中
+        if (pinyinDisplay && this._currentDisplayText) {
+            // 获取当前显示的文本（词组，例如：dú书, 阅dú, 朗dú）
+            let displayText = this._currentDisplayText;
+            const correctWord = word.word;
+            
+            // 获取字的拼音（用于在词组中查找并替换）
+            let wordPinyin = word.pinyin || '';
+            if (!wordPinyin && typeof WordGroups !== 'undefined' && WordGroups._generatePinyin) {
+                // 如果没有拼音，尝试生成
+                wordPinyin = WordGroups._generatePinyin(correctWord);
             }
             
-            // 简化正确答案显示：仅红色大字，减少高度
-            const recognizedInfo = (recognized && recognized !== '时间到') ? `<small class="text-muted ms-2">(识别：${recognized})</small>` : '';
-            feedbackArea.innerHTML = `
-                <div class="fw-bold text-danger" style="font-size: 2rem; line-height: 1;">
-                    ${word.word}${recognizedInfo}
-                </div>
-            `;
+            // 将词组中的拼音替换为正确的字，并用颜色标记
+            if (wordPinyin && wordPinyin.trim()) {
+                // 转义拼音中的特殊字符，用于正则表达式
+                const escapedPinyin = wordPinyin.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                // 使用正则表达式替换拼音为正确的字
+                // 匹配拼音（前后可能有空格、逗号等分隔符）
+                const pinyinRegex = new RegExp(`\\b${escapedPinyin}\\b`, 'gi');
+                displayText = displayText.replace(pinyinRegex, (match) => {
+                    // 用带颜色的字替换拼音
+                    const color = isCorrect ? 'text-success' : 'text-danger';
+                    return `<span class="${color} fw-bold">${correctWord}</span>`;
+                });
+            } else {
+                // 如果没有拼音，直接在文本末尾添加正确的字
+                const color = isCorrect ? 'text-success' : 'text-danger';
+                displayText = displayText + ` <span class="${color} fw-bold">${correctWord}</span>`;
+            }
+            
+            // 更新拼音显示区域（使用innerHTML以支持HTML标签）
+            pinyinDisplay.innerHTML = displayText;
+        }
+        
+        // 错误时在田字格中显示正确答案
+        if (!isCorrect && typeof Handwriting !== 'undefined' && Handwriting.drawCorrectWord) {
+            Handwriting.drawCorrectWord(word.word);
         }
     },
     
