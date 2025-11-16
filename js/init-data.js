@@ -20,10 +20,13 @@ const InitData = {
 
         // 优先加载自动构建的 wordbank 版本（包含完整单元）
         try {
-            let resp = await fetch('data/wordbank/三年级上册.json', { cache: 'no-cache' });
+            // 添加版本号参数解决浏览器缓存问题
+            const version = typeof APP_VERSION !== 'undefined' ? APP_VERSION.version : Date.now();
+            const timestamp = `?v=${version}&t=${Date.now()}`;
+            let resp = await fetch(`data/wordbank/三年级上册.json${timestamp}`, { cache: 'no-cache' });
             if (!resp.ok) {
                 // 兼容旧文件名
-                resp = await fetch('data/三年级上册写字表.json', { cache: 'no-cache' });
+                resp = await fetch(`data/三年级上册写字表.json${timestamp}`, { cache: 'no-cache' });
             }
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             const data = await resp.json();

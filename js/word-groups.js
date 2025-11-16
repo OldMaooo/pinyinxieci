@@ -31,9 +31,16 @@ const WordGroups = {
         this._loading = true;
         const sourcesArray = Array.isArray(sources) ? sources : [sources];
         
+        // 添加版本号参数解决浏览器缓存问题
+        const version = typeof APP_VERSION !== 'undefined' ? APP_VERSION.version : Date.now();
+        const timestamp = Date.now();
+        
         this._loadPromise = Promise.all(
-            sourcesArray.map(source => 
-                fetch(source)
+            sourcesArray.map(source => {
+                // 为URL添加版本号和时间戳参数
+                const separator = source.includes('?') ? '&' : '?';
+                const urlWithVersion = `${source}${separator}v=${version}&t=${timestamp}`;
+                return fetch(urlWithVersion, { cache: 'no-cache' })
                     .then(response => {
                         if (!response.ok) {
                             console.warn(`[WordGroups] 无法加载词组数据: ${source}`);

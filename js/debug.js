@@ -80,9 +80,15 @@ const Debug = {
     },
 
     applyVisibility() {
+        // 不自动显示面板，即使调试模式开启，面板也默认隐藏
+        // 面板的显示/隐藏只由 toggle 按钮控制
         const panel = document.getElementById('debug-panel');
         if (panel) {
-            panel.classList.toggle('d-none', !this.isEnabled);
+            // 始终隐藏，除非用户主动点击显示按钮
+            // 调试模式开启时，只影响日志记录功能，不影响面板显示
+            if (!panel.dataset.userOpened) {
+                panel.classList.add('d-none');
+            }
         }
     },
     
@@ -92,8 +98,14 @@ const Debug = {
     toggle() {
         const panel = document.getElementById('debug-panel');
         if (panel) {
+            const isHidden = panel.classList.contains('d-none');
             panel.classList.toggle('d-none');
-            if (!panel.classList.contains('d-none')) {
+            if (!isHidden) {
+                // 隐藏时，清除标记
+                delete panel.dataset.userOpened;
+            } else {
+                // 显示时，设置标记
+                panel.dataset.userOpened = '1';
                 this.refresh();
             }
         }

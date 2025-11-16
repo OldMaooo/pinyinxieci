@@ -1,3 +1,17 @@
+/* 楷体字体栈定义 */
+:root {
+    --kaiti-font-family: 'KaiTi_GB2312', 'KaiTi', 'Kaiti SC', '楷体', 'STKaiti', 'STKaiti SC', 'SimKai', serif;
+}
+
+/* 应用楷体字体的元素 */
+.word-box,
+.error-word-info,
+.error-comparison-item,
+#pinyin-display {
+    /* 优先使用系统楷体，fallback到加载的字体 */
+    font-family: var(--kaiti-font-family, 'KaiTi_GB2312', 'KaiTi', 'Kaiti SC', '楷体', 'STKaiti', 'STKaiti SC', 'SimKai', serif);
+}
+
 .practice-range-toolbar {
     background-color: var(--bs-card-bg);
     border-bottom: 1px solid var(--bs-border-color);
