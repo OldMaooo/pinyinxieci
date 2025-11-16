@@ -159,6 +159,15 @@ const WordGroups = {
         
         const groups = this.getGroups(word);
         
+        console.log('[WordGroups.getDisplayText]', {
+            word: word,
+            pinyin: pinyin,
+            groupsLength: groups.length,
+            groups: groups,
+            _loaded: this._loaded,
+            totalGroups: Object.keys(this.groups).length
+        });
+        
         // 如果没有词组，返回拼音
         if (groups.length === 0) {
             // 如果拼音为空，尝试生成拼音
@@ -166,6 +175,7 @@ const WordGroups = {
                 pinyin = this._generatePinyin(word);
                 pinyin = String(pinyin || '').trim();
             }
+            console.log('[WordGroups.getDisplayText] 没有词组，返回:', pinyin || word);
             return pinyin || word;
         }
         
@@ -175,11 +185,19 @@ const WordGroups = {
             pinyin = String(pinyin || '').trim();
         }
         
-        // 取前3个词组，将字替换为拼音
-        const processedGroups = groups.slice(0, 3).map(group => {
-            return group.replace(new RegExp(word, 'g'), pinyin || word);
-        });
+        // 如果还是没有拼音，直接显示原始词组（不替换）
+        if (!pinyin) {
+            const result = groups.slice(0, 3).join('，');
+            console.log('[WordGroups.getDisplayText] 无拼音，显示原始词组:', result);
+            return result;
+        }
         
-        return processedGroups.join('，');
+        // 有拼音时，取前3个词组，将字替换为拼音
+        const processedGroups = groups.slice(0, 3).map(group => {
+            return group.replace(new RegExp(word, 'g'), pinyin);
+        });
+        const result = processedGroups.join('，');
+        console.log('[WordGroups.getDisplayText] 有拼音，替换后:', result);
+        return result;
     }
 };
