@@ -27,6 +27,15 @@ const Practice = {
      * 开始练习
      */
     async start() {
+        // 确保词组数据已加载
+        if (typeof WordGroups !== 'undefined' && WordGroups.load && !WordGroups._loaded) {
+            try {
+                await WordGroups.load();
+            } catch (e) {
+                console.warn('加载词组数据失败，继续练习:', e);
+            }
+        }
+        
         const countInput = document.getElementById('word-count-input');
         const countSelect = document.getElementById('word-count-select');
         let wordCount = countInput ? parseInt(countInput.value) : NaN;
@@ -206,12 +215,18 @@ const Practice = {
         
         let displayText = word.pinyin || '';
         if (typeof WordGroups !== 'undefined') {
-            displayText = WordGroups.getDisplayText(word.word, word.pinyin || '');
+            // 每次练习随机抽取2个词语，词库上限4个
+            displayText = WordGroups.getDisplayText(word.word, word.pinyin || '', 2, 4);
         }
         
         // 使用textContent确保正确显示
         pinyinDisplay.textContent = displayText;
-        console.log('显示词组:', displayText, 'Word:', word.word);
+        console.log('[Practice] 显示题目:', {
+            word: word.word,
+            pinyin: word.pinyin || '(空)',
+            displayText: displayText,
+            wordId: word.id
+        });
         
         // 更新进度
         document.getElementById('progress-badge').textContent = 
@@ -601,7 +616,7 @@ const Practice = {
         if (pinyinDisplay) {
             let displayText = word.pinyin || '';
             if (typeof WordGroups !== 'undefined') {
-                displayText = WordGroups.getDisplayText(word.word, word.pinyin || '');
+                displayText = WordGroups.getDisplayText(word.word, word.pinyin || '', 2, 4);
             }
             pinyinDisplay.textContent = displayText;
         }

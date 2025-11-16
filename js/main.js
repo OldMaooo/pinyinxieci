@@ -273,7 +273,6 @@ const Main = {
             startHome.addEventListener('click', () => {
                 // 同步首页设置到练习页输入
                 const countHome = document.getElementById('word-count-input-home');
-                const countSelectHome = document.getElementById('word-count-select-home');
                 const timeHome = document.getElementById('time-limit-input-home');
                 const modeHome = document.getElementById('practice-mode-select-home');
                 
@@ -284,33 +283,16 @@ const Main = {
                     if (isFinite(inputVal) && inputVal > 0) {
                         resolvedCount = inputVal;
                     }
-                } else if (countSelectHome && countSelectHome.value) {
-                    if (countSelectHome.value === 'all') {
-                        resolvedCount = 'all';
-                    } else {
-                        const selectVal = parseInt(countSelectHome.value);
-                        if (isFinite(selectVal) && selectVal > 0) {
-                            resolvedCount = selectVal;
-                        }
-                    }
                 }
                 
                 const time = timeHome ? parseInt(timeHome.value) : 30;
                 const countInput = document.getElementById('word-count-input');
-                const countSelect = document.getElementById('word-count-select');
                 const timeInput = document.getElementById('time-limit-input');
                 if (countInput) {
                     if (resolvedCount === 'all') {
                         countInput.value = '';
                     } else {
                         countInput.value = String(resolvedCount);
-                    }
-                }
-                if (countSelect) {
-                    if (resolvedCount === 'all') {
-                        countSelect.value = 'all';
-                    } else {
-                        countSelect.value = String(resolvedCount);
                     }
                 }
                 // 保存设置
@@ -334,34 +316,19 @@ const Main = {
         }
 
         // 加载保存的设置到首页表单
-        const countSelectHomeEl = document.getElementById('word-count-select-home');
         const countInputHomeEl = document.getElementById('word-count-input-home');
         const timeHomeEl = document.getElementById('time-limit-input-home');
         if (typeof Storage !== 'undefined') {
             const settings = Storage.getSettings() || {};
             const p = settings.practice || {};
-            if (countSelectHomeEl && p.wordCount !== undefined) {
+            if (countInputHomeEl && p.wordCount !== undefined) {
                 if (p.wordCount === 'all') {
-                    countSelectHomeEl.value = 'all';
-                    if (countInputHomeEl) countInputHomeEl.value = '';
+                    countInputHomeEl.value = '';
                 } else {
-                    countSelectHomeEl.value = String(p.wordCount || '20');
-                    if (countInputHomeEl) countInputHomeEl.value = String(p.wordCount || '20');
+                    countInputHomeEl.value = String(p.wordCount || '20');
                 }
             }
             if (timeHomeEl && p.timeLimit !== undefined) timeHomeEl.value = p.timeLimit;
-        }
-        
-        // 下拉框变更时自动填入输入框
-        if (countSelectHomeEl && countInputHomeEl) {
-            countSelectHomeEl.addEventListener('change', (e) => {
-                const val = e.target.value;
-                if (val === 'all' || val === '') {
-                    countInputHomeEl.value = '';
-                } else {
-                    countInputHomeEl.value = val;
-                }
-            });
         }
     },
     

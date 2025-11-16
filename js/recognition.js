@@ -189,16 +189,19 @@ const Recognition = {
             
             // 优先使用同源 Serverless（Vercel 部署）/api/baidu-proxy；
             // GitHub Pages 环境则尝试使用设置里的代理地址（APP设置或localStorage: proxyBase）
+            // 本地环境使用本地代理服务器
             const configuredBase = (window.APP_CONFIG && window.APP_CONFIG.proxyBase) || localStorage.getItem('proxyBase') || '';
+            const isLocal = !isGitHubPages && !window.location.hostname.includes('vercel.app') && window.location.hostname.includes('localhost');
             const sameOriginUrl = '/api/baidu-proxy';
+            const localProxyUrl = 'http://localhost:3001/api/baidu-proxy';
             const proxyUrl = isGitHubPages
                 ? (configuredBase ? `${configuredBase.replace(/\/$/, '')}/api/baidu-proxy` : '')
-                : sameOriginUrl;
+                : (isLocal ? localProxyUrl : sameOriginUrl);
             
             // 注意：使用 Vercel 代理时，不需要前端获取 token（Vercel 函数内部已处理）
             // 只有在本地代理服务器环境下才需要获取 token
             let accessToken = null;
-            if (!isGitHubPages && !window.location.hostname.includes('vercel.app')) {
+            if (isLocal) {
                 // 本地环境，需要获取 token
                 if (typeof Debug !== 'undefined') {
                     Debug.log('info', '本地环境，需要获取 Baidu Access Token', 'recognition');
@@ -233,7 +236,10 @@ const Recognition = {
                 }
                 
                 const startTime = Date.now();
-                const requestBody = { imageBase64: imageBase64, options: {} };
+                // 本地环境需要传递 token，Vercel 环境不需要
+                const requestBody = isLocal && accessToken
+                    ? { imageBase64: imageBase64, access_token: accessToken, options: {} }
+                    : { imageBase64: imageBase64, options: {} };
                 const bodySize = JSON.stringify(requestBody).length;
                 
             // 调试日志 - 请求前

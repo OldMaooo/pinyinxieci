@@ -1,118 +1,64 @@
 /**
- * 词组数据模块（完整版）
- * 包含所有107个字的词组数据
+ * 词组数据模块（外挂式）
+ * 从外部JSON文件加载词组数据，支持动态更新
  */
 
 const WordGroups = {
-    // 完整词组库（107个字）
-    groups: {
-        "坡": ["山坡", "土坡", "斜坡", "上坡", "坡道"],
-        "球": ["足球", "篮球", "地球", "星球", "皮球"],
-        "招": ["招呼", "招手", "招聘", "招生", "招数"],
-        "呼": ["呼吸", "呼喊", "呼唤", "招呼", "呼呼"],
-        "飘": ["飘扬", "飘动", "飘落", "飘雪", "飘舞"],
-        "扬": ["飘扬", "扬帆", "表扬", "发扬", "扬起"],
-        "读": ["读书", "阅读", "朗读", "读懂", "读本"],
-        "热": ["热闹", "热情", "热爱", "热水", "炎热"],
-        "闹": ["热闹", "吵闹", "闹钟", "闹事", "闹市"],
-        "粗": ["粗壮", "粗心", "粗细", "粗糙", "粗大"],
-        "壮": ["粗壮", "强壮", "壮丽", "壮大", "壮实"],
-        "洁": ["清洁", "洁白", "整洁", "洁净", "洁癖"],
-        "轰": ["轰隆", "轰炸", "轰动", "轰鸣", "轰响"],
-        "湿": ["湿润", "潮湿", "湿度", "湿气", "湿透"],
-        "润": ["湿润", "滋润", "润滑", "润泽", "润色"],
-        "笛": ["笛子", "长笛", "竹笛", "笛声", "吹笛"],
-        "狂": ["狂风", "狂热", "狂欢", "狂喜", "疯狂"],
-        "功": ["功夫", "功劳", "功课", "成功", "用功"],
-        "罚": ["惩罚", "罚球", "罚款", "罚站", "处罚"],
-        "互": ["互相", "互助", "互帮", "互利", "互动"],
-        "碰": ["碰到", "碰见", "碰撞", "碰巧", "碰头"],
-        "黄": ["黄色", "金黄", "黄昏", "黄河", "黄叶"],
-        "急": ["急忙", "着急", "急性", "急事", "急迫"],
-        "庭": ["家庭", "庭院", "法庭", "庭园", "门庭"],
-        "相": ["互相", "相信", "相对", "相同", "相片"],
-        "未": ["未来", "未知", "未必", "未然", "未时"],
-        "寒": ["寒冷", "寒冬", "寒流", "寒意", "寒风"],
-        "径": ["路径", "直径", "径直", "小径", "径自"],
-        "斜": ["倾斜", "斜线", "斜阳", "斜坡", "斜视"],
-        "枫": ["枫叶", "枫树", "枫林", "红枫", "丹枫"],
-        "霜": ["霜降", "霜冻", "白霜", "霜花", "霜雪"],
-        "挑": ["挑选", "挑水", "挑担", "挑食", "挑拣"],
-        "深": ["深浅", "深入", "深刻", "深海", "深度"],
-        "落": ["落下", "落叶", "落后", "落水", "落座"],
-        "朗": ["朗读", "明朗", "开朗", "晴朗", "朗朗"],
-        "晶": ["水晶", "晶莹", "结晶", "晶体", "亮晶晶"],
-        "珠": ["珍珠", "水珠", "珠子", "珠宝", "露珠"],
-        "粘": ["粘贴", "粘住", "粘连", "粘性", "粘胶"],
-        "印": ["印刷", "印象", "印章", "印迹", "印证"],
-        "案": ["案件", "方案", "答案", "案件", "案板"],
-        "展": ["展开", "展览", "展示", "展翅", "发展"],
-        "列": ["排列", "列出", "列队", "列数", "列车"],
-        "规": ["规则", "规定", "规矩", "规律", "规范"],
-        "则": ["规则", "法则", "原则", "准则", "否则"],
-        "凌": ["凌乱", "凌晨", "凌空", "凌云", "凌驾"],
-        "乱": ["凌乱", "混乱", "乱跑", "乱动", "杂乱"],
-        "凉": ["凉快", "凉风", "凉爽", "凉意", "凉水"],
-        "杏": ["杏花", "杏子", "杏仁", "杏树", "红杏"],
-        "枚": ["一枚", "枚举", "枚数", "几枚", "数枚"],
-        "邮": ["邮票", "邮局", "邮寄", "邮箱", "邮政"],
-        "票": ["邮票", "门票", "车票", "发票", "票子"],
-        "爽": ["凉爽", "爽快", "清爽", "爽朗", "爽口"],
-        "挤": ["拥挤", "挤满", "挤进", "挤占", "挤压"],
-        "争": ["争取", "争论", "争夺", "争吵", "争气"],
-        "菊": ["菊花", "秋菊", "菊展", "菊香", "野菊"],
-        "频": ["频繁", "频率", "频道", "频频", "频次"],
-        "勾": ["勾画", "勾选", "勾出", "勾搭", "勾起"],
-        "挖": ["挖土", "挖掘", "挖坑", "挖出", "挖空"],
-        "油": ["石油", "油条", "油灯", "油滑", "油漆"],
-        "屋": ["房屋", "屋子", "屋顶", "屋檐", "屋里"],
-        "板": ["木板", "黑板", "板子", "板材", "板面"],
-        "准": ["准备", "准确", "准时", "准许", "准则"],
-        "备": ["准备", "备课", "备用", "备好", "备齐"],
-        "等": ["等待", "等等", "等级", "等到", "等同"],
-        "暴": ["暴雨", "暴风", "暴晒", "暴躁", "暴露"],
-        "哦": ["哦哦", "哦呀", "哦哟", "哦哦", "哦"],
-        "钻": ["钻研", "钻石", "钻孔", "钻入", "钻出"],
-        "爬": ["爬行", "爬山", "爬树", "爬高", "爬坡"],
-        "漂": ["漂亮", "漂流", "漂浮", "漂白", "漂移"],
-        "晒": ["晒干", "晒晒", "晒太阳", "晒黑", "晾晒"],
-        "恒": ["恒星", "永恒", "恒定", "恒心", "恒温"],
-        "圣": ["神圣", "圣人", "圣诞", "圣洁", "圣地"],
-        "萌": ["萌芽", "萌发", "萌生", "萌动", "卖萌"],
-        "妥": ["妥当", "妥协", "妥善", "妥帖", "稳妥"],
-        "轴": ["车轴", "轴心", "轴线", "轴承", "坐标轴"],
-        "阁": ["阁楼", "阁子", "高阁", "楼阁", "内阁"],
-        "培": ["培养", "培育", "培土", "栽培", "培训"],
-        "厘": ["厘米", "厘清", "厘定", "毫厘", "厘正"],
-        "葫": ["葫芦", "葫芦娃", "糖葫芦", "葫芦", "西葫芦"],
-        "芦": ["葫芦", "芦苇", "芦花", "芦笛", "芦荟"],
-        "错": ["错误", "错过", "错题", "错字", "错位"],
-        "普": ["普通", "普及", "普遍", "普照", "普天"],
-        "宫": ["宫殿", "皇宫", "故宫", "宫廷", "天宫"],
-        "肯": ["肯定", "肯干", "不肯", "首肯", "中肯"],
-        "冒": ["冒泡", "冒烟", "冒火", "冒失", "冒头"],
-        "式": ["方式", "公式", "样式", "正式", "格式"],
-        "怜": ["可怜", "怜悯", "怜爱", "怜惜", "自怜"],
-        "旅": ["旅行", "旅游", "旅途", "旅客", "旅店"],
-        "另": ["另外", "另行", "另类", "另选", "另说"],
-        "睛": ["眼睛", "定睛", "目不转睛", "点睛", "眼睛"],
-        "及": ["及时", "及格", "及早", "以及", "来不及"],
-        "卷": ["卷起", "卷子", "卷发", "卷尺", "画卷"],
-        "救": ["救命", "救援", "救助", "救火", "求救"],
-        "命": ["救命", "生命", "命令", "命运", "命名"],
-        "尾": ["尾巴", "末尾", "尾随", "尾气", "结尾"],
-        "齿": ["牙齿", "齿轮", "齿轮", "齿龈", "锯齿"],
-        "胃": ["胃口", "胃病", "胃痛", "胃肠", "反胃"],
-        "管": ["管理", "管子", "管道", "管用", "管好"],
-        "刚": ["刚才", "刚刚", "刚强", "刚正", "刚巧"],
-        "咬": ["咬住", "咬断", "咬紧", "咬人", "咬伤"],
-        "申": ["申请", "申明", "申诉", "申报", "申述"],
-        "介": ["介绍", "中介", "介意", "介入", "简介"],
-        "绍": ["介绍", "绍兴", "绍述", "绍介", "介绍"],
-        "宗": ["宗教", "宗旨", "宗族", "祖宗", "正宗"],
-        "旨": ["宗旨", "旨意", "主旨", "要旨", "旨趣"],
-        "占": ["占据", "占领", "占有", "占位", "占卜"],
-        "乏": ["缺乏", "疲乏", "乏味", "困乏", "乏力"]
+    // 词组库（从外部文件加载）
+    groups: {},
+    
+    // 加载状态
+    _loaded: false,
+    _loading: false,
+    _loadPromise: null,
+    
+    /**
+     * 加载词组数据（支持多个数据源）
+     * @param {string|string[]} sources - 数据源路径，可以是单个路径或路径数组
+     * @returns {Promise} 加载完成的Promise
+     */
+    async load(sources = ['data/word-groups-grade3-up.json']) {
+        // 如果正在加载，返回现有的Promise
+        if (this._loading && this._loadPromise) {
+            return this._loadPromise;
+        }
+        
+        // 如果已加载，直接返回
+        if (this._loaded) {
+            return Promise.resolve();
+        }
+        
+        this._loading = true;
+        const sourcesArray = Array.isArray(sources) ? sources : [sources];
+        
+        this._loadPromise = Promise.all(
+            sourcesArray.map(source => 
+                fetch(source)
+                    .then(response => {
+                        if (!response.ok) {
+                            console.warn(`[WordGroups] 无法加载词组数据: ${source}`);
+                            return {};
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // 合并数据（后面的会覆盖前面的）
+                        Object.assign(this.groups, data);
+                        console.log(`[WordGroups] 已加载词组数据: ${source} (${Object.keys(data).length} 个字)`);
+                        return data;
+                    })
+                    .catch(error => {
+                        console.warn(`[WordGroups] 加载词组数据失败: ${source}`, error);
+                        return {};
+                    })
+            )
+        ).then(() => {
+            this._loaded = true;
+            this._loading = false;
+            console.log(`[WordGroups] 词组数据加载完成，共 ${Object.keys(this.groups).length} 个字`);
+        });
+        
+        return this._loadPromise;
     },
     
     /**
@@ -123,13 +69,134 @@ const WordGroups = {
     },
     
     /**
+     * 生成拼音（如果拼音为空）
+     */
+    _generatePinyin(word) {
+        // 如果 pinyin-pro 可用，使用它生成拼音
+        if (typeof pinyinPro !== 'undefined' && pinyinPro.pinyin) {
+            try {
+                // pinyin-pro 的 API: pinyinPro.pinyin(text, options)
+                // 使用带声调的配置
+                let result = pinyinPro.pinyin(word, { 
+                    toneType: 'symbol'  // 带声调，例如：niàn, guā
+                });
+                
+                // 处理返回结果
+                // pinyin-pro 可能返回字符串、数组或对象数组
+                let pinyin = '';
+                
+                if (typeof result === 'string') {
+                    // 直接是字符串
+                    pinyin = result.trim();
+                } else if (Array.isArray(result)) {
+                    // 如果是数组
+                    if (result.length > 0) {
+                        const first = result[0];
+                        if (typeof first === 'string') {
+                            pinyin = first.trim();
+                        } else if (typeof first === 'object' && first !== null) {
+                            // 对象数组，提取拼音字段
+                            pinyin = (first.pinyin || first.text || first.value || String(first) || '').trim();
+                        } else {
+                            pinyin = String(first || '').trim();
+                        }
+                    }
+                } else if (typeof result === 'object' && result !== null) {
+                    // 如果是对象，尝试提取拼音字段
+                    pinyin = (result.pinyin || result.text || result.value || '').trim();
+                } else {
+                    pinyin = String(result || '').trim();
+                }
+                
+                // 最终安全检查：如果还是对象，强制转换为字符串并提取
+                if (typeof pinyin === 'object' && pinyin !== null) {
+                    console.warn('[WordGroups] pinyin 仍然是对象，尝试提取:', pinyin);
+                    pinyin = (pinyin.pinyin || pinyin.text || pinyin.value || JSON.stringify(pinyin) || '').trim();
+                }
+                
+                // 确保最终结果是字符串
+                pinyin = String(pinyin || '').trim();
+                
+                // 调试日志
+                if (pinyin) {
+                    console.log(`[WordGroups] 为 "${word}" 生成拼音: ${pinyin}`);
+                } else {
+                    console.warn(`[WordGroups] 无法为 "${word}" 生成拼音，pinyinPro 返回:`, result);
+                }
+                
+                return pinyin;
+            } catch (err) {
+                console.warn('[WordGroups] 生成拼音失败:', err);
+            }
+        } else {
+            console.warn('[WordGroups] pinyinPro 未加载或不可用');
+        }
+        return '';
+    },
+    
+    /**
      * 获取格式化的词组显示文本：将目标字替换为拼音
      * 例如：枫 → feng叶，feng树，feng林
+     * 
+     * pickCount: 每次随机展示的词语数量（默认2）
+     * maxPerChar: 每个字最多使用的候选词（默认4；若词库少于4则使用全部）
      */
-    getDisplayText(word, pinyin) {
+    getDisplayText(word, pinyin, pickCount = 2, maxPerChar = 4) {
+        // 确保 word 和 pinyin 都是字符串
+        word = String(word || '');
+        pinyin = String(pinyin || '').trim();
+        
+        // 如果词组数据未加载，返回拼音（如果拼音为空，返回字本身）
+        if (!this._loaded && Object.keys(this.groups).length === 0) {
+            return pinyin || word;
+        }
+        
         const groups = this.getGroups(word);
-        if (groups.length === 0) return pinyin;
-        const processedGroups = groups.slice(0, 3).map(group => group.replace(new RegExp(word, 'g'), pinyin));
-        return processedGroups.join('，');
+        if (groups.length === 0) {
+            // 如果没有词组，尝试生成拼音
+            if (!pinyin) {
+                pinyin = this._generatePinyin(word);
+                pinyin = String(pinyin || '').trim();
+            }
+            // 返回拼音（如果拼音为空，返回字本身）
+            return pinyin || word;
+        }
+        
+        // 如果拼音为空，尝试动态生成拼音
+        let finalPinyin = String(pinyin || '').trim();
+        if (!finalPinyin) {
+            finalPinyin = this._generatePinyin(word);
+            // 确保返回的是字符串
+            finalPinyin = String(finalPinyin || '').trim();
+        }
+        
+        // 如果还是没有拼音，直接显示词组（不替换）
+        if (!finalPinyin) {
+            const pool = groups.slice(0, Math.max(1, maxPerChar));
+            const shuffled = [...pool];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            const picked = shuffled.slice(0, Math.min(pickCount, shuffled.length));
+            return picked.join('，');
+        }
+        
+        // 有拼音时，替换字为拼音（确保 finalPinyin 是字符串）
+        finalPinyin = String(finalPinyin);
+        const pool = groups.slice(0, Math.max(1, maxPerChar));
+        // 随机抽取不重复的项
+        const shuffled = [...pool];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        const picked = shuffled.slice(0, Math.min(pickCount, shuffled.length));
+        const processed = picked.map(group => {
+            // 确保替换的是字符串
+            const pinyinStr = String(finalPinyin);
+            return group.replace(new RegExp(word, 'g'), pinyinStr);
+        });
+        return processed.join('，');
     }
 };

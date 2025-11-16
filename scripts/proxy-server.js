@@ -84,16 +84,55 @@ const server = http.createServer((req, res) => {
     
     req.on('end', () => {
         try {
-            const params = new URLSearchParams(body);
-            
-            if (path === '/api/ocr/handwriting') {
-                // 手写识别API代理
-                const accessToken = params.get('access_token');
-                const image = params.get('image');
+            if (path === '/api/ocr/handwriting' || path === '/api/baidu-proxy') {
+                // 手写识别API代理 - 支持 JSON 和 form-urlencoded 两种格式
+                let accessToken, imageBase64;
                 
+                // 检查 Content-Type
+                const contentType = req.headers['content-type'] || '';
+                
+                if (contentType.includes('application/json')) {
+                    // JSON 格式（前端发送的格式）
+                    try {
+                        const jsonBody = JSON.parse(body);
+                        imageBase64 = jsonBody.imageBase64 || jsonBody.image;
+                        
+                        // 从缓存中获取 token（如果前端没有提供）
+                        // 注意：本地代理需要前端先获取 token
+                        // 这里假设 token 已经在请求中或需要从缓存获取
+                        if (!jsonBody.access_token) {
+                            // 尝试从 localStorage 缓存获取（但这是前端的事情）
+                            // 实际上，前端应该先调用 /api/oauth/token 获取 token
+                            res.writeHead(400, { 'Content-Type': 'application/json' });
+                            res.end(JSON.stringify({ error: '缺少 access_token，请先获取 token' }));
+                            return;
+                        }
+                        accessToken = jsonBody.access_token;
+                    } catch (jsonError) {
+                        res.writeHead(400, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ error: 'JSON 解析失败: ' + jsonError.message }));
+                        return;
+                    }
+                } else {
+                    // form-urlencoded 格式（旧格式，保持兼容）
+                    const params = new URLSearchParams(body);
+                    accessToken = params.get('access_token');
+                    imageBase64 = params.get('image');
+                }
+                
+                if (!accessToken || !imageBase64) {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: '缺少必要参数: access_token 或 image' }));
+                    return;
+                }
+                
+                // 移除 data:image 前缀（如果存在）
+                const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, '');
+                
+                // 构建发送给百度 API 的请求
                 const postData = new URLSearchParams({
                     access_token: accessToken,
-                    image: image
+                    image: base64Data
                 }).toString();
                 
                 const options = {
@@ -108,7 +147,8 @@ const server = http.createServer((req, res) => {
                 
                 const proxyReq = https.request(options, (proxyRes) => {
                     res.writeHead(proxyRes.statusCode, {
-                        'Content-Type': proxyRes.headers['content-type']
+                        'Content-Type': proxyRes.headers['content-type'],
+                        'Access-Control-Allow-Origin': '*'
                     });
                     proxyRes.pipe(res);
                 });
