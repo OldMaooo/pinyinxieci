@@ -153,8 +153,15 @@ const WordGroups = {
         word = String(word || '');
         pinyin = String(pinyin || '').trim();
         
-        // 如果词组数据未加载，返回拼音（如果拼音为空，返回字本身）
+        // 如果词组数据未加载，尝试加载（但这是同步方法，所以只能返回拼音）
+        // 注意：实际加载应该在调用此方法前完成
         if (!this._loaded && Object.keys(this.groups).length === 0) {
+            // 如果正在加载中，等待一下（但这是同步方法，所以直接返回拼音）
+            if (this._loading) {
+                // 正在加载，返回拼音
+                return pinyin || word;
+            }
+            // 未加载且未在加载，返回拼音
             return pinyin || word;
         }
         

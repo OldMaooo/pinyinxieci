@@ -188,7 +188,7 @@ const Practice = {
     /**
      * 显示下一题
      */
-    showNextWord() {
+    async showNextWord() {
         if (this.currentIndex >= this.currentWords.length) {
             this.finish();
             return;
@@ -215,6 +215,14 @@ const Practice = {
         
         let displayText = word.pinyin || '';
         if (typeof WordGroups !== 'undefined') {
+            // 确保词组数据已加载
+            if (!WordGroups._loaded && WordGroups.load) {
+                try {
+                    await WordGroups.load();
+                } catch (e) {
+                    console.warn('显示题目时加载词组数据失败:', e);
+                }
+            }
             // 每次练习随机抽取2个词语，词库上限4个
             displayText = WordGroups.getDisplayText(word.word, word.pinyin || '', 2, 4);
         }
@@ -592,7 +600,7 @@ const Practice = {
     /**
      * 返回上一题
      */
-    showPreviousWord() {
+    async showPreviousWord() {
         if (this.history.length === 0) {
             alert('已经是第一题了');
             return;
@@ -616,6 +624,14 @@ const Practice = {
         if (pinyinDisplay) {
             let displayText = word.pinyin || '';
             if (typeof WordGroups !== 'undefined') {
+                // 确保词组数据已加载
+                if (!WordGroups._loaded && WordGroups.load) {
+                    try {
+                        await WordGroups.load();
+                    } catch (e) {
+                        console.warn('显示上一题时加载词组数据失败:', e);
+                    }
+                }
                 displayText = WordGroups.getDisplayText(word.word, word.pinyin || '', 2, 4);
             }
             pinyinDisplay.textContent = displayText;
