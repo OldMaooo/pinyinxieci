@@ -299,9 +299,24 @@ const Recognition = {
                 
                 // 代理服务器不可用
                 if (isGitHubPages) {
-                    const errorMsg = fetchError.message.includes('Failed to fetch') || fetchError.message.includes('load failed')
-                        ? `网络连接失败: ${fetchError.message}\n\n请检查:\n1. 代理地址是否正确: ${configuredBase || '未配置'}\n2. 网络是否正常\n3. Vercel 服务是否可用`
-                        : 'GitHub Pages需使用云端代理。请在设置中配置 proxyBase 为你的 Vercel 域名，例如：https://你的项目.vercel.app';
+                    // 提供更详细的错误信息和解决方案
+                    let errorMsg = '';
+                    if (fetchError.message.includes('Failed to fetch') || fetchError.message.includes('load failed') || fetchError.name === 'TypeError') {
+                        errorMsg = `❌ 无法连接到识别代理服务器\n\n` +
+                            `当前配置的代理地址: ${configuredBase || '未配置'}\n\n` +
+                            `可能的原因：\n` +
+                            `1. Vercel代理服务已失效或未部署\n` +
+                            `2. 代理地址配置错误\n` +
+                            `3. 网络连接问题\n\n` +
+                            `解决方案：\n` +
+                            `1. 检查Vercel项目是否正常运行（访问 https://你的项目.vercel.app/api/baidu-proxy）\n` +
+                            `2. 在"设置"→"识别服务配置"中更新代理地址\n` +
+                            `3. 如果Vercel项目已失效，需要重新部署（参考 docs/Vercel代理部署说明.md）`;
+                    } else {
+                        errorMsg = `❌ 识别服务错误: ${fetchError.message}\n\n` +
+                            `当前代理地址: ${configuredBase || '未配置'}\n\n` +
+                            `请检查代理服务是否正常运行。`;
+                    }
                     throw new Error(errorMsg);
                 } else {
                     throw new Error('代理服务器未运行！请先运行: node proxy-server.js\n\n如果是在GitHub Pages，识别功能需要本地环境或支持Serverless的平台。');
