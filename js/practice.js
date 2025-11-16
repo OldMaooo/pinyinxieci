@@ -228,26 +228,51 @@ const Practice = {
         }
         
         let displayText = word.pinyin || '';
+        console.log('[Practice.showNextWord] WordGroups检查:', {
+            wordGroupsDefined: typeof WordGroups !== 'undefined',
+            word: word.word,
+            pinyin: word.pinyin
+        });
+        
         if (typeof WordGroups !== 'undefined') {
             // 确保词组数据已加载
+            console.log('[Practice.showNextWord] WordGroups状态:', {
+                _loaded: WordGroups._loaded,
+                _loading: WordGroups._loading,
+                groupsCount: Object.keys(WordGroups.groups).length,
+                hasWord: word.word in WordGroups.groups
+            });
+            
             if (!WordGroups._loaded && WordGroups.load) {
                 try {
+                    console.log('[Practice.showNextWord] 开始加载词组数据...');
                     await WordGroups.load();
+                    console.log('[Practice.showNextWord] 词组数据加载完成:', {
+                        _loaded: WordGroups._loaded,
+                        groupsCount: Object.keys(WordGroups.groups).length
+                    });
                 } catch (e) {
-                    console.warn('显示题目时加载词组数据失败:', e);
+                    console.error('显示题目时加载词组数据失败:', e);
                 }
             }
             // 每次练习随机抽取2个词语，词库上限4个
+            console.log('[Practice.showNextWord] 调用getDisplayText:', {
+                word: word.word,
+                pinyin: word.pinyin || ''
+            });
             const groupsText = WordGroups.getDisplayText(word.word, word.pinyin || '', 2, 4);
+            console.log('[Practice.showNextWord] getDisplayText返回:', groupsText);
             // 如果返回了有效文本，使用它；否则使用拼音或字本身
             if (groupsText && groupsText.trim()) {
                 displayText = groupsText;
             } else {
                 // 如果词组返回空，使用拼音或字本身
+                console.warn('[Practice.showNextWord] 词组返回空，使用拼音或字:', word.pinyin || word.word);
                 displayText = word.pinyin || word.word || '';
             }
         } else {
             // 如果没有WordGroups，使用拼音或字本身
+            console.warn('[Practice.showNextWord] WordGroups未定义，使用拼音或字');
             displayText = word.pinyin || word.word || '';
         }
         
