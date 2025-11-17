@@ -388,6 +388,16 @@ const Storage = {
         console.log('[Storage] resetBuiltinWordBank 完成', {
             userWords: userWords.length
         });
+        setTimeout(() => {
+            if (typeof InitData !== 'undefined' && typeof InitData.loadDefaultWordBank === 'function') {
+                console.log('[Storage] resetBuiltinWordBank -> 触发 InitData.loadDefaultWordBank(storage-reset)');
+                InitData.loadDefaultWordBank('storage-reset').catch(err => {
+                    console.error('[Storage] storage-reset 自动导入失败:', err);
+                });
+            } else {
+                console.warn('[Storage] resetBuiltinWordBank -> InitData 不可用，无法自动导入默认题库');
+            }
+        }, 50);
     }
 };
 

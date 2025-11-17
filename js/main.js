@@ -422,7 +422,9 @@ const Main = {
                     Storage.resetBuiltinWordBank();
                 }
                 if (typeof InitData !== 'undefined' && InitData.loadDefaultWordBank) {
-                    await InitData.loadDefaultWordBank();
+                    await InitData.loadDefaultWordBank('manual-button');
+                } else {
+                    console.warn('[Main] InitData 不可用，改由 Storage 自动触发 storage-reset 导入');
                 }
                 if (typeof WordBank !== 'undefined' && WordBank.loadWordBank) {
                     WordBank.loadWordBank();
