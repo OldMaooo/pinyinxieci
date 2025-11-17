@@ -1,827 +1,575 @@
 {
   "version": "1.0",
-  "buildDate": "2025-11-17T07:07:41.875Z",
+  "buildDate": "2025-11-17T07:25:03.320Z",
   "gradeSemester": "六年级下册",
   "count": 63,
   "wordBank": [
     {
       "id": "六年级下册-8019",
       "word": "耙",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 11,
-      "sectionType": "课文",
-      "sourceTitle": "课文 21"
+      "unitOrder": 11
     },
     {
       "id": "六年级下册-62CC",
       "word": "拌",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1,
-      "sectionType": "课文",
-      "sourceTitle": "课文 1"
+      "unitOrder": 1
     },
     {
       "id": "六年级下册-82DE",
       "word": "苞",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 8,
-      "sectionType": "课文",
-      "sourceTitle": "课文 16"
+      "unitOrder": 8
     },
     {
       "id": "六年级下册-5351",
       "word": "卑",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 5,
-      "sectionType": "课文",
-      "sourceTitle": "课文 12"
+      "unitOrder": 5
     },
     {
       "id": "六年级下册-72C8",
       "word": "狈",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 6,
-      "sectionType": "课文",
-      "sourceTitle": "课文 13"
+      "unitOrder": 6
     },
     {
       "id": "六年级下册-640F",
       "word": "搏",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 4,
-      "sectionType": "课文",
-      "sourceTitle": "课文 11"
+      "unitOrder": 4
     },
     {
       "id": "六年级下册-918B",
       "word": "醋",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1,
-      "sectionType": "课文",
-      "sourceTitle": "课文 1"
+      "unitOrder": 1
     },
     {
       "id": "六年级下册-94DB",
       "word": "铛",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2,
-      "sectionType": "课文",
-      "sourceTitle": "课文 2"
+      "unitOrder": 2
     },
     {
       "id": "六年级下册-62B5",
       "word": "抵",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 4,
-      "sectionType": "课文",
-      "sourceTitle": "课文 11"
+      "unitOrder": 4
     },
     {
       "id": "六年级下册-9F0E",
       "word": "鼎",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2,
-      "sectionType": "课文",
-      "sourceTitle": "课文 2"
+      "unitOrder": 2
     },
     {
       "id": "六年级下册-561F",
       "word": "嘟",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 9,
-      "sectionType": "课文",
-      "sourceTitle": "课文 17"
+      "unitOrder": 9
     },
     {
       "id": "六年级下册-7779",
       "word": "睹",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 10,
-      "sectionType": "课文",
-      "sourceTitle": "课文 19"
+      "unitOrder": 10
     },
     {
       "id": "六年级下册-6CDB",
       "word": "泛",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 10,
-      "sectionType": "课文",
-      "sourceTitle": "课文 19"
+      "unitOrder": 10
     },
     {
       "id": "六年级下册-95FA",
       "word": "闺",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 11,
-      "sectionType": "课文",
-      "sourceTitle": "课文 21"
+      "unitOrder": 11
     },
     {
       "id": "六年级下册-8748",
       "word": "蝈",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 11,
-      "sectionType": "课文",
-      "sourceTitle": "课文 21"
+      "unitOrder": 11
     },
     {
       "id": "六年级下册-822A",
       "word": "航",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 10,
-      "sectionType": "课文",
-      "sourceTitle": "课文 19"
+      "unitOrder": 10
     },
     {
       "id": "六年级下册-6BEB",
       "word": "毫",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 5,
-      "sectionType": "课文",
-      "sourceTitle": "课文 12"
+      "unitOrder": 5
     },
     {
       "id": "六年级下册-9E3F",
       "word": "鸿",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 5,
-      "sectionType": "课文",
-      "sourceTitle": "课文 12"
+      "unitOrder": 5
     },
     {
       "id": "六年级下册-7B80",
       "word": "简",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 5,
-      "sectionType": "课文",
-      "sourceTitle": "课文 12"
+      "unitOrder": 5
     },
     {
       "id": "六年级下册-997A",
       "word": "饺",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1,
-      "sectionType": "课文",
-      "sourceTitle": "课文 1"
+      "unitOrder": 1
     },
     {
       "id": "六年级下册-7A9F",
       "word": "窟",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3,
-      "sectionType": "课文",
-      "sourceTitle": "课文 4"
+      "unitOrder": 3
     },
     {
       "id": "六年级下册-6EE5",
       "word": "滥",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 10,
-      "sectionType": "课文",
-      "sourceTitle": "课文 19"
+      "unitOrder": 10
     },
     {
       "id": "六年级下册-72FC",
       "word": "狼",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 6,
-      "sectionType": "课文",
-      "sourceTitle": "课文 13"
+      "unitOrder": 6
     },
     {
       "id": "六年级下册-5792",
       "word": "垒",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 6,
-      "sectionType": "课文",
-      "sourceTitle": "课文 13"
+      "unitOrder": 6
     },
     {
       "id": "六年级下册-6817",
       "word": "栗",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2,
-      "sectionType": "课文",
-      "sourceTitle": "课文 2"
+      "unitOrder": 2
     },
     {
       "id": "六年级下册-7ABF",
       "word": "窿",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3,
-      "sectionType": "课文",
-      "sourceTitle": "课文 4"
+      "unitOrder": 3
     },
     {
       "id": "六年级下册-739B",
       "word": "玛",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 9,
-      "sectionType": "课文",
-      "sourceTitle": "课文 17"
+      "unitOrder": 9
     },
     {
       "id": "六年级下册-94ED",
       "word": "铭",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 5,
-      "sectionType": "课文",
-      "sourceTitle": "课文 12"
+      "unitOrder": 5
     },
     {
       "id": "六年级下册-9B54",
       "word": "魔",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3,
-      "sectionType": "课文",
-      "sourceTitle": "课文 4"
+      "unitOrder": 3
     },
     {
       "id": "六年级下册-6CAB",
       "word": "沫",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2,
-      "sectionType": "课文",
-      "sourceTitle": "课文 2"
+      "unitOrder": 2
     },
     {
       "id": "六年级下册-56D4",
       "word": "囔",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 9,
-      "sectionType": "课文",
-      "sourceTitle": "课文 17"
+      "unitOrder": 9
     },
     {
       "id": "六年级下册-7459",
       "word": "瑙",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 9,
-      "sectionType": "课文",
-      "sourceTitle": "课文 17"
+      "unitOrder": 9
     },
     {
       "id": "六年级下册-817B",
       "word": "腻",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2,
-      "sectionType": "课文",
-      "sourceTitle": "课文 2"
+      "unitOrder": 2
     },
     {
       "id": "六年级下册-7554",
       "word": "畔",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 4,
-      "sectionType": "课文",
-      "sourceTitle": "课文 11"
+      "unitOrder": 4
     },
     {
       "id": "六年级下册-7BC7",
       "word": "篇",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 5,
-      "sectionType": "课文",
-      "sourceTitle": "课文 12"
+      "unitOrder": 5
     },
     {
       "id": "六年级下册-779F",
       "word": "瞟",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 9,
-      "sectionType": "课文",
-      "sourceTitle": "课文 17"
+      "unitOrder": 9
     },
     {
       "id": "六年级下册-835E",
       "word": "荞",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 11,
-      "sectionType": "课文",
-      "sourceTitle": "课文 21"
+      "unitOrder": 11
     },
     {
       "id": "六年级下册-98A7",
       "word": "颧",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 7,
-      "sectionType": "课文",
-      "sourceTitle": "课文 14"
+      "unitOrder": 7
     },
     {
       "id": "六年级下册-71C3",
       "word": "燃",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1,
-      "sectionType": "课文",
-      "sourceTitle": "课文 1"
+      "unitOrder": 1
     },
     {
       "id": "六年级下册-878D",
       "word": "融",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 4,
-      "sectionType": "课文",
-      "sourceTitle": "课文 11"
+      "unitOrder": 4
     },
     {
       "id": "六年级下册-970E",
       "word": "霎",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 6,
-      "sectionType": "课文",
-      "sourceTitle": "课文 13"
+      "unitOrder": 6
     },
     {
       "id": "六年级下册-9882",
       "word": "颂",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3,
-      "sectionType": "课文",
-      "sourceTitle": "课文 4"
+      "unitOrder": 3
     },
     {
       "id": "六年级下册-849C",
       "word": "蒜",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 9,
-      "sectionType": "课文",
-      "sourceTitle": "课文 17"
+      "unitOrder": 9
     },
     {
       "id": "六年级下册-85B9",
       "word": "薹",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 9,
-      "sectionType": "课文",
-      "sourceTitle": "课文 17"
+      "unitOrder": 9
     },
     {
       "id": "六年级下册-6CF0",
       "word": "泰",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 5,
-      "sectionType": "课文",
-      "sourceTitle": "课文 12"
+      "unitOrder": 5
     },
     {
       "id": "六年级下册-644A",
       "word": "摊",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1,
-      "sectionType": "课文",
-      "sourceTitle": "课文 1"
+      "unitOrder": 1
     },
     {
       "id": "六年级下册-8E5A",
       "word": "蹚",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 11,
-      "sectionType": "课文",
-      "sourceTitle": "课文 21"
+      "unitOrder": 11
     },
     {
       "id": "六年级下册-819B",
       "word": "膛",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 6,
-      "sectionType": "课文",
-      "sourceTitle": "课文 13"
+      "unitOrder": 6
     },
     {
       "id": "六年级下册-553E",
       "word": "唾",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2,
-      "sectionType": "课文",
-      "sourceTitle": "课文 2"
+      "unitOrder": 2
     },
     {
       "id": "六年级下册-5DEB",
       "word": "巫",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3,
-      "sectionType": "课文",
-      "sourceTitle": "课文 4"
+      "unitOrder": 3
     },
     {
       "id": "六年级下册-5BB5",
       "word": "宵",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1,
-      "sectionType": "课文",
-      "sourceTitle": "课文 1"
+      "unitOrder": 1
     },
     {
       "id": "六年级下册-8165",
       "word": "腥",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 9,
-      "sectionType": "课文",
-      "sourceTitle": "课文 17"
+      "unitOrder": 9
     },
     {
       "id": "六年级下册-626C",
       "word": "扬",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3,
-      "sectionType": "课文",
-      "sourceTitle": "课文 4"
+      "unitOrder": 3
     },
     {
       "id": "六年级下册-5996",
       "word": "妖",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3,
-      "sectionType": "课文",
-      "sourceTitle": "课文 4"
+      "unitOrder": 3
     },
     {
       "id": "六年级下册-51B6",
       "word": "冶",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 4,
-      "sectionType": "课文",
-      "sourceTitle": "课文 11"
+      "unitOrder": 4
     },
     {
       "id": "六年级下册-6291",
       "word": "抑",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3,
-      "sectionType": "课文",
-      "sourceTitle": "课文 4"
+      "unitOrder": 3
     },
     {
       "id": "六年级下册-5B87",
       "word": "宇",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 10,
-      "sectionType": "课文",
-      "sourceTitle": "课文 19"
+      "unitOrder": 10
     },
     {
       "id": "六年级下册-7728",
       "word": "眨",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1,
-      "sectionType": "课文",
-      "sourceTitle": "课文 1"
+      "unitOrder": 1
     },
     {
       "id": "六年级下册-80C0",
       "word": "胀",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2,
-      "sectionType": "课文",
-      "sourceTitle": "课文 2"
+      "unitOrder": 2
     },
     {
       "id": "六年级下册-7B5D",
       "word": "筝",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1,
-      "sectionType": "课文",
-      "sourceTitle": "课文 1"
+      "unitOrder": 1
     },
     {
       "id": "六年级下册-631A",
       "word": "挚",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 4,
-      "sectionType": "课文",
-      "sourceTitle": "课文 11"
+      "unitOrder": 4
     },
     {
       "id": "六年级下册-80BF",
       "word": "肿",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2,
-      "sectionType": "课文",
-      "sourceTitle": "课文 2"
+      "unitOrder": 2
     },
     {
       "id": "六年级下册-8D44",
       "word": "资",
-      "pinyin": "",
-      "gradeSemester": "六年级下册",
       "grade": 6,
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 10,
-      "sectionType": "课文",
-      "sourceTitle": "课文 19"
+      "unitOrder": 10
     }
   ]
 }

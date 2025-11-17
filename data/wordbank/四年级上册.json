@@ -1,554 +1,386 @@
 {
   "version": "1.0",
-  "buildDate": "2025-11-17T07:07:41.873Z",
+  "buildDate": "2025-11-17T07:25:03.317Z",
   "gradeSemester": "四年级上册",
   "count": 42,
   "wordBank": [
     {
       "id": "四年级上册-6602",
       "word": "昂",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1,
-      "sectionType": "识字",
-      "sourceTitle": "识字 1"
+      "unitOrder": 1
     },
     {
       "id": "四年级上册-6252",
       "word": "扒",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 5,
-      "sectionType": "课文",
-      "sourceTitle": "课文 11"
+      "unitOrder": 5
     },
     {
       "id": "四年级上册-9738",
       "word": "霸",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 3,
-      "sectionType": "课文",
-      "sourceTitle": "课文 3"
+      "unitOrder": 3
     },
     {
       "id": "四年级上册-62DC",
       "word": "拜",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 6,
-      "sectionType": "课文",
-      "sourceTitle": "课文 22"
+      "unitOrder": 6
     },
     {
       "id": "四年级上册-8584",
       "word": "薄",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1,
-      "sectionType": "识字",
-      "sourceTitle": "识字 1"
+      "unitOrder": 1
     },
     {
       "id": "四年级上册-6807",
       "word": "标",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 6,
-      "sectionType": "课文",
-      "sourceTitle": "课文 22"
+      "unitOrder": 6
     },
     {
       "id": "四年级上册-5DE2",
       "word": "巢",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 3,
-      "sectionType": "课文",
-      "sourceTitle": "课文 3"
+      "unitOrder": 3
     },
     {
       "id": "四年级上册-9F0E",
       "word": "鼎",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1,
-      "sectionType": "识字",
-      "sourceTitle": "识字 1"
+      "unitOrder": 1
     },
     {
       "id": "四年级上册-9540",
       "word": "镀",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2,
-      "sectionType": "课文",
-      "sourceTitle": "课文 2"
+      "unitOrder": 2
     },
     {
       "id": "四年级上册-9E45",
       "word": "鹅",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2,
-      "sectionType": "课文",
-      "sourceTitle": "课文 2"
+      "unitOrder": 2
     },
     {
       "id": "四年级上册-989A",
       "word": "颚",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 5,
-      "sectionType": "课文",
-      "sourceTitle": "课文 11"
+      "unitOrder": 5
     },
     {
       "id": "四年级上册-6CB8",
       "word": "沸",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1,
-      "sectionType": "识字",
-      "sourceTitle": "识字 1"
+      "unitOrder": 1
     },
     {
       "id": "四年级上册-80A4",
       "word": "肤",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 6,
-      "sectionType": "课文",
-      "sourceTitle": "课文 22"
+      "unitOrder": 6
     },
     {
       "id": "四年级上册-57C2",
       "word": "埂",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2,
-      "sectionType": "课文",
-      "sourceTitle": "课文 2"
+      "unitOrder": 2
     },
     {
       "id": "四年级上册-8D2F",
       "word": "贯",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1,
-      "sectionType": "识字",
-      "sourceTitle": "识字 1"
+      "unitOrder": 1
     },
     {
       "id": "四年级上册-4FAF",
       "word": "侯",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 6,
-      "sectionType": "课文",
-      "sourceTitle": "课文 22"
+      "unitOrder": 6
     },
     {
       "id": "四年级上册-7EAA",
       "word": "纪",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 6,
-      "sectionType": "课文",
-      "sourceTitle": "课文 22"
+      "unitOrder": 6
     },
     {
       "id": "四年级上册-5242",
       "word": "剂",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 6,
-      "sectionType": "课文",
-      "sourceTitle": "课文 22"
+      "unitOrder": 6
     },
     {
       "id": "四年级上册-50F5",
       "word": "僵",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4,
-      "sectionType": "课文",
-      "sourceTitle": "课文 5"
+      "unitOrder": 4
     },
     {
       "id": "四年级上册-63ED",
       "word": "揭",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4,
-      "sectionType": "课文",
-      "sourceTitle": "课文 5"
+      "unitOrder": 4
     },
     {
       "id": "四年级上册-6846",
       "word": "框",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4,
-      "sectionType": "课文",
-      "sourceTitle": "课文 5"
+      "unitOrder": 4
     },
     {
       "id": "四年级上册-5375",
       "word": "卵",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2,
-      "sectionType": "课文",
-      "sourceTitle": "课文 2"
+      "unitOrder": 2
     },
     {
       "id": "四年级上册-7F57",
       "word": "罗",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 3,
-      "sectionType": "课文",
-      "sourceTitle": "课文 3"
+      "unitOrder": 3
     },
     {
       "id": "四年级上册-6734",
       "word": "朴",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 5,
-      "sectionType": "课文",
-      "sourceTitle": "课文 11"
+      "unitOrder": 5
     },
     {
       "id": "四年级上册-94B3",
       "word": "钳",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 5,
-      "sectionType": "课文",
-      "sourceTitle": "课文 11"
+      "unitOrder": 5
     },
     {
       "id": "四年级上册-56DA",
       "word": "囚",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4,
-      "sectionType": "课文",
-      "sourceTitle": "课文 5"
+      "unitOrder": 4
     },
     {
       "id": "四年级上册-70C1",
       "word": "烁",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2,
-      "sectionType": "课文",
-      "sourceTitle": "课文 2"
+      "unitOrder": 2
     },
     {
       "id": "四年级上册-4FD7",
       "word": "俗",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2,
-      "sectionType": "课文",
-      "sourceTitle": "课文 2"
+      "unitOrder": 2
     },
     {
       "id": "四年级上册-9AD3",
       "word": "髓",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 6,
-      "sectionType": "课文",
-      "sourceTitle": "课文 22"
+      "unitOrder": 6
     },
     {
       "id": "四年级上册-96A7",
       "word": "隧",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 5,
-      "sectionType": "课文",
-      "sourceTitle": "课文 11"
+      "unitOrder": 5
     },
     {
       "id": "四年级上册-7A57",
       "word": "穗",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2,
-      "sectionType": "课文",
-      "sourceTitle": "课文 2"
+      "unitOrder": 2
     },
     {
       "id": "四年级上册-82D4",
       "word": "苔",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4,
-      "sectionType": "课文",
-      "sourceTitle": "课文 5"
+      "unitOrder": 4
     },
     {
       "id": "四年级上册-8C4C",
       "word": "豌",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4,
-      "sectionType": "课文",
-      "sourceTitle": "课文 5"
+      "unitOrder": 4
     },
     {
       "id": "四年级上册-82C7",
       "word": "苇",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 3,
-      "sectionType": "课文",
-      "sourceTitle": "课文 3"
+      "unitOrder": 3
     },
     {
       "id": "四年级上册-76D0",
       "word": "盐",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1,
-      "sectionType": "识字",
-      "sourceTitle": "识字 1"
+      "unitOrder": 1
     },
     {
       "id": "四年级上册-5C79",
       "word": "屹",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1,
-      "sectionType": "识字",
-      "sourceTitle": "识字 1"
+      "unitOrder": 1
     },
     {
       "id": "四年级上册-6EA2",
       "word": "溢",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4,
-      "sectionType": "课文",
-      "sourceTitle": "课文 5"
+      "unitOrder": 4
     },
     {
       "id": "四年级上册-9884",
       "word": "预",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4,
-      "sectionType": "课文",
-      "sourceTitle": "课文 5"
+      "unitOrder": 4
     },
     {
       "id": "四年级上册-8DC3",
       "word": "跃",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2,
-      "sectionType": "课文",
-      "sourceTitle": "课文 2"
+      "unitOrder": 2
     },
     {
       "id": "四年级上册-624E",
       "word": "扎",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 6,
-      "sectionType": "课文",
-      "sourceTitle": "课文 22"
+      "unitOrder": 6
     },
     {
       "id": "四年级上册-5B85",
       "word": "宅",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 5,
-      "sectionType": "课文",
-      "sourceTitle": "课文 11"
+      "unitOrder": 5
     },
     {
       "id": "四年级上册-5360",
       "word": "占",
-      "pinyin": "",
-      "gradeSemester": "四年级上册",
       "grade": 4,
       "semester": "上",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 3,
-      "sectionType": "课文",
-      "sourceTitle": "课文 3"
+      "unitOrder": 3
     }
   ]
 }

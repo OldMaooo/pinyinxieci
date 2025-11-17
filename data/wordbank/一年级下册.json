@@ -1,2608 +1,1808 @@
 {
   "version": "1.0",
-  "buildDate": "2025-11-17T07:07:41.869Z",
+  "buildDate": "2025-11-17T07:25:03.311Z",
   "gradeSemester": "一年级下册",
   "count": 200,
   "wordBank": [
     {
       "id": "一年级下册-5B89",
       "word": "安",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 14,
       "unitLabel": "阅读 14",
-      "unitOrder": 28,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 14"
+      "unitOrder": 28
     },
     {
       "id": "一年级下册-628A",
       "word": "把",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 8,
       "unitLabel": "阅读 8",
-      "unitOrder": 15,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 8"
+      "unitOrder": 15
     },
     {
       "id": "一年级下册-767E",
       "word": "百",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 16,
       "unitLabel": "阅读 16",
-      "unitOrder": 30,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 16"
+      "unitOrder": 30
     },
     {
       "id": "一年级下册-5305",
       "word": "包",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 7,
       "unitLabel": "识字 7",
-      "unitOrder": 20,
-      "sectionType": "识字",
-      "sourceTitle": "识字 7"
+      "unitOrder": 20
     },
     {
       "id": "一年级下册-9971",
       "word": "饱",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 5,
       "unitLabel": "语文园地五",
-      "unitOrder": 22,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地五"
+      "unitOrder": 22
     },
     {
       "id": "一年级下册-62B1",
       "word": "抱",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 5,
       "unitLabel": "语文园地五",
-      "unitOrder": 22,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地五"
+      "unitOrder": 22
     },
     {
       "id": "一年级下册-5317",
       "word": "北",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 3,
       "unitLabel": "阅读 3",
-      "unitOrder": 8,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 3"
+      "unitOrder": 8
     },
     {
       "id": "一年级下册-8D1D",
       "word": "贝",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 11,
       "unitLabel": "阅读 11",
-      "unitOrder": 24,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 11"
+      "unitOrder": 24
     },
     {
       "id": "一年级下册-7B14",
       "word": "笔",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 14,
       "unitLabel": "阅读 14",
-      "unitOrder": 28,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 14"
+      "unitOrder": 28
     },
     {
       "id": "一年级下册-8FB9",
       "word": "边",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 20,
       "unitLabel": "阅读 20",
-      "unitOrder": 35,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 20"
+      "unitOrder": 35
     },
     {
       "id": "一年级下册-91C7",
       "word": "采",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 10,
       "unitLabel": "阅读 10",
-      "unitOrder": 23,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 10"
+      "unitOrder": 23
     },
     {
       "id": "一年级下册-8349",
       "word": "草",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 20,
       "unitLabel": "阅读 20",
-      "unitOrder": 35,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 20"
+      "unitOrder": 35
     },
     {
       "id": "一年级下册-518C",
       "word": "册",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 4,
       "unitLabel": "语文园地四",
-      "unitOrder": 17,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地四"
+      "unitOrder": 17
     },
     {
       "id": "一年级下册-4EA7",
       "word": "产",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 1,
       "unitLabel": "阅读 1",
-      "unitOrder": 6,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 1"
+      "unitOrder": 6
     },
     {
       "id": "一年级下册-5531",
       "word": "唱",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 12,
       "unitLabel": "阅读 12",
-      "unitOrder": 25,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 12"
+      "unitOrder": 25
     },
     {
       "id": "一年级下册-8F66",
       "word": "车",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 15,
       "unitLabel": "阅读 15",
-      "unitOrder": 29,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 15"
+      "unitOrder": 29
     },
     {
       "id": "一年级下册-5403",
       "word": "吃",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 9,
       "unitLabel": "阅读 9",
-      "unitOrder": 16,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 9"
+      "unitOrder": 16
     },
     {
       "id": "一年级下册-6C60",
       "word": "池",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 10,
       "unitLabel": "阅读 10",
-      "unitOrder": 23,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 10"
+      "unitOrder": 23
     },
     {
       "id": "一年级下册-5E8A",
       "word": "床",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 7,
       "unitLabel": "阅读 7",
-      "unitOrder": 14,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 7"
+      "unitOrder": 14
     },
     {
       "id": "一年级下册-5439",
       "word": "吹",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1,
-      "sectionType": "识字",
-      "sourceTitle": "识字 1"
+      "unitOrder": 1
     },
     {
       "id": "一年级下册-6625",
       "word": "春",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1,
-      "sectionType": "识字",
-      "sourceTitle": "识字 1"
+      "unitOrder": 1
     },
     {
       "id": "一年级下册-4ECE",
       "word": "从",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 5,
       "unitLabel": "阅读 5",
-      "unitOrder": 11,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 5"
+      "unitOrder": 11
     },
     {
       "id": "一年级下册-5BF8",
       "word": "寸",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 3,
       "unitLabel": "语文园地三",
-      "unitOrder": 13,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地三"
+      "unitOrder": 13
     },
     {
       "id": "一年级下册-6253",
       "word": "打",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 7,
       "unitLabel": "识字 7",
-      "unitOrder": 20,
-      "sectionType": "识字",
-      "sourceTitle": "识字 7"
+      "unitOrder": 20
     },
     {
       "id": "一年级下册-5F53",
       "word": "当",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 6,
       "unitLabel": "阅读 6",
-      "unitOrder": 12,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 6"
+      "unitOrder": 12
     },
     {
       "id": "一年级下册-515A",
       "word": "党",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 1,
       "unitLabel": "阅读 1",
-      "unitOrder": 6,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 1"
+      "unitOrder": 6
     },
     {
       "id": "一年级下册-5230",
       "word": "到",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 19,
       "unitLabel": "阅读 19",
-      "unitOrder": 34,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 19"
+      "unitOrder": 34
     },
     {
       "id": "一年级下册-9053",
       "word": "道",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 14,
       "unitLabel": "阅读 14",
-      "unitOrder": 28,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 14"
+      "unitOrder": 28
     },
     {
       "id": "一年级下册-5730",
       "word": "地",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 7,
       "unitLabel": "阅读 7",
-      "unitOrder": 14,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 7"
+      "unitOrder": 14
     },
     {
       "id": "一年级下册-7684",
       "word": "的",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 3,
       "unitLabel": "阅读 3",
-      "unitOrder": 8,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 3"
+      "unitOrder": 8
     },
     {
       "id": "一年级下册-706F",
       "word": "灯",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 15,
       "unitLabel": "阅读 15",
-      "unitOrder": 29,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 15"
+      "unitOrder": 29
     },
     {
       "id": "一年级下册-70B9",
       "word": "点",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 16,
       "unitLabel": "阅读 16",
-      "unitOrder": 30,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 16"
+      "unitOrder": 30
     },
     {
       "id": "一年级下册-7535",
       "word": "电",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 4,
       "unitLabel": "语文园地四",
-      "unitOrder": 17,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地四"
+      "unitOrder": 17
     },
     {
       "id": "一年级下册-4E01",
       "word": "丁",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 3,
       "unitLabel": "语文园地三",
-      "unitOrder": 13,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地三"
+      "unitOrder": 13
     },
     {
       "id": "一年级下册-51AC",
       "word": "冬",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1,
-      "sectionType": "识字",
-      "sourceTitle": "识字 1"
+      "unitOrder": 1
     },
     {
       "id": "一年级下册-52A8",
       "word": "动",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 4,
       "unitLabel": "识字 4",
-      "unitOrder": 4,
-      "sectionType": "识字",
-      "sourceTitle": "识字 4"
+      "unitOrder": 4
     },
     {
       "id": "一年级下册-90FD",
       "word": "都",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 16,
       "unitLabel": "阅读 16",
-      "unitOrder": 30,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 16"
+      "unitOrder": 30
     },
     {
       "id": "一年级下册-6597",
       "word": "斗",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 6,
       "unitLabel": "语文园地六",
-      "unitOrder": 27,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地六"
+      "unitOrder": 27
     },
     {
       "id": "一年级下册-8C46",
       "word": "豆",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 6,
       "unitLabel": "语文园地六",
-      "unitOrder": 27,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地六"
+      "unitOrder": 27
     },
     {
       "id": "一年级下册-5BF9",
       "word": "对",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 6,
       "unitLabel": "识字 6",
-      "unitOrder": 19,
-      "sectionType": "识字",
-      "sourceTitle": "识字 6"
+      "unitOrder": 19
     },
     {
       "id": "一年级下册-6735",
       "word": "朵",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 12,
       "unitLabel": "阅读 12",
-      "unitOrder": 25,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 12"
+      "unitOrder": 25
     },
     {
       "id": "一年级下册-65B9",
       "word": "方",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 2,
       "unitLabel": "阅读 2",
-      "unitOrder": 7,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 2"
+      "unitOrder": 7
     },
     {
       "id": "一年级下册-623F",
       "word": "房",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 5,
       "unitLabel": "识字 5",
-      "unitOrder": 18,
-      "sectionType": "识字",
-      "sourceTitle": "识字 5"
+      "unitOrder": 18
     },
     {
       "id": "一年级下册-653E",
       "word": "放",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 14,
       "unitLabel": "阅读 14",
-      "unitOrder": 28,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 14"
+      "unitOrder": 28
     },
     {
       "id": "一年级下册-98DE",
       "word": "飞",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1,
-      "sectionType": "识字",
-      "sourceTitle": "识字 1"
+      "unitOrder": 1
     },
     {
       "id": "一年级下册-5206",
       "word": "分",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 9,
       "unitLabel": "阅读 9",
-      "unitOrder": 16,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 9"
+      "unitOrder": 16
     },
     {
       "id": "一年级下册-7236",
       "word": "父",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 8,
       "unitLabel": "语文园地八",
-      "unitOrder": 36,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地八"
+      "unitOrder": 36
     },
     {
       "id": "一年级下册-8D76",
       "word": "赶",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 20,
       "unitLabel": "阅读 20",
-      "unitOrder": 35,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 20"
+      "unitOrder": 35
     },
     {
       "id": "一年级下册-5E72",
       "word": "干",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 18,
       "unitLabel": "阅读 18",
-      "unitOrder": 33,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 18"
+      "unitOrder": 33
     },
     {
       "id": "一年级下册-9AD8",
       "word": "高",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 17,
       "unitLabel": "阅读 17",
-      "unitOrder": 31,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 17"
+      "unitOrder": 31
     },
     {
       "id": "一年级下册-544A",
       "word": "告",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 3,
       "unitLabel": "阅读 3",
-      "unitOrder": 8,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 3"
+      "unitOrder": 8
     },
     {
       "id": "一年级下册-5171",
       "word": "共",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 1,
       "unitLabel": "阅读 1",
-      "unitOrder": 6,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 1"
+      "unitOrder": 6
     },
     {
       "id": "一年级下册-53E4",
       "word": "古",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 2,
       "unitLabel": "识字 2",
-      "unitOrder": 2,
-      "sectionType": "识字",
-      "sourceTitle": "识字 2"
+      "unitOrder": 2
     },
     {
       "id": "一年级下册-6545",
       "word": "故",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 7,
       "unitLabel": "阅读 7",
-      "unitOrder": 14,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 7"
+      "unitOrder": 14
     },
     {
       "id": "一年级下册-74DC",
       "word": "瓜",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 17,
       "unitLabel": "阅读 17",
-      "unitOrder": 31,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 17"
+      "unitOrder": 31
     },
     {
       "id": "一年级下册-5149",
       "word": "光",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 1,
       "unitLabel": "阅读 1",
-      "unitOrder": 6,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 1"
+      "unitOrder": 6
     },
     {
       "id": "一年级下册-5E7F",
       "word": "广",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 3,
       "unitLabel": "阅读 3",
-      "unitOrder": 8,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 3"
+      "unitOrder": 8
     },
     {
       "id": "一年级下册-56FD",
       "word": "国",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 16,
       "unitLabel": "阅读 16",
-      "unitOrder": 30,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 16"
+      "unitOrder": 30
     },
     {
       "id": "一年级下册-8FC7",
       "word": "过",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 20,
       "unitLabel": "阅读 20",
-      "unitOrder": 35,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 20"
+      "unitOrder": 35
     },
     {
       "id": "一年级下册-8FD8",
       "word": "还",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 18,
       "unitLabel": "阅读 18",
-      "unitOrder": 33,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 18"
+      "unitOrder": 33
     },
     {
       "id": "一年级下册-597D",
       "word": "好",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 5,
       "unitLabel": "阅读 5",
-      "unitOrder": 11,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 5"
+      "unitOrder": 11
     },
     {
       "id": "一年级下册-5408",
       "word": "合",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 1,
       "unitLabel": "语文园地一",
-      "unitOrder": 5,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地一"
+      "unitOrder": 5
     },
     {
       "id": "一年级下册-6CB3",
       "word": "河",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 4,
       "unitLabel": "阅读 4",
-      "unitOrder": 10,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 4"
+      "unitOrder": 10
     },
     {
       "id": "一年级下册-7EA2",
       "word": "红",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 4,
       "unitLabel": "识字 4",
-      "unitOrder": 4,
-      "sectionType": "识字",
-      "sourceTitle": "识字 4"
+      "unitOrder": 4
     },
     {
       "id": "一年级下册-540E",
       "word": "后",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 2,
       "unitLabel": "阅读 2",
-      "unitOrder": 7,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 2"
+      "unitOrder": 7
     },
     {
       "id": "一年级下册-80E1",
       "word": "胡",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 2,
       "unitLabel": "识字 2",
-      "unitOrder": 2,
-      "sectionType": "识字",
-      "sourceTitle": "识字 2"
+      "unitOrder": 2
     },
     {
       "id": "一年级下册-6237",
       "word": "户",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 8,
       "unitLabel": "语文园地八",
-      "unitOrder": 36,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地八"
+      "unitOrder": 36
     },
     {
       "id": "一年级下册-82B1",
       "word": "花",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1,
-      "sectionType": "识字",
-      "sourceTitle": "识字 1"
+      "unitOrder": 1
     },
     {
       "id": "一年级下册-753B",
       "word": "画",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 6,
       "unitLabel": "阅读 6",
-      "unitOrder": 12,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 6"
+      "unitOrder": 12
     },
     {
       "id": "一年级下册-6B22",
       "word": "欢",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 5,
       "unitLabel": "识字 5",
-      "unitOrder": 18,
-      "sectionType": "识字",
-      "sourceTitle": "识字 5"
+      "unitOrder": 18
     },
     {
       "id": "一年级下册-56DE",
       "word": "回",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 5,
       "unitLabel": "阅读 5",
-      "unitOrder": 11,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 5"
+      "unitOrder": 11
     },
     {
       "id": "一年级下册-4F1A",
       "word": "会",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 3,
       "unitLabel": "阅读 3",
-      "unitOrder": 8,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 3"
+      "unitOrder": 8
     },
     {
       "id": "一年级下册-673A",
       "word": "机",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 12,
       "unitLabel": "阅读 12",
-      "unitOrder": 25,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 12"
+      "unitOrder": 25
     },
     {
       "id": "一年级下册-5DF1",
       "word": "己",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 4,
       "unitLabel": "阅读 4",
-      "unitOrder": 10,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 4"
+      "unitOrder": 10
     },
     {
       "id": "一年级下册-52A0",
       "word": "加",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 13,
       "unitLabel": "阅读 13",
-      "unitOrder": 26,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 13"
+      "unitOrder": 26
     },
     {
       "id": "一年级下册-5BB6",
       "word": "家",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 19,
       "unitLabel": "阅读 19",
-      "unitOrder": 34,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 19"
+      "unitOrder": 34
     },
     {
       "id": "一年级下册-5C16",
       "word": "尖",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 10,
       "unitLabel": "阅读 10",
-      "unitOrder": 23,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 10"
+      "unitOrder": 23
     },
     {
       "id": "一年级下册-95F4",
       "word": "间",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 9,
       "unitLabel": "阅读 9",
-      "unitOrder": 16,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 9"
+      "unitOrder": 16
     },
     {
       "id": "一年级下册-6C5F",
       "word": "江",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 2,
       "unitLabel": "阅读 2",
-      "unitOrder": 7,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 2"
+      "unitOrder": 7
     },
     {
       "id": "一年级下册-8BB2",
       "word": "讲",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 8,
       "unitLabel": "阅读 8",
-      "unitOrder": 15,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 8"
+      "unitOrder": 15
     },
     {
       "id": "一年级下册-4EA4",
       "word": "交",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 8,
       "unitLabel": "语文园地八",
-      "unitOrder": 36,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地八"
+      "unitOrder": 36
     },
     {
       "id": "一年级下册-89D2",
       "word": "角",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 10,
       "unitLabel": "阅读 10",
-      "unitOrder": 23,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 10"
+      "unitOrder": 23
     },
     {
       "id": "一年级下册-53EB",
       "word": "叫",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 5,
       "unitLabel": "阅读 5",
-      "unitOrder": 11,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 5"
+      "unitOrder": 11
     },
     {
       "id": "一年级下册-8282",
       "word": "节",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 9,
       "unitLabel": "阅读 9",
-      "unitOrder": 16,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 9"
+      "unitOrder": 16
     },
     {
       "id": "一年级下册-5DFE",
       "word": "巾",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 7,
       "unitLabel": "语文园地七",
-      "unitOrder": 32,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地七"
+      "unitOrder": 32
     },
     {
       "id": "一年级下册-4ECA",
       "word": "今",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 6,
       "unitLabel": "识字 6",
-      "unitOrder": 19,
-      "sectionType": "识字",
-      "sourceTitle": "识字 6"
+      "unitOrder": 19
     },
     {
       "id": "一年级下册-65A4",
       "word": "斤",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 3,
       "unitLabel": "语文园地三",
-      "unitOrder": 13,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地三"
+      "unitOrder": 13
     },
     {
       "id": "一年级下册-8FD1",
       "word": "近",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 8,
       "unitLabel": "识字 8",
-      "unitOrder": 21,
-      "sectionType": "识字",
-      "sourceTitle": "识字 8"
+      "unitOrder": 21
     },
     {
       "id": "一年级下册-8FDB",
       "word": "进",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 17,
       "unitLabel": "阅读 17",
-      "unitOrder": 31,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 17"
+      "unitOrder": 31
     },
     {
       "id": "一年级下册-4EAC",
       "word": "京",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 3,
       "unitLabel": "阅读 3",
-      "unitOrder": 8,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 3"
+      "unitOrder": 8
     },
     {
       "id": "一年级下册-4E95",
       "word": "井",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 2,
       "unitLabel": "阅读 2",
-      "unitOrder": 7,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 2"
+      "unitOrder": 7
     },
     {
       "id": "一年级下册-4E45",
       "word": "久",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 18,
       "unitLabel": "阅读 18",
-      "unitOrder": 33,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 18"
+      "unitOrder": 33
     },
     {
       "id": "一年级下册-5361",
       "word": "卡",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 1,
       "unitLabel": "语文园地一",
-      "unitOrder": 5,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地一"
+      "unitOrder": 5
     },
     {
       "id": "一年级下册-770B",
       "word": "看",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 13,
       "unitLabel": "阅读 13",
-      "unitOrder": 26,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 13"
+      "unitOrder": 26
     },
     {
       "id": "一年级下册-8BFE",
       "word": "课",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 15,
       "unitLabel": "阅读 15",
-      "unitOrder": 29,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 15"
+      "unitOrder": 29
     },
     {
       "id": "一年级下册-7A7A",
       "word": "空",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 18,
       "unitLabel": "阅读 18",
-      "unitOrder": 33,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 18"
+      "unitOrder": 33
     },
     {
       "id": "一年级下册-5FEB",
       "word": "快",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 6,
       "unitLabel": "阅读 6",
-      "unitOrder": 12,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 6"
+      "unitOrder": 12
     },
     {
       "id": "一年级下册-8001",
       "word": "老",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 15,
       "unitLabel": "阅读 15",
-      "unitOrder": 29,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 15"
+      "unitOrder": 29
     },
     {
       "id": "一年级下册-4E50",
       "word": "乐",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 6,
       "unitLabel": "阅读 6",
-      "unitOrder": 12,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 6"
+      "unitOrder": 12
     },
     {
       "id": "一年级下册-6CEA",
       "word": "泪",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 11,
       "unitLabel": "阅读 11",
-      "unitOrder": 24,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 11"
+      "unitOrder": 24
     },
     {
       "id": "一年级下册-6797",
       "word": "林",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 16,
       "unitLabel": "阅读 16",
-      "unitOrder": 30,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 16"
+      "unitOrder": 30
     },
     {
       "id": "一年级下册-6BDB",
       "word": "毛",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 6,
       "unitLabel": "阅读 6",
-      "unitOrder": 12,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 6"
+      "unitOrder": 12
     },
     {
       "id": "一年级下册-4E48",
       "word": "么",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 2,
       "unitLabel": "识字 2",
-      "unitOrder": 2,
-      "sectionType": "识字",
-      "sourceTitle": "识字 2"
+      "unitOrder": 2
     },
     {
       "id": "一年级下册-6CA1",
       "word": "没",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 19,
       "unitLabel": "阅读 19",
-      "unitOrder": 34,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 19"
+      "unitOrder": 34
     },
     {
       "id": "一年级下册-7F8E",
       "word": "美",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 12,
       "unitLabel": "阅读 12",
-      "unitOrder": 25,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 12"
+      "unitOrder": 25
     },
     {
       "id": "一年级下册-4EEC",
       "word": "们",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 5,
       "unitLabel": "阅读 5",
-      "unitOrder": 11,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 5"
+      "unitOrder": 11
     },
     {
       "id": "一年级下册-7C73",
       "word": "米",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 9,
       "unitLabel": "阅读 9",
-      "unitOrder": 16,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 9"
+      "unitOrder": 16
     },
     {
       "id": "一年级下册-9762",
       "word": "面",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 13,
       "unitLabel": "阅读 13",
-      "unitOrder": 26,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 13"
+      "unitOrder": 26
     },
     {
       "id": "一年级下册-82D7",
       "word": "苗",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 3,
       "unitLabel": "识字 3",
-      "unitOrder": 3,
-      "sectionType": "识字",
-      "sourceTitle": "识字 3"
+      "unitOrder": 3
     },
     {
       "id": "一年级下册-660E",
       "word": "明",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 4,
       "unitLabel": "识字 4",
-      "unitOrder": 4,
-      "sectionType": "识字",
-      "sourceTitle": "识字 4"
+      "unitOrder": 4
     },
     {
       "id": "一年级下册-6015",
       "word": "怕",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 19,
       "unitLabel": "阅读 19",
-      "unitOrder": 34,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 19"
+      "unitOrder": 34
     },
     {
       "id": "一年级下册-8DD1",
       "word": "跑",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 7,
       "unitLabel": "识字 7",
-      "unitOrder": 20,
-      "sectionType": "识字",
-      "sourceTitle": "识字 7"
+      "unitOrder": 20
     },
     {
       "id": "一年级下册-76AE",
       "word": "皮",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 7,
       "unitLabel": "识字 7",
-      "unitOrder": 20,
-      "sectionType": "识字",
-      "sourceTitle": "识字 7"
+      "unitOrder": 20
     },
     {
       "id": "一年级下册-7247",
       "word": "片",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 1,
       "unitLabel": "语文园地一",
-      "unitOrder": 5,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地一"
+      "unitOrder": 5
     },
     {
       "id": "一年级下册-5E73",
       "word": "平",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 14,
       "unitLabel": "阅读 14",
-      "unitOrder": 28,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 14"
+      "unitOrder": 28
     },
     {
       "id": "一年级下册-6C14",
       "word": "气",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 11,
       "unitLabel": "阅读 11",
-      "unitOrder": 24,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 11"
+      "unitOrder": 24
     },
     {
       "id": "一年级下册-5343",
       "word": "千",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 3,
       "unitLabel": "语文园地三",
-      "unitOrder": 13,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地三"
+      "unitOrder": 13
     },
     {
       "id": "一年级下册-524D",
       "word": "前",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 7,
       "unitLabel": "阅读 7",
-      "unitOrder": 14,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 7"
+      "unitOrder": 14
     },
     {
       "id": "一年级下册-9752",
       "word": "青",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 3,
       "unitLabel": "识字 3",
-      "unitOrder": 3,
-      "sectionType": "识字",
-      "sourceTitle": "识字 3"
+      "unitOrder": 3
     },
     {
       "id": "一年级下册-6E05",
       "word": "清",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 3,
       "unitLabel": "识字 3",
-      "unitOrder": 3,
-      "sectionType": "识字",
-      "sourceTitle": "识字 3"
+      "unitOrder": 3
     },
     {
       "id": "一年级下册-6674",
       "word": "晴",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 3,
       "unitLabel": "识字 3",
-      "unitOrder": 3,
-      "sectionType": "识字",
-      "sourceTitle": "识字 3"
+      "unitOrder": 3
     },
     {
       "id": "一年级下册-8BF7",
       "word": "请",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 3,
       "unitLabel": "识字 3",
-      "unitOrder": 3,
-      "sectionType": "识字",
-      "sourceTitle": "识字 3"
+      "unitOrder": 3
     },
     {
       "id": "一年级下册-8BA9",
       "word": "让",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 4,
       "unitLabel": "阅读 4",
-      "unitOrder": 10,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 4"
+      "unitOrder": 10
     },
     {
       "id": "一年级下册-8BA4",
       "word": "认",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 2,
       "unitLabel": "语文园地二",
-      "unitOrder": 9,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地二"
+      "unitOrder": 9
     },
     {
       "id": "一年级下册-8089",
       "word": "肉",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 9,
       "unitLabel": "阅读 9",
-      "unitOrder": 16,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 9"
+      "unitOrder": 16
     },
     {
       "id": "一年级下册-5165",
       "word": "入",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1,
-      "sectionType": "识字",
-      "sourceTitle": "识字 1"
+      "unitOrder": 1
     },
     {
       "id": "一年级下册-4F1E",
       "word": "伞",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 12,
       "unitLabel": "阅读 12",
-      "unitOrder": 25,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 12"
+      "unitOrder": 25
     },
     {
       "id": "一年级下册-8272",
       "word": "色",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 8,
       "unitLabel": "阅读 8",
-      "unitOrder": 15,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 8"
+      "unitOrder": 15
     },
     {
       "id": "一年级下册-6C99",
       "word": "沙",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 7,
       "unitLabel": "识字 7",
-      "unitOrder": 20,
-      "sectionType": "识字",
-      "sourceTitle": "识字 7"
+      "unitOrder": 20
     },
     {
       "id": "一年级下册-8EAB",
       "word": "身",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 18,
       "unitLabel": "阅读 18",
-      "unitOrder": 33,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 18"
+      "unitOrder": 33
     },
     {
       "id": "一年级下册-4EC0",
       "word": "什",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 2,
       "unitLabel": "识字 2",
-      "unitOrder": 2,
-      "sectionType": "识字",
-      "sourceTitle": "识字 2"
+      "unitOrder": 2
     },
     {
       "id": "一年级下册-751F",
       "word": "生",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 3,
       "unitLabel": "识字 3",
-      "unitOrder": 3,
-      "sectionType": "识字",
-      "sourceTitle": "识字 3"
+      "unitOrder": 3
     },
     {
       "id": "一年级下册-5E08",
       "word": "师",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 15,
       "unitLabel": "阅读 15",
-      "unitOrder": 29,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 15"
+      "unitOrder": 29
     },
     {
       "id": "一年级下册-65F6",
       "word": "时",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 16,
       "unitLabel": "阅读 16",
-      "unitOrder": 30,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 16"
+      "unitOrder": 30
     },
     {
       "id": "一年级下册-9996",
       "word": "首",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 10,
       "unitLabel": "阅读 10",
-      "unitOrder": 23,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 10"
+      "unitOrder": 23
     },
     {
       "id": "一年级下册-4E66",
       "word": "书",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 6,
       "unitLabel": "阅读 6",
-      "unitOrder": 12,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 6"
+      "unitOrder": 12
     },
     {
       "id": "一年级下册-53CC",
       "word": "双",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 2,
       "unitLabel": "识字 2",
-      "unitOrder": 2,
-      "sectionType": "识字",
-      "sourceTitle": "识字 2"
+      "unitOrder": 2
     },
     {
       "id": "一年级下册-8BF4",
       "word": "说",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 4,
       "unitLabel": "阅读 4",
-      "unitOrder": 10,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 4"
+      "unitOrder": 10
     },
     {
       "id": "一年级下册-601D",
       "word": "思",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 7,
       "unitLabel": "阅读 7",
-      "unitOrder": 14,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 7"
+      "unitOrder": 14
     },
     {
       "id": "一年级下册-4ED6",
       "word": "他",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 5,
       "unitLabel": "阅读 5",
-      "unitOrder": 11,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 5"
+      "unitOrder": 11
     },
     {
       "id": "一年级下册-5B83",
       "word": "它",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 11,
       "unitLabel": "阅读 11",
-      "unitOrder": 24,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 11"
+      "unitOrder": 24
     },
     {
       "id": "一年级下册-5979",
       "word": "她",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 18,
       "unitLabel": "阅读 18",
-      "unitOrder": 33,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 18"
+      "unitOrder": 33
     },
     {
       "id": "一年级下册-53F0",
       "word": "台",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 12,
       "unitLabel": "阅读 12",
-      "unitOrder": 25,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 12"
+      "unitOrder": 25
     },
     {
       "id": "一年级下册-592A",
       "word": "太",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 1,
       "unitLabel": "阅读 1",
-      "unitOrder": 6,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 1"
+      "unitOrder": 6
     },
     {
       "id": "一年级下册-542C",
       "word": "听",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 16,
       "unitLabel": "阅读 16",
-      "unitOrder": 30,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 16"
+      "unitOrder": 30
     },
     {
       "id": "一年级下册-5154",
       "word": "兔",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 17,
       "unitLabel": "阅读 17",
-      "unitOrder": 31,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 17"
+      "unitOrder": 31
     },
     {
       "id": "一年级下册-73A9",
       "word": "玩",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 11,
       "unitLabel": "阅读 11",
-      "unitOrder": 24,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 11"
+      "unitOrder": 24
     },
     {
       "id": "一年级下册-4E07",
       "word": "万",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 4,
       "unitLabel": "识字 4",
-      "unitOrder": 4,
-      "sectionType": "识字",
-      "sourceTitle": "识字 4"
+      "unitOrder": 4
     },
     {
       "id": "一年级下册-7F51",
       "word": "网",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 5,
       "unitLabel": "识字 5",
-      "unitOrder": 18,
-      "sectionType": "识字",
-      "sourceTitle": "识字 5"
+      "unitOrder": 18
     },
     {
       "id": "一年级下册-5F80",
       "word": "往",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 17,
       "unitLabel": "阅读 17",
-      "unitOrder": 31,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 17"
+      "unitOrder": 31
     },
     {
       "id": "一年级下册-4E3A",
       "word": "为",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 19,
       "unitLabel": "阅读 19",
-      "unitOrder": 34,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 19"
+      "unitOrder": 34
     },
     {
       "id": "一年级下册-6587",
       "word": "文",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 1,
       "unitLabel": "语文园地一",
-      "unitOrder": 5,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地一"
+      "unitOrder": 5
     },
     {
       "id": "一年级下册-95EE",
       "word": "问",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 13,
       "unitLabel": "阅读 13",
-      "unitOrder": 26,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 13"
+      "unitOrder": 26
     },
     {
       "id": "一年级下册-65E0",
       "word": "无",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 4,
       "unitLabel": "识字 4",
-      "unitOrder": 4,
-      "sectionType": "识字",
-      "sourceTitle": "识字 4"
+      "unitOrder": 4
     },
     {
       "id": "一年级下册-7269",
       "word": "物",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 5,
       "unitLabel": "识字 5",
-      "unitOrder": 18,
-      "sectionType": "识字",
-      "sourceTitle": "识字 5"
+      "unitOrder": 18
     },
     {
       "id": "一年级下册-5915",
       "word": "夕",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 6,
       "unitLabel": "识字 6",
-      "unitOrder": 19,
-      "sectionType": "识字",
-      "sourceTitle": "识字 6"
+      "unitOrder": 19
     },
     {
       "id": "一年级下册-4E60",
       "word": "习",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 8,
       "unitLabel": "识字 8",
-      "unitOrder": 21,
-      "sectionType": "识字",
-      "sourceTitle": "识字 8"
+      "unitOrder": 21
     },
     {
       "id": "一年级下册-6D17",
       "word": "洗",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 7,
       "unitLabel": "语文园地七",
-      "unitOrder": 32,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地七"
+      "unitOrder": 32
     },
     {
       "id": "一年级下册-7EC6",
       "word": "细",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 6,
       "unitLabel": "识字 6",
-      "unitOrder": 19,
-      "sectionType": "识字",
-      "sourceTitle": "识字 6"
+      "unitOrder": 19
     },
     {
       "id": "一年级下册-5413",
       "word": "吓",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 19,
       "unitLabel": "阅读 19",
-      "unitOrder": 34,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 19"
+      "unitOrder": 34
     },
     {
       "id": "一年级下册-4E61",
       "word": "乡",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 7,
       "unitLabel": "阅读 7",
-      "unitOrder": 14,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 7"
+      "unitOrder": 14
     },
     {
       "id": "一年级下册-5411",
       "word": "向",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 20,
       "unitLabel": "阅读 20",
-      "unitOrder": 35,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 20"
+      "unitOrder": 35
     },
     {
       "id": "一年级下册-8C61",
       "word": "象",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 19,
       "unitLabel": "阅读 19",
-      "unitOrder": 34,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 19"
+      "unitOrder": 34
     },
     {
       "id": "一年级下册-7B11",
       "word": "笑",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 8,
       "unitLabel": "阅读 8",
-      "unitOrder": 15,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 8"
+      "unitOrder": 15
     },
     {
       "id": "一年级下册-5199",
       "word": "写",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 2,
       "unitLabel": "语文园地二",
-      "unitOrder": 9,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地二"
+      "unitOrder": 9
     },
     {
       "id": "一年级下册-661F",
       "word": "星",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 18,
       "unitLabel": "阅读 18",
-      "unitOrder": 33,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 18"
+      "unitOrder": 33
     },
     {
       "id": "一年级下册-884C",
       "word": "行",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 20,
       "unitLabel": "阅读 20",
-      "unitOrder": 35,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 20"
+      "unitOrder": 35
     },
     {
       "id": "一年级下册-5174",
       "word": "兴",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 17,
       "unitLabel": "阅读 17",
-      "unitOrder": 31,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 17"
+      "unitOrder": 31
     },
     {
       "id": "一年级下册-5B66",
       "word": "学",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 8,
       "unitLabel": "识字 8",
-      "unitOrder": 21,
-      "sectionType": "识字",
-      "sourceTitle": "识字 8"
+      "unitOrder": 21
     },
     {
       "id": "一年级下册-96EA",
       "word": "雪",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 6,
       "unitLabel": "识字 6",
-      "unitOrder": 19,
-      "sectionType": "识字",
-      "sourceTitle": "识字 6"
+      "unitOrder": 19
     },
     {
       "id": "一年级下册-8A00",
       "word": "言",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 2,
       "unitLabel": "识字 2",
-      "unitOrder": 2,
-      "sectionType": "识字",
-      "sourceTitle": "识字 2"
+      "unitOrder": 2
     },
     {
       "id": "一年级下册-773C",
       "word": "眼",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 11,
       "unitLabel": "阅读 11",
-      "unitOrder": 24,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 11"
+      "unitOrder": 24
     },
     {
       "id": "一年级下册-9633",
       "word": "阳",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 1,
       "unitLabel": "阅读 1",
-      "unitOrder": 6,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 1"
+      "unitOrder": 6
     },
     {
       "id": "一年级下册-6837",
       "word": "样",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 8,
       "unitLabel": "阅读 8",
-      "unitOrder": 15,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 8"
+      "unitOrder": 15
     },
     {
       "id": "一年级下册-9875",
       "word": "页",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 8,
       "unitLabel": "语文园地八",
-      "unitOrder": 36,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地八"
+      "unitOrder": 36
     },
     {
       "id": "一年级下册-8863",
       "word": "衣",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 4,
       "unitLabel": "语文园地四",
-      "unitOrder": 17,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地四"
+      "unitOrder": 17
     },
     {
       "id": "一年级下册-4E49",
       "word": "义",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 8,
       "unitLabel": "识字 8",
-      "unitOrder": 21,
-      "sectionType": "识字",
-      "sourceTitle": "识字 8"
+      "unitOrder": 21
     },
     {
       "id": "一年级下册-9C7C",
       "word": "鱼",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 13,
       "unitLabel": "阅读 13",
-      "unitOrder": 26,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 13"
+      "unitOrder": 26
     },
     {
       "id": "一年级下册-8BED",
       "word": "语",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 6,
       "unitLabel": "识字 6",
-      "unitOrder": 19,
-      "sectionType": "识字",
-      "sourceTitle": "识字 6"
+      "unitOrder": 19
     },
     {
       "id": "一年级下册-7389",
       "word": "玉",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 8,
       "unitLabel": "识字 8",
-      "unitOrder": 21,
-      "sectionType": "识字",
-      "sourceTitle": "识字 8"
+      "unitOrder": 21
     },
     {
       "id": "一年级下册-5143",
       "word": "元",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 3,
       "unitLabel": "语文园地三",
-      "unitOrder": 13,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地三"
+      "unitOrder": 13
     },
     {
       "id": "一年级下册-8FDC",
       "word": "远",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 8,
       "unitLabel": "识字 8",
-      "unitOrder": 21,
-      "sectionType": "识字",
-      "sourceTitle": "识字 8"
+      "unitOrder": 21
     },
     {
       "id": "一年级下册-8FD0",
       "word": "运",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 5,
       "unitLabel": "识字 5",
-      "unitOrder": 18,
-      "sectionType": "识字",
-      "sourceTitle": "识字 5"
+      "unitOrder": 18
     },
     {
       "id": "一年级下册-518D",
       "word": "再",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 8,
       "unitLabel": "阅读 8",
-      "unitOrder": 15,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 8"
+      "unitOrder": 15
     },
     {
       "id": "一年级下册-65E9",
       "word": "早",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 10,
       "unitLabel": "阅读 10",
-      "unitOrder": 23,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 10"
+      "unitOrder": 23
     },
     {
       "id": "一年级下册-9020",
       "word": "造",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 5,
       "unitLabel": "识字 5",
-      "unitOrder": 18,
-      "sectionType": "识字",
-      "sourceTitle": "识字 5"
+      "unitOrder": 18
     },
     {
       "id": "一年级下册-7AD9",
       "word": "站",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 15,
       "unitLabel": "阅读 15",
-      "unitOrder": 29,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 15"
+      "unitOrder": 29
     },
     {
       "id": "一年级下册-627E",
       "word": "找",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 20,
       "unitLabel": "阅读 20",
-      "unitOrder": 35,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 20"
+      "unitOrder": 35
     },
     {
       "id": "一年级下册-8FD9",
       "word": "这",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 13,
       "unitLabel": "阅读 13",
-      "unitOrder": 26,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 13"
+      "unitOrder": 26
     },
     {
       "id": "一年级下册-7740",
       "word": "着",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 17,
       "unitLabel": "阅读 17",
-      "unitOrder": 31,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 17"
+      "unitOrder": 31
     },
     {
       "id": "一年级下册-652F",
       "word": "支",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 4,
       "unitLabel": "语文园地四",
-      "unitOrder": 17,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地四"
+      "unitOrder": 17
     },
     {
       "id": "一年级下册-77E5",
       "word": "知",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 14,
       "unitLabel": "阅读 14",
-      "unitOrder": 28,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 14"
+      "unitOrder": 28
     },
     {
       "id": "一年级下册-6B62",
       "word": "止",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 3,
       "unitLabel": "语文园地三",
-      "unitOrder": 13,
-      "sectionType": "语文园地",
-      "sourceTitle": "语文园地三"
+      "unitOrder": 13
     },
     {
       "id": "一年级下册-4E3B",
       "word": "主",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 2,
       "unitLabel": "阅读 2",
-      "unitOrder": 7,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 2"
+      "unitOrder": 7
     },
     {
       "id": "一年级下册-4F4F",
       "word": "住",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 2,
       "unitLabel": "阅读 2",
-      "unitOrder": 7,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 2"
+      "unitOrder": 7
     },
     {
       "id": "一年级下册-5B57",
       "word": "字",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 4,
       "unitLabel": "识字 4",
-      "unitOrder": 4,
-      "sectionType": "识字",
-      "sourceTitle": "识字 4"
+      "unitOrder": 4
     },
     {
       "id": "一年级下册-81EA",
       "word": "自",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 4,
       "unitLabel": "阅读 4",
-      "unitOrder": 10,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 4"
+      "unitOrder": 10
     },
     {
       "id": "一年级下册-8D70",
       "word": "走",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 4,
       "unitLabel": "阅读 4",
-      "unitOrder": 10,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 4"
+      "unitOrder": 10
     },
     {
       "id": "一年级下册-8DB3",
       "word": "足",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 7,
       "unitLabel": "识字 7",
-      "unitOrder": 20,
-      "sectionType": "识字",
-      "sourceTitle": "识字 7"
+      "unitOrder": 20
     },
     {
       "id": "一年级下册-5750",
       "word": "坐",
-      "pinyin": "",
-      "gradeSemester": "一年级下册",
       "grade": 1,
       "semester": "下",
       "unit": 15,
       "unitLabel": "阅读 15",
-      "unitOrder": 29,
-      "sectionType": "阅读",
-      "sourceTitle": "阅读 15"
+      "unitOrder": 29
     }
   ]
 }

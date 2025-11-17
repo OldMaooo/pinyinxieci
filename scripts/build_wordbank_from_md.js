@@ -197,13 +197,10 @@ for (const rawLine of lines) {
     if (!wordsMap.has(word)) {
       wordsMap.set(word, {
         word,
-        pinyin: '',
         gradeSemester: currentGS,
-        unit: unitNumber || null,
+        unit: unitNumber ?? null,
         unitLabel,
-        unitOrder: orderSeq,
-        sectionType: sectionType || null,
-        sourceTitle: sourceTitle || null
+        unitOrder: orderSeq
       });
     }
   }
@@ -221,19 +218,17 @@ function writeOne(gsLabel) {
     const id = `${gsLabel}-${codePointHex(meta.word)}`;
     const gNum = gradeNumber(gsLabel.slice(0, 3));
     const semChar = semesterChar(gsLabel.slice(3));
-    wordBank.push({
+    const unitOrder = typeof meta.unitOrder === 'number' ? meta.unitOrder : (typeof meta.unit === 'number' ? meta.unit : null);
+    const entry = {
       id,
       word: meta.word,
-      pinyin: meta.pinyin,
-      gradeSemester: gsLabel,
       grade: gNum,
       semester: semChar,
-    unit: meta.unit || meta.unitOrder || null,
-    unitLabel: meta.unitLabel || meta.sourceTitle || null,
-    unitOrder: meta.unitOrder || null,
-      sectionType: meta.sectionType,
-      sourceTitle: meta.sourceTitle
-    });
+      unit: typeof meta.unit === 'number' ? meta.unit : unitOrder,
+      unitLabel: meta.unitLabel || (typeof meta.unit === 'number' ? `第${meta.unit}单元` : '未分类单元'),
+      unitOrder
+    };
+    wordBank.push(entry);
   }
   // Sort by code point for stable output
   wordBank.sort((a, b) => a.word.localeCompare(b.word, 'zh-Hans-CN'));

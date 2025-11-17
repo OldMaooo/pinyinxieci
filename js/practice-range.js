@@ -305,13 +305,14 @@ const PracticeRange = {
             const gradeLabel = this.formatGradeLabel(word.grade);
             const semesterLabel = this.formatSemesterLabel(word.semester);
             const semesterKey = `${gradeLabel}${semesterLabel}`;
-            const unitLabel = word.unitLabel || word.sourceTitle || this.formatUnitLabel(word.unit);
-            const unitKey = unitLabel || String(word.unit ?? unitLabel ?? '未分类');
+            const unitLabel = word.unitLabel || this.formatUnitLabel(word.unit);
+            const unitOrder = this.getUnitOrder(word, unitLabel);
+            const unitKey = `${unitLabel || '未分类单元'}__${unitOrder ?? '999'}`;
             if (!grouped[semesterKey]) grouped[semesterKey] = {};
             if (!grouped[semesterKey][unitKey]) {
                 const arr = [];
                 arr.unitLabel = unitLabel;
-                arr.order = this.getUnitOrder(word, unitLabel);
+                arr.order = unitOrder ?? 999;
                 grouped[semesterKey][unitKey] = arr;
             }
             grouped[semesterKey][unitKey].push(word);
