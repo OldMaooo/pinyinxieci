@@ -172,3 +172,4 @@ console.log(`✅ 已保存到: ${groupsPath}`);
 const remaining = Object.entries(groups).filter(([k, v]) => v[0].endsWith('的')).length;
 console.log(`📊 仍有 ${remaining} 个字使用默认词组`);
 
+

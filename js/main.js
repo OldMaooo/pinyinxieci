@@ -108,6 +108,11 @@ const Main = {
         // 检查API配置
         this.checkAPIConfig();
         
+        // 自动配置代理（GitHub Pages环境）
+        if (typeof Recognition !== 'undefined' && Recognition.autoConfigureProxy) {
+            Recognition.autoConfigureProxy();
+        }
+        
         // 初始化题库范围选择器
         if (typeof PracticeRange !== 'undefined') {
             // 延迟初始化，确保Storage已初始化

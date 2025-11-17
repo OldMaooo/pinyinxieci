@@ -107,3 +107,4 @@ curl -X POST https://pinyinxieci.vercel.app/api/baidu-proxy \
 2. 尝试实际识别一个字
 3. 查看浏览器控制台确认没有错误
 
+

@@ -36,7 +36,7 @@ const Recognition = {
     /**
      * 自动配置云端代理（仅在 GitHub Pages 环境且未配置时）
      */
-    autoConfigureProxy() {
+    async autoConfigureProxy() {
         const isGitHubPages = window.location.hostname.includes('github.io') || 
                               window.location.hostname.includes('github.com');
         
@@ -47,10 +47,34 @@ const Recognition = {
         // 检查是否已配置
         const existingProxy = localStorage.getItem('proxyBase');
         if (existingProxy && existingProxy.trim()) {
-            return; // 已配置，不覆盖
+            // 已配置，验证是否可用（异步验证，不阻塞）
+            const testUrl = `${existingProxy.replace(/\/$/, '')}/api/baidu-proxy`;
+            fetch(testUrl, { method: 'GET', cache: 'no-cache' })
+                .then(response => {
+                    if (response.ok) {
+                        if (typeof Debug !== 'undefined') {
+                            Debug.log('info', `代理地址已验证可用: ${existingProxy}`, 'proxy');
+                        }
+                    } else {
+                        // 代理不可用，使用默认值
+                        this._setDefaultProxy();
+                    }
+                })
+                .catch(() => {
+                    // 代理不可用，使用默认值
+                    this._setDefaultProxy();
+                });
+            return;
         }
         
-        // 自动设置默认 Vercel 代理
+        // 未配置，自动设置默认 Vercel 代理
+        this._setDefaultProxy();
+    },
+    
+    /**
+     * 设置默认代理地址
+     */
+    _setDefaultProxy() {
         const defaultProxy = 'https://pinyinxieci.vercel.app';
         localStorage.setItem('proxyBase', defaultProxy);
         console.log('✅ 已自动配置云端识别代理:', defaultProxy);
@@ -190,7 +214,18 @@ const Recognition = {
             // 优先使用同源 Serverless（Vercel 部署）/api/baidu-proxy；
             // GitHub Pages 环境则尝试使用设置里的代理地址（APP设置或localStorage: proxyBase）
             // 本地环境使用本地代理服务器
-            const configuredBase = (window.APP_CONFIG && window.APP_CONFIG.proxyBase) || localStorage.getItem('proxyBase') || '';
+            let configuredBase = (window.APP_CONFIG && window.APP_CONFIG.proxyBase) || localStorage.getItem('proxyBase') || '';
+            
+            // 如果 GitHub Pages 环境且未配置，尝试自动配置
+            if (isGitHubPages && !configuredBase) {
+                const defaultProxy = 'https://pinyinxieci.vercel.app';
+                configuredBase = defaultProxy;
+                localStorage.setItem('proxyBase', defaultProxy);
+                if (typeof Debug !== 'undefined') {
+                    Debug.log('warning', `GitHub Pages环境未配置代理，已自动设置为: ${defaultProxy}`, 'proxy');
+                }
+            }
+            
             const isLocal = !isGitHubPages && !window.location.hostname.includes('vercel.app') && window.location.hostname.includes('localhost');
             const sameOriginUrl = '/api/baidu-proxy';
             const localProxyUrl = 'http://localhost:3001/api/baidu-proxy';

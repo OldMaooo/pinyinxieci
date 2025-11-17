@@ -421,3 +421,4 @@ const withGoodGroups = Object.values(wordGroups).filter(g => !g[0].endsWith('的
 console.log(`📊 有预设词组的字: ${withGoodGroups} 个`);
 console.log(`📊 使用默认词组的字: ${Object.keys(wordGroups).length - withGoodGroups} 个`);
 
+
