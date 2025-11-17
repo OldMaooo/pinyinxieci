@@ -149,7 +149,7 @@ const ErrorBook = {
                 <div class="card h-100 shadow-sm">
                     <div class="card-body p-2 position-relative">
                         <div class="position-absolute top-0 end-0 me-2 mt-1">
-                            <input type="checkbox" class="form-check-input result-correct-toggle" data-log-id="${log.id}" data-word-id="${w.id}" data-item-idx="${idx}" ${isWrong ? 'checked' : ''} title="点击修改对错状态">
+                            <input type="checkbox" class="form-check-input result-correct-toggle" data-log-id="${log.id}" data-word-id="${w.id}" data-item-idx="${idx}" ${isWrong ? 'checked' : ''} title="点击修改对错状态" style="appearance: checkbox; -webkit-appearance: checkbox;">
                         </div>
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="d-flex align-items-start gap-2">

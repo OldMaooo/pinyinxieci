@@ -68,8 +68,11 @@ const Main = {
         // 绑定导航链接
         this.bindNavLinks();
         
-        // 绑定结果页面按钮
-        this.bindResultButtons();
+            // 绑定结果页面按钮
+            this.bindResultButtons();
+            
+            // 绑定首页快捷按钮
+            this.bindQuickButtons();
 
         // 页面可见性与退出时的自动保存
         document.addEventListener('visibilitychange', () => {
@@ -350,10 +353,28 @@ const Main = {
         
         if (reviewBtn) {
             reviewBtn.addEventListener('click', () => {
-                // 从练习记录中获取错题，然后开始练习
-                this.showPage('practice');
-                // TODO: 设置练习范围为错题
-                document.getElementById('practice-range-select').value = 'error';
+                // 从当前练习记录中获取错题，然后开始练习
+                if (typeof Statistics !== 'undefined' && Statistics.currentLogId) {
+                    const logs = (Storage.getPracticeLogsFiltered && Storage.getPracticeLogsFiltered()) || Storage.getPracticeLogs();
+                    const log = logs.find(l => l.id === Statistics.currentLogId);
+                    if (log && log.errorWords && log.errorWords.length > 0) {
+                        // 设置练习范围为当前轮的错题
+                        if (typeof PracticeRange !== 'undefined' && PracticeRange.setErrorWordsFromLog) {
+                            PracticeRange.setErrorWordsFromLog(log.errorWords);
+                        }
+                        // 切换到练习页面并开始练习
+                        this.showPage('practice');
+                        setTimeout(() => {
+                            if (typeof Practice !== 'undefined') {
+                                Practice.start();
+                            }
+                        }, 100);
+                    } else {
+                        alert('本轮练习没有错题');
+                    }
+                } else {
+                    alert('无法获取当前练习记录');
+                }
             });
         }
         
@@ -362,6 +383,23 @@ const Main = {
                 this.showPage('practice');
             });
         }
+    },
+    
+    /**
+     * 绑定首页快捷按钮
+     */
+    bindQuickButtons() {
+        // 题目数量快捷按钮（首页）
+        document.querySelectorAll('.word-count-quick').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const value = btn.dataset.value;
+                const input = document.getElementById('word-count-input-home');
+                if (input) {
+                    input.value = value;
+                    input.focus();
+                }
+            });
+        });
     },
     
     /**

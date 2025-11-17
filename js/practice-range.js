@@ -578,6 +578,53 @@ const PracticeRange = {
             const target = toRoot.querySelector(`.unit-checkbox[data-semester="${sel}"][data-unit="${unit}"]`);
             if (target) target.checked = fromCb.checked;
         });
+    },
+    
+    /**
+     * 设置错题为练习范围（从练习记录中的错题ID列表）
+     */
+    setErrorWordsFromLog(errorWordIds) {
+        if (!errorWordIds || errorWordIds.length === 0) return;
+        
+        const wordBank = Storage.getWordBank();
+        const grouped = this.groupWordsBySemesterUnit(wordBank);
+        
+        // 先取消所有选择
+        const container = document.getElementById('practice-range-container');
+        if (container) {
+            container.querySelectorAll('.unit-checkbox, .semester-checkbox').forEach(cb => {
+                cb.checked = false;
+            });
+        }
+        
+        // 根据错题ID找到对应的单元并选中
+        const selectedUnits = new Set();
+        errorWordIds.forEach(wordId => {
+            const word = wordBank.find(w => w.id === wordId);
+            if (word) {
+                const semester = `${word.grade || 3}年级${word.semester || '上'}学期`;
+                const unit = word.unit !== undefined ? String(word.unit) : '';
+                selectedUnits.add(`${semester}|${unit}`);
+            }
+        });
+        
+        // 选中对应的单元复选框
+        selectedUnits.forEach(unitKey => {
+            const [semester, unit] = unitKey.split('|');
+            const checkbox = container?.querySelector(`.unit-checkbox[data-semester="${semester}"][data-unit="${unit}"]`);
+            if (checkbox) {
+                checkbox.checked = true;
+            }
+        });
+        
+        // 更新学期复选框状态
+        if (container) {
+            const semesters = new Set(Array.from(selectedUnits).map(k => k.split('|')[0]));
+            semesters.forEach(semester => {
+                this.updateSemesterCheckbox(semester);
+            });
+            this.updateSelectedCount();
+        }
     }
 };
 
