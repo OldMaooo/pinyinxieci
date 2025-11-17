@@ -180,10 +180,15 @@ const Main = {
             targetPage.classList.add('active');
             
             // 如果是练习页面，重新初始化范围选择器
-            if (pageId === 'practice' && typeof PracticeRange !== 'undefined') {
-                setTimeout(() => {
-                    PracticeRange.init();
-                }, 100);
+            if (pageId === 'practice') {
+                if (typeof PracticeRange !== 'undefined') {
+                    setTimeout(() => {
+                        PracticeRange.init();
+                    }, 100);
+                }
+                if (typeof Practice !== 'undefined' && Practice.syncForcedWordStateFromStorage) {
+                    Practice.syncForcedWordStateFromStorage();
+                }
             }
         }
         

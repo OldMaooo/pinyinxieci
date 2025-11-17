@@ -22,6 +22,7 @@ const Practice = {
     isActive: false,
     isPaused: false,
     mode: 'normal',
+    forcedWordCount: null,
     lastSubmitTime: 0, // 上次提交时间，用于防重复提交
     lastSubmitWordId: null, // 上次提交的字ID，用于判断是否切换了字
     isSubmitting: false, // 是否正在提交中
@@ -30,6 +31,10 @@ const Practice = {
      * 开始练习
      */
     async start() {
+        // 同步可能来自错题本的强制题量设置
+        if (typeof this.syncForcedWordStateFromStorage === 'function') {
+            this.syncForcedWordStateFromStorage();
+        }
         // 确保词组数据已加载（无论是否已加载，都重新加载以确保最新）
         if (typeof WordGroups !== 'undefined' && WordGroups.load) {
             try {
@@ -54,7 +59,7 @@ const Practice = {
         }
         
         const countInput = document.getElementById('word-count-input');
-        const countSelect = document.getElementById('word-count-select');
+        const countSelect = document.getElementById('word-count-select-home');
         let wordCount = countInput ? parseInt(countInput.value) : NaN;
         if (isNaN(wordCount)) {
             wordCount = countSelect ? (countSelect.value === 'all' ? 'all' : parseInt(countSelect.value)) : 'all';
@@ -109,9 +114,19 @@ const Practice = {
             return;
         }
         
+        let forcedMode = false;
+        if (this.forcedWordCount && this.forcedWordCount > 0) {
+            wordCount = this.forcedWordCount;
+            forcedMode = true;
+        }
+
         // 随机选择或限制数量
-        if (wordCount !== 'all') {
+        if (!forcedMode && wordCount !== 'all') {
             words = this.shuffleArray(words).slice(0, wordCount);
+        }
+        if (forcedMode) {
+            // 用完即清除，下一次回到手动模式
+            this.clearForcedWords?.();
         }
         
         this.currentWords = words;
@@ -942,11 +957,71 @@ const Practice = {
         return shuffled;
     },
 
+    prepareForcedWords(count, options = {}) {
+        if (!count || count <= 0) return;
+        const { persist = true } = options;
+        this.forcedWordCount = count;
+        if (persist) {
+            try {
+                localStorage.setItem('practice_force_word_count', String(count));
+            } catch (e) {}
+        }
+        this.updateForcedWordUI(true, count);
+    },
+
+    clearForcedWords(options = {}) {
+        const { removeStorage = true } = options;
+        this.forcedWordCount = null;
+        if (removeStorage) {
+            try {
+                localStorage.removeItem('practice_force_word_count');
+            } catch (e) {}
+        }
+        this.updateForcedWordUI(false);
+    },
+
+    syncForcedWordStateFromStorage() {
+        try {
+            const value = localStorage.getItem('practice_force_word_count');
+            if (value) {
+                const count = parseInt(value, 10);
+                if (!isNaN(count) && count > 0) {
+                    this.prepareForcedWords(count, { persist: false });
+                    return;
+                }
+            }
+        } catch (e) {}
+        this.updateForcedWordUI(false);
+    },
+
+    updateForcedWordUI(enabled, count = 0) {
+        const input = document.getElementById('word-count-input');
+        const select = document.getElementById('word-count-select-home');
+        const hint = document.getElementById('practice-forced-hint');
+        if (!input || !select) return;
+        if (enabled) {
+            input.value = count;
+            input.disabled = true;
+            select.value = 'all';
+            select.disabled = true;
+            if (hint) {
+                hint.classList.remove('d-none');
+                hint.textContent = `本次将练习所选错题 ${count} 个，题目数量已锁定。`;
+            }
+        } else {
+            input.disabled = false;
+            select.disabled = false;
+            if (hint) {
+                hint.classList.add('d-none');
+            }
+        }
+    },
+
     loadSettings() {
         if (typeof Storage === 'undefined') return;
         const settings = Storage.getSettings() || {};
         const p = settings.practice || {};
-        const countSelect = document.getElementById('word-count-select');
+        const countSelect = document.getElementById('word-count-select-home');
         const countInput = document.getElementById('word-count-input');
         const timeInput = document.getElementById('time-limit-input');
         const modeHome = document.getElementById('practice-mode-select-home');

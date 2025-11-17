@@ -73,7 +73,8 @@ const ErrorBook = {
         const logs = ((Storage.getPracticeLogsFiltered && Storage.getPracticeLogsFiltered()) || Storage.getPracticeLogs() || []).slice().reverse();
         const wordBank = Storage.getWordBank();
         const errorMap = new Map((Storage.getErrorWords() || []).map(e => [e.wordId, e]));
-        const selectedRounds = new Set(this.getSelectedRounds());
+        const roundSelection = this.ensureDefaultRoundSelection(logs);
+        const selectedRounds = new Set(roundSelection);
         const html = logs.map((log, idx) => {
             const date = new Date(log.date);
             const timeStr = date.toLocaleString('zh-CN');
@@ -314,6 +315,7 @@ const ErrorBook = {
             cb.checked = !!select;
             this.toggleRoundSelection(cb.dataset.logId, cb.checked);
         });
+        this.updateRoundSelectionIndicator();
     },
 
     batchRemove() {
@@ -381,6 +383,17 @@ const ErrorBook = {
         } catch (e) {}
     },
 
+    ensureDefaultRoundSelection(logs = []) {
+        const saved = this.getSelectedRounds();
+        if (saved.length) return saved;
+        const allIds = logs.map(log => log.id).filter(Boolean);
+        if (allIds.length) {
+            this.saveSelectedRounds(allIds);
+            return allIds;
+        }
+        return [];
+    },
+
     practiceSelectedRounds() {
         const selected = this.getSelectedRounds();
         if (!selected.length) {
@@ -418,16 +431,16 @@ const ErrorBook = {
             } catch (e) {}
         }
         localStorage.setItem('practice_error_only', '1');
+        try {
+            localStorage.setItem('practice_force_word_count', String(ids.length));
+        } catch (e) {}
+        if (typeof Practice !== 'undefined' && Practice.prepareForcedWords) {
+            Practice.prepareForcedWords(ids.length);
+        }
         if (typeof Main !== 'undefined' && Main.showPage) {
             Main.showPage('practice');
         }
-        setTimeout(() => {
-            const practiceTab = document.getElementById('practice');
-            if (practiceTab && typeof Practice !== 'undefined' && Practice.start) {
-                // 保持与现有流程一致，需要用户手动点击开始
-                console.log('[ErrorBook] 已准备好所选错题，请在练习页点击“开始练习”');
-            }
-        }, 100);
+        console.log('[ErrorBook] 已准备好所选错题，请在练习页点击“开始练习”');
     }
 };
 
