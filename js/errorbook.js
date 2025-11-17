@@ -59,6 +59,11 @@ const ErrorBook = {
         if (onlyWrongToggle) {
             onlyWrongToggle.onchange = () => this.load();
         }
+
+        const practiceSelectedBtn = document.getElementById('errorbook-practice-selected-btn');
+        if (practiceSelectedBtn) {
+            practiceSelectedBtn.onclick = () => this.practiceSelectedRounds();
+        }
     },
 
     renderRoundsView(adminMode, opts = {}) {
@@ -68,6 +73,7 @@ const ErrorBook = {
         const logs = ((Storage.getPracticeLogsFiltered && Storage.getPracticeLogsFiltered()) || Storage.getPracticeLogs() || []).slice().reverse();
         const wordBank = Storage.getWordBank();
         const errorMap = new Map((Storage.getErrorWords() || []).map(e => [e.wordId, e]));
+        const selectedRounds = new Set(this.getSelectedRounds());
         const html = logs.map((log, idx) => {
             const date = new Date(log.date);
             const timeStr = date.toLocaleString('zh-CN');
@@ -114,9 +120,11 @@ const ErrorBook = {
                     </div>
                 `;
             }).join('');
+            const checkedAttr = selectedRounds.has(log.id) ? 'checked' : '';
             return `
                 <div class="mb-2">
-                    <div class="small text-muted">
+                    <div class="small text-muted d-flex align-items-center gap-2">
+                        <input type="checkbox" class="form-check-input error-round-select" data-log-id="${log.id}" ${checkedAttr}>
                         <a class="text-decoration-none" data-bs-toggle="collapse" href="#${collapseId}" role="button" aria-expanded="${expanded}" aria-controls="${collapseId}">
                             <i class="bi bi-caret-${expanded ? 'down' : 'right'}-fill"></i> ${title}
                         </a>
@@ -128,6 +136,7 @@ const ErrorBook = {
             `;
         }).join('');
         roundsEl.innerHTML = html || '<div class="text-muted small">暂无练习记录</div>';
+        this.bindRoundSelectionEvents();
     },
 
     // 提供给结果页复用的渲染：仅一轮
@@ -301,6 +310,10 @@ const ErrorBook = {
         document.querySelectorAll('#errorbook-rounds .error-select, #errorbook-summary .error-select').forEach(cb => {
             cb.checked = !!select;
         });
+        document.querySelectorAll('.error-round-select').forEach(cb => {
+            cb.checked = !!select;
+            this.toggleRoundSelection(cb.dataset.logId, cb.checked);
+        });
     },
 
     batchRemove() {
@@ -319,6 +332,102 @@ const ErrorBook = {
             if (w) Storage.addErrorWord(id, w.word, w.pinyin||'', null);
         });
         this.load();
+    },
+
+    bindRoundSelectionEvents() {
+        document.querySelectorAll('.error-round-select').forEach(cb => {
+            cb.addEventListener('change', () => {
+                this.toggleRoundSelection(cb.dataset.logId, cb.checked);
+            });
+        });
+        this.updateRoundSelectionIndicator();
+    },
+
+    toggleRoundSelection(logId, checked) {
+        if (!logId) return;
+        const selected = new Set(this.getSelectedRounds());
+        if (checked) {
+            selected.add(logId);
+        } else {
+            selected.delete(logId);
+        }
+        this.saveSelectedRounds(Array.from(selected));
+        this.updateRoundSelectionIndicator();
+    },
+
+    updateRoundSelectionIndicator() {
+        const btn = document.getElementById('errorbook-practice-selected-btn');
+        if (!btn) return;
+        const count = this.getSelectedRounds().length;
+        const countSpan = btn.querySelector('[data-count]');
+        if (countSpan) {
+            countSpan.textContent = count;
+        }
+        btn.disabled = count === 0;
+    },
+
+    getSelectedRounds() {
+        try {
+            const saved = localStorage.getItem('errorbook_selected_rounds');
+            return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            return [];
+        }
+    },
+
+    saveSelectedRounds(list) {
+        try {
+            localStorage.setItem('errorbook_selected_rounds', JSON.stringify(list || []));
+        } catch (e) {}
+    },
+
+    practiceSelectedRounds() {
+        const selected = this.getSelectedRounds();
+        if (!selected.length) {
+            alert('请先勾选要练习的轮次。');
+            return;
+        }
+        const logs = (Storage.getPracticeLogsFiltered ? Storage.getPracticeLogsFiltered() : Storage.getPracticeLogs()) || [];
+        const selectedLogs = logs.filter(log => selected.includes(log.id));
+        if (!selectedLogs.length) {
+            alert('未找到勾选的练习记录。');
+            return;
+        }
+        const uniqueWordIds = new Set();
+        selectedLogs.forEach(log => {
+            if (Array.isArray(log.details) && log.details.length) {
+                log.details.forEach(item => {
+                    if (item && item.wordId && item.correct === false) {
+                        uniqueWordIds.add(item.wordId);
+                    }
+                });
+            } else if (Array.isArray(log.errorWords)) {
+                log.errorWords.forEach(id => uniqueWordIds.add(id));
+            }
+        });
+        if (!uniqueWordIds.size) {
+            alert('所选轮次没有需要练习的错题。');
+            return;
+        }
+        const ids = Array.from(uniqueWordIds);
+        if (typeof PracticeRange !== 'undefined' && PracticeRange.setErrorWordsFromLog) {
+            PracticeRange.setErrorWordsFromLog(ids);
+        } else {
+            try {
+                localStorage.setItem('practice_error_word_ids', JSON.stringify(ids));
+            } catch (e) {}
+        }
+        localStorage.setItem('practice_error_only', '1');
+        if (typeof Main !== 'undefined' && Main.showPage) {
+            Main.showPage('practice');
+        }
+        setTimeout(() => {
+            const practiceTab = document.getElementById('practice');
+            if (practiceTab && typeof Practice !== 'undefined' && Practice.start) {
+                // 保持与现有流程一致，需要用户手动点击开始
+                console.log('[ErrorBook] 已准备好所选错题，请在练习页点击“开始练习”');
+            }
+        }, 100);
     }
 };
 
