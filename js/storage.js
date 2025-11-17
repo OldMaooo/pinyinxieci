@@ -334,8 +334,17 @@ const Storage = {
     },
 
     importBuiltinWordBank(words = [], metadata = {}) {
+        console.log('[Storage] importBuiltinWordBank start', {
+            incomingCount: words.length,
+            metadata
+        });
         const current = this.getWordBank();
         const userWords = current.filter(word => !this.isBuiltinWord(word));
+        console.log('[Storage] existing wordBank统计', {
+            total: current.length,
+            builtin: current.length - userWords.length,
+            user: userWords.length
+        });
         const normalized = words.map((word, index) => ({
             id: word.id || `builtin_${index}_${word.word}`,
             word: word.word,
@@ -354,8 +363,31 @@ const Storage = {
             builtinVersion: metadata.version || metadata.buildDate || 'unknown',
             addedDate: new Date().toISOString()
         }));
-        this.saveWordBank([...userWords, ...normalized]);
-        this.setBuiltinWordBankVersion(metadata.version || metadata.buildDate || `len-${normalized.length}`);
+        const merged = [...userWords, ...normalized];
+        this.saveWordBank(merged);
+        const versionToken = metadata.version || metadata.buildDate || `len-${normalized.length}`;
+        this.setBuiltinWordBankVersion(versionToken);
+        console.log('[Storage] importBuiltinWordBank 完成', {
+            mergedCount: merged.length,
+            builtinVersion: versionToken
+        });
+    },
+
+    resetBuiltinWordBank() {
+        console.log('[Storage] resetBuiltinWordBank -> 清空内置题库并保留自定义词库');
+        const current = this.getWordBank();
+        const userWords = current.filter(word => !this.isBuiltinWord(word));
+        this.saveWordBank(userWords);
+        try {
+            localStorage.removeItem(this.KEYS.BUILTIN_VERSION);
+            localStorage.removeItem('practiceRangeSelection');
+            localStorage.removeItem('practice_error_word_ids');
+        } catch (err) {
+            console.warn('[Storage] resetBuiltinWordBank 清理本地记录失败:', err);
+        }
+        console.log('[Storage] resetBuiltinWordBank 完成', {
+            userWords: userWords.length
+        });
     }
 };
 

@@ -8,6 +8,7 @@ const PracticeRange = {
     },
 
     refresh() {
+        console.log('[PracticeRange] refresh() triggered');
         this.renderContainer('practice-range-container', { context: 'modal' });
         this.renderContainer('practice-range-container-home', {
             context: 'home',
@@ -27,12 +28,14 @@ const PracticeRange = {
             return;
         }
         const wordBank = Storage.getWordBank() || [];
+        console.log(`[PracticeRange] renderContainer(${containerId}) wordBank size = ${wordBank.length}`);
         if (wordBank.length === 0) {
             container.innerHTML = '<div class="text-muted py-3 text-center">正在加载默认题库，请稍候…</div>';
             return;
         }
 
         const grouped = this.groupWordsBySemesterUnit(wordBank);
+        console.log(`[PracticeRange] ${containerId} grouped semesters:`, Object.keys(grouped));
         const semesters = this.sortSemesters(Object.keys(grouped));
         const accordionId = `${containerId}-accordion`;
 
@@ -228,6 +231,7 @@ const PracticeRange = {
         if (label) {
             label.textContent = `已选择: ${total} 个字`;
         }
+        console.log(`[PracticeRange] container=${container.id} 已选择 ${total} 个字`);
         this.saveSelection(container);
         if (container.id === 'practice-range-container-home') {
             this.updateDynamicCountButton(total);

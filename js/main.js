@@ -73,6 +73,7 @@ const Main = {
             
             // 绑定首页快捷按钮
             this.bindQuickButtons();
+            this.bindWordBankRefreshButton();
 
         // 页面可见性与退出时的自动保存
         document.addEventListener('visibilitychange', () => {
@@ -399,6 +400,57 @@ const Main = {
                     // 不调用focus()，避免iPad上弹出键盘
                 }
             });
+        });
+    },
+
+    bindWordBankRefreshButton() {
+        const btn = document.getElementById('refresh-wordbank-btn');
+        if (!btn) return;
+        btn.addEventListener('click', async () => {
+            if (btn.disabled) return;
+            const confirmMsg = '将重新加载1-6年级默认题库，保留自定义词库。确定继续吗？';
+            if (!confirm(confirmMsg)) return;
+            const originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `
+                <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                刷新中…
+            `;
+            try {
+                if (typeof Storage !== 'undefined' && Storage.resetBuiltinWordBank) {
+                    Storage.resetBuiltinWordBank();
+                }
+                if (typeof InitData !== 'undefined' && InitData.loadDefaultWordBank) {
+                    await InitData.loadDefaultWordBank();
+                }
+                if (typeof WordBank !== 'undefined' && WordBank.loadWordBank) {
+                    WordBank.loadWordBank();
+                }
+                if (typeof ErrorBook !== 'undefined' && ErrorBook.load) {
+                    ErrorBook.load();
+                }
+                if (typeof Statistics !== 'undefined' && Statistics.updateHomeStats) {
+                    Statistics.updateHomeStats();
+                }
+                if (typeof PracticeRange !== 'undefined' && PracticeRange.refresh) {
+                    PracticeRange.refresh();
+                }
+                if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                    WordBank.showToast('success', '内置题库已刷新');
+                } else {
+                    alert('内置题库已刷新');
+                }
+            } catch (error) {
+                console.error('刷新内置题库失败:', error);
+                if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                    WordBank.showToast('danger', `刷新失败：${error.message}`);
+                } else {
+                    alert(`刷新失败：${error.message}`);
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            }
         });
     },
     

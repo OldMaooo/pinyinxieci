@@ -23,8 +23,10 @@ const InitData = {
      * 加载默认题库数据
      */
     async loadDefaultWordBank() {
+        console.log('[InitData] 开始加载默认题库…');
         try {
             await this.loadBuiltinWordBank();
+            console.log('[InitData] ✅ 内置题库加载完成');
         } catch (error) {
             console.warn('[InitData] 内置题库加载失败，回退到 legacy 文件：', error);
             await this.loadLegacyWordBank();
@@ -64,6 +66,7 @@ const InitData = {
                 const versionToken = data.version || data.buildDate || words.length;
                 signatureTokens.push(`${file}:${versionToken}`);
 
+                console.log(`[InitData] ✅ 读取 ${file} 成功，包含 ${words.length} 个字`);
                 words.forEach(word => {
                     collectedWords.push({
                         word: word.word,
@@ -103,7 +106,7 @@ const InitData = {
             version: signature,
             buildDate: new Date().toISOString()
         });
-        console.log(`[InitData] 已导入内置题库 ${collectedWords.length} 个字`);
+        console.log(`[InitData] 已导入内置题库 ${collectedWords.length} 个字，版本签名: ${signature}`);
     },
 
     async loadLegacyWordBank() {
