@@ -280,6 +280,42 @@
     font-weight: bold;
 }
 
+.result-toggle {
+    width: 32px;
+    height: 32px;
+    border: 2px solid rgba(220, 53, 69, 0.4);
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(220, 53, 69, 0.9);
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    background-color: transparent;
+    font-size: 1.2rem;
+    user-select: none;
+}
+
+.result-toggle:not(.active) {
+    border-color: #ced4da;
+    color: transparent;
+    background-color: transparent;
+}
+
+.result-toggle.active {
+    border-color: #dc3545;
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+.result-toggle:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.15rem rgba(220, 53, 69, 0.25);
+}
+
+.result-toggle-icon {
+    line-height: 1;
+}
+
 /* 响应式优化 */
 @media (max-width: 768px) {
     .stat-value {

@@ -146,10 +146,16 @@ const ErrorBook = {
             const isWrong = !d.correct;
             return `
             <div class="col">
-                <div class="card h-100 shadow-sm ${isWrong ? 'border-danger' : ''}" ${isWrong ? 'style="border-width: 2px;"' : ''}>
+                <div class="card h-100 shadow-sm">
                     <div class="card-body p-2 position-relative">
                         <div class="position-absolute top-0 end-0 me-2 mt-1">
-                            ${isWrong ? '<span class="text-danger" title="错误">❌</span>' : '<span class="text-success" title="正确">✅</span>'}
+                            <div class="result-toggle ${isWrong ? 'active' : ''}" 
+                                 data-log-id="${log.id}" 
+                                 data-word-id="${w.id}" 
+                                 data-item-idx="${idx}" 
+                                 data-is-wrong="${isWrong}">
+                                <span class="result-toggle-icon">${isWrong ? '✕' : ''}</span>
+                            </div>
                         </div>
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="d-flex align-items-start gap-2">
@@ -170,6 +176,29 @@ const ErrorBook = {
             </div>`;
         }).join('');
         container.innerHTML = `<div class=\"row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3\">${cards || '<div class=\"text-muted small\">暂无错题</div>'}</div>`;
+        
+        const updateToggleVisual = (btn, isWrong) => {
+            btn.classList.toggle('active', isWrong);
+            const icon = btn.querySelector('.result-toggle-icon');
+            if (icon) {
+                icon.textContent = isWrong ? '✕' : '';
+            }
+            btn.setAttribute('data-is-wrong', isWrong ? 'true' : 'false');
+        };
+        
+        container.querySelectorAll('.result-toggle').forEach(btn => {
+            let isWrong = btn.getAttribute('data-is-wrong') === 'true';
+            updateToggleVisual(btn, isWrong);
+            btn.addEventListener('click', () => {
+                isWrong = !isWrong;
+                updateToggleVisual(btn, isWrong);
+                if (typeof Statistics !== 'undefined' && Statistics.updateResultItemStatus) {
+                    const logId = btn.getAttribute('data-log-id');
+                    const itemIdx = parseInt(btn.getAttribute('data-item-idx'));
+                    Statistics.updateResultItemStatus(logId, itemIdx, !isWrong);
+                }
+            });
+        });
     },
 
     renderSummaryView(adminMode) {
