@@ -587,19 +587,80 @@ const Recognition = {
             if (data.error_code || data._proxy_info?.has_error_code) {
                 const errorCode = data.error_code || data._proxy_info?.error_code;
                 const errorMsg = data.error_msg || data._proxy_info?.error_msg || '未知错误';
-                const fullErrorMsg = `百度API错误 [${errorCode}]: ${errorMsg}`;
+                
+                // 百度API常见错误码的友好提示
+                const errorMessages = {
+                    17: {
+                        title: '📊 API每日请求限制已到达',
+                        message: '今日的识别次数已用完',
+                        solution: '请等待明天（北京时间0点）重置，或升级百度AI套餐以增加每日配额。\n\n免费版每日有500次调用限制。',
+                        isQuotaError: true
+                    },
+                    18: {
+                        title: '⚠️ API调用频率超限',
+                        message: '请求过于频繁，请稍后再试',
+                        solution: '请等待几秒后重试，或降低使用频率。',
+                        isQuotaError: false
+                    },
+                    19: {
+                        title: '❌ API配额不足',
+                        message: '账户配额已用完',
+                        solution: '请前往百度AI开放平台充值或升级套餐。',
+                        isQuotaError: true
+                    },
+                    100: {
+                        title: '❌ 参数错误',
+                        message: '请求参数不正确',
+                        solution: '请检查图片数据是否正确。如果问题持续，请联系技术支持。',
+                        isQuotaError: false
+                    },
+                    110: {
+                        title: '🔑 Access Token无效',
+                        message: 'API密钥验证失败',
+                        solution: '请检查Vercel环境变量中的BAIDU_API_KEY和BAIDU_SECRET_KEY是否正确配置。',
+                        isQuotaError: false
+                    },
+                    111: {
+                        title: '🔑 Access Token过期',
+                        message: 'API密钥已过期',
+                        solution: '系统会自动刷新，请稍后重试。如果问题持续，请检查Vercel环境变量配置。',
+                        isQuotaError: false
+                    }
+                };
+                
+                const errorInfo = errorMessages[errorCode] || {
+                    title: `❌ 百度API错误 [${errorCode}]`,
+                    message: errorMsg,
+                    solution: '请查看控制台日志获取详细信息，或联系技术支持。',
+                    isQuotaError: false
+                };
+                
+                // 构建友好的错误消息
+                const fullErrorMsg = errorInfo.isQuotaError
+                    ? `${errorInfo.title}\n\n${errorInfo.message}\n\n${errorInfo.solution}`
+                    : `${errorInfo.title}\n\n${errorInfo.message}\n\n解决方案：\n${errorInfo.solution}`;
+                
                 consoleLog('error', '百度API错误', {
                     errorCode,
                     errorMsg,
+                    errorInfo,
                     proxyInfo: data._proxy_info
                 });
+                
                 if (typeof Debug !== 'undefined') {
-                    Debug.log('error', fullErrorMsg, 'error');
+                    Debug.log('error', `百度API错误 [${errorCode}]: ${errorMsg}`, 'error');
+                    Debug.log('error', `错误详情: ${errorInfo.title}`, 'error');
                     if (data._proxy_info) {
                         Debug.log('error', `代理调试信息: ${JSON.stringify(data._proxy_info)}`, 'error');
                     }
                 }
-                throw new Error(fullErrorMsg);
+                
+                // 创建错误对象，包含更多信息
+                const error = new Error(fullErrorMsg);
+                error.errorCode = errorCode;
+                error.errorInfo = errorInfo;
+                error.isQuotaError = errorInfo.isQuotaError;
+                throw error;
             }
             
             // 检查是否有其他错误字段

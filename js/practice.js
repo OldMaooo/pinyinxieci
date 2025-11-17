@@ -532,14 +532,29 @@ const Practice = {
             
             // 显示错误（简化显示，详细错误在调试面板）
             let displayMsg = error.message;
-            if (error.message.includes('load failed') || error.message.includes('Failed to fetch')) {
+            let errorClass = 'text-danger';
+            let errorIcon = 'bi-exclamation-triangle';
+            
+            // 针对配额错误，使用更友好的提示
+            if (error.isQuotaError) {
+                errorClass = 'text-warning';
+                errorIcon = 'bi-hourglass-split';
+                // 配额错误通常消息已经包含完整信息，直接使用
+                displayMsg = error.message;
+            } else if (error.message.includes('load failed') || error.message.includes('Failed to fetch')) {
                 displayMsg = '网络连接失败，请检查调试面板查看详情';
+            } else if (error.errorInfo) {
+                // 使用错误信息中的友好提示
+                displayMsg = `${error.errorInfo.title}\n\n${error.errorInfo.message}`;
             }
             
+            // 将换行符转换为HTML换行
+            const displayMsgHtml = displayMsg.replace(/\n/g, '<br>');
+            
             document.getElementById('feedback-area').innerHTML = 
-                `<div class="text-danger">
-                    <i class="bi bi-exclamation-triangle"></i> 识别出错: ${displayMsg}
-                    <br><small class="text-muted">点击导航栏"调试"按钮查看详细错误信息</small>
+                `<div class="${errorClass}">
+                    <i class="bi ${errorIcon}"></i> ${displayMsgHtml}
+                    ${error.isQuotaError ? '' : '<br><small class="text-muted">点击导航栏"调试"按钮查看详细错误信息</small>'}
                 </div>`;
         }
     },
