@@ -18,6 +18,83 @@ const Recognition = {
     },
     
     /**
+     * 诊断函数 - 输出完整的调试信息
+     * 可在浏览器控制台调用：Recognition.diagnose()
+     * 或通过浏览器 MCP 工具调用
+     */
+    async diagnose() {
+        const diagnosis = {
+            timestamp: new Date().toISOString(),
+            environment: {
+                hostname: window.location.hostname,
+                origin: window.location.origin,
+                isGitHubPages: window.location.hostname.includes('github.io') || window.location.hostname.includes('github.com'),
+                isLocal: window.location.hostname.includes('localhost'),
+                isVercel: window.location.hostname.includes('vercel.app'),
+                userAgent: navigator.userAgent
+            },
+            proxy: {
+                hasAppConfig: !!window.APP_CONFIG,
+                appConfigProxy: window.APP_CONFIG?.proxyBase || null,
+                localStorageProxy: localStorage.getItem('proxyBase') || null,
+                configuredBase: (window.APP_CONFIG && window.APP_CONFIG.proxyBase) || localStorage.getItem('proxyBase') || '(未配置)'
+            },
+            apiConfig: {
+                hasConfig: !!this.apiConfig,
+                provider: this.apiConfig?.provider || null,
+                hasApiKey: !!(this.apiConfig?.apiKey),
+                hasApiSecret: !!(this.apiConfig?.apiSecret)
+            },
+            testResults: {}
+        };
+        
+        // 测试代理连接
+        const proxyBase = diagnosis.proxy.configuredBase;
+        if (proxyBase && proxyBase !== '(未配置)') {
+            try {
+                const testUrl = `${proxyBase.replace(/\/$/, '')}/api/baidu-proxy`;
+                console.log(`[Diagnosis] 测试代理连接: ${testUrl}`);
+                const startTime = Date.now();
+                const response = await fetch(testUrl, { 
+                    method: 'GET', 
+                    cache: 'no-cache',
+                    signal: AbortSignal.timeout(5000)
+                });
+                const responseTime = Date.now() - startTime;
+                const data = await response.json();
+                
+                diagnosis.testResults.proxy = {
+                    success: response.ok,
+                    status: response.status,
+                    responseTime: `${responseTime}ms`,
+                    response: data,
+                    hasEnvVars: data.env || null
+                };
+            } catch (error) {
+                diagnosis.testResults.proxy = {
+                    success: false,
+                    error: error.message,
+                    errorName: error.name
+                };
+            }
+        } else {
+            diagnosis.testResults.proxy = {
+                success: false,
+                error: '代理未配置'
+            };
+        }
+        
+        // 输出诊断结果
+        console.group('🔍 Recognition 诊断报告');
+        console.log('完整诊断数据:', diagnosis);
+        console.log('JSON格式:', JSON.stringify(diagnosis, null, 2));
+        console.groupEnd();
+        
+        // 返回诊断结果（方便 MCP 工具获取）
+        return diagnosis;
+    },
+    
+    /**
      * 初始化（从设置中读取配置）
      */
     init() {
@@ -203,24 +280,63 @@ const Recognition = {
      * 百度AI手写识别
      */
     async recognizeBaidu(imageBase64) {
+        const requestId = `rec_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        const startTime = Date.now();
+        
+        // 统一的 console 日志函数，方便浏览器 MCP 工具查看
+        const consoleLog = (level, message, data = null) => {
+            const logEntry = {
+                requestId,
+                timestamp: new Date().toISOString(),
+                level,
+                message,
+                ...(data && { data })
+            };
+            const logMethod = level === 'error' ? console.error : level === 'warn' ? console.warn : console.log;
+            logMethod(`[Recognition ${requestId}]`, message, data || '');
+            // 同时输出结构化数据，方便 MCP 工具解析
+            logMethod(`[Recognition ${requestId} JSON]`, JSON.stringify(logEntry, null, 2));
+        };
+        
         // 移除data:image/png;base64,前缀（如果存在）
         const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, '');
+        
+        consoleLog('info', '开始识别请求', {
+            imageBase64Length: imageBase64.length,
+            base64DataLength: base64Data.length,
+            hasDataPrefix: imageBase64.startsWith('data:')
+        });
         
         try {
             // 检测是否在GitHub Pages环境
             const isGitHubPages = window.location.hostname.includes('github.io') || 
                                   window.location.hostname.includes('github.com');
             
+            consoleLog('info', '环境检测', {
+                hostname: window.location.hostname,
+                isGitHubPages,
+                isLocal: window.location.hostname.includes('localhost'),
+                isVercel: window.location.hostname.includes('vercel.app')
+            });
+            
             // 优先使用同源 Serverless（Vercel 部署）/api/baidu-proxy；
             // GitHub Pages 环境则尝试使用设置里的代理地址（APP设置或localStorage: proxyBase）
             // 本地环境使用本地代理服务器
             let configuredBase = (window.APP_CONFIG && window.APP_CONFIG.proxyBase) || localStorage.getItem('proxyBase') || '';
+            
+            consoleLog('info', '代理配置检查', {
+                hasAppConfig: !!window.APP_CONFIG,
+                appConfigProxy: window.APP_CONFIG?.proxyBase || null,
+                localStorageProxy: localStorage.getItem('proxyBase') || null,
+                configuredBase: configuredBase || '(未配置)'
+            });
             
             // 如果 GitHub Pages 环境且未配置，尝试自动配置
             if (isGitHubPages && !configuredBase) {
                 const defaultProxy = 'https://pinyinxieci.vercel.app';
                 configuredBase = defaultProxy;
                 localStorage.setItem('proxyBase', defaultProxy);
+                consoleLog('warn', '自动配置代理地址', { defaultProxy });
                 if (typeof Debug !== 'undefined') {
                     Debug.log('warning', `GitHub Pages环境未配置代理，已自动设置为: ${defaultProxy}`, 'proxy');
                 }
@@ -232,6 +348,15 @@ const Recognition = {
             const proxyUrl = isGitHubPages
                 ? (configuredBase ? `${configuredBase.replace(/\/$/, '')}/api/baidu-proxy` : '')
                 : (isLocal ? localProxyUrl : sameOriginUrl);
+            
+            consoleLog('info', '代理URL确定', {
+                isLocal,
+                isGitHubPages,
+                sameOriginUrl,
+                localProxyUrl,
+                configuredBase: configuredBase || '(未配置)',
+                finalProxyUrl: proxyUrl || '(未配置)'
+            });
             
             // 注意：使用 Vercel 代理时，不需要前端获取 token（Vercel 函数内部已处理）
             // 只有在本地代理服务器环境下才需要获取 token
@@ -263,6 +388,11 @@ const Recognition = {
             try {
                 if (!proxyUrl) {
                     const err = new Error('NO_PROXY_CONFIG');
+                    consoleLog('error', '代理URL未配置', {
+                        isGitHubPages,
+                        configuredBase: configuredBase || '(未配置)',
+                        error: err.message
+                    });
                     if (typeof Debug !== 'undefined') {
                         Debug.logError(err, '代理URL未配置');
                         Debug.log('error', `代理配置为空！isGitHubPages=${isGitHubPages}, configuredBase=${configuredBase}`, 'proxy');
@@ -270,26 +400,38 @@ const Recognition = {
                     throw err;
                 }
                 
-                const startTime = Date.now();
+                const fetchStartTime = Date.now();
                 // 本地环境需要传递 token，Vercel 环境不需要
                 const requestBody = isLocal && accessToken
                     ? { imageBase64: imageBase64, access_token: accessToken, options: {} }
                     : { imageBase64: imageBase64, options: {} };
                 const bodySize = JSON.stringify(requestBody).length;
                 
-            // 调试日志 - 请求前
-            if (typeof Debug !== 'undefined') {
-                Debug.setLastImage(imageBase64); // 保存图片供查看
-                Debug.log('info', `准备发送POST请求，请求体大小: ${(bodySize / 1024).toFixed(2)}KB`, 'network');
-                Debug.log('info', `图片数据检查:`, 'network');
-                Debug.log('info', `- 原始数据长度: ${imageBase64.length}`, 'network');
-                Debug.log('info', `- 是否有data:前缀: ${imageBase64.startsWith('data:')}`, 'network');
-                const base64Only = imageBase64.replace(/^data:image\/\w+;base64,/, '');
-                Debug.log('info', `- Base64数据长度: ${base64Only.length}`, 'network');
-                Debug.log('info', `- Base64前50字符: ${base64Only.substring(0, 50)}...`, 'network');
-            }
+                consoleLog('info', '准备发送请求', {
+                    url: proxyUrl,
+                    method: 'POST',
+                    bodySize: `${(bodySize / 1024).toFixed(2)}KB`,
+                    hasAccessToken: !!(isLocal && accessToken),
+                    isLocal,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                // 调试日志 - 请求前
+                if (typeof Debug !== 'undefined') {
+                    Debug.setLastImage(imageBase64); // 保存图片供查看
+                    Debug.log('info', `准备发送POST请求，请求体大小: ${(bodySize / 1024).toFixed(2)}KB`, 'network');
+                    Debug.log('info', `图片数据检查:`, 'network');
+                    Debug.log('info', `- 原始数据长度: ${imageBase64.length}`, 'network');
+                    Debug.log('info', `- 是否有data:前缀: ${imageBase64.startsWith('data:')}`, 'network');
+                    const base64Only = imageBase64.replace(/^data:image\/\w+;base64,/, '');
+                    Debug.log('info', `- Base64数据长度: ${base64Only.length}`, 'network');
+                    Debug.log('info', `- Base64前50字符: ${base64Only.substring(0, 50)}...`, 'network');
+                }
                 
                 try {
+                    consoleLog('info', '开始 fetch 请求', { url: proxyUrl });
                     response = await fetch(proxyUrl, {
                         method: 'POST',
                         headers: {
@@ -298,8 +440,25 @@ const Recognition = {
                         body: JSON.stringify(requestBody),
                         mode: 'cors'
                     });
+                    const fetchTime = Date.now() - fetchStartTime;
+                    consoleLog('info', 'Fetch 请求完成', {
+                        status: response.status,
+                        statusText: response.statusText,
+                        fetchTime: `${fetchTime}ms`,
+                        headers: Object.fromEntries(response.headers.entries())
+                    });
                 } catch (fetchErr) {
+                    const fetchTime = Date.now() - fetchStartTime;
                     // 捕获 fetch 本身的错误（网络错误、CORS等）
+                    consoleLog('error', 'Fetch 请求失败', {
+                        errorName: fetchErr.name,
+                        errorMessage: fetchErr.message,
+                        errorStack: fetchErr.stack,
+                        url: proxyUrl,
+                        method: 'POST',
+                        mode: 'cors',
+                        fetchTime: `${fetchTime}ms`
+                    });
                     if (typeof Debug !== 'undefined') {
                         Debug.logError(fetchErr, 'Fetch请求失败');
                         Debug.log('error', `错误类型: ${fetchErr.name}, 消息: ${fetchErr.message}`, 'network');
@@ -311,10 +470,18 @@ const Recognition = {
                 }
                 
                 const endTime = Date.now();
+                const totalTime = endTime - startTime;
+                
+                consoleLog('info', '响应接收完成', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    totalTime: `${totalTime}ms`,
+                    fetchTime: `${Date.now() - fetchStartTime}ms`
+                });
                 
                 // 调试日志 - 响应后
                 if (typeof Debug !== 'undefined') {
-                    Debug.log('info', `请求耗时: ${endTime - startTime}ms`, 'network');
+                    Debug.log('info', `请求耗时: ${endTime - fetchStartTime}ms`, 'network');
                     Debug.log('info', `响应状态: ${response.status} ${response.statusText}`, 'network');
                     Debug.log('info', `响应头: ${JSON.stringify(Object.fromEntries(response.headers.entries()))}`, 'network');
                 }
@@ -365,10 +532,29 @@ const Recognition = {
             
             let data;
             try {
-                data = await response.json();
+                const responseText = await response.text();
+                consoleLog('info', '响应文本接收', {
+                    textLength: responseText.length,
+                    preview: responseText.substring(0, 200)
+                });
+                data = JSON.parse(responseText);
+                consoleLog('info', '响应JSON解析成功', {
+                    hasErrorCode: !!data.error_code,
+                    errorCode: data.error_code || null,
+                    errorMsg: data.error_msg || null,
+                    hasWordsResult: !!data.words_result,
+                    wordsResultCount: data.words_result ? data.words_result.length : 0,
+                    hasProxyInfo: !!data._proxy_info,
+                    proxyInfo: data._proxy_info || null
+                });
             } catch (jsonError) {
                 // 如果JSON解析失败，尝试读取原始文本
                 const text = await response.text();
+                consoleLog('error', 'JSON解析失败', {
+                    error: jsonError.message,
+                    responseText: text.substring(0, 500),
+                    status: response.status
+                });
                 if (typeof Debug !== 'undefined') {
                     Debug.log('error', `JSON解析失败，原始响应: ${text.substring(0, 1000)}`, 'error');
                 }
@@ -376,6 +562,14 @@ const Recognition = {
             }
             
             // 调试日志 - 记录完整响应（不截断）
+            consoleLog('info', '响应数据分析', {
+                errorCode: data.error_code || null,
+                errorMsg: data.error_msg || null,
+                wordsResultCount: data.words_result ? data.words_result.length : 0,
+                firstWord: data.words_result && data.words_result.length > 0 ? data.words_result[0].words : null,
+                proxyInfo: data._proxy_info || null
+            });
+            
             if (typeof Debug !== 'undefined') {
                 const fullResponse = JSON.stringify(data, null, 2);
                 Debug.log('info', `百度API完整响应:`, 'network');
@@ -394,6 +588,11 @@ const Recognition = {
                 const errorCode = data.error_code || data._proxy_info?.error_code;
                 const errorMsg = data.error_msg || data._proxy_info?.error_msg || '未知错误';
                 const fullErrorMsg = `百度API错误 [${errorCode}]: ${errorMsg}`;
+                consoleLog('error', '百度API错误', {
+                    errorCode,
+                    errorMsg,
+                    proxyInfo: data._proxy_info
+                });
                 if (typeof Debug !== 'undefined') {
                     Debug.log('error', fullErrorMsg, 'error');
                     if (data._proxy_info) {
@@ -405,6 +604,11 @@ const Recognition = {
             
             // 检查是否有其他错误字段
             if (data.error) {
+                consoleLog('error', 'Vercel代理错误', {
+                    error: data.error,
+                    details: data.details,
+                    requestId: data.requestId
+                });
                 if (typeof Debug !== 'undefined') {
                     Debug.log('error', `Vercel代理错误: ${data.error}`, 'error');
                     if (data.details) {
@@ -417,21 +621,18 @@ const Recognition = {
             // 解析结果
             if (data.words_result && data.words_result.length > 0) {
                 let word = data.words_result[0].words.trim();
+                const confidence = data.words_result[0].probability?.average || 0.8;
+                
+                consoleLog('info', '识别成功', {
+                    recognized: word,
+                    confidence,
+                    totalTime: `${Date.now() - startTime}ms`,
+                    proxyInfo: data._proxy_info
+                });
                 
                 // 调试日志
                 if (typeof Debug !== 'undefined') {
                     Debug.log('info', `识别到的文字: "${word}"`, 'recognition');
-                }
-                
-            // 如果识别结果是词组，提取第一个字
-            // 因为题目要求写单个字，识别可能返回词组
-            // 但先保留原结果，让对比逻辑来处理
-            // word保持原样，在对比时处理
-                
-                const confidence = data.words_result[0].probability?.average || 0.8;
-                
-                // 调试日志
-                if (typeof Debug !== 'undefined') {
                     Debug.log('info', `置信度: ${confidence}`, 'recognition');
                 }
                 
@@ -442,6 +643,10 @@ const Recognition = {
             }
             
             // 没有识别结果
+            consoleLog('warn', '识别结果为空', {
+                responseData: data,
+                totalTime: `${Date.now() - startTime}ms`
+            });
             if (typeof Debug !== 'undefined') {
                 Debug.log('warning', `百度API返回空结果。完整响应: ${JSON.stringify(data)}`, 'recognition');
             }
