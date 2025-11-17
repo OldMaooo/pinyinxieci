@@ -22,6 +22,8 @@ const Practice = {
     isActive: false,
     isPaused: false,
     mode: 'normal',
+    lastSubmitTime: 0, // 上次提交时间，用于防重复提交
+    isSubmitting: false, // 是否正在提交中
     
     /**
      * 开始练习
@@ -280,7 +282,7 @@ const Practice = {
             displayText = word.word || '';
         }
         
-        // 使用textContent确保正确显示
+        // 使用textContent确保正确显示（清除之前的图标和HTML）
         pinyinDisplay.textContent = displayText;
         console.log('[Practice] 显示题目:', JSON.stringify({
             word: word.word,
@@ -424,6 +426,20 @@ const Practice = {
      * 提交答案
      */
     async submitAnswer() {
+        // 防重复提交：10秒内只能提交一次
+        const now = Date.now();
+        const timeSinceLastSubmit = now - this.lastSubmitTime;
+        if (timeSinceLastSubmit < 10000 && this.lastSubmitTime > 0) {
+            const remainingSeconds = Math.ceil((10000 - timeSinceLastSubmit) / 1000);
+            alert(`请等待 ${remainingSeconds} 秒后再提交`);
+            return;
+        }
+        
+        // 如果正在提交中，忽略
+        if (this.isSubmitting) {
+            return;
+        }
+        
         if (this.mode === 'normal' && !Handwriting.hasContent()) {
             alert('请先书写');
             return;
@@ -440,6 +456,14 @@ const Practice = {
         if (this.timer) {
             clearInterval(this.timer);
         }
+        
+        // 设置提交状态和按钮loading
+        this.isSubmitting = true;
+        this.lastSubmitTime = now;
+        const submitBtn = document.getElementById('submit-answer-btn');
+        const originalBtnHtml = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>识别中...';
         
         // 显示识别中
         document.getElementById('feedback-area').innerHTML = 
@@ -503,6 +527,11 @@ const Practice = {
             // 持续草稿保存
             this.saveAutosaveDraft();
             
+            // 恢复按钮状态
+            this.isSubmitting = false;
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHtml;
+            
             // 2秒后下一题
             setTimeout(() => {
                 // 保存当前题目到历史
@@ -518,6 +547,11 @@ const Practice = {
             }, this.mode === 'normal' ? 2000 : 300);
         } catch (error) {
             console.error('提交失败:', error);
+            
+            // 恢复按钮状态
+            this.isSubmitting = false;
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHtml;
             
             // 详细的调试日志
             if (typeof Debug !== 'undefined') {
@@ -560,6 +594,56 @@ const Practice = {
     },
     
     /**
+     * 不会（直接显示正确答案，不调用API）
+     */
+    async skipAnswer() {
+        const word = this.currentWords[this.currentIndex];
+        const snapshot = this.mode === 'normal' && Handwriting.hasContent() ? Handwriting.getSnapshot() : null;
+        const wordStartTime = this.practiceLog.wordTimes.length > 0 ? 
+            Date.now() - (this.practiceLog.wordTimes[this.practiceLog.wordTimes.length - 1] * 1000 + this.practiceLog.startTime) : 
+            Date.now() - this.practiceLog.startTime;
+        const wordTime = wordStartTime / 1000;
+        
+        // 停止计时
+        if (this.timer) {
+            clearInterval(this.timer);
+        }
+        
+        // 记录为错误（不会）
+        this.practiceLog.errorCount++;
+        this.practiceLog.wordTimes.push(wordTime);
+        this.practiceLog.totalTime += wordTime;
+        
+        // 如果有笔迹，保存快照
+        if (snapshot) {
+            await this.recordError(word, snapshot);
+            this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot });
+        } else {
+            this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null });
+        }
+        
+        // 显示反馈（错误）
+        this.showFeedback(false, word, '');
+        
+        // 持续草稿保存
+        this.saveAutosaveDraft();
+        
+        // 2秒后下一题
+        setTimeout(() => {
+            // 保存当前题目到历史
+            if (this.currentIndex < this.currentWords.length) {
+                this.history.push({
+                    word: word,
+                    index: this.currentIndex,
+                    snapshot: snapshot
+                });
+            }
+            this.currentIndex++;
+            this.showNextWord();
+        }, 2000);
+    },
+    
+    /**
      * 显示反馈
      * 错误时：不显示feedback-area，将正确的字代入拼音显示中（红字）
      * 正确时：不显示feedback-area，将正确的字代入拼音显示中（绿字）
@@ -571,8 +655,13 @@ const Practice = {
         // 清空反馈区域（不显示红框内容）
         feedbackArea.innerHTML = '';
         
-        // 在拼音显示区域中，将正确的字替换到词组中
+        // 在拼音显示区域中，将正确的字替换到词组中，并在左边显示对钩/叉
         if (pinyinDisplay && this._currentDisplayText) {
+            // 添加对钩或叉的图标
+            const icon = isCorrect 
+                ? '<i class="bi bi-check-circle-fill text-success me-2" style="font-size: 1.2em;"></i>' 
+                : '<i class="bi bi-x-circle-fill text-danger me-2" style="font-size: 1.2em;"></i>';
+            
             // 获取当前显示的文本（词组，例如：dú书, 阅dú, 朗dú）
             let displayText = this._currentDisplayText;
             const correctWord = word.word;
@@ -602,8 +691,8 @@ const Practice = {
                 displayText = displayText + ` <span class="${color} fw-bold">${correctWord}</span>`;
             }
             
-            // 更新拼音显示区域（使用innerHTML以支持HTML标签）
-            pinyinDisplay.innerHTML = displayText;
+            // 更新拼音显示区域：在左边添加图标，然后显示文本（使用innerHTML以支持HTML标签）
+            pinyinDisplay.innerHTML = icon + displayText;
         }
         
         // 错误时在田字格中显示正确答案
@@ -846,6 +935,7 @@ const Practice = {
 document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('start-practice-btn');
     const submitBtn = document.getElementById('submit-answer-btn');
+    const skipAnswerBtn = document.getElementById('skip-answer-btn');
     const clearBtn = document.getElementById('clear-canvas-btn');
     const skipBtn = document.getElementById('skip-question-btn');
     const endBtn = document.getElementById('end-practice-btn');
@@ -856,6 +946,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (submitBtn) {
         submitBtn.addEventListener('click', () => Practice.submitAnswer());
+    }
+    
+    if (skipAnswerBtn) {
+        skipAnswerBtn.addEventListener('click', () => Practice.skipAnswer());
     }
     
     if (clearBtn) {

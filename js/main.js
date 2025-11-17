@@ -307,16 +307,20 @@ const Main = {
                     Storage.saveSettings(settings);
                 }
                 if (timeInput) timeInput.value = isFinite(time) && time > 0 ? String(time) : '30';
-                // 跳到练习页并同步范围选择
-                this.showPage('practice');
-                setTimeout(() => {
-                    if (typeof PracticeRange !== 'undefined' && PracticeRange.syncSelection) {
-                        PracticeRange.syncSelection('practice-range-container-home', 'practice-range-container');
-                    }
-                    if (typeof Practice !== 'undefined') {
+                // 直接开始练习，跳过练习范围选择页面
+                // 先同步范围选择（在后台进行）
+                if (typeof PracticeRange !== 'undefined' && PracticeRange.syncSelection) {
+                    PracticeRange.syncSelection('practice-range-container-home', 'practice-range-container');
+                }
+                // 直接开始练习
+                if (typeof Practice !== 'undefined') {
+                    // 切换到练习页面
+                    this.showPage('practice');
+                    // 立即开始练习
+                    setTimeout(() => {
                         Practice.start();
-                    }
-                }, 150);
+                    }, 100);
+                }
             });
         }
 
