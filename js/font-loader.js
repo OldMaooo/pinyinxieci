@@ -27,7 +27,6 @@
             return new Promise((resolve) => {
                 // iPad/iOS设备：直接使用Canvas方法，因为FontFace API可能不可靠
                 if (this.isIPadOrIOS()) {
-                    console.log('[FontLoader] 检测到iPad/iOS设备，使用Canvas方法检测字体');
                     resolve(this.checkSystemFontFallback());
                     return;
                 }
@@ -87,7 +86,6 @@
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 if (!ctx) {
-                    console.log('[FontLoader] Canvas 不可用，将加载本地字体');
                     return false;
                 }
                 
@@ -112,18 +110,9 @@
                 const significantDiffs = differences.filter(diff => diff > 0.5);
                 const hasSystemFont = significantDiffs.length >= 3;
                 
-                if (typeof Debug !== 'undefined' && Debug.isEnabled) {
-                    Debug.log('FontLoader.checkSystemFontFallback (Canvas)', {
-                        differences: differences,
-                        significantDiffs: significantDiffs.length,
-                        hasSystemKaiTi: hasSystemFont
-                    });
-                }
-                
-                console.log('[FontLoader] 字体检测结果:', JSON.stringify({
+                console.log('[FontLoader.checkSystemFont] 系统字体检测结果:', JSON.stringify({
                     hasSystemFont: hasSystemFont,
-                    significantDiffs: significantDiffs.length,
-                    differences: differences
+                    significantDiffs: significantDiffs.length
                 }, null, 2));
                 
                 return hasSystemFont;
@@ -140,7 +129,6 @@
             try {
                 // iPad/iOS可能不支持Cache API，使用IndexedDB作为备用
                 if (this.isIPadOrIOS() && !('caches' in window)) {
-                    console.log('[FontLoader] iPad/iOS设备且不支持Cache API，尝试使用IndexedDB');
                     return await this.loadFromIndexedDB();
                 }
                 
@@ -161,10 +149,9 @@
                 
                 return false;
             } catch (err) {
-                console.error('[FontLoader] 从缓存加载失败:', err);
+                console.error('[FontLoader.loadFromCache] 从缓存加载失败:', err);
                 // 如果Cache API失败，尝试IndexedDB
                 if (this.isIPadOrIOS()) {
-                    console.log('[FontLoader] Cache API失败，尝试IndexedDB');
                     return await this.loadFromIndexedDB();
                 }
                 return false;
@@ -180,7 +167,6 @@
                     const request = indexedDB.open('font-storage', 1);
                     
                     request.onerror = () => {
-                        console.warn('[FontLoader] IndexedDB打开失败');
                         resolve(false);
                     };
                     
@@ -195,7 +181,7 @@
                                 const blob = getRequest.result.blob;
                                 const url = URL.createObjectURL(blob);
                                 this.injectFont(url);
-                                console.log('[FontLoader] 从IndexedDB加载字体成功');
+                                console.log('[FontLoader.loadFromIndexedDB] 从IndexedDB加载字体成功');
                                 resolve(true);
                             } else {
                                 resolve(false);
@@ -203,7 +189,6 @@
                         };
                         
                         getRequest.onerror = () => {
-                            console.warn('[FontLoader] 从IndexedDB读取失败');
                             resolve(false);
                         };
                     };
@@ -243,7 +228,6 @@
                         await cache.put(this.fontFile, new Response(blob));
                     }
                 } catch (cacheErr) {
-                    console.warn('[FontLoader] 缓存失败，但继续使用字体:', cacheErr);
                     // 即使缓存失败，也继续使用字体
                 }
                 
@@ -284,7 +268,6 @@
                         const putRequest = store.put({ blob: blob }, this.fontName);
                         
                         putRequest.onsuccess = () => {
-                            console.log('[FontLoader] 字体已保存到IndexedDB');
                             resolve(true);
                         };
                         
@@ -331,18 +314,32 @@
             
             // 更新CSS变量
             document.documentElement.style.setProperty('--kaiti-font-family', this.fontFamily);
+            
+            // 字体调试信息
+            console.log('[FontLoader.injectFont] 字体注入完成:', JSON.stringify({
+                fontName: this.fontName,
+                fontFamily: this.fontFamily,
+                url: url.substring(0, 50) + '...',
+                cssVariableSet: getComputedStyle(document.documentElement).getPropertyValue('--kaiti-font-family'),
+                styleElementExists: document.getElementById('custom-kaiti-font') !== null
+            }, null, 2));
         },
         
         /**
          * 初始化字体加载
          */
         async init() {
-            console.log('[FontLoader] 开始初始化字体加载器...');
+            console.log('[FontLoader.init] 开始初始化字体加载器');
             
             // iPad/iOS设备：强制加载本地字体，因为系统字体检测可能不准确
             if (this.isIPadOrIOS()) {
-                console.log('[FontLoader] iPad/iOS设备，强制加载本地字体以确保显示正确');
+                console.log('[FontLoader.init] iPad/iOS设备，强制加载本地字体');
                 await this.loadLocalFont();
+                console.log('[FontLoader.init] 字体初始化完成:', JSON.stringify({
+                    isIPad: true,
+                    cssVariable: getComputedStyle(document.documentElement).getPropertyValue('--kaiti-font-family'),
+                    fontStyleElement: document.getElementById('custom-kaiti-font') !== null
+                }, null, 2));
                 return;
             }
             
@@ -350,20 +347,23 @@
             const hasSystemFont = await this.checkSystemFont();
             
             if (hasSystemFont) {
-                console.log('[FontLoader] 检测到系统已有楷体字体，无需加载');
-                if (typeof Debug !== 'undefined' && Debug.isEnabled) {
-                    Debug.log('FontLoader.init', { 
-                        message: '系统已有楷体字体，无需加载',
-                        hasSystemFont: true 
-                    });
-                }
+                console.log('[FontLoader.init] 检测到系统已有楷体字体，无需加载');
                 // 即使检测到系统字体，也设置 CSS 变量以确保字体栈正确
                 document.documentElement.style.setProperty('--kaiti-font-family', this.fontFamily);
+                console.log('[FontLoader.init] 字体初始化完成:', JSON.stringify({
+                    hasSystemFont: true,
+                    cssVariable: getComputedStyle(document.documentElement).getPropertyValue('--kaiti-font-family')
+                }, null, 2));
                 return;
             }
             
-            console.log('[FontLoader] 未检测到系统楷体，开始加载本地字体...');
+            console.log('[FontLoader.init] 未检测到系统楷体，开始加载本地字体');
             await this.loadLocalFont();
+            console.log('[FontLoader.init] 字体初始化完成:', JSON.stringify({
+                hasSystemFont: false,
+                cssVariable: getComputedStyle(document.documentElement).getPropertyValue('--kaiti-font-family'),
+                fontStyleElement: document.getElementById('custom-kaiti-font') !== null
+            }, null, 2));
         },
         
         /**
@@ -373,30 +373,18 @@
             // 尝试从缓存加载
             const cached = await this.loadFromCache();
             if (cached) {
-                console.log('[FontLoader] 从缓存加载字体成功');
-                if (typeof Debug !== 'undefined' && Debug.isEnabled) {
-                    Debug.log('FontLoader.loadLocalFont', { 
-                        message: '从缓存加载字体成功',
-                        fromCache: true 
-                    });
-                }
+                console.log('[FontLoader.loadLocalFont] 从缓存加载字体成功');
                 return;
             }
             
-            console.log('[FontLoader] 缓存中无字体，开始下载...');
+            console.log('[FontLoader.loadLocalFont] 缓存中无字体，开始下载');
             
             // 下载并缓存
             const downloaded = await this.downloadAndCache();
             if (downloaded) {
-                console.log('[FontLoader] 下载并缓存字体成功');
-                if (typeof Debug !== 'undefined' && Debug.isEnabled) {
-                    Debug.log('FontLoader.loadLocalFont', { 
-                        message: '下载并缓存字体成功',
-                        downloaded: true 
-                    });
-                }
+                console.log('[FontLoader.loadLocalFont] 下载并缓存字体成功');
             } else {
-                console.error('[FontLoader] 字体加载失败，将使用系统默认字体');
+                console.error('[FontLoader.loadLocalFont] 字体加载失败，将使用系统默认字体');
                 // 即使下载失败，也设置 CSS 变量，使用系统字体栈
                 document.documentElement.style.setProperty('--kaiti-font-family', this.fontFamily);
             }

@@ -490,15 +490,26 @@ const Handwriting = {
         // 保存当前状态
         this.ctx.save();
         
-        // 设置文字样式 - 使用楷体，撑满田字格
-        const isDark = (document.documentElement.getAttribute('data-bs-theme') || 'light') === 'dark';
-        this.ctx.fillStyle = isDark ? '#ffffff' : '#000000';
-        // 使用楷体，字体大小约为田字格的80-90%，确保撑满
+        // 设置文字样式 - 使用楷体，撑满田字格，颜色为红色
         // 使用CSS变量定义的楷体字体栈
         const kaitiFontFamily = getComputedStyle(document.documentElement).getPropertyValue('--kaiti-font-family') || 
             'KaiTi_GB2312, KaiTi, "Kaiti SC", "楷体", "STKaiti", "STKaiti SC", "SimKai", serif';
         const fontSize = size * 0.85;
-        this.ctx.font = `bold ${fontSize}px ${kaitiFontFamily}`;
+        const fontString = `bold ${fontSize}px ${kaitiFontFamily}`;
+        
+        // 字体调试信息
+        console.log('[Handwriting.drawCorrectWord] 字体调试信息:', JSON.stringify({
+            word: word,
+            cssVariable: getComputedStyle(document.documentElement).getPropertyValue('--kaiti-font-family'),
+            kaitiFontFamily: kaitiFontFamily,
+            fontString: fontString,
+            fontSize: fontSize,
+            fontName: typeof FontLoader !== 'undefined' ? FontLoader.fontName : 'undefined',
+            fontLoaded: typeof FontLoader !== 'undefined' && FontLoader.fontName ? document.getElementById('custom-kaiti-font') !== null : false
+        }, null, 2));
+        
+        this.ctx.fillStyle = '#dc3545'; // 红色
+        this.ctx.font = fontString;
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
         
