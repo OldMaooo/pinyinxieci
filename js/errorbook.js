@@ -101,7 +101,7 @@ const ErrorBook = {
                                 <div class="d-flex gap-2 align-items-center mt-2">
                                     <div class="word-box">${latestSnapshot ? `<img class="snapshot-invert" src="${latestSnapshot}" alt="手写" style="max-width: 90%; max-height: 90%; object-fit: contain;">` : '<span class="text-muted small">无快照</span>'}</div>
                                     <div class="word-box standard-dark-box text-center">
-                                        <div class="standard-dark-text" style="font-size: 2.2rem; font-family: 'KaiTi','楷体',serif;">${w.word}</div>
+                                        <div class="standard-dark-text" style="font-size: 2.2rem;">${w.word}</div>
                                     </div>
                                 </div>
                             </div>
@@ -162,7 +162,7 @@ const ErrorBook = {
                         <div class="d-flex gap-2 align-items-center mt-2">
                             <div class="word-box">${latestSnapshot ? `<img class=\"snapshot-invert\" src=\"${latestSnapshot}\" style=\"max-width: 90%; max-height: 90%; object-fit: contain;\">` : '<span class=\"text-muted small\">无快照</span>'}</div>
                             <div class="word-box standard-dark-box text-center">
-                                <div class="standard-dark-text" style="font-size: 2.2rem; font-family: 'KaiTi','楷体',serif;">${w.word}</div>
+                                <div class="standard-dark-text" style="font-size: 2.2rem;">${w.word}</div>
                             </div>
                         </div>
                     </div>

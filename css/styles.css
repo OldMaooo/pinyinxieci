@@ -79,7 +79,18 @@
 [data-bs-theme="dark"] .standard-dark-text { color: #fff; }
 
 /* 统一错题卡中文字框尺寸与边框 */
-.word-box { width: 96px; height: 96px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--bs-border-color); border-radius: 4px; background: var(--bs-body-bg); }
+.word-box { 
+    width: 96px; 
+    height: 96px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    border: 1px solid var(--bs-border-color); 
+    border-radius: 4px; 
+    background: var(--bs-body-bg);
+    /* 使用楷体字体 */
+    font-family: var(--kaiti-font-family, 'KaiTi_GB2312', 'KaiTi', 'Kaiti SC', '楷体', 'STKaiti', 'STKaiti SC', 'SimKai', serif);
+}
 [data-bs-theme="dark"] .word-box { background: #212529; }
 
 /* 自定义样式 */

@@ -494,8 +494,11 @@ const Handwriting = {
         const isDark = (document.documentElement.getAttribute('data-bs-theme') || 'light') === 'dark';
         this.ctx.fillStyle = isDark ? '#ffffff' : '#000000';
         // 使用楷体，字体大小约为田字格的80-90%，确保撑满
+        // 使用CSS变量定义的楷体字体栈
+        const kaitiFontFamily = getComputedStyle(document.documentElement).getPropertyValue('--kaiti-font-family') || 
+            'KaiTi_GB2312, KaiTi, "Kaiti SC", "楷体", "STKaiti", "STKaiti SC", "SimKai", serif';
         const fontSize = size * 0.85;
-        this.ctx.font = `bold ${fontSize}px "KaiTi", "Kaiti SC", "楷体", "STKaiti", "Songti SC", "Songti", "宋体", "SimSun", "Heiti SC", "黑体", "SimHei", serif`;
+        this.ctx.font = `bold ${fontSize}px ${kaitiFontFamily}`;
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
         

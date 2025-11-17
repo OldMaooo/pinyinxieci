@@ -23,6 +23,7 @@ const Practice = {
     isPaused: false,
     mode: 'normal',
     lastSubmitTime: 0, // 上次提交时间，用于防重复提交
+    lastSubmitWordId: null, // 上次提交的字ID，用于判断是否切换了字
     isSubmitting: false, // 是否正在提交中
     
     /**
@@ -291,6 +292,12 @@ const Practice = {
             wordId: word.id
         }, null, 2));
         
+        // 切换字时重置提交时间（允许新字立即提交）
+        if (this.lastSubmitWordId !== word.id) {
+            this.lastSubmitTime = 0;
+            this.lastSubmitWordId = null;
+        }
+        
         // 更新进度
         document.getElementById('progress-badge').textContent = 
             `${this.currentIndex + 1}/${this.currentWords.length}`;
@@ -426,10 +433,18 @@ const Practice = {
      * 提交答案
      */
     async submitAnswer() {
-        // 防重复提交：10秒内只能提交一次
+        const word = this.currentWords[this.currentIndex];
+        
+        // 防重复提交：同一个字10秒内只能提交一次
         const now = Date.now();
+        // 如果切换了字，重置提交时间
+        if (this.lastSubmitWordId !== word.id) {
+            this.lastSubmitTime = 0;
+            this.lastSubmitWordId = word.id;
+        }
+        
         const timeSinceLastSubmit = now - this.lastSubmitTime;
-        if (timeSinceLastSubmit < 10000 && this.lastSubmitTime > 0) {
+        if (timeSinceLastSubmit < 10000 && this.lastSubmitTime > 0 && this.lastSubmitWordId === word.id) {
             const remainingSeconds = Math.ceil((10000 - timeSinceLastSubmit) / 1000);
             alert(`请等待 ${remainingSeconds} 秒后再提交`);
             return;
@@ -444,8 +459,6 @@ const Practice = {
             alert('请先书写');
             return;
         }
-        
-        const word = this.currentWords[this.currentIndex];
         const snapshot = this.mode === 'normal' ? Handwriting.getSnapshot() : null;
         const wordStartTime = this.practiceLog.wordTimes.length > 0 ? 
             Date.now() - (this.practiceLog.wordTimes[this.practiceLog.wordTimes.length - 1] * 1000 + this.practiceLog.startTime) : 
@@ -460,6 +473,7 @@ const Practice = {
         // 设置提交状态和按钮loading
         this.isSubmitting = true;
         this.lastSubmitTime = now;
+        this.lastSubmitWordId = word.id; // 记录当前提交的字ID
         const submitBtn = document.getElementById('submit-answer-btn');
         const originalBtnHtml = submitBtn.innerHTML;
         submitBtn.disabled = true;
