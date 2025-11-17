@@ -30,19 +30,19 @@ const Practice = {
         // 确保词组数据已加载（无论是否已加载，都重新加载以确保最新）
         if (typeof WordGroups !== 'undefined' && WordGroups.load) {
             try {
-                console.log('[Practice.start] 开始加载词组数据，当前状态:', {
+                console.log('[Practice.start] 开始加载词组数据，当前状态:', JSON.stringify({
                     _loaded: WordGroups._loaded,
                     _loading: WordGroups._loading,
                     groupsCount: Object.keys(WordGroups.groups).length
-                });
+                }, null, 2));
                 // 强制重新加载，确保数据是最新的
                 WordGroups._loaded = false;
                 await WordGroups.load();
-                console.log('[Practice.start] 词组数据加载完成，状态:', {
+                console.log('[Practice.start] 词组数据加载完成，状态:', JSON.stringify({
                     _loaded: WordGroups._loaded,
                     groupsCount: Object.keys(WordGroups.groups).length,
                     sampleWords: Object.keys(WordGroups.groups).slice(0, 5)
-                });
+                }, null, 2));
             } catch (e) {
                 console.error('加载词组数据失败，继续练习:', e);
             }
@@ -228,33 +228,33 @@ const Practice = {
         }
         
         let displayText = word.pinyin || '';
-        console.log('[Practice.showNextWord] WordGroups检查:', {
+        console.log('[Practice.showNextWord] WordGroups检查:', JSON.stringify({
             wordGroupsDefined: typeof WordGroups !== 'undefined',
             word: word.word,
             pinyin: word.pinyin,
             windowWordGroups: typeof window.WordGroups !== 'undefined',
             globalWordGroups: typeof globalThis.WordGroups !== 'undefined'
-        });
+        }, null, 2));
         
         if (typeof WordGroups !== 'undefined') {
             // 确保词组数据已加载
-            console.log('[Practice.showNextWord] WordGroups状态:', {
+            console.log('[Practice.showNextWord] WordGroups状态:', JSON.stringify({
                 _loaded: WordGroups._loaded,
                 _loading: WordGroups._loading,
                 groupsCount: Object.keys(WordGroups.groups).length,
                 hasWord: word.word in WordGroups.groups
-            });
+            }, null, 2));
             
             // 确保词组数据已加载（如果未加载，先加载）
             if (!WordGroups._loaded && WordGroups.load) {
                 try {
                     console.log('[Practice.showNextWord] 开始加载词组数据...');
                     await WordGroups.load();
-                    console.log('[Practice.showNextWord] 词组数据加载完成:', {
+                    console.log('[Practice.showNextWord] 词组数据加载完成:', JSON.stringify({
                         _loaded: WordGroups._loaded,
                         groupsCount: Object.keys(WordGroups.groups).length,
                         hasWord: word.word in WordGroups.groups
-                    });
+                    }, null, 2));
                 } catch (e) {
                     console.error('显示题目时加载词组数据失败:', e);
                 }
@@ -282,12 +282,12 @@ const Practice = {
         
         // 使用textContent确保正确显示
         pinyinDisplay.textContent = displayText;
-        console.log('[Practice] 显示题目:', {
+        console.log('[Practice] 显示题目:', JSON.stringify({
             word: word.word,
             pinyin: word.pinyin || '(空)',
             displayText: displayText,
             wordId: word.id
-        });
+        }, null, 2));
         
         // 更新进度
         document.getElementById('progress-badge').textContent = 

@@ -120,11 +120,11 @@
                     });
                 }
                 
-                console.log('[FontLoader] 字体检测结果:', {
+                console.log('[FontLoader] 字体检测结果:', JSON.stringify({
                     hasSystemFont: hasSystemFont,
                     significantDiffs: significantDiffs.length,
                     differences: differences
-                });
+                }, null, 2));
                 
                 return hasSystemFont;
             } catch (err) {
