@@ -10,7 +10,8 @@ const Storage = {
         PRACTICE_LOGS: 'practice_logs',
         ERROR_WORDS: 'error_words',
         SETTINGS: 'practice_settings',
-        PRACTICE_AUTOSAVE: 'practice_autosave'
+        PRACTICE_AUTOSAVE: 'practice_autosave',
+        BUILTIN_VERSION: 'builtin_wordbank_version'
     },
 
     /**
@@ -62,6 +63,8 @@ const Storage = {
             const newWord = {
                 id: `word_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
                 ...word,
+                isBuiltIn: !!word.isBuiltIn,
+                source: word.source || (word.isBuiltIn ? 'builtin' : 'user'),
                 addedDate: new Date().toISOString()
             };
             wordBank.push(newWord);
@@ -299,6 +302,56 @@ const Storage = {
         if (data.settings) {
             this.saveSettings(data.settings);
         }
+    },
+
+    /**
+     * 内置题库管理
+     */
+    getBuiltinWordBankVersion() {
+        return localStorage.getItem(this.KEYS.BUILTIN_VERSION) || null;
+    },
+
+    setBuiltinWordBankVersion(version) {
+        if (!version) {
+            localStorage.removeItem(this.KEYS.BUILTIN_VERSION);
+            return;
+        }
+        localStorage.setItem(this.KEYS.BUILTIN_VERSION, version);
+    },
+
+    isBuiltinWord(word) {
+        if (!word) return false;
+        if (word.isBuiltIn) return true;
+        if (word.source === 'builtin') return true;
+        if (typeof word.id === 'string' && /年级/.test(word.id)) {
+            return true;
+        }
+        return false;
+    },
+
+    hasBuiltinWordBank() {
+        return this.getWordBank().some(word => this.isBuiltinWord(word));
+    },
+
+    importBuiltinWordBank(words = [], metadata = {}) {
+        const current = this.getWordBank();
+        const userWords = current.filter(word => !this.isBuiltinWord(word));
+        const normalized = words.map((word, index) => ({
+            id: word.id || `builtin_${index}_${word.word}`,
+            word: word.word,
+            pinyin: word.pinyin || '',
+            grade: word.grade || 3,
+            semester: word.semester || '上',
+            unit: typeof word.unit === 'number' ? word.unit : word.unit ?? null,
+            sectionType: word.sectionType || '',
+            sourceTitle: word.sourceTitle || '',
+            isBuiltIn: true,
+            source: 'builtin',
+            builtinVersion: metadata.version || metadata.buildDate || 'unknown',
+            addedDate: new Date().toISOString()
+        }));
+        this.saveWordBank([...userWords, ...normalized]);
+        this.setBuiltinWordBankVersion(metadata.version || metadata.buildDate || `len-${normalized.length}`);
     }
 };
 

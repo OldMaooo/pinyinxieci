@@ -31,19 +31,35 @@ const InitData = {
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             const data = await resp.json();
             const wordsToImport = Array.isArray(data) ? data : (data.wordBank || []);
-        let imported = 0;
-            wordsToImport.forEach(word => {
-            const result = Storage.addWord({
-                word: word.word,
-                pinyin: word.pinyin || '',
-                grade: word.grade || 3,
-                semester: word.semester || '上',
-                unit: word.unit || 1
-            });
-            if (result) imported++;
-        });
+            const fileVersion = data.version || data.buildDate || `len-${wordsToImport.length}`;
+            const currentVersion = typeof Storage.getBuiltinWordBankVersion === 'function' ? Storage.getBuiltinWordBankVersion() : null;
+            const hasBuiltin = typeof Storage.hasBuiltinWordBank === 'function' ? Storage.hasBuiltinWordBank() : false;
 
-            console.log(`✅ 自动导入 ${imported} 个生字（优先加载 data/wordbank/三年级上册.json）`);
+            if (hasBuiltin && currentVersion === fileVersion) {
+                console.log(`[InitData] 内置题库已是最新版本 ${fileVersion}，跳过导入`);
+                return;
+            }
+
+            if (typeof Storage.importBuiltinWordBank === 'function') {
+                Storage.importBuiltinWordBank(wordsToImport, { version: fileVersion, buildDate: data.buildDate });
+                console.log(`✅ 自动导入 ${wordsToImport.length} 个生字（版本 ${fileVersion}）`);
+            } else {
+                // 回退：使用逐条添加（旧版本逻辑）
+                let imported = 0;
+                wordsToImport.forEach(word => {
+                    const result = Storage.addWord({
+                        word: word.word,
+                        pinyin: word.pinyin || '',
+                        grade: word.grade || 3,
+                        semester: word.semester || '上',
+                        unit: word.unit || 1,
+                        isBuiltIn: true,
+                        source: 'builtin'
+                    });
+                    if (result) imported++;
+                });
+                console.log(`✅ 自动导入 ${imported} 个生字（兼容旧逻辑）`);
+            }
         } catch (e) {
             console.warn('加载 data/三年级上册写字表.json 失败，退回内置少量样本：', e);
             // 退回空导入，提示用户使用导入功能加载数据
