@@ -4,74 +4,149 @@
  */
 
 const InitData = {
-    // 如果本地已有人为导入数据，则不再自动导入
-    // 否则优先从 data/三年级上册写字表.json 加载完整数据作为默认样本
-    
+    BUILTIN_FILES: [
+        'data/wordbank/一年级上册.json',
+        'data/wordbank/一年级下册.json',
+        'data/wordbank/二年级上册.json',
+        'data/wordbank/二年级下册.json',
+        'data/wordbank/三年级上册.json',
+        'data/wordbank/三年级下册.json',
+        'data/wordbank/四年级上册.json',
+        'data/wordbank/四年级下册.json',
+        'data/wordbank/五年级上册.json',
+        'data/wordbank/五年级下册.json',
+        'data/wordbank/六年级上册.json',
+        'data/wordbank/六年级下册.json'
+    ],
+****
     /**
      * 加载默认题库数据
      */
     async loadDefaultWordBank() {
-        // 检查是否已经导入过
-        const existingWords = Storage.getWordBank();
-        if (existingWords && existingWords.length > 0) {
-            console.log('题库已有数据，跳过自动导入');
-            return;
-        }
-
-        // 优先加载自动构建的 wordbank 版本（包含完整单元）
         try {
-            // 添加版本号参数解决浏览器缓存问题
-            const version = typeof APP_VERSION !== 'undefined' ? APP_VERSION.version : Date.now();
-            const timestamp = `?v=${version}&t=${Date.now()}`;
-            let resp = await fetch(`data/wordbank/三年级上册.json${timestamp}`, { cache: 'no-cache' });
-            if (!resp.ok) {
-                // 兼容旧文件名
-                resp = await fetch(`data/三年级上册写字表.json${timestamp}`, { cache: 'no-cache' });
-            }
-            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-            const data = await resp.json();
-            const wordsToImport = Array.isArray(data) ? data : (data.wordBank || []);
-            const fileVersion = data.version || data.buildDate || `len-${wordsToImport.length}`;
-            const currentVersion = typeof Storage.getBuiltinWordBankVersion === 'function' ? Storage.getBuiltinWordBankVersion() : null;
-            const hasBuiltin = typeof Storage.hasBuiltinWordBank === 'function' ? Storage.hasBuiltinWordBank() : false;
-
-            if (hasBuiltin && currentVersion === fileVersion) {
-                console.log(`[InitData] 内置题库已是最新版本 ${fileVersion}，跳过导入`);
-                return;
-            }
-
-            if (typeof Storage.importBuiltinWordBank === 'function') {
-                Storage.importBuiltinWordBank(wordsToImport, { version: fileVersion, buildDate: data.buildDate });
-                console.log(`✅ 自动导入 ${wordsToImport.length} 个生字（版本 ${fileVersion}）`);
-            } else {
-                // 回退：使用逐条添加（旧版本逻辑）
-                let imported = 0;
-                wordsToImport.forEach(word => {
-                    const result = Storage.addWord({
-                        word: word.word,
-                        pinyin: word.pinyin || '',
-                        grade: word.grade || 3,
-                        semester: word.semester || '上',
-                        unit: word.unit || 1,
-                        isBuiltIn: true,
-                        source: 'builtin'
-                    });
-                    if (result) imported++;
-                });
-                console.log(`✅ 自动导入 ${imported} 个生字（兼容旧逻辑）`);
-            }
-        } catch (e) {
-            console.warn('加载 data/三年级上册写字表.json 失败，退回内置少量样本：', e);
-            // 退回空导入，提示用户使用导入功能加载数据
+            await this.loadBuiltinWordBank();
+        } catch (error) {
+            console.warn('[InitData] 内置题库加载失败，回退到 legacy 文件：', error);
+            await this.loadLegacyWordBank();
         }
         
-        // 更新界面
         if (typeof WordBank !== 'undefined') {
             WordBank.loadWordBank();
         }
         if (typeof Statistics !== 'undefined') {
             Statistics.updateHomeStats();
         }
+    },
+
+    async loadBuiltinWordBank() {
+        if (typeof Storage === 'undefined' || !Storage.importBuiltinWordBank) {
+            throw new Error('Storage.importBuiltinWordBank 不可用');
+        }
+
+        const version = typeof APP_VERSION !== 'undefined' ? APP_VERSION.version : Date.now();
+        const timestamp = `?v=${version}&t=${Date.now()}`;
+        const collectedWords = [];
+        const signatureTokens = [];
+
+        for (const file of this.BUILTIN_FILES) {
+            try {
+                const resp = await fetch(`${file}${timestamp}`, { cache: 'no-cache' });
+                if (!resp.ok) {
+                    console.warn(`[InitData] 无法加载 ${file}: HTTP ${resp.status}`);
+                    continue;
+                }
+                const data = await resp.json();
+                const words = Array.isArray(data) ? data : (data.wordBank || []);
+                if (words.length === 0) continue;
+                const versionToken = data.version || data.buildDate || words.length;
+                signatureTokens.push(`${file}:${versionToken}`);
+
+                words.forEach(word => {
+                    collectedWords.push({
+                        word: word.word,
+                        pinyin: word.pinyin || '',
+                        grade: this.normalizeGrade(word.grade),
+                        semester: this.normalizeSemester(word.semester),
+                        unit: typeof word.unit === 'number' ? word.unit : (word.unitOrder || null),
+                        unitLabel: word.unitLabel || word.sourceTitle || '',
+                        sectionType: word.sectionType || '',
+                        sourceTitle: word.sourceTitle || '',
+                        isBuiltIn: true,
+                        source: 'builtin'
+                    });
+                });
+            } catch (err) {
+                console.warn(`[InitData] 加载 ${file} 失败:`, err);
+            }
+        }
+
+        if (!collectedWords.length) {
+            throw new Error('未能加载任何内置题库');
+        }
+
+        const signature = signatureTokens.join('|');
+        const currentSignature = typeof Storage.getBuiltinWordBankVersion === 'function'
+            ? Storage.getBuiltinWordBankVersion()
+            : null;
+
+        if (typeof Storage.hasBuiltinWordBank === 'function' &&
+            Storage.hasBuiltinWordBank() &&
+            currentSignature === signature) {
+            console.log('[InitData] 内置题库版本未变化，跳过导入');
+            return;
+        }
+
+        Storage.importBuiltinWordBank(collectedWords, {
+            version: signature,
+            buildDate: new Date().toISOString()
+        });
+        console.log(`[InitData] 已导入内置题库 ${collectedWords.length} 个字`);
+    },
+
+    async loadLegacyWordBank() {
+        const version = typeof APP_VERSION !== 'undefined' ? APP_VERSION.version : Date.now();
+        const timestamp = `?v=${version}&t=${Date.now()}`;
+        let resp = await fetch(`data/wordbank/三年级上册.json${timestamp}`, { cache: 'no-cache' });
+        if (!resp.ok) {
+            resp = await fetch(`data/三年级上册写字表.json${timestamp}`, { cache: 'no-cache' });
+        }
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        const wordsToImport = Array.isArray(data) ? data : (data.wordBank || []);
+        let imported = 0;
+        wordsToImport.forEach(word => {
+            const result = Storage.addWord({
+                word: word.word,
+                pinyin: word.pinyin || '',
+                grade: this.normalizeGrade(word.grade),
+                semester: this.normalizeSemester(word.semester),
+                unit: word.unit || 1,
+                isBuiltIn: true,
+                source: 'builtin'
+            });
+            if (result) imported++;
+        });
+        console.log(`✅ 回退导入 ${imported} 个生字（legacy 文件）`);
+    },
+
+    normalizeGrade(grade) {
+        if (typeof grade === 'number') return grade;
+        if (typeof grade === 'string') {
+            const match = grade.match(/([一二三四五六])年级/);
+            if (match) {
+                const map = { '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6 };
+                return map[match[1]] || 3;
+            }
+            const num = parseInt(grade, 10);
+            if (!isNaN(num)) return num;
+        }
+        return 3;
+    },
+
+    normalizeSemester(semester) {
+        if (!semester) return '上';
+        if (typeof semester === 'string' && semester.includes('下')) return '下';
+        return '上';
     },
 
     /**

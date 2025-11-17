@@ -141,6 +141,7 @@ let currentGrade = null;     // "一年级".."六年级"
 let currentSemester = null;  // "上册"|"下册"
 let currentGS = null;        // combined label
 const gsToWords = new Map(); // gradeSemester -> Map(word -> metadata)
+const gsUnitOrder = new Map(); // gradeSemester -> incremental unit order
 
 const content = fs.readFileSync(inputPath, 'utf8');
 const lines = content.split(/\r?\n/);
@@ -160,6 +161,7 @@ for (const rawLine of lines) {
       currentSemester = s;
       currentGS = toGradeSemester(currentGrade, currentSemester);
       if (!gsToWords.has(currentGS)) gsToWords.set(currentGS, new Map());
+      if (!gsUnitOrder.has(currentGS)) gsUnitOrder.set(currentGS, 0);
     }
     continue;
   }
@@ -180,6 +182,9 @@ for (const rawLine of lines) {
   if (items.length === 0) continue;
 
   const { sectionType, unitNumber, sourceTitle } = parseUnitHeaderPrefix(prefix);
+  const unitLabel = sourceTitle || sectionType || prefix;
+  const orderSeq = (gsUnitOrder.get(currentGS) || 0) + 1;
+  gsUnitOrder.set(currentGS, orderSeq);
   const wordsMap = gsToWords.get(currentGS);
 
   for (const token of items) {
@@ -195,6 +200,8 @@ for (const rawLine of lines) {
         pinyin: '',
         gradeSemester: currentGS,
         unit: unitNumber || null,
+        unitLabel,
+        unitOrder: orderSeq,
         sectionType: sectionType || null,
         sourceTitle: sourceTitle || null
       });
@@ -221,7 +228,9 @@ function writeOne(gsLabel) {
       gradeSemester: gsLabel,
       grade: gNum,
       semester: semChar,
-      unit: meta.unit,
+    unit: meta.unit || meta.unitOrder || null,
+    unitLabel: meta.unitLabel || meta.sourceTitle || null,
+    unitOrder: meta.unitOrder || null,
       sectionType: meta.sectionType,
       sourceTitle: meta.sourceTitle
     });
