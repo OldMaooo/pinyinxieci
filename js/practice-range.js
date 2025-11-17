@@ -30,6 +30,7 @@ const PracticeRange = {
         const wordBank = Storage.getWordBank() || [];
         console.log(`[PracticeRange] renderContainer(${containerId}) wordBank size = ${wordBank.length}`);
         if (wordBank.length === 0) {
+            console.warn(`[PracticeRange] renderContainer(${containerId}) 题库为空，显示加载提示`);
             container.innerHTML = '<div class="text-muted py-3 text-center">正在加载默认题库，请稍候…</div>';
             return;
         }
@@ -231,7 +232,7 @@ const PracticeRange = {
         if (label) {
             label.textContent = `已选择: ${total} 个字`;
         }
-        console.log(`[PracticeRange] container=${container.id} 已选择 ${total} 个字`);
+        console.log(`[PracticeRange] container=${container.id} 已选择 ${total} 个字 (checked units=${container.querySelectorAll('.unit-checkbox:checked').length})`);
         this.saveSelection(container);
         if (container.id === 'practice-range-container-home') {
             this.updateDynamicCountButton(total);

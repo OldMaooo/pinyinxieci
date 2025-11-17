@@ -9,6 +9,7 @@ const WordBank = {
     loadWordBank() {
         const wordBank = Storage.getWordBank();
         const tbody = document.getElementById('wordbank-table-body');
+        console.log('[WordBank] loadWordBank 调用，当前字数:', wordBank?.length || 0);
         
         if (!wordBank || wordBank.length === 0) {
             tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">暂无数据，请先导入题库</td></tr>';

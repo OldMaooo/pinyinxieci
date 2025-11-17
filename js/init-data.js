@@ -18,32 +18,34 @@ const InitData = {
         'data/wordbank/六年级上册.json',
         'data/wordbank/六年级下册.json'
     ],
-****
     /**
      * 加载默认题库数据
      */
-    async loadDefaultWordBank() {
-        console.log('[InitData] 开始加载默认题库…');
+    async loadDefaultWordBank(context = 'auto') {
+        console.log(`[InitData] (${context}) 开始加载默认题库…`);
         try {
-            await this.loadBuiltinWordBank();
-            console.log('[InitData] ✅ 内置题库加载完成');
+            await this.loadBuiltinWordBank(context);
+            console.log(`[InitData] (${context}) ✅ 内置题库加载完成`);
         } catch (error) {
-            console.warn('[InitData] 内置题库加载失败，回退到 legacy 文件：', error);
-            await this.loadLegacyWordBank();
+            console.warn(`[InitData] (${context}) 内置题库加载失败，回退到 legacy 文件：`, error);
+            await this.loadLegacyWordBank(context);
         }
         
         if (typeof WordBank !== 'undefined') {
+            console.log('[InitData] 通知 WordBank 刷新列表');
             WordBank.loadWordBank();
         }
         if (typeof Statistics !== 'undefined') {
+            console.log('[InitData] 通知 Statistics 刷新首页统计');
             Statistics.updateHomeStats();
         }
         if (typeof PracticeRange !== 'undefined' && typeof PracticeRange.refresh === 'function') {
+            console.log('[InitData] 通知 PracticeRange 刷新练习范围');
             PracticeRange.refresh();
         }
     },
 
-    async loadBuiltinWordBank() {
+    async loadBuiltinWordBank(context = 'auto') {
         if (typeof Storage === 'undefined' || !Storage.importBuiltinWordBank) {
             throw new Error('Storage.importBuiltinWordBank 不可用');
         }
@@ -55,9 +57,10 @@ const InitData = {
 
         for (const file of this.BUILTIN_FILES) {
             try {
+                console.log(`[InitData] (${context}) 正在拉取 ${file}`);
                 const resp = await fetch(`${file}${timestamp}`, { cache: 'no-cache' });
                 if (!resp.ok) {
-                    console.warn(`[InitData] 无法加载 ${file}: HTTP ${resp.status}`);
+                    console.warn(`[InitData] (${context}) 无法加载 ${file}: HTTP ${resp.status}`);
                     continue;
                 }
                 const data = await resp.json();
@@ -66,7 +69,7 @@ const InitData = {
                 const versionToken = data.version || data.buildDate || words.length;
                 signatureTokens.push(`${file}:${versionToken}`);
 
-                console.log(`[InitData] ✅ 读取 ${file} 成功，包含 ${words.length} 个字`);
+                console.log(`[InitData] (${context}) ✅ 读取 ${file} 成功，包含 ${words.length} 个字`);
                 words.forEach(word => {
                     collectedWords.push({
                         word: word.word,
@@ -87,6 +90,7 @@ const InitData = {
         }
 
         if (!collectedWords.length) {
+            console.error('[InitData] 未能加载任何内置题库文件，signatureTokens=', signatureTokens);
             throw new Error('未能加载任何内置题库');
         }
 
@@ -109,7 +113,8 @@ const InitData = {
         console.log(`[InitData] 已导入内置题库 ${collectedWords.length} 个字，版本签名: ${signature}`);
     },
 
-    async loadLegacyWordBank() {
+    async loadLegacyWordBank(context = 'auto') {
+        console.log(`[InitData] (${context}) 使用 legacy 备份文件加载默认题库`);
         const version = typeof APP_VERSION !== 'undefined' ? APP_VERSION.version : Date.now();
         const timestamp = `?v=${version}&t=${Date.now()}`;
         let resp = await fetch(`data/wordbank/三年级上册.json${timestamp}`, { cache: 'no-cache' });
@@ -132,7 +137,7 @@ const InitData = {
             });
             if (result) imported++;
         });
-        console.log(`✅ 回退导入 ${imported} 个生字（legacy 文件）`);
+        console.log(`[InitData] (${context}) ✅ 回退导入 ${imported} 个生字（legacy 文件）`);
     },
 
     normalizeGrade(grade) {

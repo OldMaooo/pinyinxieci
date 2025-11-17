@@ -416,6 +416,7 @@ const Main = {
                 <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
                 刷新中…
             `;
+            console.log('[Main] 用户点击刷新默认题库按钮');
             try {
                 if (typeof Storage !== 'undefined' && Storage.resetBuiltinWordBank) {
                     Storage.resetBuiltinWordBank();
@@ -435,6 +436,7 @@ const Main = {
                 if (typeof PracticeRange !== 'undefined' && PracticeRange.refresh) {
                     PracticeRange.refresh();
                 }
+                console.log('[Main] 默认题库刷新流程完成');
                 if (typeof WordBank !== 'undefined' && WordBank.showToast) {
                     WordBank.showToast('success', '内置题库已刷新');
                 } else {
