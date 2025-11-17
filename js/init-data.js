@@ -36,6 +36,9 @@ const InitData = {
         if (typeof Statistics !== 'undefined') {
             Statistics.updateHomeStats();
         }
+        if (typeof PracticeRange !== 'undefined' && typeof PracticeRange.refresh === 'function') {
+            PracticeRange.refresh();
+        }
     },
 
     async loadBuiltinWordBank() {

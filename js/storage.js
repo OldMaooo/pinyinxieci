@@ -343,6 +343,10 @@ const Storage = {
             grade: word.grade || 3,
             semester: word.semester || '上',
             unit: typeof word.unit === 'number' ? word.unit : word.unit ?? null,
+            unitLabel: word.unitLabel || '',
+            unitOrder: typeof word.unitOrder === 'number'
+                ? word.unitOrder
+                : (typeof word.unit === 'number' ? word.unit : null),
             sectionType: word.sectionType || '',
             sourceTitle: word.sourceTitle || '',
             isBuiltIn: true,
