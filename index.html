@@ -378,9 +378,6 @@
                         <button class="btn btn-sm btn-outline-warning" id="admin-mode-btn">
                             <i class="bi bi-shield-lock"></i> 管理模式
                         </button>
-                        <button class="btn btn-sm btn-success" id="errorbook-practice-selected-btn" disabled>
-                            <i class="bi bi-check-square"></i> 练习所选 (<span data-count>0</span>)
-                        </button>
                         <button class="btn btn-sm btn-primary" id="errorbook-practice-all-btn">
                             <i class="bi bi-play"></i> 一键练习
                         </button>
@@ -667,5 +664,37 @@
         </div>
       </div>
     </div>
+
+<!-- 错题练习设置弹窗 -->
+<div class="modal fade" id="errorbook-practice-modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-sliders"></i> 错题练习设置</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted">已选择 <strong data-practice-count>0</strong> 个错题，将全部练习一次。</p>
+        <div class="mb-3">
+          <label class="form-label">时间限制（秒/字）</label>
+          <input type="number" class="form-control" id="errorbook-practice-time" value="30" min="5" max="120">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">练习模式</label>
+          <select class="form-select" id="errorbook-practice-mode">
+            <option value="normal">标准模式（识别+判题）</option>
+            <option value="paper">纸质书写模式（不判题）</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="errorbook-practice-confirm-btn">
+          <i class="bi bi-play-fill"></i> 开始练习
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

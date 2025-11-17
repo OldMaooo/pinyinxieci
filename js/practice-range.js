@@ -38,35 +38,21 @@ const PracticeRange = {
         const grouped = this.groupWordsBySemesterUnit(wordBank);
         console.log(`[PracticeRange] ${containerId} grouped semesters:`, Object.keys(grouped));
         const semesters = this.sortSemesters(Object.keys(grouped));
-        const accordionId = `${containerId}-accordion`;
 
         let html = '<div class="practice-range-selector">';
         html += this.renderToolbar(options);
         html += '<div class="p-3">';
-        html += `<div class="accordion practice-range-accordion" id="${accordionId}">`;
 
-        semesters.forEach((semesterKey, idx) => {
+        semesters.forEach((semesterKey) => {
             const units = this.sortUnits(grouped[semesterKey]);
-            const headingId = `${accordionId}-heading-${idx}`;
-            const collapseId = `${accordionId}-collapse-${idx}`;
-            const isFirst = idx === 0;
-
             html += `
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="${headingId}">
-                        <button class="accordion-button practice-semester-btn ${isFirst ? '' : 'collapsed'}" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#${collapseId}"
-                                aria-expanded="${isFirst}" aria-controls="${collapseId}">
-                            <input type="checkbox" class="form-check-input semester-checkbox me-2"
-                                   data-semester="${semesterKey}"
-                                   onclick="event.stopPropagation();">
-                            <span>${semesterKey}</span>
-                        </button>
-                    </h2>
-                    <div id="${collapseId}"
-                         class="accordion-collapse collapse ${isFirst ? 'show' : ''}"
-                         aria-labelledby="${headingId}" data-bs-parent="#${accordionId}">
-                        <div class="accordion-body">
+                <div class="semester-section mb-3">
+                    <div class="semester-header d-flex align-items-center gap-2 px-3 py-2">
+                        <input type="checkbox" class="form-check-input semester-checkbox"
+                               data-semester="${semesterKey}">
+                        <span class="fw-semibold">${semesterKey}</span>
+                    </div>
+                    <div class="semester-body px-3 py-2">
             `;
 
             units.forEach(unitKey => {
@@ -92,13 +78,12 @@ const PracticeRange = {
             });
 
             html += `
-                        </div>
                     </div>
                 </div>
             `;
         });
 
-        html += '</div></div></div>';
+        html += '</div></div>';
         container.innerHTML = html;
 
         this.bindContainerEvents(container, options);

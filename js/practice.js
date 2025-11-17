@@ -975,23 +975,38 @@ const Practice = {
         if (removeStorage) {
             try {
                 localStorage.removeItem('practice_force_word_count');
+                localStorage.removeItem('practice_force_time_limit');
+                localStorage.removeItem('practice_force_mode');
             } catch (e) {}
         }
         this.updateForcedWordUI(false);
     },
 
     syncForcedWordStateFromStorage() {
+        let applied = false;
         try {
             const value = localStorage.getItem('practice_force_word_count');
             if (value) {
                 const count = parseInt(value, 10);
                 if (!isNaN(count) && count > 0) {
                     this.prepareForcedWords(count, { persist: false });
-                    return;
+                    applied = true;
                 }
             }
         } catch (e) {}
-        this.updateForcedWordUI(false);
+        const storedTime = parseInt(localStorage.getItem('practice_force_time_limit') || '', 10);
+        if (!isNaN(storedTime) && storedTime > 0) {
+            const timeInput = document.getElementById('time-limit-input');
+            if (timeInput) timeInput.value = storedTime;
+        }
+        const storedMode = localStorage.getItem('practice_force_mode');
+        if (storedMode) {
+            const modeSelect = document.getElementById('practice-mode-select-home');
+            if (modeSelect) modeSelect.value = storedMode;
+        }
+        if (!applied) {
+            this.updateForcedWordUI(false);
+        }
     },
 
     updateForcedWordUI(enabled, count = 0) {

@@ -3,6 +3,8 @@
  */
 
 const ErrorBook = {
+    pendingPracticeWordIds: [],
+    practiceModalInstance: null,
     /**
      * 加载错题本
      */
@@ -60,10 +62,6 @@ const ErrorBook = {
             onlyWrongToggle.onchange = () => this.load();
         }
 
-        const practiceSelectedBtn = document.getElementById('errorbook-practice-selected-btn');
-        if (practiceSelectedBtn) {
-            practiceSelectedBtn.onclick = () => this.practiceSelectedRounds();
-        }
     },
 
     renderRoundsView(adminMode, opts = {}) {
@@ -275,13 +273,20 @@ const ErrorBook = {
     },
 
     /**
-     * 一键练习错题集
+     * 一键练习错题集（基于所选轮次）
      */
     practiceAll() {
-        localStorage.setItem('practice_error_only', '1');
-        if (typeof Main !== 'undefined') {
-            Main.showPage('practice');
+        const selectedRounds = this.getSelectedRounds();
+        if (!selectedRounds.length) {
+            alert('请至少勾选一轮练习记录。');
+            return;
         }
+        const ids = this.collectWordIdsFromRounds(selectedRounds);
+        if (!ids.length) {
+            alert('所选轮次没有需要练习的错题。');
+            return;
+        }
+        this.openPracticeModal(ids);
     },
     
     /**
@@ -311,11 +316,16 @@ const ErrorBook = {
         document.querySelectorAll('#errorbook-rounds .error-select, #errorbook-summary .error-select').forEach(cb => {
             cb.checked = !!select;
         });
-        document.querySelectorAll('.error-round-select').forEach(cb => {
-            cb.checked = !!select;
-            this.toggleRoundSelection(cb.dataset.logId, cb.checked);
-        });
-        this.updateRoundSelectionIndicator();
+        if (select) {
+            const allIds = Array.from(document.querySelectorAll('.error-round-select'))
+                .map(cb => cb.dataset.logId)
+                .filter(Boolean);
+            this.saveSelectedRounds(allIds);
+            document.querySelectorAll('.error-round-select').forEach(cb => cb.checked = true);
+        } else {
+            this.saveSelectedRounds([]);
+            document.querySelectorAll('.error-round-select').forEach(cb => cb.checked = false);
+        }
     },
 
     batchRemove() {
@@ -342,7 +352,6 @@ const ErrorBook = {
                 this.toggleRoundSelection(cb.dataset.logId, cb.checked);
             });
         });
-        this.updateRoundSelectionIndicator();
     },
 
     toggleRoundSelection(logId, checked) {
@@ -354,18 +363,6 @@ const ErrorBook = {
             selected.delete(logId);
         }
         this.saveSelectedRounds(Array.from(selected));
-        this.updateRoundSelectionIndicator();
-    },
-
-    updateRoundSelectionIndicator() {
-        const btn = document.getElementById('errorbook-practice-selected-btn');
-        if (!btn) return;
-        const count = this.getSelectedRounds().length;
-        const countSpan = btn.querySelector('[data-count]');
-        if (countSpan) {
-            countSpan.textContent = count;
-        }
-        btn.disabled = count === 0;
     },
 
     getSelectedRounds() {
@@ -394,18 +391,10 @@ const ErrorBook = {
         return [];
     },
 
-    practiceSelectedRounds() {
-        const selected = this.getSelectedRounds();
-        if (!selected.length) {
-            alert('请先勾选要练习的轮次。');
-            return;
-        }
+    collectWordIdsFromRounds(roundIds) {
+        if (!roundIds || !roundIds.length) return [];
         const logs = (Storage.getPracticeLogsFiltered ? Storage.getPracticeLogsFiltered() : Storage.getPracticeLogs()) || [];
-        const selectedLogs = logs.filter(log => selected.includes(log.id));
-        if (!selectedLogs.length) {
-            alert('未找到勾选的练习记录。');
-            return;
-        }
+        const selectedLogs = logs.filter(log => roundIds.includes(log.id));
         const uniqueWordIds = new Set();
         selectedLogs.forEach(log => {
             if (Array.isArray(log.details) && log.details.length) {
@@ -418,29 +407,93 @@ const ErrorBook = {
                 log.errorWords.forEach(id => uniqueWordIds.add(id));
             }
         });
-        if (!uniqueWordIds.size) {
-            alert('所选轮次没有需要练习的错题。');
+        return Array.from(uniqueWordIds);
+    },
+
+    openPracticeModal(wordIds, options = {}) {
+        const modalEl = document.getElementById('errorbook-practice-modal');
+        if (!modalEl) {
+            alert('无法打开练习设置弹窗，请刷新页面后重试。');
             return;
         }
-        const ids = Array.from(uniqueWordIds);
-        if (typeof PracticeRange !== 'undefined' && PracticeRange.setErrorWordsFromLog) {
-            PracticeRange.setErrorWordsFromLog(ids);
-        } else {
-            try {
-                localStorage.setItem('practice_error_word_ids', JSON.stringify(ids));
-            } catch (e) {}
+        this.pendingPracticeWordIds = wordIds;
+        const countSpan = modalEl.querySelector('[data-practice-count]');
+        if (countSpan) countSpan.textContent = wordIds.length;
+
+        const defaultTime = options.timeLimit || this.getDefaultTimeLimit();
+        const timeInput = document.getElementById('errorbook-practice-time');
+        if (timeInput) timeInput.value = defaultTime;
+
+        const defaultMode = options.mode || this.getDefaultMode();
+        const modeSelect = document.getElementById('errorbook-practice-mode');
+        if (modeSelect) modeSelect.value = defaultMode;
+
+        this.practiceModalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+        this.practiceModalInstance.show();
+    },
+
+    confirmPracticeModal() {
+        const wordIds = this.pendingPracticeWordIds || [];
+        if (!wordIds.length) {
+            alert('没有待练习的错题，请重新选择。');
+            return;
         }
+        const timeInput = document.getElementById('errorbook-practice-time');
+        let timeLimit = parseInt(timeInput?.value, 10);
+        if (isNaN(timeLimit) || timeLimit < 5) timeLimit = 30;
+        if (timeLimit > 180) timeLimit = 180;
+
+        const modeSelect = document.getElementById('errorbook-practice-mode');
+        const mode = modeSelect?.value || 'normal';
+
+        try {
+            localStorage.setItem('practice_error_word_ids', JSON.stringify(wordIds));
+        } catch (e) {}
         localStorage.setItem('practice_error_only', '1');
         try {
-            localStorage.setItem('practice_force_word_count', String(ids.length));
+            localStorage.setItem('practice_force_word_count', String(wordIds.length));
+            localStorage.setItem('practice_force_time_limit', String(timeLimit));
+            localStorage.setItem('practice_force_mode', mode);
         } catch (e) {}
+
+        const timeLimitInput = document.getElementById('time-limit-input');
+        if (timeLimitInput) timeLimitInput.value = timeLimit;
+        const modeHomeSelect = document.getElementById('practice-mode-select-home');
+        if (modeHomeSelect) modeHomeSelect.value = mode;
+
         if (typeof Practice !== 'undefined' && Practice.prepareForcedWords) {
-            Practice.prepareForcedWords(ids.length);
+            Practice.prepareForcedWords(wordIds.length);
         }
-        if (typeof Main !== 'undefined' && Main.showPage) {
-            Main.showPage('practice');
+
+        if (this.practiceModalInstance) {
+            this.practiceModalInstance.hide();
         }
-        console.log('[ErrorBook] 已准备好所选错题，请在练习页点击“开始练习”');
+        this.pendingPracticeWordIds = [];
+
+        setTimeout(() => {
+            if (typeof Main !== 'undefined' && Main.showPage) {
+                Main.showPage('practice');
+            }
+            setTimeout(() => {
+                const timeLimitInputAgain = document.getElementById('time-limit-input');
+                if (timeLimitInputAgain) timeLimitInputAgain.value = timeLimit;
+                const modeSelectAgain = document.getElementById('practice-mode-select-home');
+                if (modeSelectAgain) modeSelectAgain.value = mode;
+                if (typeof Practice !== 'undefined' && Practice.start) {
+                    Practice.start();
+                }
+            }, 300);
+        }, 100);
+    },
+
+    getDefaultTimeLimit() {
+        const settings = Storage.getSettings ? Storage.getSettings() : null;
+        return settings?.practice?.timeLimit || 30;
+    },
+
+    getDefaultMode() {
+        const settings = Storage.getSettings ? Storage.getSettings() : null;
+        return settings?.practice?.mode || 'normal';
     }
 };
 
@@ -453,5 +506,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const practiceAllBtn = document.getElementById('errorbook-practice-all-btn');
     if (practiceAllBtn) {
         practiceAllBtn.addEventListener('click', () => ErrorBook.practiceAll());
+    }
+    const practiceConfirmBtn = document.getElementById('errorbook-practice-confirm-btn');
+    if (practiceConfirmBtn) {
+        practiceConfirmBtn.addEventListener('click', () => ErrorBook.confirmPracticeModal());
     }
 });
