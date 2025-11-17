@@ -396,7 +396,7 @@ const Main = {
                 const input = document.getElementById('word-count-input-home');
                 if (input) {
                     input.value = value;
-                    input.focus();
+                    // 不调用focus()，避免iPad上弹出键盘
                 }
             });
         });

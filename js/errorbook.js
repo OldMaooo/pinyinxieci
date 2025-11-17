@@ -146,10 +146,10 @@ const ErrorBook = {
             const isWrong = !d.correct;
             return `
             <div class="col">
-                <div class="card h-100 shadow-sm">
+                <div class="card h-100 shadow-sm ${isWrong ? 'border-danger' : ''}" ${isWrong ? 'style="border-width: 2px;"' : ''}>
                     <div class="card-body p-2 position-relative">
                         <div class="position-absolute top-0 end-0 me-2 mt-1">
-                            <input type="checkbox" class="form-check-input result-correct-toggle" data-log-id="${log.id}" data-word-id="${w.id}" data-item-idx="${idx}" ${isWrong ? 'checked' : ''} title="点击修改对错状态" style="appearance: checkbox; -webkit-appearance: checkbox;">
+                            ${isWrong ? '<span class="text-danger" title="错误">❌</span>' : '<span class="text-success" title="正确">✅</span>'}
                         </div>
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="d-flex align-items-start gap-2">
@@ -170,19 +170,6 @@ const ErrorBook = {
             </div>`;
         }).join('');
         container.innerHTML = `<div class=\"row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3\">${cards || '<div class=\"text-muted small\">暂无错题</div>'}</div>`;
-        
-        // 绑定复选框事件
-        container.querySelectorAll('.result-correct-toggle').forEach(cb => {
-            cb.addEventListener('change', (e) => {
-                const logId = e.target.getAttribute('data-log-id');
-                const wordId = e.target.getAttribute('data-word-id');
-                const itemIdx = parseInt(e.target.getAttribute('data-item-idx'));
-                const isChecked = e.target.checked; // checked = 错误
-                if (typeof Statistics !== 'undefined' && Statistics.updateResultItemStatus) {
-                    Statistics.updateResultItemStatus(logId, itemIdx, !isChecked);
-                }
-            });
-        });
     },
 
     renderSummaryView(adminMode) {

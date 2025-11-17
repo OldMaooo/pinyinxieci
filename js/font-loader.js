@@ -331,6 +331,13 @@
         async init() {
             console.log('[FontLoader.init] 开始初始化字体加载器');
             
+            // 先尝试从缓存加载（无论是否iPad/iOS，都先检查缓存）
+            const cached = await this.loadFromCache();
+            if (cached) {
+                console.log('[FontLoader.init] 从缓存加载字体成功，无需下载');
+                return;
+            }
+            
             // iPad/iOS设备：强制加载本地字体，因为系统字体检测可能不准确
             if (this.isIPadOrIOS()) {
                 console.log('[FontLoader.init] iPad/iOS设备，强制加载本地字体');

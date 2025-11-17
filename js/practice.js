@@ -75,7 +75,21 @@ const Practice = {
         // 获取题目（支持错题集一键练习）
         let words = [];
         const errorOnly = localStorage.getItem('practice_error_only') === '1';
-        if (errorOnly) {
+        const errorWordIdsJson = localStorage.getItem('practice_error_word_ids');
+        
+        if (errorWordIdsJson) {
+            // 优先使用从结果页传入的错题ID列表（当前轮的错题）
+            try {
+                const errorWordIds = JSON.parse(errorWordIdsJson);
+                const wordBank = Storage.getWordBank();
+                words = wordBank.filter(w => errorWordIds.includes(w.id));
+                // 清除标记
+                localStorage.removeItem('practice_error_word_ids');
+            } catch (e) {
+                console.error('解析错题ID列表失败:', e);
+                localStorage.removeItem('practice_error_word_ids');
+            }
+        } else if (errorOnly) {
             const errorWords = Storage.getErrorWords();
             const wordBank = Storage.getWordBank();
             words = wordBank.filter(w => errorWords.some(ew => ew.wordId === w.id));
