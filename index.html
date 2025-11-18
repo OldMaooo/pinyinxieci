@@ -354,14 +354,14 @@
                     <div id="error-words-list" class="mb-4"></div>
                     
                     <!-- 操作按钮 -->
-                    <div class="text-center">
-                        <button class="btn btn-success btn-lg me-2" id="confirm-changes-btn" disabled>
+                    <div class="results-action-bar" id="results-action-bar">
+                        <button class="btn btn-success btn-lg flex-fill" id="confirm-changes-btn" disabled>
                             <i class="bi bi-check-circle"></i> 确认修改
                         </button>
-                        <button class="btn btn-primary btn-lg me-2" id="review-errors-btn">
+                        <button class="btn btn-primary btn-lg flex-fill" id="review-errors-btn">
                             <i class="bi bi-arrow-repeat"></i> 复习错题
                         </button>
-                        <button class="btn btn-secondary btn-lg" id="practice-again-btn">
+                        <button class="btn btn-secondary btn-lg flex-fill" id="practice-again-btn">
                             <i class="bi bi-arrow-clockwise"></i> 再练一次
                         </button>
                     </div>
@@ -406,12 +406,21 @@
                         </li>
                     </ul>
 
-                    <!-- 批量操作工具栏（两个视图共用） -->
-                    <div class="d-flex gap-2 mb-2" id="errorbook-batch-toolbar" style="display:none;">
-                        <button class="btn btn-sm btn-outline-secondary" id="errorbook-select-all">全选</button>
-                        <button class="btn btn-sm btn-outline-secondary" id="errorbook-clear-select">清空选择</button>
-                        <button class="btn btn-sm btn-outline-danger" id="errorbook-batch-remove">设为已掌握</button>
-                        <button class="btn btn-sm btn-outline-warning" id="errorbook-batch-delete">删除</button>
+                    <!-- 错题统计 & 批量工具栏 -->
+                    <div class="errorbook-toolbar d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-3 d-none" id="errorbook-toolbar">
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <span class="text-muted small">共有 <strong id="errorbook-total-count">0</strong> 个错题</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <div class="btn-group btn-group-sm" role="group" id="errorbook-selection-group">
+                                <button class="btn btn-outline-secondary" id="errorbook-select-all">全选</button>
+                                <button class="btn btn-outline-secondary" id="errorbook-clear-select">清空选择</button>
+                            </div>
+                            <div class="btn-group btn-group-sm" role="group" id="errorbook-batch-action-group" style="display:none;">
+                                <button class="btn btn-outline-danger" id="errorbook-batch-remove">设为已掌握</button>
+                                <button class="btn btn-outline-warning" id="errorbook-batch-delete">删除</button>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- 按轮视图 -->

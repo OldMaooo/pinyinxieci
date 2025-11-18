@@ -14,7 +14,9 @@ const ErrorBook = {
         const adminMode = localStorage.getItem('adminMode') === '1';
         const roundsEl = document.getElementById('errorbook-rounds');
         const summaryEl = document.getElementById('errorbook-summary');
-        const batchBar = document.getElementById('errorbook-batch-toolbar');
+        const toolbar = document.getElementById('errorbook-toolbar');
+        const selectionGroup = document.getElementById('errorbook-selection-group');
+        const batchActions = document.getElementById('errorbook-batch-action-group');
         const onlyWrongToggle = document.getElementById('errorbook-only-wrong');
         const onlyWrongContainer = onlyWrongToggle ? onlyWrongToggle.closest('.form-check') : null;
         const onlyWrong = !!(onlyWrongToggle && onlyWrongToggle.checked);
@@ -22,13 +24,22 @@ const ErrorBook = {
         if (!errorWords || errorWords.length === 0) {
             if (roundsEl) roundsEl.innerHTML = '';
             if (summaryEl) summaryEl.innerHTML = '';
-            if (batchBar) batchBar.style.display = 'none';
+            if (toolbar) toolbar.classList.add('d-none');
             empty.style.display = 'block';
             return;
         }
 
         empty.style.display = 'none';
-        if (batchBar) batchBar.style.display = 'none';
+        if (toolbar) {
+            toolbar.classList.remove('d-none');
+        }
+        if (selectionGroup) {
+            selectionGroup.style.display = adminMode ? '' : 'none';
+        }
+        if (!adminMode && batchActions) {
+            batchActions.style.display = 'none';
+        }
+        this.updateErrorCount(errorWords.length);
 
         this.renderRoundsView(adminMode, { onlyWrong });
         this.renderSummaryView(adminMode);
@@ -130,15 +141,22 @@ const ErrorBook = {
     },
 
     updateBatchToolbarState() {
-        const batchBar = document.getElementById('errorbook-batch-toolbar');
-        if (!batchBar) return;
+        const actionGroup = document.getElementById('errorbook-batch-action-group');
+        if (!actionGroup) return;
         const adminMode = localStorage.getItem('adminMode') === '1';
         if (!adminMode) {
-            batchBar.style.display = 'none';
+            actionGroup.style.display = 'none';
             return;
         }
         const selectedCount = document.querySelectorAll('.error-select:checked').length;
-        batchBar.style.display = selectedCount > 0 ? 'flex' : 'none';
+        actionGroup.style.display = selectedCount > 0 ? 'flex' : 'none';
+    },
+
+    updateErrorCount(count) {
+        const totalEl = document.getElementById('errorbook-total-count');
+        if (totalEl) {
+            totalEl.textContent = count;
+        }
     },
 
     renderRoundsView(adminMode, opts = {}) {
