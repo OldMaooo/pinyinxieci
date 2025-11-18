@@ -111,6 +111,16 @@ const ErrorBook = {
         });
     },
 
+    escapeHtml(text) {
+        if (text === null || text === undefined) return '';
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    },
+
     bindSelectionCheckboxEvents(root) {
         if (!root) return;
         root.querySelectorAll('.error-select').forEach(cb => {
@@ -153,7 +163,12 @@ const ErrorBook = {
                 const w = wordBank.find(x => x.id === id);
                 if (!w) return '';
                 const latestSnapshot = d.snapshot || '';
-                const groupsText = typeof WordGroups !== 'undefined' ? WordGroups.getDisplayText(w.word, w.pinyin || '') : (w.pinyin || '');
+                const fallbackGroups = typeof WordGroups !== 'undefined'
+                    ? WordGroups.getDisplayText(w.word, w.pinyin || '')
+                    : (w.pinyin || '');
+                const storedDisplay = d.displayText || '';
+                const groupsTextRaw = storedDisplay || fallbackGroups || '';
+                const groupsText = this.escapeHtml(groupsTextRaw);
                 const canToggle = Array.isArray(log.details) && log.details.length > 0;
                 const toggleHtml = canToggle ? `
                     <div class="position-absolute top-0 end-0 me-2 mt-1">
@@ -231,13 +246,20 @@ const ErrorBook = {
         if (!container || !log) return;
         const wordBank = Storage.getWordBank();
         const errorMap = new Map((Storage.getErrorWords() || []).map(e => [e.wordId, e]));
-        const items = (log.details && log.details.length ? log.details : (log.errorWords||[]).map(id=>({wordId:id,correct:false,snapshot:(errorMap.get(id)?.handwritingSnapshots?.slice(-1)[0]?.snapshot)||''})));
+        const items = (log.details && log.details.length
+            ? log.details
+            : (log.errorWords||[]).map(id=>({wordId:id,correct:false,snapshot:(errorMap.get(id)?.handwritingSnapshots?.slice(-1)[0]?.snapshot)||''})));
         const cards = items.map((d, idx) => {
             const w = wordBank.find(x=>x.id===d.wordId);
             if (!w) return '';
             // 优先使用本次练习的快照，而不是错题本历史快照
             const latestSnapshot = d.snapshot || '';
-            const groupsText = typeof WordGroups !== 'undefined' ? WordGroups.getDisplayText(w.word, w.pinyin || '') : (w.pinyin || '');
+            const fallbackGroups = typeof WordGroups !== 'undefined'
+                ? WordGroups.getDisplayText(w.word, w.pinyin || '')
+                : (w.pinyin || '');
+            const storedDisplay = d.displayText || '';
+            const groupsTextRaw = storedDisplay || fallbackGroups || '';
+            const groupsText = this.escapeHtml(groupsTextRaw);
             const isWrong = !d.correct;
             return `
             <div class="col">
@@ -261,9 +283,9 @@ const ErrorBook = {
                             </div>
                         </div>
                         <div class="d-flex gap-2 align-items-center mt-2">
-                            <div class="word-box">${latestSnapshot ? `<img class=\"snapshot-invert\" src=\"${latestSnapshot}\" style=\"max-width: 90%; max-height: 90%; object-fit: contain;\">` : '<span class=\"text-muted small\">无快照</span>'}</div>
+                            <div class="word-box">${latestSnapshot ? `<img class="snapshot-invert" src="${latestSnapshot}" style="max-width: 90%; max-height: 90%; object-fit: contain;">` : '<span class="text-muted small">无快照</span>'}</div>
                             <div class="word-box standard-dark-box text-center">
-                                <div class="standard-dark-text" style="font-size: 3rem; line-height: 1; font-family: var(--kaiti-font-family, 'KaiTi', 'STKaiti', 'BiauKai', serif);">${w.word}</div>
+                                <div class="standard-dark-text" style="font-size: 3.8rem; line-height: 1; font-family: var(--kaiti-font-family, 'KaiTi','楷体',serif);">${w.word}</div>
                             </div>
                         </div>
                     </div>
@@ -417,6 +439,7 @@ const ErrorBook = {
             this.saveSelectedRounds([]);
             document.querySelectorAll('.error-round-select').forEach(cb => cb.checked = false);
         }
+        this.updateBatchToolbarState();
     },
 
     batchRemove() {
@@ -433,6 +456,7 @@ const ErrorBook = {
         if (!confirm(`确定要删除选中的 ${ids.length} 个错题吗？`)) return;
         ids.forEach(id => Storage.removeErrorWord(id));
         this.load();
+        this.updateBatchToolbarState();
     },
 
     bindRoundSelectionEvents() {

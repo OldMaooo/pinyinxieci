@@ -323,10 +323,7 @@ const Main = {
                 if (typeof Practice !== 'undefined') {
                     // 切换到练习页面
                     this.showPage('practice');
-                    // 立即开始练习
-                    setTimeout(() => {
-                        Practice.start();
-                    }, 100);
+                    Practice.start();
                 }
             });
         }
@@ -368,11 +365,9 @@ const Main = {
                         }
                         // 切换到练习页面并开始练习
                         this.showPage('practice');
-                        setTimeout(() => {
-                            if (typeof Practice !== 'undefined') {
-                                Practice.start();
-                            }
-                        }, 100);
+                        if (typeof Practice !== 'undefined') {
+                            Practice.start();
+                        }
                     } else {
                         alert('本轮练习没有错题');
                     }

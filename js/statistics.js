@@ -140,7 +140,7 @@ const Statistics = {
                             <div class="d-flex gap-3 align-items-center mt-2">
                                 <div class="word-box"><img class="snapshot-invert" src="${latestSnapshot.snapshot}" alt="手写" style="max-width: 90%; max-height: 90%; object-fit: contain;"></div>
                                 <div class="word-box standard-dark-box text-center">
-                                    <div class="standard-dark-text" style="font-size: 2.6rem; font-family: 'KaiTi','楷体',serif;">${word.word}</div>
+                                    <div class="standard-dark-text" style="font-size: 3rem;">${word.word}</div>
                                 </div>
                             </div>
                         ` : ''}

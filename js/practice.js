@@ -17,6 +17,40 @@ const Practice = {
         wordTimes: [],
         errorWords: []
     },
+
+    async handleEmptySubmission(word) {
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+        }
+        const wordTime = this._currentWordStartTime ? (Date.now() - this._currentWordStartTime) / 1000 : 0;
+        this._currentWordStartTime = null;
+        this.lastSubmitTime = 0;
+        this.lastSubmitWordId = null;
+        this.consecutiveBlockCount = 0;
+        this.isSubmitting = false;
+        await this.recordError(word, null);
+        this.practiceLog.errorCount++;
+        this.practiceLog.wordTimes.push(wordTime);
+        this.practiceLog.totalTime += wordTime;
+        this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null, displayText: this._currentDisplayText });
+        this.showFeedback(false, word, '');
+        if (typeof Handwriting !== 'undefined' && Handwriting.clear) {
+            Handwriting.clear();
+        }
+        this.saveAutosaveDraft();
+        setTimeout(() => {
+            if (this.currentIndex < this.currentWords.length) {
+                this.history.push({
+                    word: word,
+                    index: this.currentIndex,
+                    snapshot: null
+                });
+            }
+            this.currentIndex++;
+            this.showNextWord();
+        }, 2000);
+    },
     timer: null,
     timeLimit: 30,
     isActive: false,
@@ -26,12 +60,19 @@ const Practice = {
     lastSubmitTime: 0, // 上次提交时间，用于防重复提交
     lastSubmitWordId: null, // 上次提交的字ID，用于判断是否切换了字
     isSubmitting: false, // 是否正在提交中
+    _currentWordStartTime: null, // 当前题目开始计时点
+    _pendingDirectStart: false, // 是否来自首页/错题本的直接启动
     consecutiveBlockCount: 0, // 连续被拦截的次数，用于容错机制
     
     /**
      * 开始练习
      */
-    async start() {
+    async start(options = {}) {
+        const directStart = options.directStart || this._pendingDirectStart;
+        this._pendingDirectStart = false;
+        if (directStart) {
+            this.prepareDirectStartUI();
+        }
         // 同步可能来自错题本的强制题量设置
         if (typeof this.syncForcedWordStateFromStorage === 'function') {
             this.syncForcedWordStateFromStorage();
@@ -186,6 +227,29 @@ const Practice = {
         
         // 开始第一题
         this.showNextWord();
+    },
+    
+    prepareDirectStartUI(message = '正在准备题目...') {
+        const settingsEl = document.getElementById('practice-settings');
+        const practiceAreaEl = document.getElementById('practice-area');
+        if (settingsEl) settingsEl.classList.add('d-none');
+        if (practiceAreaEl) practiceAreaEl.classList.remove('d-none');
+        const pinyinDisplay = document.getElementById('pinyin-display');
+        if (pinyinDisplay) {
+            pinyinDisplay.textContent = message;
+        }
+        const feedbackArea = document.getElementById('feedback-area');
+        if (feedbackArea) {
+            feedbackArea.innerHTML = '<span class="text-muted small">准备中…</span>';
+        }
+        if (typeof Handwriting !== 'undefined' && Handwriting.clear) {
+            Handwriting.clear();
+        }
+    },
+    
+    prepareDirectStart() {
+        this._pendingDirectStart = true;
+        this.prepareDirectStartUI();
     },
 
     savePartialIfActive() {
@@ -354,8 +418,8 @@ const Practice = {
         this._currentWord = word.word;
         
         // 开始计时
-        const wordStartTime = Date.now();
-        this.startTimer(wordStartTime);
+        this._currentWordStartTime = Date.now();
+        this.startTimer(this._currentWordStartTime);
     },
     
     /**
@@ -427,25 +491,25 @@ const Practice = {
                     this.practiceLog.totalTime += wordTime;
                     if (result.success && result.passed) {
                         this.practiceLog.correctCount++;
-                        this.practiceLog.details.push({ wordId: word.id, correct: true, snapshot });
+                        this.practiceLog.details.push({ wordId: word.id, correct: true, snapshot, displayText: this._currentDisplayText });
                         this.showFeedback(true, word, '');
                     } else {
                         this.practiceLog.errorCount++;
                         await this.recordError(word, snapshot);
-                        this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot });
+                        this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot, displayText: this._currentDisplayText });
                         this.showFeedback(false, word, result.recognized || '时间到');
                     }
                 } catch (e) {
                     this.practiceLog.errorCount++;
                     await this.recordError(word, snapshot);
-                    this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot });
+                    this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot, displayText: this._currentDisplayText });
                     this.showFeedback(false, word, '时间到');
                 }
             } else {
                 // 无内容：直接判错
                 this.practiceLog.errorCount++;
                 await this.recordError(word, null);
-                this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null });
+                this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null, displayText: this._currentDisplayText });
                 this.showFeedback(false, word, '时间到');
             }
         } else {
@@ -473,7 +537,8 @@ const Practice = {
     /**
      * 提交答案
      */
-    async submitAnswer() {
+    async submitAnswer(options = {}) {
+        const { bypassCooldown = false } = options;
         const word = this.currentWords[this.currentIndex];
         
         // 防重复提交：同一个字10秒内只能提交一次
@@ -486,7 +551,7 @@ const Practice = {
         }
         
         const timeSinceLastSubmit = now - this.lastSubmitTime;
-        if (timeSinceLastSubmit < 10000 && this.lastSubmitTime > 0 && this.lastSubmitWordId === word.id) {
+        if (!bypassCooldown && timeSinceLastSubmit < 10000 && this.lastSubmitTime > 0 && this.lastSubmitWordId === word.id) {
             // 容错机制：如果连续3次被拦截，自动清除限制（可能是bug导致）
             this.consecutiveBlockCount++;
             if (this.consecutiveBlockCount >= 3) {
@@ -516,6 +581,9 @@ const Practice = {
         } else {
             // 提交未被拦截，重置连续拦截计数
             this.consecutiveBlockCount = 0;
+            if (bypassCooldown) {
+                this.lastSubmitTime = 0;
+            }
         }
         
         // 如果正在提交中，忽略
@@ -527,36 +595,12 @@ const Practice = {
             const hasInk = typeof Handwriting !== 'undefined' && Handwriting.hasContent && Handwriting.hasContent();
             if (!hasInk) {
                 // 没有笔迹：直接判为错题，不调用API
-                if (this.timer) {
-                    clearInterval(this.timer);
-                    this.timer = null;
-                }
-                await this.recordError(word, null);
-                this.practiceLog.errorCount++;
-                this.practiceLog.wordTimes.push(0);
-                this.practiceLog.totalTime += 0;
-                this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null });
-                this.showFeedback(false, word, '');
-                this.saveAutosaveDraft();
-                setTimeout(() => {
-                    if (this.currentIndex < this.currentWords.length) {
-                        this.history.push({
-                            word: word,
-                            index: this.currentIndex,
-                            snapshot: null
-                        });
-                    }
-                    this.currentIndex++;
-                    this.showNextWord();
-                }, 2000);
+                await this.handleEmptySubmission(word);
                 return;
             }
         }
         const snapshot = this.mode === 'normal' ? Handwriting.getSnapshot() : null;
-        const wordStartTime = this.practiceLog.wordTimes.length > 0 ? 
-            Date.now() - (this.practiceLog.wordTimes[this.practiceLog.wordTimes.length - 1] * 1000 + this.practiceLog.startTime) : 
-            Date.now() - this.practiceLog.startTime;
-        const wordTime = wordStartTime / 1000;
+        const wordTime = this._currentWordStartTime ? (Date.now() - this._currentWordStartTime) / 1000 : 0;
         
         // 停止计时
         if (this.timer) {
@@ -614,7 +658,7 @@ const Practice = {
                 if (this.mode === 'normal') {
                     this.practiceLog.correctCount++;
                     // 保存详情（保留正确也保留快照）
-                    this.practiceLog.details.push({ wordId: word.id, correct: true, snapshot });
+                this.practiceLog.details.push({ wordId: word.id, correct: true, snapshot, displayText: this._currentDisplayText });
                     this.showFeedback(true, word, '');
                 } else {
                     // 纸质模式：不反馈对错，快速进入下一题
@@ -625,7 +669,7 @@ const Practice = {
                 if (this.mode === 'normal') {
                     this.practiceLog.errorCount++;
                     await this.recordError(word, snapshot);
-                    this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot });
+                this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot, displayText: this._currentDisplayText });
                     this.showFeedback(false, word, result.recognized);
                 } else {
                     document.getElementById('feedback-area').innerHTML = '';
@@ -652,6 +696,7 @@ const Practice = {
                 this.currentIndex++;
                 this.showNextWord();
             }, this.mode === 'normal' ? 2000 : 300);
+        this._currentWordStartTime = null;
         } catch (error) {
             console.error('提交失败:', error);
             
@@ -714,10 +759,7 @@ const Practice = {
         this.isSubmitting = false;
         
         const snapshot = this.mode === 'normal' && Handwriting.hasContent() ? Handwriting.getSnapshot() : null;
-        const wordStartTime = this.practiceLog.wordTimes.length > 0 ? 
-            Date.now() - (this.practiceLog.wordTimes[this.practiceLog.wordTimes.length - 1] * 1000 + this.practiceLog.startTime) : 
-            Date.now() - this.practiceLog.startTime;
-        const wordTime = wordStartTime / 1000;
+        const wordTime = this._currentWordStartTime ? (Date.now() - this._currentWordStartTime) / 1000 : 0;
         
         // 停止计时
         if (this.timer) {
@@ -732,9 +774,9 @@ const Practice = {
         // 如果有笔迹，保存快照
         if (snapshot) {
             await this.recordError(word, snapshot);
-            this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot });
+            this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot, displayText: this._currentDisplayText });
         } else {
-            this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null });
+            this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null, displayText: this._currentDisplayText });
         }
         
         // 显示反馈（错误）
@@ -756,6 +798,7 @@ const Practice = {
             this.currentIndex++;
             this.showNextWord();
         }, 2000);
+        this._currentWordStartTime = null;
     },
     
     /**
@@ -834,9 +877,18 @@ const Practice = {
      */
     async skipQuestion() {
         if (confirm('确定要跳过这道题吗？（将记录为错题）')) {
+            this.lastSubmitTime = 0;
+            this.lastSubmitWordId = null;
+            this.consecutiveBlockCount = 0;
+            this.isSubmitting = false;
             const word = this.currentWords[this.currentIndex];
             await this.recordError(word, null);
             this.practiceLog.errorCount++;
+            const wordTime = this._currentWordStartTime ? (Date.now() - this._currentWordStartTime) / 1000 : 0;
+            this.practiceLog.wordTimes.push(wordTime);
+            this.practiceLog.totalTime += wordTime;
+            this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null, displayText: this._currentDisplayText });
+            this._currentWordStartTime = null;
             
             // 保存当前题目到历史
             if (this.currentIndex < this.currentWords.length) {
@@ -858,29 +910,33 @@ const Practice = {
     /**
      * 结束练习
      */
-    finish() {
+    finish(options = {}) {
+        if (!this.practiceLog) return;
+        const { partial = false } = options;
         if (this.timer) {
             clearInterval(this.timer);
         }
+        this.isActive = false;
+        this.isSubmitting = false;
+        this.lastSubmitTime = 0;
+        this.lastSubmitWordId = null;
+        this.consecutiveBlockCount = 0;
+        this._currentWordStartTime = null;
         let isDebug = false; try { isDebug = localStorage.getItem('debugMode') === '1'; } catch(e) {}
         
-        // 保存练习记录
-        const log = Storage.addPracticeLog({
-            totalWords: this.practiceLog.totalWords,
-            correctCount: this.practiceLog.correctCount,
-            errorCount: this.practiceLog.errorCount,
-            totalTime: this.practiceLog.totalTime,
-            averageTime: this.practiceLog.totalWords > 0 ? 
-                this.practiceLog.totalTime / this.practiceLog.totalWords : 0,
-            errorWords: this.practiceLog.errorWords,
-            details: this.practiceLog.details || [],
-            status: 'completed',
-            isDebug
-        });
-        this.isActive = false;
+        const logPayload = this._buildPracticeLogPayload({ partial, isDebug });
+        let log = null;
+        try {
+            log = Storage.addPracticeLog(logPayload);
+        } catch (error) {
+            console.error('保存练习记录失败:', error);
+            alert('保存练习记录失败，请稍后再试。');
+            this.resetToSettings();
+            return;
+        }
         
         // 跳转到结果页面
-        if (typeof Main !== 'undefined') {
+        if (log && typeof Main !== 'undefined') {
             Main.showResults(log.id);
         }
         
@@ -890,12 +946,52 @@ const Practice = {
         }
     },
     
+    _buildPracticeLogPayload({ partial, isDebug }) {
+        const details = (this.practiceLog.details || []).map(item => ({ ...item }));
+        const wordTimes = (this.practiceLog.wordTimes || []).slice();
+        let totalWords = this.practiceLog.totalWords || 0;
+        let correctCount = this.practiceLog.correctCount || 0;
+        let errorCount = this.practiceLog.errorCount || 0;
+        let totalTime = this.practiceLog.totalTime || 0;
+        let errorWords = Array.isArray(this.practiceLog.errorWords) ? [...this.practiceLog.errorWords] : [];
+        
+        if (partial) {
+            const answeredCount = details.length;
+            totalWords = answeredCount;
+            errorCount = details.filter(d => d.correct === false).length;
+            correctCount = answeredCount - errorCount;
+            totalTime = wordTimes.reduce((sum, t) => sum + (t || 0), 0);
+            errorWords = details.filter(d => d.correct === false).map(d => d.wordId);
+        }
+        
+        const averageTime = totalWords > 0 ? totalTime / totalWords : 0;
+        return {
+            totalWords,
+            correctCount,
+            errorCount,
+            totalTime,
+            averageTime,
+            errorWords: [...new Set(errorWords)],
+            details,
+            wordTimes,
+            status: partial ? 'partial' : 'completed',
+            isDebug
+        };
+    },
+    
+    resetToSettings() {
+        const settingsEl = document.getElementById('practice-settings');
+        const practiceAreaEl = document.getElementById('practice-area');
+        if (settingsEl) settingsEl.classList.remove('d-none');
+        if (practiceAreaEl) practiceAreaEl.classList.add('d-none');
+    },
+    
     /**
      * 结束练习（手动）
      */
     end() {
         if (confirm('确定要结束练习吗？')) {
-            this.finish();
+            this.finish({ partial: true });
         }
     },
     
@@ -991,10 +1087,14 @@ const Practice = {
             alert('已经是最后一题了');
             return;
         }
+        this.lastSubmitTime = 0;
+        this.lastSubmitWordId = null;
+        this.consecutiveBlockCount = 0;
+        this.isSubmitting = false;
         
         // 如果当前有未提交的笔迹，自动提交并判断
         if (this.mode === 'normal' && typeof Handwriting !== 'undefined' && Handwriting.hasContent && Handwriting.hasContent()) {
-            this.submitAnswer();
+            this.submitAnswer({ bypassCooldown: true });
             return;
         }
 
