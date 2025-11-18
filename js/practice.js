@@ -523,9 +523,34 @@ const Practice = {
             return;
         }
         
-        if (this.mode === 'normal' && !Handwriting.hasContent()) {
-            alert('请先书写');
-            return;
+        if (this.mode === 'normal') {
+            const hasInk = typeof Handwriting !== 'undefined' && Handwriting.hasContent && Handwriting.hasContent();
+            if (!hasInk) {
+                // 没有笔迹：直接判为错题，不调用API
+                if (this.timer) {
+                    clearInterval(this.timer);
+                    this.timer = null;
+                }
+                await this.recordError(word, null);
+                this.practiceLog.errorCount++;
+                this.practiceLog.wordTimes.push(0);
+                this.practiceLog.totalTime += 0;
+                this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null });
+                this.showFeedback(false, word, '');
+                this.saveAutosaveDraft();
+                setTimeout(() => {
+                    if (this.currentIndex < this.currentWords.length) {
+                        this.history.push({
+                            word: word,
+                            index: this.currentIndex,
+                            snapshot: null
+                        });
+                    }
+                    this.currentIndex++;
+                    this.showNextWord();
+                }, 2000);
+                return;
+            }
         }
         const snapshot = this.mode === 'normal' ? Handwriting.getSnapshot() : null;
         const wordStartTime = this.practiceLog.wordTimes.length > 0 ? 
@@ -751,7 +776,6 @@ const Practice = {
                 : '<i class="bi bi-x-circle-fill text-danger me-2" style="font-size: 1.2em;"></i>';
             const color = isCorrect ? 'text-success' : 'text-danger';
             
-            // 恢复答题前的词组提示（含拼音），答题后替换为汉字并上色
             let displayText = this._currentDisplayText || word.pinyin || word.word;
             const correctWord = word.word;
             let wordPinyin = word.pinyin || '';
@@ -759,27 +783,29 @@ const Practice = {
                 wordPinyin = WordGroups._generatePinyin(correctWord);
             }
             
-            let replaced = false;
+            let replacements = 0;
+            const wrapText = () => `<span class="${color} fw-bold">${correctWord}</span>`;
+            
             if (wordPinyin && wordPinyin.trim()) {
                 const escaped = wordPinyin.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                 const regex = new RegExp(`\\b${escaped}\\b`, 'gi');
                 displayText = displayText.replace(regex, () => {
-                    replaced = true;
-                    return `<span class="${color} fw-bold">${correctWord}</span>`;
+                    replacements++;
+                    return wrapText();
                 });
             }
             
-            if (!replaced) {
+            if (replacements === 0) {
                 const escapedWord = correctWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                 const wordRegex = new RegExp(escapedWord, 'g');
-                displayText = displayText.replace(wordRegex, (match) => {
-                    replaced = true;
-                    return `<span class="${color} fw-bold">${match}</span>`;
+                displayText = displayText.replace(wordRegex, () => {
+                    replacements++;
+                    return wrapText();
                 });
             }
             
-            if (!replaced) {
-                displayText = `${displayText} <span class="${color} fw-bold">${correctWord}</span>`;
+            if (replacements === 0) {
+                displayText = `${displayText} ${wrapText()}`;
             }
             
             pinyinDisplay.innerHTML = icon + displayText;

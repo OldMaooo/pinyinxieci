@@ -103,7 +103,10 @@
 .snapshot-invert { filter: none; }
 [data-bs-theme="dark"] .snapshot-invert { filter: invert(1) grayscale(1) contrast(1.1); }
 .standard-dark-box { background-color: #f8f9fa; }
-.standard-dark-text { color: #212529; }
+.standard-dark-text { 
+    color: #212529; 
+    font-family: var(--kaiti-font-family, 'KaiTi_GB2312', 'KaiTi', 'Kaiti SC', '楷体', 'STKaiti', 'STKaiti SC', 'SimKai', serif);
+}
 [data-bs-theme="dark"] .standard-dark-box { background-color: #212529; }
 [data-bs-theme="dark"] .standard-dark-text { color: #fff; }
 

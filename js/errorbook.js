@@ -28,7 +28,7 @@ const ErrorBook = {
         }
 
         empty.style.display = 'none';
-        if (batchBar) batchBar.style.display = adminMode ? 'flex' : 'none';
+        if (batchBar) batchBar.style.display = 'none';
 
         this.renderRoundsView(adminMode, { onlyWrong });
         this.renderSummaryView(adminMode);
@@ -70,16 +70,17 @@ const ErrorBook = {
         const selAll = document.getElementById('errorbook-select-all');
         const clrSel = document.getElementById('errorbook-clear-select');
         const batchRemove = document.getElementById('errorbook-batch-remove');
-        const batchAdd = document.getElementById('errorbook-batch-add');
+        const batchDelete = document.getElementById('errorbook-batch-delete');
         if (selAll) selAll.onclick = () => this.toggleSelectAll(true);
         if (clrSel) clrSel.onclick = () => this.toggleSelectAll(false);
         if (batchRemove) batchRemove.onclick = () => this.batchRemove();
-        if (batchAdd) batchAdd.onclick = () => this.batchAdd();
+        if (batchDelete) batchDelete.onclick = () => this.batchDelete();
 
         if (onlyWrongToggle) {
             onlyWrongToggle.onchange = () => this.load();
         }
 
+        this.updateBatchToolbarState();
     },
 
     initResultToggleControls(root) {
@@ -108,6 +109,26 @@ const ErrorBook = {
                 }
             });
         });
+    },
+
+    bindSelectionCheckboxEvents(root) {
+        if (!root) return;
+        root.querySelectorAll('.error-select').forEach(cb => {
+            cb.addEventListener('change', () => this.updateBatchToolbarState());
+        });
+        this.updateBatchToolbarState();
+    },
+
+    updateBatchToolbarState() {
+        const batchBar = document.getElementById('errorbook-batch-toolbar');
+        if (!batchBar) return;
+        const adminMode = localStorage.getItem('adminMode') === '1';
+        if (!adminMode) {
+            batchBar.style.display = 'none';
+            return;
+        }
+        const selectedCount = document.querySelectorAll('.error-select:checked').length;
+        batchBar.style.display = selectedCount > 0 ? 'flex' : 'none';
     },
 
     renderRoundsView(adminMode, opts = {}) {
@@ -153,7 +174,7 @@ const ErrorBook = {
                                     <div class="d-flex align-items-start gap-2">
                                         ${adminMode ? `<input type="checkbox" class="form-check-input mt-2 error-select" data-id="${id}">` : ''}
                                         <div>
-                                            <div class="fw-bold" style="font-size: 1.5rem; line-height: 1;">${w.word} ${d.correct ? '' : '<span title="错误">❌</span>'}</div>
+                                            <div class="fw-bold" style="font-size: 1.5rem; line-height: 1;">${w.word}</div>
                                             <div class="text-muted small mt-1" title="${groupsText}">${groupsText}</div>
                                         </div>
                                     </div>
@@ -161,7 +182,7 @@ const ErrorBook = {
                                 <div class="d-flex gap-2 align-items-center mt-2">
                                     <div class="word-box">${latestSnapshot ? `<img class="snapshot-invert" src="${latestSnapshot}" alt="手写" style="max-width: 90%; max-height: 90%; object-fit: contain;">` : '<span class="text-muted small">无快照</span>'}</div>
                                     <div class="word-box standard-dark-box text-center">
-                                        <div class="standard-dark-text" style="font-size: 2.2rem;">${w.word}</div>
+                                        <div class="standard-dark-text" style="font-size: 3rem; line-height: 1; font-family: var(--kaiti-font-family, 'KaiTi', 'STKaiti', 'BiauKai', serif);">${w.word}</div>
                                     </div>
                                 </div>
                             </div>
@@ -201,6 +222,7 @@ const ErrorBook = {
         roundsEl.innerHTML = htmlChunks.length ? htmlChunks.join('') : '<div class="text-muted small">暂无练习记录</div>';
         this.bindRoundSelectionEvents();
         this.initResultToggleControls(roundsEl);
+        this.bindSelectionCheckboxEvents(roundsEl);
     },
 
     // 提供给结果页复用的渲染：仅一轮
@@ -241,7 +263,7 @@ const ErrorBook = {
                         <div class="d-flex gap-2 align-items-center mt-2">
                             <div class="word-box">${latestSnapshot ? `<img class=\"snapshot-invert\" src=\"${latestSnapshot}\" style=\"max-width: 90%; max-height: 90%; object-fit: contain;\">` : '<span class=\"text-muted small\">无快照</span>'}</div>
                             <div class="word-box standard-dark-box text-center">
-                                <div class="standard-dark-text" style="font-size: 2.2rem;">${w.word}</div>
+                                <div class="standard-dark-text" style="font-size: 3rem; line-height: 1; font-family: var(--kaiti-font-family, 'KaiTi', 'STKaiti', 'BiauKai', serif);">${w.word}</div>
                             </div>
                         </div>
                     </div>
@@ -327,6 +349,7 @@ const ErrorBook = {
                 this.renderSummaryView(adminMode);
             };
         }
+        this.bindSelectionCheckboxEvents(summaryEl);
     },
 
     /**
@@ -401,16 +424,14 @@ const ErrorBook = {
         if (!ids.length) return;
         ids.forEach(id => Storage.removeErrorWord(id));
         this.load();
+        this.updateBatchToolbarState();
     },
 
-    batchAdd() {
+    batchDelete() {
         const ids = Array.from(document.querySelectorAll('.error-select:checked')).map(cb => cb.getAttribute('data-id'));
         if (!ids.length) return;
-        const wordBank = Storage.getWordBank();
-        ids.forEach(id => {
-            const w = wordBank.find(x=>x.id===id);
-            if (w) Storage.addErrorWord(id, w.word, w.pinyin||'', null);
-        });
+        if (!confirm(`确定要删除选中的 ${ids.length} 个错题吗？`)) return;
+        ids.forEach(id => Storage.removeErrorWord(id));
         this.load();
     },
 
