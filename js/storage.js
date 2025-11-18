@@ -67,11 +67,13 @@ const Storage = {
      */
     getWordBank() {
         const data = localStorage.getItem(this.KEYS.WORD_BANK);
-        return data ? JSON.parse(data) : [];
+        const words = data ? JSON.parse(data) : [];
+        return this._withWordBankSanity(words);
     },
 
     saveWordBank(wordBank) {
-        localStorage.setItem(this.KEYS.WORD_BANK, JSON.stringify(wordBank));
+        const sanitized = this._withWordBankSanity(wordBank, { persist: false });
+        localStorage.setItem(this.KEYS.WORD_BANK, JSON.stringify(sanitized));
     },
 
     addWord(word) {
@@ -490,7 +492,7 @@ const Storage = {
             builtinVersion: metadata.version || metadata.buildDate || 'unknown',
             addedDate: new Date().toISOString()
         }));
-        const merged = [...userWords, ...normalized];
+        const merged = this._withWordBankSanity([...userWords, ...normalized], { persist: false });
         this.saveWordBank(merged);
         const versionToken = metadata.version || metadata.buildDate || `len-${normalized.length}`;
         this.setBuiltinWordBankVersion(versionToken);
@@ -498,6 +500,21 @@ const Storage = {
             mergedCount: merged.length,
             builtinVersion: versionToken
         });
+    },
+
+    _withWordBankSanity(wordBank, options = {}) {
+        const list = Array.isArray(wordBank) ? wordBank.slice() : [];
+        const filtered = list.filter(item => {
+            const text = typeof item?.word === 'string' ? item.word.trim() : '';
+            return text.length >= 2;
+        });
+        if (filtered.length !== list.length && !options.silent) {
+            console.warn(`[Storage] 已过滤 ${list.length - filtered.length} 个单字词条，题库不再允许单字练习`);
+        }
+        if (options.persist !== false && filtered.length !== list.length) {
+            localStorage.setItem(this.KEYS.WORD_BANK, JSON.stringify(filtered));
+        }
+        return filtered;
     },
 
     resetBuiltinWordBank() {

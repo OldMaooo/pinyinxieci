@@ -1,12 +1,12 @@
 /* 楷体字体栈定义 */
 :root {
     --kaiti-font-family: 'KaiTi_GB2312', 'KaiTi', 'Kaiti SC', '楷体', 'STKaiti', 'STKaiti SC', 'SimKai', serif;
-    --results-action-height: 190px;
+    --results-action-height: 150px;
 }
 
 @media (max-width: 576px) {
     :root {
-        --results-action-height: 220px;
+        --results-action-height: 180px;
     }
 }
 
@@ -347,7 +347,7 @@
 }
 
 .results-action-bar .btn {
-    min-width: 180px;
+    min-width: 140px;
     flex: 1 1 0;
 }
 
@@ -360,7 +360,7 @@
     }
     
     .results-action-bar .btn {
-        min-width: 140px;
+        min-width: 120px;
     }
 }
 
@@ -369,10 +369,6 @@
     border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 0.75rem;
     padding: 0.75rem 1rem;
-}
-
-.errorbook-toolbar .btn-group .btn {
-    min-width: 96px;
 }
 
 .badge-soft-primary {

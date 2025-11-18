@@ -15,8 +15,9 @@ const ErrorBook = {
         const roundsEl = document.getElementById('errorbook-rounds');
         const summaryEl = document.getElementById('errorbook-summary');
         const toolbar = document.getElementById('errorbook-toolbar');
-        const selectionGroup = document.getElementById('errorbook-selection-group');
-        const batchActions = document.getElementById('errorbook-batch-action-group');
+        const toggleAllCheckbox = document.getElementById('errorbook-toggle-all');
+        const batchRemoveBtn = document.getElementById('errorbook-batch-remove');
+        const batchDeleteBtn = document.getElementById('errorbook-batch-delete');
         const onlyWrongToggle = document.getElementById('errorbook-only-wrong');
         const onlyWrongContainer = onlyWrongToggle ? onlyWrongToggle.closest('.form-check') : null;
         const onlyWrong = !!(onlyWrongToggle && onlyWrongToggle.checked);
@@ -26,13 +27,16 @@ const ErrorBook = {
             toolbar.classList.remove('d-none');
             toolbar.classList.toggle('opacity-50', !hasErrors);
         }
-        if (selectionGroup) {
-            selectionGroup.querySelectorAll('button').forEach(btn => btn.disabled = !hasErrors);
+        if (toggleAllCheckbox) {
+            toggleAllCheckbox.disabled = !hasErrors;
+            toggleAllCheckbox.checked = false;
+            toggleAllCheckbox.indeterminate = false;
         }
+        if (batchRemoveBtn) batchRemoveBtn.disabled = true;
+        if (batchDeleteBtn) batchDeleteBtn.disabled = true;
         if (!hasErrors) {
             if (roundsEl) roundsEl.innerHTML = '';
             if (summaryEl) summaryEl.innerHTML = '';
-            if (batchActions) batchActions.style.display = 'none';
             empty.style.display = 'block';
             this.updateErrorCount(0);
             this.updateBatchToolbarState();
@@ -67,14 +71,11 @@ const ErrorBook = {
             applyTabState(initialRoundsActive);
         }
 
-        const selAll = document.getElementById('errorbook-select-all');
-        const clrSel = document.getElementById('errorbook-clear-select');
-        const batchRemove = document.getElementById('errorbook-batch-remove');
-        const batchDelete = document.getElementById('errorbook-batch-delete');
-        if (selAll) selAll.onclick = () => this.toggleSelectAll(true);
-        if (clrSel) clrSel.onclick = () => this.toggleSelectAll(false);
-        if (batchRemove) batchRemove.onclick = () => this.batchRemove();
-        if (batchDelete) batchDelete.onclick = () => this.batchDelete();
+        if (toggleAllCheckbox) {
+            toggleAllCheckbox.onchange = () => this.toggleSelectAll(toggleAllCheckbox.checked);
+        }
+        if (batchRemoveBtn) batchRemoveBtn.onclick = () => this.batchRemove();
+        if (batchDeleteBtn) batchDeleteBtn.onclick = () => this.batchDelete();
 
         if (onlyWrongToggle) {
             onlyWrongToggle.onchange = () => this.load();
@@ -130,15 +131,26 @@ const ErrorBook = {
     },
 
     updateBatchToolbarState() {
-        const actionGroup = document.getElementById('errorbook-batch-action-group');
         const selectedBadge = document.getElementById('errorbook-selected-count');
-        if (!actionGroup) return;
         const selectedCount = document.querySelectorAll('.error-select:checked').length;
-        actionGroup.style.display = selectedCount > 0 ? 'flex' : 'none';
+        const totalCount = document.querySelectorAll('.error-select').length;
+        const toggleAll = document.getElementById('errorbook-toggle-all');
+        const batchRemoveBtn = document.getElementById('errorbook-batch-remove');
+        const batchDeleteBtn = document.getElementById('errorbook-batch-delete');
+
+        if (toggleAll && !toggleAll.disabled) {
+            toggleAll.indeterminate = selectedCount > 0 && selectedCount < totalCount;
+            toggleAll.checked = totalCount > 0 && selectedCount === totalCount;
+        }
+
+        const hasSelection = selectedCount > 0;
+        if (batchRemoveBtn) batchRemoveBtn.disabled = !hasSelection;
+        if (batchDeleteBtn) batchDeleteBtn.disabled = !hasSelection;
+
         if (selectedBadge) {
             const countEl = selectedBadge.querySelector('strong');
             if (countEl) countEl.textContent = selectedCount;
-            selectedBadge.classList.toggle('d-none', selectedCount === 0);
+            selectedBadge.classList.toggle('d-none', !hasSelection);
         }
     },
 
