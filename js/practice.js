@@ -39,7 +39,7 @@ const Practice = {
             Handwriting.clear();
         }
         this.saveAutosaveDraft();
-        setTimeout(() => {
+        this.scheduleNextWord(2000, () => {
             if (this.currentIndex < this.currentWords.length) {
                 this.history.push({
                     word: word,
@@ -49,7 +49,7 @@ const Practice = {
             }
             this.currentIndex++;
             this.showNextWord();
-        }, 2000);
+        });
     },
     timer: null,
     timeLimit: 30,
@@ -63,6 +63,21 @@ const Practice = {
     _currentWordStartTime: null, // 当前题目开始计时点
     _pendingDirectStart: false, // 是否来自首页/错题本的直接启动
     consecutiveBlockCount: 0, // 连续被拦截的次数，用于容错机制
+    _nextWordTimer: null,
+    clearPendingNextWordTimer() {
+        if (this._nextWordTimer) {
+            clearTimeout(this._nextWordTimer);
+            this._nextWordTimer = null;
+        }
+    },
+
+    scheduleNextWord(delay, fn) {
+        this.clearPendingNextWordTimer();
+        this._nextWordTimer = setTimeout(() => {
+            this._nextWordTimer = null;
+            fn?.();
+        }, delay);
+    },
     
     /**
      * 开始练习
@@ -70,6 +85,7 @@ const Practice = {
     async start(options = {}) {
         const directStart = options.directStart || this._pendingDirectStart;
         this._pendingDirectStart = false;
+        this.clearPendingNextWordTimer();
         if (directStart) {
             this.prepareDirectStartUI();
         }
@@ -164,6 +180,18 @@ const Practice = {
             }
         });
         words = Array.from(uniqueWordsMap.values());
+
+        const singleWords = words.filter(w => (w.word || '').trim().length === 1);
+        if (singleWords.length) {
+            console.warn('[Practice.start] ⚠️ 当前练习包含单字题目，请检查题库来源:', singleWords.slice(0, 10).map(w => ({
+                id: w.id,
+                word: w.word,
+                grade: w.grade,
+                semester: w.semester,
+                unit: w.unit,
+                unitLabel: w.unitLabel
+            })));
+        }
         
         let forcedMode = false;
         if (this.forcedWordCount && this.forcedWordCount > 0) {
@@ -517,7 +545,7 @@ const Practice = {
         }
         
         // 2秒后下一题
-        setTimeout(() => {
+        this.scheduleNextWord(2000, () => {
             // 保存当前题目到历史（超时也算）
             if (this.currentIndex < this.currentWords.length) {
                 this.history.push({
@@ -528,7 +556,7 @@ const Practice = {
             }
             this.currentIndex++;
             this.showNextWord();
-        }, 2000);
+        });
         
         // 持续草稿保存
         this.saveAutosaveDraft();
@@ -684,7 +712,7 @@ const Practice = {
             submitBtn.innerHTML = originalBtnHtml;
             
             // 2秒后下一题
-            setTimeout(() => {
+            this.scheduleNextWord(this.mode === 'normal' ? 2000 : 300, () => {
                 // 保存当前题目到历史
                 if (this.currentIndex < this.currentWords.length) {
                     this.history.push({
@@ -695,7 +723,7 @@ const Practice = {
                 }
                 this.currentIndex++;
                 this.showNextWord();
-            }, this.mode === 'normal' ? 2000 : 300);
+            });
         this._currentWordStartTime = null;
         } catch (error) {
             console.error('提交失败:', error);
@@ -786,7 +814,7 @@ const Practice = {
         this.saveAutosaveDraft();
         
         // 2秒后下一题
-        setTimeout(() => {
+        this.scheduleNextWord(2000, () => {
             // 保存当前题目到历史
             if (this.currentIndex < this.currentWords.length) {
                 this.history.push({
@@ -797,7 +825,7 @@ const Practice = {
             }
             this.currentIndex++;
             this.showNextWord();
-        }, 2000);
+        });
         this._currentWordStartTime = null;
     },
     
@@ -877,6 +905,7 @@ const Practice = {
      */
     async skipQuestion() {
         if (confirm('确定要跳过这道题吗？（将记录为错题）')) {
+            this.clearPendingNextWordTimer();
             this.lastSubmitTime = 0;
             this.lastSubmitWordId = null;
             this.consecutiveBlockCount = 0;
@@ -916,6 +945,7 @@ const Practice = {
         if (this.timer) {
             clearInterval(this.timer);
         }
+        this.clearPendingNextWordTimer();
         this.isActive = false;
         this.isSubmitting = false;
         this.lastSubmitTime = 0;
@@ -974,7 +1004,8 @@ const Practice = {
             errorWords: [...new Set(errorWords)],
             details,
             wordTimes,
-            status: partial ? 'partial' : 'completed',
+            status: 'completed',
+            wasPartial: partial,
             isDebug
         };
     },

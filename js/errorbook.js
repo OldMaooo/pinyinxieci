@@ -44,7 +44,6 @@ const ErrorBook = {
         }
 
         empty.style.display = 'none';
-        this.updateErrorCount(errorWords.length);
 
         this.renderRoundsView(adminMode, { onlyWrong });
         this.renderSummaryView(adminMode);
@@ -81,6 +80,7 @@ const ErrorBook = {
             onlyWrongToggle.onchange = () => this.load();
         }
 
+        this.updateErrorCount();
         this.updateBatchToolbarState();
     },
 
@@ -156,9 +156,12 @@ const ErrorBook = {
 
     updateErrorCount(count) {
         const totalEl = document.getElementById('errorbook-total-count');
-        if (totalEl) {
-            totalEl.textContent = count;
+        if (!totalEl) return;
+        let value = typeof count === 'number' ? count : null;
+        if (value === null) {
+            value = document.querySelectorAll('.error-select').length;
         }
+        totalEl.textContent = value;
     },
 
     renderRoundsView(adminMode, opts = {}) {

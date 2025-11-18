@@ -54,6 +54,7 @@ const InitData = {
         const timestamp = `?v=${version}&t=${Date.now()}`;
         const collectedWords = [];
         const signatureTokens = [];
+        const singleWordMap = {};
 
         for (const file of this.BUILTIN_FILES) {
             try {
@@ -83,10 +84,24 @@ const InitData = {
                         isBuiltIn: true,
                         source: 'builtin'
                     });
+                    if (word.word && String(word.word).trim().length === 1) {
+                        singleWordMap[file] = singleWordMap[file] || [];
+                        singleWordMap[file].push(word.word);
+                        console.warn(`[InitData] ⚠️ 检测到单字词条 "${word.word}" 来自 ${file}`, {
+                            grade: word.grade,
+                            semester: word.semester,
+                            unit: word.unit,
+                            unitLabel: word.unitLabel
+                        });
+                    }
                 });
             } catch (err) {
                 console.warn(`[InitData] 加载 ${file} 失败:`, err);
             }
+        }
+
+        if (Object.keys(singleWordMap).length) {
+            console.warn('[InitData] ⚠️ 单字词条统计:', singleWordMap);
         }
 
         if (!collectedWords.length) {

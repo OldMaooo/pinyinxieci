@@ -75,6 +75,15 @@ const Storage = {
     },
 
     addWord(word) {
+        const text = (word && word.word) ? String(word.word).trim() : '';
+        if (text.length === 1) {
+            console.warn('[Storage.addWord] ⚠️ 正在写入单字词条', {
+                word: text,
+                grade: word.grade,
+                semester: word.semester,
+                unit: word.unit
+            });
+        }
         const wordBank = this.getWordBank();
         // 检查是否已存在
         const exists = wordBank.find(w => 
@@ -490,6 +499,18 @@ const Storage = {
             builtinVersion: metadata.version || metadata.buildDate || 'unknown',
             addedDate: new Date().toISOString()
         }));
+        normalized.forEach(entry => {
+            const text = entry.word ? String(entry.word).trim() : '';
+            if (text.length === 1) {
+                console.warn('[Storage.importBuiltinWordBank] ⚠️ 导入单字词条', {
+                    word: text,
+                    grade: entry.grade,
+                    semester: entry.semester,
+                    unit: entry.unit,
+                    unitLabel: entry.unitLabel
+                });
+            }
+        });
         const merged = [...userWords, ...normalized];
         this.saveWordBank(merged);
         const versionToken = metadata.version || metadata.buildDate || `len-${normalized.length}`;
