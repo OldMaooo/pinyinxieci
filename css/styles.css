@@ -185,21 +185,21 @@
     touch-action: none;
     display: block;
     
-    /* 响应式尺寸 */
+    /* 响应式尺寸 - 减小尺寸，更适合小孩书写 */
     width: 100%;
-    max-width: 500px;
-    height: 400px;
+    max-width: 350px;
+    height: 300px;
     
     /* iPad和电脑适配 */
     @media (min-width: 768px) {
-        height: 500px;
+        height: 350px;
     }
 }
 
 .canvas-controls { margin-top: 0.5rem; }
 
 @media (max-width: 1024px) {
-    #handwriting-canvas { height: 360px; }
+    #handwriting-canvas { height: 300px; }
 }
 
 .canvas-controls {
@@ -220,12 +220,16 @@
 
 /* 拼音显示区域 - 支持词组显示 */
 #pinyin-display {
-    line-height: 1.4;
+    /* 固定行高，避免出题和判定时布局跳动 */
+    min-height: 2.5em;
+    line-height: 2.5em;
     word-break: keep-all;
     /* 拼音使用系统默认字体，不使用楷体 */
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
     letter-spacing: 0.02em;
     word-spacing: 0.1em;
+    display: flex;
+    align-items: center;
 }
 
 /* 题库范围旧样式（保留基本交互） */
@@ -356,7 +360,7 @@
     }
     
     #handwriting-canvas {
-        height: 300px;
+        height: 280px;
     }
     
     .error-comparison {

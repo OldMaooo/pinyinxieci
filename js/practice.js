@@ -26,6 +26,7 @@ const Practice = {
     lastSubmitTime: 0, // 上次提交时间，用于防重复提交
     lastSubmitWordId: null, // 上次提交的字ID，用于判断是否切换了字
     isSubmitting: false, // 是否正在提交中
+    consecutiveBlockCount: 0, // 连续被拦截的次数，用于容错机制
     
     /**
      * 开始练习
@@ -114,6 +115,15 @@ const Practice = {
             return;
         }
         
+        // 题目去重：按word.id去重，避免同一轮内出现重复题目
+        const uniqueWordsMap = new Map();
+        words.forEach(word => {
+            if (!uniqueWordsMap.has(word.id)) {
+                uniqueWordsMap.set(word.id, word);
+            }
+        });
+        words = Array.from(uniqueWordsMap.values());
+        
         let forcedMode = false;
         if (this.forcedWordCount && this.forcedWordCount > 0) {
             wordCount = this.forcedWordCount;
@@ -132,6 +142,12 @@ const Practice = {
         this.currentWords = words;
         this.currentIndex = 0;
         this.history = []; // 重置历史记录
+        
+        // 重置提交限制相关状态（容错机制）
+        this.lastSubmitTime = 0;
+        this.lastSubmitWordId = null;
+        this.consecutiveBlockCount = 0;
+        this.isSubmitting = false;
         
         // 初始化练习记录
         this.practiceLog = {
@@ -313,7 +329,8 @@ const Practice = {
         }
         
         // 使用textContent确保正确显示（清除之前的图标和HTML）
-        pinyinDisplay.textContent = displayText;
+        // 出题时显示透明占位符，保持布局稳定（与判定时的图标同宽）
+        pinyinDisplay.innerHTML = '<span style="opacity: 0; font-size: 1.2em; margin-right: 0.5rem;">✓</span>' + displayText;
         console.log('[Practice] 显示题目:', JSON.stringify({
             word: word.word,
             pinyin: word.pinyin || '(空)',
@@ -321,10 +338,15 @@ const Practice = {
             wordId: word.id
         }, null, 2));
         
-        // 切换字时重置提交时间（允许新字立即提交）
-        if (this.lastSubmitWordId !== word.id) {
-            this.lastSubmitTime = 0;
-            this.lastSubmitWordId = null;
+        // 切换字时强制重置提交限制（容错机制：确保新字可以立即提交）
+        this.lastSubmitTime = 0;
+        this.lastSubmitWordId = null;
+        this.consecutiveBlockCount = 0; // 重置连续拦截计数
+        this.isSubmitting = false; // 确保提交状态已清除
+        
+        // 记录日志，便于调试
+        if (typeof Debug !== 'undefined') {
+            Debug.log('info', `切换到新题目，已重置提交限制: wordId=${word.id}, word=${word.word}`, 'practice');
         }
         
         // 更新进度
@@ -470,13 +492,40 @@ const Practice = {
         if (this.lastSubmitWordId !== word.id) {
             this.lastSubmitTime = 0;
             this.lastSubmitWordId = word.id;
+            this.consecutiveBlockCount = 0; // 切换字时重置连续拦截计数
         }
         
         const timeSinceLastSubmit = now - this.lastSubmitTime;
         if (timeSinceLastSubmit < 10000 && this.lastSubmitTime > 0 && this.lastSubmitWordId === word.id) {
-            const remainingSeconds = Math.ceil((10000 - timeSinceLastSubmit) / 1000);
-            alert(`请等待 ${remainingSeconds} 秒后再提交`);
-            return;
+            // 容错机制：如果连续3次被拦截，自动清除限制（可能是bug导致）
+            this.consecutiveBlockCount++;
+            if (this.consecutiveBlockCount >= 3) {
+                console.warn('[Practice] 检测到连续3次提交被拦截，自动清除限制（容错机制）', {
+                    wordId: word.id,
+                    word: word.word,
+                    lastSubmitTime: this.lastSubmitTime,
+                    timeSinceLastSubmit: timeSinceLastSubmit,
+                    consecutiveBlockCount: this.consecutiveBlockCount
+                });
+                // 强制清除限制
+                this.lastSubmitTime = 0;
+                this.lastSubmitWordId = null;
+                this.consecutiveBlockCount = 0;
+                // 继续执行提交，不返回
+            } else {
+                const remainingSeconds = Math.ceil((10000 - timeSinceLastSubmit) / 1000);
+                console.warn('[Practice] 提交被拦截', {
+                    wordId: word.id,
+                    word: word.word,
+                    remainingSeconds: remainingSeconds,
+                    consecutiveBlockCount: this.consecutiveBlockCount
+                });
+                alert(`请等待 ${remainingSeconds} 秒后再提交`);
+                return;
+            }
+        } else {
+            // 提交未被拦截，重置连续拦截计数
+            this.consecutiveBlockCount = 0;
         }
         
         // 如果正在提交中，忽略
@@ -638,9 +687,17 @@ const Practice = {
     
     /**
      * 不会（直接显示正确答案，不调用API）
+     * 绕过提交限制，允许随时跳过
      */
     async skipAnswer() {
         const word = this.currentWords[this.currentIndex];
+        
+        // 绕过提交限制：清除限制状态，允许跳过
+        this.lastSubmitTime = 0;
+        this.lastSubmitWordId = null;
+        this.consecutiveBlockCount = 0;
+        this.isSubmitting = false;
+        
         const snapshot = this.mode === 'normal' && Handwriting.hasContent() ? Handwriting.getSnapshot() : null;
         const wordStartTime = this.practiceLog.wordTimes.length > 0 ? 
             Date.now() - (this.practiceLog.wordTimes[this.practiceLog.wordTimes.length - 1] * 1000 + this.practiceLog.startTime) : 
@@ -688,8 +745,8 @@ const Practice = {
     
     /**
      * 显示反馈
-     * 错误时：不显示feedback-area，将正确的字代入拼音显示中（红字）
-     * 正确时：不显示feedback-area，将正确的字代入拼音显示中（绿字）
+     * 统一格式：✓/✗ + 全中文（不显示拼音）
+     * 固定行高，避免布局跳动
      */
     showFeedback(isCorrect, word, recognized) {
         const feedbackArea = document.getElementById('feedback-area');
@@ -698,44 +755,18 @@ const Practice = {
         // 清空反馈区域（不显示红框内容）
         feedbackArea.innerHTML = '';
         
-        // 在拼音显示区域中，将正确的字替换到词组中，并在左边显示对钩/叉
-        if (pinyinDisplay && this._currentDisplayText) {
+        // 统一格式：✓/✗ + 全中文（不显示拼音）
+        if (pinyinDisplay) {
             // 添加对钩或叉的图标
             const icon = isCorrect 
                 ? '<i class="bi bi-check-circle-fill text-success me-2" style="font-size: 1.2em;"></i>' 
                 : '<i class="bi bi-x-circle-fill text-danger me-2" style="font-size: 1.2em;"></i>';
             
-            // 获取当前显示的文本（词组，例如：dú书, 阅dú, 朗dú）
-            let displayText = this._currentDisplayText;
             const correctWord = word.word;
+            const color = isCorrect ? 'text-success' : 'text-danger';
             
-            // 获取字的拼音（用于在词组中查找并替换）
-            let wordPinyin = word.pinyin || '';
-            if (!wordPinyin && typeof WordGroups !== 'undefined' && WordGroups._generatePinyin) {
-                // 如果没有拼音，尝试生成
-                wordPinyin = WordGroups._generatePinyin(correctWord);
-            }
-            
-            // 将词组中的拼音替换为正确的字，并用颜色标记
-            if (wordPinyin && wordPinyin.trim()) {
-                // 转义拼音中的特殊字符，用于正则表达式
-                const escapedPinyin = wordPinyin.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                // 使用正则表达式替换拼音为正确的字
-                // 匹配拼音（前后可能有空格、逗号等分隔符）
-                const pinyinRegex = new RegExp(`\\b${escapedPinyin}\\b`, 'gi');
-                displayText = displayText.replace(pinyinRegex, (match) => {
-                    // 用带颜色的字替换拼音
-                    const color = isCorrect ? 'text-success' : 'text-danger';
-                    return `<span class="${color} fw-bold">${correctWord}</span>`;
-                });
-            } else {
-                // 如果没有拼音，直接在文本末尾添加正确的字
-                const color = isCorrect ? 'text-success' : 'text-danger';
-                displayText = displayText + ` <span class="${color} fw-bold">${correctWord}</span>`;
-            }
-            
-            // 更新拼音显示区域：在左边添加图标，然后显示文本（使用innerHTML以支持HTML标签）
-            pinyinDisplay.innerHTML = icon + displayText;
+            // 统一格式：图标 + 全中文（不显示拼音）
+            pinyinDisplay.innerHTML = icon + `<span class="${color} fw-bold">${correctWord}</span>`;
         }
         
         // 错误时在田字格中显示正确答案
