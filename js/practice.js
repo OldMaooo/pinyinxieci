@@ -192,18 +192,8 @@ const Practice = {
         if (!this.isActive || !this.practiceLog || this.practiceLog.totalWords === 0) return;
         let isDebug = false; try { isDebug = localStorage.getItem('debugMode') === '1'; } catch(e) {}
         try {
-            const log = {
-                totalWords: this.practiceLog.totalWords,
-                correctCount: this.practiceLog.correctCount,
-                errorCount: this.practiceLog.errorCount,
-                totalTime: this.practiceLog.totalTime,
-                averageTime: (this.practiceLog.totalWords > 0 ? this.practiceLog.totalTime / this.practiceLog.totalWords : 0),
-                errorWords: this.practiceLog.errorWords,
-                details: this.practiceLog.details || [],
-                status: 'partial',
-                isDebug
-            };
-            Storage.addPracticeLog(log);
+            // 使用草稿保存而不是写入正式练习记录，避免生成重复的按轮记录
+            this.saveAutosaveDraft();
         } catch(e) {
             console.warn('保存未完成练习失败:', e);
         } finally {
@@ -745,8 +735,8 @@ const Practice = {
     
     /**
      * 显示反馈
-     * 正确：拼音提示改为绿色汉字
-     * 错误：拼音提示改为红色汉字，并在田字格中显示楷体红字
+     * 正确：拼音提示替换为绿色汉字
+     * 错误：拼音提示替换为红色汉字，并在田字格中显示楷体红字
      */
     showFeedback(isCorrect, word, recognized) {
         const feedbackArea = document.getElementById('feedback-area');
@@ -761,8 +751,38 @@ const Practice = {
                 : '<i class="bi bi-x-circle-fill text-danger me-2" style="font-size: 1.2em;"></i>';
             const color = isCorrect ? 'text-success' : 'text-danger';
             
-            // 按要求：答案采用汉字并高亮颜色
-            pinyinDisplay.innerHTML = `${icon}<span class="${color} fw-bold">${word.word}</span>`;
+            // 恢复答题前的词组提示（含拼音），答题后替换为汉字并上色
+            let displayText = this._currentDisplayText || word.pinyin || word.word;
+            const correctWord = word.word;
+            let wordPinyin = word.pinyin || '';
+            if (!wordPinyin && typeof WordGroups !== 'undefined' && WordGroups._generatePinyin) {
+                wordPinyin = WordGroups._generatePinyin(correctWord);
+            }
+            
+            let replaced = false;
+            if (wordPinyin && wordPinyin.trim()) {
+                const escaped = wordPinyin.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regex = new RegExp(`\\b${escaped}\\b`, 'gi');
+                displayText = displayText.replace(regex, () => {
+                    replaced = true;
+                    return `<span class="${color} fw-bold">${correctWord}</span>`;
+                });
+            }
+            
+            if (!replaced) {
+                const escapedWord = correctWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const wordRegex = new RegExp(escapedWord, 'g');
+                displayText = displayText.replace(wordRegex, (match) => {
+                    replaced = true;
+                    return `<span class="${color} fw-bold">${match}</span>`;
+                });
+            }
+            
+            if (!replaced) {
+                displayText = `${displayText} <span class="${color} fw-bold">${correctWord}</span>`;
+            }
+            
+            pinyinDisplay.innerHTML = icon + displayText;
         }
         
         // 错误时在田字格中显示正确答案（楷体红色）

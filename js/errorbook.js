@@ -16,6 +16,7 @@ const ErrorBook = {
         const summaryEl = document.getElementById('errorbook-summary');
         const batchBar = document.getElementById('errorbook-batch-toolbar');
         const onlyWrongToggle = document.getElementById('errorbook-only-wrong');
+        const onlyWrongContainer = onlyWrongToggle ? onlyWrongToggle.closest('.form-check') : null;
         const onlyWrong = !!(onlyWrongToggle && onlyWrongToggle.checked);
 
         if (!errorWords || errorWords.length === 0) {
@@ -34,19 +35,36 @@ const ErrorBook = {
 
         const tabRounds = document.getElementById('tab-rounds');
         const tabSummary = document.getElementById('tab-summary');
+        const updateOnlyWrongVisibility = (show) => {
+            if (onlyWrongContainer) {
+                onlyWrongContainer.style.display = show ? '' : 'none';
+            }
+        };
+
         if (tabRounds && tabSummary) {
             tabRounds.onclick = () => {
                 tabRounds.classList.add('active');
                 tabSummary.classList.remove('active');
                 roundsEl.classList.remove('d-none');
                 summaryEl.classList.add('d-none');
+                updateOnlyWrongVisibility(true);
             };
             tabSummary.onclick = () => {
                 tabSummary.classList.add('active');
                 tabRounds.classList.remove('active');
                 summaryEl.classList.remove('d-none');
                 roundsEl.classList.add('d-none');
+                updateOnlyWrongVisibility(false);
             };
+            const roundsActive = tabRounds.classList.contains('active');
+            if (roundsActive) {
+                roundsEl.classList.remove('d-none');
+                summaryEl.classList.add('d-none');
+            } else {
+                summaryEl.classList.remove('d-none');
+                roundsEl.classList.add('d-none');
+            }
+            updateOnlyWrongVisibility(roundsActive);
         }
 
         const selAll = document.getElementById('errorbook-select-all');
@@ -64,35 +82,72 @@ const ErrorBook = {
 
     },
 
+    initResultToggleControls(root) {
+        if (!root) return;
+        const updateToggleVisual = (btn, isWrong) => {
+            btn.classList.toggle('active', isWrong);
+            const icon = btn.querySelector('.result-toggle-icon');
+            if (icon) {
+                icon.textContent = isWrong ? '✕' : '';
+            }
+            btn.setAttribute('data-is-wrong', isWrong ? 'true' : 'false');
+        };
+
+        root.querySelectorAll('.result-toggle').forEach(btn => {
+            let isWrong = btn.getAttribute('data-is-wrong') === 'true';
+            updateToggleVisual(btn, isWrong);
+            btn.addEventListener('click', () => {
+                isWrong = !isWrong;
+                updateToggleVisual(btn, isWrong);
+                if (typeof Statistics !== 'undefined' && Statistics.updateResultItemStatus) {
+                    const logId = btn.getAttribute('data-log-id');
+                    const itemIdx = parseInt(btn.getAttribute('data-item-idx'), 10);
+                    if (!Number.isNaN(itemIdx)) {
+                        Statistics.updateResultItemStatus(logId, itemIdx, !isWrong);
+                    }
+                }
+            });
+        });
+    },
+
     renderRoundsView(adminMode, opts = {}) {
         const onlyWrong = !!opts.onlyWrong;
         const roundsEl = document.getElementById('errorbook-rounds');
         if (!roundsEl) return;
-        const logs = ((Storage.getPracticeLogsFiltered && Storage.getPracticeLogsFiltered()) || Storage.getPracticeLogs() || []).slice().reverse();
+        const rawLogs = (Storage.getPracticeLogsFiltered && Storage.getPracticeLogsFiltered()) || Storage.getPracticeLogs() || [];
+        const completedLogs = rawLogs.filter(log => log && log.status === 'completed');
+        const logs = completedLogs.slice().reverse();
         const wordBank = Storage.getWordBank();
-        const errorMap = new Map((Storage.getErrorWords() || []).map(e => [e.wordId, e]));
         const roundSelection = this.ensureDefaultRoundSelection(logs);
         const selectedRounds = new Set(roundSelection);
-        const html = logs.map((log, idx) => {
-            const date = new Date(log.date);
-            const timeStr = date.toLocaleString('zh-CN');
-            const acc = log.totalWords > 0 ? Math.round((log.correctCount / log.totalWords) * 100) : 0;
-            const speed = log.totalWords > 0 ? (log.totalTime / log.totalWords).toFixed(1) : '-';
-            const title = `第${logs.length - idx}轮 · ${timeStr} · ${log.totalTime.toFixed(0)}s · 正确${log.correctCount}/${log.totalWords} · 准确率${acc}% · 速度${speed}s/字`;
-            const collapseId = `err-round-${idx}`;
-            const expanded = idx < 5; // 默认展开最近5轮
-            const items = (log.details && log.details.length ? log.details : (log.errorWords||[]).map(id=>({wordId:id,correct:false,snapshot:(errorMap.get(id)?.handwritingSnapshots?.slice(-1)[0]?.snapshot)||''})));
-            const filtered = onlyWrong ? items.filter(d => d.correct === false) : items;
-            const cards = filtered.map(d => {
+        const htmlChunks = [];
+        
+        logs.forEach((log, idx) => {
+            const baseItems = (Array.isArray(log.details) && log.details.length
+                ? log.details.map((item, detailIdx) => ({ ...item, _idx: detailIdx }))
+                : (log.errorWords || []).map((id, detailIdx) => ({ wordId: id, correct: false, snapshot: null, _idx: detailIdx })));
+            const filteredItems = onlyWrong ? baseItems.filter(d => d.correct === false) : baseItems;
+            const cards = filteredItems.map((d) => {
                 const id = d.wordId;
                 const w = wordBank.find(x => x.id === id);
                 if (!w) return '';
-                const ew = errorMap.get(id);
-                const latestSnapshot = d.snapshot || ew?.handwritingSnapshots?.[ew.handwritingSnapshots.length - 1]?.snapshot || '';
+                const latestSnapshot = d.snapshot || '';
                 const groupsText = typeof WordGroups !== 'undefined' ? WordGroups.getDisplayText(w.word, w.pinyin || '') : (w.pinyin || '');
+                const canToggle = Array.isArray(log.details) && log.details.length > 0;
+                const toggleHtml = canToggle ? `
+                    <div class="position-absolute top-0 end-0 me-2 mt-1">
+                        <div class="result-toggle ${d.correct ? '' : 'active'}" 
+                             data-log-id="${log.id}" 
+                             data-word-id="${w.id}"
+                             data-item-idx="${d._idx}"
+                             data-is-wrong="${(!d.correct).toString()}">
+                            <span class="result-toggle-icon">${d.correct ? '' : '✕'}</span>
+                        </div>
+                    </div>` : '';
                 return `
                     <div class="col">
-                        <div class="card h-100 shadow-sm">
+                        <div class="card h-100 shadow-sm position-relative">
+                            ${toggleHtml}
                             <div class="card-body p-2">
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="d-flex align-items-start gap-2">
@@ -110,17 +165,25 @@ const ErrorBook = {
                                     </div>
                                 </div>
                             </div>
-                            ${adminMode ? `
-                            <div class="card-footer bg-transparent border-0 pt-0 d-flex justify-content-between gap-2">
-                                <button class="btn btn-sm btn-primary flex-fill" onclick="ErrorBook.practiceWord('${id}')">练习</button>
-                                <button class="btn btn-sm btn-outline-danger flex-fill" onclick="ErrorBook.removeWord('${id}')">已掌握</button>
-                            </div>` : ''}
                         </div>
                     </div>
                 `;
-            }).join('');
+            }).filter(Boolean);
+            
+            if (!cards.length) {
+                return;
+            }
+            
+            const date = new Date(log.date);
+            const timeStr = date.toLocaleString('zh-CN');
+            const acc = log.totalWords > 0 ? Math.round((log.correctCount / log.totalWords) * 100) : 0;
+            const speed = log.totalWords > 0 ? (log.totalTime / log.totalWords).toFixed(1) : '-';
+            const title = `第${logs.length - idx}轮 · ${timeStr} · ${log.totalTime.toFixed(0)}s · 正确${log.correctCount}/${log.totalWords} · 准确率${acc}% · 速度${speed}s/字`;
+            const collapseId = `err-round-${idx}`;
+            const expanded = idx < 5;
             const checkedAttr = selectedRounds.has(log.id) ? 'checked' : '';
-            return `
+            
+            htmlChunks.push(`
                 <div class="mb-2">
                     <div class="small text-muted d-flex align-items-center gap-2">
                         <input type="checkbox" class="form-check-input error-round-select" data-log-id="${log.id}" ${checkedAttr}>
@@ -129,13 +192,15 @@ const ErrorBook = {
                         </a>
                     </div>
                     <div class="collapse ${expanded ? 'show' : ''} ms-3" id="${collapseId}">
-                        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">${cards || '<div class="text-muted small">本轮无错题</div>'}</div>
+                        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">${cards.join('')}</div>
                     </div>
                 </div>
-            `;
-        }).join('');
-        roundsEl.innerHTML = html || '<div class="text-muted small">暂无练习记录</div>';
+            `);
+        });
+        
+        roundsEl.innerHTML = htmlChunks.length ? htmlChunks.join('') : '<div class="text-muted small">暂无练习记录</div>';
         this.bindRoundSelectionEvents();
+        this.initResultToggleControls(roundsEl);
     },
 
     // 提供给结果页复用的渲染：仅一轮
@@ -183,30 +248,8 @@ const ErrorBook = {
                 </div>
             </div>`;
         }).join('');
-        container.innerHTML = `<div class=\"row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3\">${cards || '<div class=\"text-muted small\">暂无错题</div>'}</div>`;
-        
-        const updateToggleVisual = (btn, isWrong) => {
-            btn.classList.toggle('active', isWrong);
-            const icon = btn.querySelector('.result-toggle-icon');
-            if (icon) {
-                icon.textContent = isWrong ? '✕' : '';
-            }
-            btn.setAttribute('data-is-wrong', isWrong ? 'true' : 'false');
-        };
-        
-        container.querySelectorAll('.result-toggle').forEach(btn => {
-            let isWrong = btn.getAttribute('data-is-wrong') === 'true';
-            updateToggleVisual(btn, isWrong);
-            btn.addEventListener('click', () => {
-                isWrong = !isWrong;
-                updateToggleVisual(btn, isWrong);
-                if (typeof Statistics !== 'undefined' && Statistics.updateResultItemStatus) {
-                    const logId = btn.getAttribute('data-log-id');
-                    const itemIdx = parseInt(btn.getAttribute('data-item-idx'));
-                    Statistics.updateResultItemStatus(logId, itemIdx, !isWrong);
-                }
-            });
-        });
+        container.innerHTML = `<div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">${cards || '<div class="text-muted small">暂无错题</div>'}</div>`;
+        this.initResultToggleControls(container);
     },
 
     renderSummaryView(adminMode) {
@@ -214,9 +257,12 @@ const ErrorBook = {
         if (!summaryEl) return;
         const wordBank = Storage.getWordBank();
         const errors = Storage.getErrorWords() || [];
-        // 排序模式（可选下拉 #errorbook-summary-sort）
-        const sortSelect = document.getElementById('errorbook-summary-sort');
-        const mode = sortSelect ? sortSelect.value : 'count';
+        const previousSelect = document.getElementById('errorbook-summary-sort');
+        const storedSort = (() => {
+            try { return localStorage.getItem('errorbook_summary_sort'); } catch (e) { return null; }
+        })();
+        const mode = previousSelect ? previousSelect.value : (storedSort || 'recent');
+
         const sortedErrors = errors.slice().sort((a,b)=>{
             if (mode === 'recent') {
                 return new Date(b.lastErrorDate||0) - new Date(a.lastErrorDate||0);
@@ -243,17 +289,17 @@ const ErrorBook = {
                 `).join('');
             return `<tr>
                 <td>${adminMode ? `<input type="checkbox" class="form-check-input error-select" data-id="${ew.wordId}">` : ''}</td>
-                <td class="fw-bold">${w.word}</td>
-                <td class="text-muted">${w.pinyin||''}</td>
+                <td class="summary-word">${w.word}</td>
                 <td>${w.unit!==undefined ? w.unit : '-'}</td>
                 <td>${ew.lastErrorDate ? new Date(ew.lastErrorDate).toLocaleString('zh-CN') : '-'}</td>
                 <td><span class="badge bg-danger">${ew.errorCount}</span></td>
                 <td><div class="d-flex flex-wrap">${snaps || '<span class="text-muted small">暂无快照</span>'}</div></td>
             </tr>`;
         }).join('');
+
         const sortOptions = `
-            <option value="count">按错误次数</option>
             <option value="recent">按最近时间</option>
+            <option value="count">按错误次数</option>
             <option value="unit">按单元</option>
         `;
 
@@ -266,18 +312,20 @@ const ErrorBook = {
             </div>
             <table class="table table-sm align-middle">
                 <thead>
-                    <tr><th style="width:40px;"></th><th>字</th><th>拼音</th><th>单元</th><th>最近错误</th><th>错误次数</th><th>错题笔迹</th></tr>
+                    <tr><th style="width:40px;"></th><th>字</th><th>单元</th><th>最近错误</th><th>错误次数</th><th>错题笔迹</th></tr>
                 </thead>
-                <tbody>${rows || '<tr><td colspan="5" class="text-muted small">暂无数据</td></tr>'}</tbody>
+                <tbody>${rows || '<tr><td colspan="6" class="text-muted small">暂无数据</td></tr>'}</tbody>
             </table>
             </div>
         `;
 
-        // 绑定排序变更
         const sel = document.getElementById('errorbook-summary-sort');
         if (sel) {
             sel.value = mode;
-            sel.onchange = () => this.renderSummaryView(adminMode);
+            sel.onchange = () => {
+                try { localStorage.setItem('errorbook_summary_sort', sel.value); } catch (e) {}
+                this.renderSummaryView(adminMode);
+            };
         }
     },
 
@@ -413,7 +461,8 @@ const ErrorBook = {
 
     collectWordIdsFromRounds(roundIds) {
         if (!roundIds || !roundIds.length) return [];
-        const logs = (Storage.getPracticeLogsFiltered ? Storage.getPracticeLogsFiltered() : Storage.getPracticeLogs()) || [];
+        const logs = ((Storage.getPracticeLogsFiltered ? Storage.getPracticeLogsFiltered() : Storage.getPracticeLogs()) || [])
+            .filter(log => log && log.status === 'completed');
         const selectedLogs = logs.filter(log => roundIds.includes(log.id));
         const uniqueWordIds = new Set();
         selectedLogs.forEach(log => {

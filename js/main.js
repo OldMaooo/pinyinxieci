@@ -87,12 +87,10 @@ const Main = {
             }
         });
 
-        // 启动时检查是否存在未提交草稿，入库为 partial 并清除
+        // 启动时检查是否存在未提交草稿，如有则清理，避免重复生成按轮记录
         if (typeof Storage !== 'undefined' && Storage.getPracticeAutosave) {
             const draft = Storage.getPracticeAutosave();
             if (draft && draft.totalWords) {
-                let isDebug = false; try { isDebug = localStorage.getItem('debugMode') === '1'; } catch(e) {}
-                Storage.addPracticeLog({ ...draft, status: 'partial', isDebug });
                 Storage.clearPracticeAutosave && Storage.clearPracticeAutosave();
             }
         }

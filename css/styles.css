@@ -313,6 +313,13 @@
     font-weight: bold;
 }
 
+.summary-word {
+    font-size: 2rem;
+    line-height: 1.2;
+    font-family: var(--kaiti-font-family, 'KaiTi', 'STKaiti', 'BiauKai', serif);
+    font-weight: 600;
+}
+
 .result-toggle {
     width: 32px;
     height: 32px;
