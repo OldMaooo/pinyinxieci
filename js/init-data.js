@@ -98,8 +98,13 @@ const InitData = {
         const currentSignature = typeof Storage.getBuiltinWordBankVersion === 'function'
             ? Storage.getBuiltinWordBankVersion()
             : null;
+        const currentWordCount = typeof Storage.getWordBank === 'function'
+            ? (Storage.getWordBank() || []).length
+            : 0;
+        const shouldForceImport = currentWordCount === 0;
 
-        if (typeof Storage.hasBuiltinWordBank === 'function' &&
+        if (!shouldForceImport &&
+            typeof Storage.hasBuiltinWordBank === 'function' &&
             Storage.hasBuiltinWordBank() &&
             currentSignature === signature) {
             console.log('[InitData] 内置题库版本未变化，跳过导入');

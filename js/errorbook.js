@@ -207,7 +207,7 @@ const ErrorBook = {
                             <div class="card-body p-2">
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="d-flex align-items-start gap-2">
-                                        ${adminMode ? `<input type="checkbox" class="form-check-input mt-2 error-select" data-id="${id}">` : ''}
+                                        <input type="checkbox" class="form-check-input mt-2 error-select" data-id="${id}">
                                         <div>
                                             <div class="fw-bold" style="font-size: 1.5rem; line-height: 1;">${w.word}</div>
                                             <div class="text-muted small mt-1" title="${groupsText}">${groupsText}</div>
@@ -352,7 +352,7 @@ const ErrorBook = {
                     </div>
                 `).join('');
             return `<tr>
-                <td>${adminMode ? `<input type="checkbox" class="form-check-input error-select" data-id="${ew.wordId}">` : ''}</td>
+                <td><input type="checkbox" class="form-check-input error-select" data-id="${ew.wordId}"></td>
                 <td class="summary-word">${w.word}</td>
                 <td>${w.unit!==undefined ? w.unit : '-'}</td>
                 <td>${ew.lastErrorDate ? new Date(ew.lastErrorDate).toLocaleString('zh-CN') : '-'}</td>
@@ -445,20 +445,10 @@ const ErrorBook = {
         alert('功能开发中：需要记录连续正确次数');
     },
 
-    toggleSelectAll(select) {
-        document.querySelectorAll('#errorbook-rounds .error-select, #errorbook-summary .error-select').forEach(cb => {
-            cb.checked = !!select;
+    toggleSelectAll(selectAll) {
+        document.querySelectorAll('.error-select').forEach(cb => {
+            cb.checked = !!selectAll;
         });
-        if (select) {
-            const allIds = Array.from(document.querySelectorAll('.error-round-select'))
-                .map(cb => cb.dataset.logId)
-                .filter(Boolean);
-            this.saveSelectedRounds(allIds);
-            document.querySelectorAll('.error-round-select').forEach(cb => cb.checked = true);
-        } else {
-            this.saveSelectedRounds([]);
-            document.querySelectorAll('.error-round-select').forEach(cb => cb.checked = false);
-        }
         this.updateBatchToolbarState();
     },
 

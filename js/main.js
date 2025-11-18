@@ -148,8 +148,10 @@ const Main = {
             this.showPage(hash);
         });
         
-        // 初始页面：默认进入练习设置页
-        const hash = window.location.hash.substring(1) || 'practice';
+        if (!window.location.hash) {
+            window.location.hash = 'home';
+        }
+        const hash = window.location.hash.substring(1) || 'home';
         this.showPage(hash);
     },
     
@@ -197,6 +199,10 @@ const Main = {
                 link.classList.add('active');
             }
         });
+        
+        if (window.location.hash.substring(1) !== pageId) {
+            window.location.hash = pageId;
+        }
         
         // 特殊处理：如果显示错题本或题库管理，刷新数据
         if (pageId === 'errorbook') {
@@ -282,7 +288,8 @@ const Main = {
         // 首页开始按钮：使用首页设置直接开始练习
         const startHome = document.getElementById('start-practice-btn-home');
         if (startHome) {
-            startHome.addEventListener('click', () => {
+            startHome.addEventListener('click', (event) => {
+                event.preventDefault();
                 // 同步首页设置到练习页输入
                 const countHome = document.getElementById('word-count-input-home');
                 const timeHome = document.getElementById('time-limit-input-home');
@@ -321,7 +328,6 @@ const Main = {
                 }
                 // 直接开始练习
                 if (typeof Practice !== 'undefined') {
-                    // 切换到练习页面
                     this.showPage('practice');
                     Practice.start();
                 }
