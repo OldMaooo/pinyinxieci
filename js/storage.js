@@ -8,10 +8,29 @@ const Storage = {
     KEYS: {
         WORD_BANK: 'wordbank_data',
         PRACTICE_LOGS: 'practice_logs',
+        PRACTICE_LOGS_DEBUG: 'practice_logs_debug',
         ERROR_WORDS: 'error_words',
+        ERROR_WORDS_DEBUG: 'error_words_debug',
         SETTINGS: 'practice_settings',
         PRACTICE_AUTOSAVE: 'practice_autosave',
         BUILTIN_VERSION: 'builtin_wordbank_version'
+    },
+
+    isDebugMode() {
+        try {
+            return localStorage.getItem('debugMode') === '1';
+        } catch (e) {
+            return false;
+        }
+    },
+    
+    _getList(key) {
+        const data = localStorage.getItem(key);
+        return data ? JSON.parse(data) : [];
+    },
+    
+    _saveList(key, list) {
+        localStorage.setItem(key, JSON.stringify(list || []));
     },
 
     /**
@@ -22,11 +41,17 @@ const Storage = {
         if (!this.getWordBank().length) {
             this.saveWordBank([]);
         }
-        if (!this.getPracticeLogs()) {
+        if (!localStorage.getItem(this.KEYS.PRACTICE_LOGS)) {
             this.savePracticeLogs([]);
         }
-        if (!this.getErrorWords()) {
+        if (!localStorage.getItem(this.KEYS.PRACTICE_LOGS_DEBUG)) {
+            this.savePracticeLogs([], { debug: true });
+        }
+        if (!localStorage.getItem(this.KEYS.ERROR_WORDS)) {
             this.saveErrorWords([]);
+        }
+        if (!localStorage.getItem(this.KEYS.ERROR_WORDS_DEBUG)) {
+            this.saveErrorWords([], { debug: true });
         }
         if (!this.getSettings()) {
             this.saveSettings({
@@ -77,9 +102,10 @@ const Storage = {
     /**
      * 练习记录管理
      */
-    getPracticeLogs() {
-        const data = localStorage.getItem(this.KEYS.PRACTICE_LOGS);
-        return data ? JSON.parse(data) : [];
+    getPracticeLogs(options = {}) {
+        const debug = options.debug === true;
+        const key = debug ? this.KEYS.PRACTICE_LOGS_DEBUG : this.KEYS.PRACTICE_LOGS;
+        return this._getList(key);
     },
 
     /**
@@ -89,24 +115,33 @@ const Storage = {
      */
     getPracticeLogsFiltered() {
         const logs = this.getPracticeLogs();
-        let debugOn = false; try { debugOn = localStorage.getItem('debugMode') === '1'; } catch(e) {}
-        if (debugOn) return logs;
-        return logs.filter(l => !l.isDebug);
+        if (!this.isDebugMode()) {
+            return logs;
+        }
+        const debugLogs = this.getPracticeLogs({ debug: true }).map(log => ({
+            ...log,
+            isDebug: true
+        }));
+        return [...logs, ...debugLogs];
     },
 
-    savePracticeLogs(logs) {
-        localStorage.setItem(this.KEYS.PRACTICE_LOGS, JSON.stringify(logs));
+    savePracticeLogs(logs, options = {}) {
+        const debug = options.debug === true;
+        const key = debug ? this.KEYS.PRACTICE_LOGS_DEBUG : this.KEYS.PRACTICE_LOGS;
+        this._saveList(key, logs);
     },
 
     addPracticeLog(log) {
-        const logs = this.getPracticeLogs();
+        const useDebug = log?.isDebug || this.isDebugMode();
+        const logs = this.getPracticeLogs({ debug: useDebug });
         const newLog = {
             id: `log_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
             date: new Date().toISOString(),
-            ...log
+            ...log,
+            isDebug: !!useDebug
         };
         logs.push(newLog);
-        this.savePracticeLogs(logs);
+        this.savePracticeLogs(logs, { debug: useDebug });
         return newLog;
     },
 
@@ -124,17 +159,36 @@ const Storage = {
     /**
      * 错题管理
      */
-    getErrorWords() {
-        const data = localStorage.getItem(this.KEYS.ERROR_WORDS);
-        return data ? JSON.parse(data) : [];
+    _getErrorWordsStore(debug = false) {
+        const key = debug ? this.KEYS.ERROR_WORDS_DEBUG : this.KEYS.ERROR_WORDS;
+        return this._getList(key);
+    },
+    
+    getErrorWords(options = {}) {
+        return this._getErrorWordsStore(options.debug === true);
     },
 
-    saveErrorWords(errorWords) {
-        localStorage.setItem(this.KEYS.ERROR_WORDS, JSON.stringify(errorWords));
+    getErrorWordsFiltered() {
+        const normal = this._getErrorWordsStore(false);
+        if (!this.isDebugMode()) {
+            return normal;
+        }
+        const debugErrors = this._getErrorWordsStore(true).map(err => ({
+            ...err,
+            isDebug: true
+        }));
+        return [...normal, ...debugErrors];
+    },
+
+    saveErrorWords(errorWords, options = {}) {
+        const debug = options.debug === true;
+        const key = debug ? this.KEYS.ERROR_WORDS_DEBUG : this.KEYS.ERROR_WORDS;
+        this._saveList(key, errorWords);
     },
 
     addErrorWord(wordId, word, pinyin, snapshot) {
-        const errorWords = this.getErrorWords();
+        const useDebug = this.isDebugMode();
+        const errorWords = this.getErrorWords({ debug: useDebug });
         let errorWord = errorWords.find(ew => ew.wordId === wordId);
         
         const snapshotData = snapshot ? {
@@ -165,14 +219,25 @@ const Storage = {
             errorWords.push(errorWord);
         }
         
-        this.saveErrorWords(errorWords);
+        this.saveErrorWords(errorWords, { debug: useDebug });
         return errorWord;
     },
 
     removeErrorWord(wordId) {
+        let updated = false;
         const errorWords = this.getErrorWords();
         const filtered = errorWords.filter(ew => ew.wordId !== wordId);
-        this.saveErrorWords(filtered);
+        if (filtered.length !== errorWords.length) {
+            this.saveErrorWords(filtered);
+            updated = true;
+        }
+        const debugErrors = this.getErrorWords({ debug: true });
+        const filteredDebug = debugErrors.filter(ew => ew.wordId !== wordId);
+        if (filteredDebug.length !== debugErrors.length) {
+            this.saveErrorWords(filteredDebug, { debug: true });
+            updated = true;
+        }
+        return updated;
     },
 
     /**
@@ -196,7 +261,9 @@ const Storage = {
             exportDate: new Date().toISOString(),
             wordBank: this.getWordBank(),
             practiceLogs: this.getPracticeLogs(),
+            practiceLogsDebug: this.getPracticeLogs({ debug: true }),
             errorWords: this.getErrorWords(),
+            errorWordsDebug: this.getErrorWords({ debug: true }),
             settings: this.getSettings()
         };
     },
@@ -249,6 +316,19 @@ const Storage = {
                 this.savePracticeLogs(combinedLogs);
             }
             
+            if (data.practiceLogsDebug && Array.isArray(data.practiceLogsDebug)) {
+                const existingDebugLogs = this.getPracticeLogs({ debug: true });
+                const combinedDebugLogs = [...existingDebugLogs];
+                const debugIds = new Set(existingDebugLogs.map(log => log.id));
+                data.practiceLogsDebug.forEach(log => {
+                    if (!debugIds.has(log.id)) {
+                        combinedDebugLogs.push({ ...log, isDebug: true });
+                    }
+                });
+                combinedDebugLogs.sort((a, b) => new Date(a.date) - new Date(b.date));
+                this.savePracticeLogs(combinedDebugLogs, { debug: true });
+            }
+            
             // 合并错题（合并相同字的错题记录）
             if (data.errorWords && Array.isArray(data.errorWords)) {
                 const existingErrors = this.getErrorWords();
@@ -288,6 +368,36 @@ const Storage = {
                 
                 this.saveErrorWords(Array.from(errorMap.values()));
             }
+            
+            if (data.errorWordsDebug && Array.isArray(data.errorWordsDebug)) {
+                const existingDebugErrors = this.getErrorWords({ debug: true });
+                const errorMapDebug = new Map(existingDebugErrors.map(error => [error.wordId, error]));
+                
+                data.errorWordsDebug.forEach(error => {
+                    const existing = errorMapDebug.get(error.wordId);
+                    if (existing) {
+                        existing.errorCount = Math.max(existing.errorCount, error.errorCount);
+                        if (error.lastErrorDate && new Date(error.lastErrorDate) > new Date(existing.lastErrorDate)) {
+                            existing.lastErrorDate = error.lastErrorDate;
+                        }
+                        if (error.handwritingSnapshots) {
+                            existing.handwritingSnapshots = existing.handwritingSnapshots || [];
+                            const snapshotMap = new Map();
+                            existing.handwritingSnapshots.forEach(s => snapshotMap.set(s.date, s));
+                            error.handwritingSnapshots.forEach(s => {
+                                if (!snapshotMap.has(s.date)) {
+                                    snapshotMap.set(s.date, s);
+                                }
+                            });
+                            existing.handwritingSnapshots = Array.from(snapshotMap.values());
+                        }
+                    } else {
+                        errorMapDebug.set(error.wordId, error);
+                    }
+                });
+                
+                this.saveErrorWords(Array.from(errorMapDebug.values()), { debug: true });
+            }
         } else {
             // 替换模式：清空现有数据，使用新数据
             if (data.wordBank && Array.isArray(data.wordBank)) {
@@ -295,9 +405,23 @@ const Storage = {
             }
             if (data.practiceLogs && Array.isArray(data.practiceLogs)) {
                 this.savePracticeLogs(data.practiceLogs);
+            } else {
+                this.savePracticeLogs([]);
+            }
+            if (data.practiceLogsDebug && Array.isArray(data.practiceLogsDebug)) {
+                this.savePracticeLogs(data.practiceLogsDebug, { debug: true });
+            } else {
+                this.savePracticeLogs([], { debug: true });
             }
             if (data.errorWords && Array.isArray(data.errorWords)) {
                 this.saveErrorWords(data.errorWords);
+            } else {
+                this.saveErrorWords([]);
+            }
+            if (data.errorWordsDebug && Array.isArray(data.errorWordsDebug)) {
+                this.saveErrorWords(data.errorWordsDebug, { debug: true });
+            } else {
+                this.saveErrorWords([], { debug: true });
             }
         }
         

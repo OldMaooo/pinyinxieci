@@ -9,7 +9,7 @@ const ErrorBook = {
      * 加载错题本
      */
     load() {
-        const errorWords = Storage.getErrorWords();
+        const errorWords = Storage.getErrorWordsFiltered();
         const empty = document.getElementById('errorbook-empty');
         const adminMode = localStorage.getItem('adminMode') === '1';
         const roundsEl = document.getElementById('errorbook-rounds');
@@ -20,25 +20,26 @@ const ErrorBook = {
         const onlyWrongToggle = document.getElementById('errorbook-only-wrong');
         const onlyWrongContainer = onlyWrongToggle ? onlyWrongToggle.closest('.form-check') : null;
         const onlyWrong = !!(onlyWrongToggle && onlyWrongToggle.checked);
+        const hasErrors = Array.isArray(errorWords) && errorWords.length > 0;
 
-        if (!errorWords || errorWords.length === 0) {
+        if (toolbar) {
+            toolbar.classList.remove('d-none');
+            toolbar.classList.toggle('opacity-50', !hasErrors);
+        }
+        if (selectionGroup) {
+            selectionGroup.querySelectorAll('button').forEach(btn => btn.disabled = !hasErrors);
+        }
+        if (!hasErrors) {
             if (roundsEl) roundsEl.innerHTML = '';
             if (summaryEl) summaryEl.innerHTML = '';
-            if (toolbar) toolbar.classList.add('d-none');
+            if (batchActions) batchActions.style.display = 'none';
             empty.style.display = 'block';
+            this.updateErrorCount(0);
+            this.updateBatchToolbarState();
             return;
         }
 
         empty.style.display = 'none';
-        if (toolbar) {
-            toolbar.classList.remove('d-none');
-        }
-        if (selectionGroup) {
-            selectionGroup.style.display = adminMode ? '' : 'none';
-        }
-        if (!adminMode && batchActions) {
-            batchActions.style.display = 'none';
-        }
         this.updateErrorCount(errorWords.length);
 
         this.renderRoundsView(adminMode, { onlyWrong });
@@ -53,29 +54,17 @@ const ErrorBook = {
         };
 
         if (tabRounds && tabSummary) {
-            tabRounds.onclick = () => {
-                tabRounds.classList.add('active');
-                tabSummary.classList.remove('active');
-                roundsEl.classList.remove('d-none');
-                summaryEl.classList.add('d-none');
-                updateOnlyWrongVisibility(true);
+            const applyTabState = (showRounds) => {
+                tabRounds.classList.toggle('active', showRounds);
+                tabSummary.classList.toggle('active', !showRounds);
+                roundsEl.classList.toggle('d-none', !showRounds);
+                summaryEl.classList.toggle('d-none', showRounds);
+                updateOnlyWrongVisibility(showRounds);
             };
-            tabSummary.onclick = () => {
-                tabSummary.classList.add('active');
-                tabRounds.classList.remove('active');
-                summaryEl.classList.remove('d-none');
-                roundsEl.classList.add('d-none');
-                updateOnlyWrongVisibility(false);
-            };
-            const roundsActive = tabRounds.classList.contains('active');
-            if (roundsActive) {
-                roundsEl.classList.remove('d-none');
-                summaryEl.classList.add('d-none');
-            } else {
-                summaryEl.classList.remove('d-none');
-                roundsEl.classList.add('d-none');
-            }
-            updateOnlyWrongVisibility(roundsActive);
+            tabRounds.onclick = () => applyTabState(true);
+            tabSummary.onclick = () => applyTabState(false);
+            const initialRoundsActive = tabRounds.classList.contains('active') || !tabSummary.classList.contains('active');
+            applyTabState(initialRoundsActive);
         }
 
         const selAll = document.getElementById('errorbook-select-all');
@@ -142,14 +131,15 @@ const ErrorBook = {
 
     updateBatchToolbarState() {
         const actionGroup = document.getElementById('errorbook-batch-action-group');
+        const selectedBadge = document.getElementById('errorbook-selected-count');
         if (!actionGroup) return;
-        const adminMode = localStorage.getItem('adminMode') === '1';
-        if (!adminMode) {
-            actionGroup.style.display = 'none';
-            return;
-        }
         const selectedCount = document.querySelectorAll('.error-select:checked').length;
         actionGroup.style.display = selectedCount > 0 ? 'flex' : 'none';
+        if (selectedBadge) {
+            const countEl = selectedBadge.querySelector('strong');
+            if (countEl) countEl.textContent = selectedCount;
+            selectedBadge.classList.toggle('d-none', selectedCount === 0);
+        }
     },
 
     updateErrorCount(count) {
@@ -263,7 +253,7 @@ const ErrorBook = {
         const container = document.getElementById('error-words-list');
         if (!container || !log) return;
         const wordBank = Storage.getWordBank();
-        const errorMap = new Map((Storage.getErrorWords() || []).map(e => [e.wordId, e]));
+        const errorMap = new Map((Storage.getErrorWordsFiltered() || []).map(e => [e.wordId, e]));
         const items = (log.details && log.details.length
             ? log.details
             : (log.errorWords||[]).map(id=>({wordId:id,correct:false,snapshot:(errorMap.get(id)?.handwritingSnapshots?.slice(-1)[0]?.snapshot)||''})));
@@ -318,7 +308,7 @@ const ErrorBook = {
         const summaryEl = document.getElementById('errorbook-summary');
         if (!summaryEl) return;
         const wordBank = Storage.getWordBank();
-        const errors = Storage.getErrorWords() || [];
+        const errors = Storage.getErrorWordsFiltered() || [];
         const previousSelect = document.getElementById('errorbook-summary-sort');
         const storedSort = (() => {
             try { return localStorage.getItem('errorbook_summary_sort'); } catch (e) { return null; }

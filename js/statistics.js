@@ -12,7 +12,7 @@ const Statistics = {
     updateHomeStats() {
         const wordBank = Storage.getWordBank();
         const logs = (Storage.getPracticeLogsFiltered && Storage.getPracticeLogsFiltered()) || Storage.getPracticeLogs();
-        const errorWords = Storage.getErrorWords();
+        const errorWords = Storage.getErrorWordsFiltered();
         
         // 总词数
         document.getElementById('stat-total-words').textContent = wordBank.length;
@@ -114,7 +114,7 @@ const Statistics = {
         }
         
         const wordBank = Storage.getWordBank();
-        const errorWords = Storage.getErrorWords();
+        const errorWords = Storage.getErrorWordsFiltered();
         
         let html = '<h5 class="mb-3">错题列表：</h5>';
         

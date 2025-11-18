@@ -137,7 +137,7 @@ const Practice = {
                 localStorage.removeItem('practice_error_word_ids');
             }
         } else if (errorOnly) {
-            const errorWords = Storage.getErrorWords();
+            const errorWords = Storage.getErrorWordsFiltered();
             const wordBank = Storage.getWordBank();
             words = wordBank.filter(w => errorWords.some(ew => ew.wordId === w.id));
             // 重置标记
@@ -291,7 +291,7 @@ const Practice = {
         
         switch (range) {
             case 'error':
-                const errorWords = Storage.getErrorWords();
+                const errorWords = Storage.getErrorWordsFiltered();
                 return wordBank.filter(w => errorWords.some(ew => ew.wordId === w.id));
             case 'grade':
                 // TODO: 实现按年级筛选

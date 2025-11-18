@@ -6,6 +6,9 @@
 const WordGroups = {
     // 词组库（从外部文件加载）
     groups: {},
+    _fallbackCache: {},
+    _missingScanQueued: false,
+    _missingLogged: new Set(),
     
     // 加载状态
     _loaded: false,
@@ -63,6 +66,7 @@ const WordGroups = {
             this._loaded = true;
             this._loading = false;
             console.log(`[WordGroups] 词组数据加载完成，共 ${Object.keys(this.groups).length} 个字`);
+            this.scheduleMissingScan();
         });
         
         return this._loadPromise;
@@ -72,7 +76,13 @@ const WordGroups = {
      * 获取字的词组
      */
     getGroups(word) {
-        return this.groups[word] || [];
+        const normalized = String(word || '');
+        const direct = this.groups[normalized];
+        if (direct && direct.length > 0) {
+            return direct;
+        }
+        const fallback = this._getFallbackGroups(normalized);
+        return fallback || [];
     },
     
     /**
@@ -199,5 +209,76 @@ const WordGroups = {
         const result = processedGroups.join(', ');
         console.log('[WordGroups.getDisplayText] 有拼音，替换后:', result);
         return result;
+    },
+    
+    _getFallbackGroups(word) {
+        if (!word || word.length !== 1) return [];
+        if (this._fallbackCache[word]) {
+            return this._fallbackCache[word];
+        }
+        if (typeof Storage === 'undefined' || typeof Storage.getWordBank !== 'function') {
+            return [];
+        }
+        const wordBank = Storage.getWordBank() || [];
+        const seen = new Set();
+        const matches = [];
+        for (const item of wordBank) {
+            const entry = typeof item?.word === 'string' ? item.word.trim() : '';
+            if (!entry || entry.length < 2) continue;
+            if (entry === word) continue;
+            if (!entry.includes(word)) continue;
+            if (seen.has(entry)) continue;
+            seen.add(entry);
+            matches.push(entry);
+            if (matches.length >= 6) break;
+        }
+        this._fallbackCache[word] = matches;
+        if (matches.length === 0) {
+            this._logMissingWord(word);
+        } else {
+            console.debug(`[WordGroups] "${word}" 使用自动提示:`, matches.join('、'));
+        }
+        return matches;
+    },
+    
+    _logMissingWord(word) {
+        if (this._missingLogged.has(word)) return;
+        this._missingLogged.add(word);
+        console.warn(`[WordGroups] "${word}" 缺少提示词组，且题库中未找到包含该字的词语，请补充词组数据。`);
+    },
+    
+    scheduleMissingScan() {
+        if (this._missingScanQueued) return;
+        this._missingScanQueued = true;
+        setTimeout(() => this._runMissingScan(), 1200);
+    },
+    
+    _runMissingScan() {
+        this._missingScanQueued = false;
+        if (typeof Storage === 'undefined' || typeof Storage.getWordBank !== 'function') {
+            return;
+        }
+        const wordBank = Storage.getWordBank() || [];
+        const singles = new Set();
+        wordBank.forEach(item => {
+            const word = typeof item?.word === 'string' ? item.word.trim() : '';
+            if (word.length === 1) {
+                singles.add(word);
+            }
+        });
+        const missing = [];
+        singles.forEach(char => {
+            const definedGroups = this.groups[char];
+            if (definedGroups && definedGroups.length > 0) return;
+            const fallback = this._getFallbackGroups(char);
+            if (!fallback.length) {
+                missing.push(char);
+            }
+        });
+        if (missing.length) {
+            console.warn(`[WordGroups] 发现 ${missing.length} 个单字仍缺少提示词组:`, missing.slice(0, 80).join('、'));
+        } else {
+            console.log('[WordGroups] 单字提示词组检查完成，未发现缺失项');
+        }
     }
 };

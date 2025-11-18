@@ -1,6 +1,13 @@
 /* 楷体字体栈定义 */
 :root {
     --kaiti-font-family: 'KaiTi_GB2312', 'KaiTi', 'Kaiti SC', '楷体', 'STKaiti', 'STKaiti SC', 'SimKai', serif;
+    --results-action-height: 190px;
+}
+
+@media (max-width: 576px) {
+    :root {
+        --results-action-height: 220px;
+    }
 }
 
 /* 应用楷体字体的元素 */
@@ -324,7 +331,9 @@
 }
 
 .results-action-bar {
+    position: -webkit-sticky;
     position: sticky;
+    top: calc(100vh - var(--results-action-height));
     bottom: 1rem;
     display: flex;
     flex-wrap: wrap;
@@ -344,6 +353,7 @@
 
 @media (max-width: 576px) {
     .results-action-bar {
+        top: calc(100vh - var(--results-action-height));
         bottom: 0.5rem;
         padding: 0.75rem;
         border-radius: 0.75rem;
@@ -363,6 +373,12 @@
 
 .errorbook-toolbar .btn-group .btn {
     min-width: 96px;
+}
+
+.badge-soft-primary {
+    background-color: rgba(13, 110, 253, 0.12);
+    color: #0d6efd;
+    font-weight: 600;
 }
 
 .result-toggle {
