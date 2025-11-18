@@ -137,17 +137,20 @@ const Storage = {
         const errorWords = this.getErrorWords();
         let errorWord = errorWords.find(ew => ew.wordId === wordId);
         
-        const snapshotData = {
+        const snapshotData = snapshot ? {
             practiceId: `log_${Date.now()}`,
             snapshot: snapshot,
             date: new Date().toISOString()
-        };
+        } : null;
 
         if (errorWord) {
             // 更新已有错题
             errorWord.lastErrorDate = new Date().toISOString();
             errorWord.errorCount += 1;
-            errorWord.handwritingSnapshots.push(snapshotData);
+            if (snapshotData) {
+                errorWord.handwritingSnapshots = errorWord.handwritingSnapshots || [];
+                errorWord.handwritingSnapshots.push(snapshotData);
+            }
         } else {
             // 创建新错题记录
             errorWord = {
@@ -157,7 +160,7 @@ const Storage = {
                 firstErrorDate: new Date().toISOString(),
                 lastErrorDate: new Date().toISOString(),
                 errorCount: 1,
-                handwritingSnapshots: [snapshotData]
+                handwritingSnapshots: snapshotData ? [snapshotData] : []
             };
             errorWords.push(errorWord);
         }

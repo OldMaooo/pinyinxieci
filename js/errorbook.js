@@ -231,9 +231,16 @@ const ErrorBook = {
         const rows = sortedErrors.map(ew => {
             const w = wordBank.find(x=>x.id===ew.wordId);
             if (!w) return '';
-            const snaps = (ew.handwritingSnapshots || []).slice().reverse().map(s => `
-                <div class="word-box me-1 mb-1"><img class="snapshot-invert" src="${s.snapshot}" style="max-width: 90%; max-height: 90%; object-fit: contain;"></div>
-            `).join('');
+            const sortedSnapshots = (ew.handwritingSnapshots || [])
+                .slice()
+                .sort((a,b) => new Date(b?.date || 0) - new Date(a?.date || 0));
+            const snaps = sortedSnapshots
+                .filter(s => s && s.snapshot)
+                .map(s => `
+                    <div class="word-box me-1 mb-1">
+                        <img class="snapshot-invert" src="${s.snapshot}" style="max-width: 90%; max-height: 90%; object-fit: contain;">
+                    </div>
+                `).join('');
             return `<tr>
                 <td>${adminMode ? `<input type="checkbox" class="form-check-input error-select" data-id="${ew.wordId}">` : ''}</td>
                 <td class="fw-bold">${w.word}</td>
@@ -244,9 +251,19 @@ const ErrorBook = {
                 <td><div class="d-flex flex-wrap">${snaps || '<span class="text-muted small">暂无快照</span>'}</div></td>
             </tr>`;
         }).join('');
+        const sortOptions = `
+            <option value="count">按错误次数</option>
+            <option value="recent">按最近时间</option>
+            <option value="unit">按单元</option>
+        `;
+
         summaryEl.innerHTML = `
             <div class="table-responsive">
-            <div class="d-flex justify-content-end mb-2">${sortSelect ? '' : '<select id="errorbook-summary-sort" class="form-select form-select-sm" style="width:160px"><option value="count">按错误次数</option><option value="recent">按最近时间</option><option value="unit">按单元</option></select>'}</div>
+            <div class="d-flex justify-content-end mb-2">
+                <select id="errorbook-summary-sort" class="form-select form-select-sm" style="width:160px">
+                    ${sortOptions}
+                </select>
+            </div>
             <table class="table table-sm align-middle">
                 <thead>
                     <tr><th style="width:40px;"></th><th>字</th><th>拼音</th><th>单元</th><th>最近错误</th><th>错误次数</th><th>错题笔迹</th></tr>
@@ -258,7 +275,10 @@ const ErrorBook = {
 
         // 绑定排序变更
         const sel = document.getElementById('errorbook-summary-sort');
-        if (sel) sel.onchange = () => this.renderSummaryView(adminMode);
+        if (sel) {
+            sel.value = mode;
+            sel.onchange = () => this.renderSummaryView(adminMode);
+        }
     },
 
     /**

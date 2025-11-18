@@ -745,8 +745,8 @@ const Practice = {
     
     /**
      * 显示反馈
-     * 统一格式：✓/✗ + 全中文（不显示拼音）
-     * 固定行高，避免布局跳动
+     * 正确：拼音提示改为绿色汉字
+     * 错误：拼音提示改为红色汉字，并在田字格中显示楷体红字
      */
     showFeedback(isCorrect, word, recognized) {
         const feedbackArea = document.getElementById('feedback-area');
@@ -755,21 +755,17 @@ const Practice = {
         // 清空反馈区域（不显示红框内容）
         feedbackArea.innerHTML = '';
         
-        // 统一格式：✓/✗ + 全中文（不显示拼音）
         if (pinyinDisplay) {
-            // 添加对钩或叉的图标
             const icon = isCorrect 
                 ? '<i class="bi bi-check-circle-fill text-success me-2" style="font-size: 1.2em;"></i>' 
                 : '<i class="bi bi-x-circle-fill text-danger me-2" style="font-size: 1.2em;"></i>';
-            
-            const correctWord = word.word;
             const color = isCorrect ? 'text-success' : 'text-danger';
             
-            // 统一格式：图标 + 全中文（不显示拼音）
-            pinyinDisplay.innerHTML = icon + `<span class="${color} fw-bold">${correctWord}</span>`;
+            // 按要求：答案采用汉字并高亮颜色
+            pinyinDisplay.innerHTML = `${icon}<span class="${color} fw-bold">${word.word}</span>`;
         }
         
-        // 错误时在田字格中显示正确答案
+        // 错误时在田字格中显示正确答案（楷体红色）
         if (!isCorrect && typeof Handwriting !== 'undefined' && Handwriting.drawCorrectWord) {
             Handwriting.drawCorrectWord(word.word);
         }
@@ -781,9 +777,9 @@ const Practice = {
     async recordError(word, snapshot) {
         this.practiceLog.errorWords.push(word.id);
         
-        // 保存到错题本
-        if (snapshot) {
-            Storage.addErrorWord(word.id, word.word, word.pinyin || '', snapshot);
+        // 保存到错题本（无论是否有快照，都记录错题）
+        if (typeof Storage !== 'undefined' && Storage.addErrorWord) {
+            Storage.addErrorWord(word.id, word.word, word.pinyin || '', snapshot || null);
         }
     },
     
