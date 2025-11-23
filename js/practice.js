@@ -1092,7 +1092,9 @@ const Practice = {
             
             if (wordPinyin && wordPinyin.trim()) {
                 const escaped = wordPinyin.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                const regex = new RegExp(`\\b${escaped}\\b`, 'gi');
+                // 不使用单词边界\b，因为中文字符后可能跟着拼音，拼音后可能跟着中文字符
+                // 改用更灵活的匹配：拼音前后不能是字母数字（避免匹配到其他拼音的一部分）
+                const regex = new RegExp(`(?<=[^a-zA-Z0-9]|^)${escaped}(?=[^a-zA-Z0-9]|$)`, 'gi');
                 const beforeReplace = displayText;
                 displayText = displayText.replace(regex, () => {
                     replacements++;
@@ -1100,6 +1102,17 @@ const Practice = {
                 });
                 if (beforeReplace !== displayText) {
                     console.log('[Practice.showFeedback] 通过拼音匹配替换成功');
+                } else {
+                    // 如果单词边界匹配失败，尝试不使用边界限制（更宽松的匹配）
+                    const regex2 = new RegExp(escaped, 'gi');
+                    const beforeReplace2 = displayText;
+                    displayText = displayText.replace(regex2, () => {
+                        replacements++;
+                        return wrapText();
+                    });
+                    if (beforeReplace2 !== displayText) {
+                        console.log('[Practice.showFeedback] 通过拼音匹配替换成功（宽松模式）');
+                    }
                 }
             }
             
