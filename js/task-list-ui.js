@@ -679,6 +679,34 @@ const TaskListUI = {
             });
         });
         
+        // 卡片视图中的任务卡片拖拽（只有练习任务可拖拽）
+        document.querySelectorAll('.task-card-item .task-card.practice-task').forEach(item => {
+            const cardItem = item.closest('.task-card-item');
+            if (!cardItem) return;
+            
+            cardItem.setAttribute('draggable', 'true');
+            cardItem.style.cursor = 'move';
+            
+            cardItem.addEventListener('dragstart', (e) => {
+                const taskId = cardItem.getAttribute('data-task-id');
+                const task = TaskList.getTask(taskId);
+                
+                // 只有练习任务可拖拽
+                if (task && task.type === TaskList.TYPE.PRACTICE) {
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', taskId);
+                    e.dataTransfer.setData('source', 'cards');
+                    cardItem.classList.add('dragging');
+                } else {
+                    e.preventDefault();
+                }
+            });
+            
+            cardItem.addEventListener('dragend', (e) => {
+                cardItem.classList.remove('dragging');
+            });
+        });
+        
         // 日历日期拖放
         document.querySelectorAll('.calendar-day[data-droppable="true"]').forEach(day => {
             day.addEventListener('dragover', (e) => {
@@ -715,7 +743,39 @@ const TaskListUI = {
                         this.scheduleTask(taskId, targetDate);
                     }
                     
-                    // 重新渲染日历
+                    // 重新渲染
+                    setTimeout(() => {
+                        this.load();
+                    }, 100);
+                }
+            });
+        });
+        
+        // 卡片视图中的日期区域拖放（可以拖到其他卡片上更改日期）
+        document.querySelectorAll('.task-card-item').forEach(cardItem => {
+            cardItem.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                cardItem.classList.add('drag-over');
+            });
+            
+            cardItem.addEventListener('dragleave', (e) => {
+                cardItem.classList.remove('drag-over');
+            });
+            
+            cardItem.addEventListener('drop', (e) => {
+                e.preventDefault();
+                cardItem.classList.remove('drag-over');
+                
+                const taskId = e.dataTransfer.getData('text/plain');
+                const source = e.dataTransfer.getData('source');
+                const targetDate = cardItem.getAttribute('data-date');
+                
+                if (taskId && targetDate && source !== 'cards') {
+                    // 从待排期或其他地方拖过来的任务，排期到目标日期
+                    this.scheduleTask(taskId, targetDate);
+                    
+                    // 重新渲染
                     setTimeout(() => {
                         this.load();
                     }, 100);
