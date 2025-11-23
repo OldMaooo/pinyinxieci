@@ -400,6 +400,28 @@
             </div>
         </section>
 
+        <!-- 任务详情弹窗 -->
+        <div class="modal fade" id="task-detail-modal" tabindex="-1">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="bi bi-list-check"></i> 任务详情</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="task-detail-content">
+                            <div class="text-center text-muted py-3">
+                                <span class="spinner-border spinner-border-sm me-2"></span>加载中...
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- 题库管理页面 -->
         <!-- 任务清单 -->
         <section id="tasklist" class="page-section d-none">

@@ -137,7 +137,7 @@ const TaskListUI = {
         
         return `
             <div class="col-md-6 col-lg-4">
-                <div class="card task-card" data-task-id="${task.id}">
+                <div class="card task-card" data-task-id="${task.id}" style="cursor: pointer;" title="点击查看任务详情">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start mb-2">
                             <div class="flex-grow-1">
@@ -204,6 +204,18 @@ const TaskListUI = {
      * 绑定任务卡片事件
      */
     bindTaskCardEvents() {
+        // 任务卡片点击事件（查看详情）
+        document.querySelectorAll('.task-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                // 如果点击的是按钮，不触发卡片点击
+                if (e.target.closest('button') || e.target.closest('a')) {
+                    return;
+                }
+                const taskId = card.getAttribute('data-task-id');
+                this.showTaskDetail(taskId);
+            });
+        });
+        
         // 删除按钮（需要家长验证）
         document.querySelectorAll('.task-delete-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -242,6 +254,175 @@ const TaskListUI = {
                 }
             });
         });
+    },
+    
+    /**
+     * 显示任务详情
+     */
+    showTaskDetail(taskId) {
+        const task = TaskList.getTask(taskId);
+        if (!task) {
+            alert('任务不存在');
+            return;
+        }
+        
+        const modal = new bootstrap.Modal(document.getElementById('task-detail-modal'));
+        const contentEl = document.getElementById('task-detail-content');
+        
+        // 显示加载中
+        contentEl.innerHTML = '<div class="text-center text-muted py-3"><span class="spinner-border spinner-border-sm me-2"></span>加载中...</div>';
+        modal.show();
+        
+        // 获取任务包含的题目
+        const wordBank = Storage.getWordBank();
+        const taskWords = wordBank.filter(w => task.wordIds.includes(w.id));
+        
+        // 按学期和单元分组
+        const grouped = this.groupWordsBySemesterUnit(taskWords);
+        const semesters = this.sortSemesters(Object.keys(grouped));
+        
+        // 渲染详情内容
+        let html = `
+            <div class="mb-3">
+                <h6>任务信息</h6>
+                <div class="small text-muted">
+                    <div>任务名称: <strong>${this.escapeHtml(task.name)}</strong></div>
+                    <div>题目总数: ${task.progress.total}</div>
+                    <div>已完成: ${task.progress.completed}</div>
+                    <div>正确: ${task.progress.correct}</div>
+                    <div>错误: ${task.progress.errors.length}</div>
+                </div>
+            </div>
+            <hr>
+            <h6 class="mb-3">题目列表</h6>
+        `;
+        
+        if (semesters.length === 0) {
+            html += '<div class="text-center text-muted py-3">暂无题目</div>';
+        } else {
+            semesters.forEach(semester => {
+                html += `<div class="mb-4">`;
+                html += `<h6 class="mb-2 text-primary">${semester}</h6>`;
+                
+                const units = this.sortUnits(grouped[semester]);
+                units.forEach(unitKey => {
+                    const words = grouped[semester][unitKey];
+                    const unitLabel = words.unitLabel || this.formatUnitLabel(unitKey);
+                    
+                    html += `<div class="mb-3 ps-3 border-start border-2">`;
+                    html += `<div class="fw-bold mb-2">${unitLabel} <span class="text-muted small">(${words.length} 个字)</span></div>`;
+                    html += `<div class="d-flex flex-wrap gap-2">`;
+                    
+                    words.forEach(word => {
+                        // 检查是否在错误列表中
+                        const isError = task.progress.errors.includes(word.id);
+                        const tagClass = isError ? 'word-tag-error' : 'word-tag word-tag-default';
+                        html += `<span class="word-tag ${tagClass}">${word.word}</span>`;
+                    });
+                    
+                    html += `</div></div>`;
+                });
+                
+                html += `</div>`;
+            });
+        }
+        
+        contentEl.innerHTML = html;
+    },
+    
+    /**
+     * 按学期和单元分组题目（复用PracticeRange的逻辑）
+     */
+    groupWordsBySemesterUnit(words) {
+        if (typeof PracticeRange !== 'undefined' && PracticeRange.groupWordsBySemesterUnit) {
+            return PracticeRange.groupWordsBySemesterUnit(words);
+        }
+        
+        // 降级方案
+        const grouped = {};
+        words.forEach(word => {
+            const gradeLabel = this.formatGradeLabel(word.grade);
+            const semesterLabel = this.formatSemesterLabel(word.semester);
+            const semesterKey = `${gradeLabel}${semesterLabel}`;
+            const unitLabel = word.unitLabel || this.formatUnitLabel(word.unit);
+            const unitKey = unitLabel || '未分类单元';
+            
+            if (!grouped[semesterKey]) grouped[semesterKey] = {};
+            if (!grouped[semesterKey][unitKey]) {
+                grouped[semesterKey][unitKey] = [];
+            }
+            grouped[semesterKey][unitKey].push(word);
+        });
+        return grouped;
+    },
+    
+    /**
+     * 排序学期（复用PracticeRange的逻辑）
+     */
+    sortSemesters(semesters) {
+        if (typeof PracticeRange !== 'undefined' && PracticeRange.sortSemesters) {
+            return PracticeRange.sortSemesters(semesters);
+        }
+        
+        // 降级方案
+        return semesters.sort((a, b) => {
+            const gradeMap = { '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6 };
+            const aMatch = a.match(/([一二三四五六])年级([上下])册/);
+            const bMatch = b.match(/([一二三四五六])年级([上下])册/);
+            
+            if (!aMatch || !bMatch) return a.localeCompare(b);
+            
+            const aGrade = gradeMap[aMatch[1]] || 0;
+            const bGrade = gradeMap[bMatch[1]] || 0;
+            if (aGrade !== bGrade) return aGrade - bGrade;
+            
+            return aMatch[2] === '上' ? -1 : 1;
+        });
+    },
+    
+    /**
+     * 排序单元
+     */
+    sortUnits(units) {
+        // units是一个对象，key是unitKey，value是words数组
+        return Object.keys(units).sort((a, b) => {
+            const aWords = units[a];
+            const bWords = units[b];
+            const aOrder = aWords.order ?? 999;
+            const bOrder = bWords.order ?? 999;
+            if (aOrder !== bOrder) return aOrder - bOrder;
+            return a.localeCompare(b);
+        });
+    },
+    
+    /**
+     * 格式化年级标签
+     */
+    formatGradeLabel(grade) {
+        const map = { '1': '一', '2': '二', '3': '三', '4': '四', '5': '五', '6': '六' };
+        return map[grade] || grade;
+    },
+    
+    /**
+     * 格式化学期标签
+     */
+    formatSemesterLabel(semester) {
+        return semester === '上' ? '年级上册' : '年级下册';
+    },
+    
+    /**
+     * 格式化单元标签
+     */
+    formatUnitLabel(unit) {
+        if (typeof PracticeRange !== 'undefined' && PracticeRange.formatUnitLabel) {
+            return PracticeRange.formatUnitLabel(unit);
+        }
+        // 降级方案
+        const match = unit?.match(/(\d+)/);
+        if (match) {
+            return `第${match[1]}单元`;
+        }
+        return unit || '未分类';
     },
     
     /**
