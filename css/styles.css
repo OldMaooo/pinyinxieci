@@ -964,6 +964,13 @@
 
 .task-inbox-item {
     cursor: move;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.task-inbox-list {
+    display: flex;
+    flex-direction: column;
 }
 
 .task-inbox-item.dragging {
