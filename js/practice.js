@@ -1069,7 +1069,12 @@ const Practice = {
         
         // 保存到错题本（无论是否有快照，都记录错题）
         if (typeof Storage !== 'undefined' && Storage.addErrorWord) {
-            Storage.addErrorWord(word.id, word.word, word.pinyin || '', snapshot || null);
+            const errorWord = Storage.addErrorWord(word.id, word.word, word.pinyin || '', snapshot || null);
+            
+            // 为错题创建复习计划
+            if (errorWord && typeof ReviewPlan !== 'undefined' && ReviewPlan.createPlanForErrorWord) {
+                ReviewPlan.createPlanForErrorWord(errorWord);
+            }
         }
     },
     

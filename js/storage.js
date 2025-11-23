@@ -14,7 +14,8 @@ const Storage = {
         SETTINGS: 'practice_settings',
         PRACTICE_AUTOSAVE: 'practice_autosave',
         BUILTIN_VERSION: 'builtin_wordbank_version',
-        WORD_MASTERY: 'word_mastery_status' // 字的掌握状态：'default' | 'error' | 'mastered'
+        WORD_MASTERY: 'word_mastery_status', // 字的掌握状态：'default' | 'error' | 'mastered'
+        REVIEW_PLANS: 'review_plans' // 复习计划
     },
 
     isDebugMode() {
@@ -63,6 +64,9 @@ const Storage = {
         }
         if (!localStorage.getItem(this.KEYS.WORD_MASTERY)) {
             this.saveWordMastery({});
+        }
+        if (!localStorage.getItem(this.KEYS.REVIEW_PLANS)) {
+            this.saveAllReviewPlans({});
         }
     },
     
