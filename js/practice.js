@@ -39,6 +39,12 @@ const Practice = {
             Handwriting.clear();
         }
         this.saveAutosaveDraft();
+        
+        // 更新任务进度（如果有任务，在答题后立即更新）
+        if (this.currentTaskId && typeof TaskList !== 'undefined') {
+            this.updateTaskProgress(false);
+        }
+        
         this.scheduleNextWord(2000, () => {
             if (this.currentIndex < this.currentWords.length) {
                 this.history.push({
@@ -343,18 +349,19 @@ const Practice = {
         const task = TaskList.getTask(this.currentTaskId);
         if (!task) return;
         
-        // completed应该是已答题的数量
-        // currentIndex表示当前要答的题目索引，所以已完成的数量就是currentIndex
-        // 但如果已经答过题，应该用details的长度（更准确）
-        const detailsCount = (this.practiceLog.details || []).length;
-        const completed = detailsCount > 0 ? detailsCount : this.currentIndex;
+        // completed应该是所有答过的题目数量（无论对错）
+        // details数组包含了所有答过的题目，每个题目答完后都会push到details
+        // 所以completed应该直接使用details的长度
+        const details = this.practiceLog.details || [];
+        const completed = details.length; // 所有答过的题目数量
+        
         const correct = this.practiceLog.correctCount || 0;
         const errors = this.practiceLog.errorWords || [];
         
         const updates = {
             progress: {
                 total: task.progress.total,
-                completed: completed,
+                completed: completed, // 所有答过的题目（无论对错）
                 correct: correct,
                 errors: errors
             }
@@ -814,6 +821,12 @@ const Practice = {
             // 持续草稿保存
             this.saveAutosaveDraft();
             
+            // 更新任务进度（如果有任务，在答题后立即更新）
+            // 此时details已经包含了当前答过的题目，所以进度应该立即更新
+            if (this.currentTaskId && typeof TaskList !== 'undefined') {
+                this.updateTaskProgress(false);
+            }
+            
             // 恢复按钮状态
             this.isSubmitting = false;
             submitBtn.disabled = false;
@@ -830,12 +843,6 @@ const Practice = {
                     });
                 }
                 this.currentIndex++;
-                
-                // 更新任务进度（如果有任务，在索引更新后）
-                if (this.currentTaskId && typeof TaskList !== 'undefined') {
-                    this.updateTaskProgress(false);
-                }
-                
                 this.showNextWord();
             });
         this._currentWordStartTime = null;
