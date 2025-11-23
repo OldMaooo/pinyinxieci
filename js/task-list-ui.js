@@ -754,38 +754,60 @@ const TaskListUI = {
     
     /**
      * 渲染任务卡片
+     * @param {Object} task - 任务对象
+     * @param {boolean} inInbox - 是否在待排期区域（true时卡片宽度100%，不包含col类）
      */
-    renderTaskCard(task) {
+    renderTaskCard(task, inInbox = false) {
         const progress = task.progress || { total: 0, completed: 0, correct: 0 };
         const progressPercent = progress.total > 0 ? Math.round((progress.completed / progress.total) * 100) : 0;
         const statusBadge = this.getStatusBadge(task.status);
         const typeIcon = task.type === TaskList.TYPE.REVIEW ? 'bi-arrow-repeat' : 'bi-pencil-square';
         
+        // 格式化日期显示
+        const scheduledDate = task.scheduledDate;
+        const dateDisplay = scheduledDate 
+            ? new Date(scheduledDate + 'T00:00:00').toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })
+            : '待排期';
+        
+        const cardWrapper = inInbox ? '' : '<div class="col-md-6 col-lg-4">';
+        const cardWrapperEnd = inInbox ? '' : '</div>';
+        
         return `
-            <div class="col-md-6 col-lg-4">
-                <div class="card task-card" data-task-id="${task.id}" style="cursor: pointer;" title="点击查看任务详情">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div class="flex-grow-1">
-                                <h6 class="card-title mb-1">
-                                    <i class="bi ${typeIcon}"></i> ${this.escapeHtml(task.name)}
-                                </h6>
-                                <span class="badge ${statusBadge.class}">${statusBadge.text}</span>
-                            </div>
-                            <button class="btn btn-sm btn-outline-danger task-delete-btn" data-task-id="${task.id}" title="删除">
-                                <i class="bi bi-trash"></i>
-                            </button>
+            ${cardWrapper}
+            <div class="card task-card" data-task-id="${task.id}" style="cursor: pointer; ${inInbox ? 'width: 100%;' : ''}" title="点击查看任务详情">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div class="flex-grow-1">
+                            <h6 class="card-title mb-1">
+                                <i class="bi ${typeIcon}"></i> ${this.escapeHtml(task.name)}
+                            </h6>
+                            <span class="badge ${statusBadge.class}">${statusBadge.text}</span>
                         </div>
-                        <div class="mt-2">
-                            <div class="d-flex justify-content-between small text-muted mb-1">
-                                <span>进度: ${progress.completed}/${progress.total}</span>
-                                <span>${progressPercent}%</span>
-                            </div>
-                            <div class="progress" style="height: 6px;">
-                                <div class="progress-bar" role="progressbar" style="width: ${progressPercent}%" 
-                                     aria-valuenow="${progressPercent}" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
+                        <button class="btn btn-sm btn-outline-danger task-delete-btn" data-task-id="${task.id}" title="删除">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                    ${inInbox ? `
+                    <div class="mb-2">
+                        <label class="small text-muted d-block mb-1">复习日期：</label>
+                        <button class="btn btn-sm btn-outline-secondary task-schedule-date-btn" 
+                                data-task-id="${task.id}" 
+                                style="width: 100%; text-align: left;"
+                                title="点击选择日期">
+                            <i class="bi bi-calendar-event"></i> ${this.escapeHtml(dateDisplay)}
+                        </button>
+                    </div>
+                    ` : ''}
+                    <div class="mt-2">
+                        <div class="d-flex justify-content-between small text-muted mb-1">
+                            <span>进度: ${progress.completed}/${progress.total}</span>
+                            <span>${progressPercent}%</span>
                         </div>
+                        <div class="progress" style="height: 6px;">
+                            <div class="progress-bar" role="progressbar" style="width: ${progressPercent}%" 
+                                 aria-valuenow="${progressPercent}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
                         <div class="mt-3 d-flex gap-2">
                             ${task.status === TaskList.STATUS.PENDING || task.status === TaskList.STATUS.PAUSED ? `
                                 <button class="btn btn-sm btn-primary flex-grow-1 task-start-btn" data-task-id="${task.id}">
@@ -880,6 +902,61 @@ const TaskListUI = {
                 }
             });
         });
+        
+        // 日期选择按钮（待排期区域）
+        document.querySelectorAll('.task-schedule-date-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const taskId = btn.getAttribute('data-task-id');
+                this.showDatePicker(taskId);
+            });
+        });
+    },
+    
+    /**
+     * 显示日期选择器
+     */
+    showDatePicker(taskId) {
+        const task = TaskList.getTask(taskId);
+        if (!task) return;
+        
+        // 创建日期输入
+        const today = new Date().toISOString().split('T')[0];
+        const currentDate = task.scheduledDate || today;
+        
+        const selectedDate = prompt('请选择日期（格式：YYYY-MM-DD）\n留空则取消排期：', currentDate);
+        
+        if (selectedDate === null) {
+            return; // 用户取消
+        }
+        
+        if (selectedDate === '') {
+            // 取消排期
+            TaskList.updateTask(taskId, {
+                scheduledDate: null
+            });
+            if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                WordBank.showToast('success', '已取消排期');
+            }
+        } else {
+            // 验证日期格式
+            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+            if (!dateRegex.test(selectedDate)) {
+                alert('日期格式不正确，请使用 YYYY-MM-DD 格式');
+                return;
+            }
+            
+            // 设置排期
+            TaskList.updateTask(taskId, {
+                scheduledDate: selectedDate
+            });
+            if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                WordBank.showToast('success', '已设置排期日期');
+            }
+        }
+        
+        // 重新渲染
+        this.load();
     },
     
     /**
