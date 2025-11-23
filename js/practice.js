@@ -260,16 +260,30 @@ const Practice = {
         this.isSubmitting = false;
         
         // 初始化练习记录
+        // 如果是从任务继续，需要恢复之前的进度
+        let initialCompleted = 0;
+        let initialCorrect = 0;
+        let initialErrors = [];
+        if (currentTaskId && task && task.progress) {
+            initialCompleted = task.progress.completed || 0;
+            initialCorrect = task.progress.correct || 0;
+            initialErrors = task.progress.errors || [];
+        }
+        
         this.practiceLog = {
             totalWords: words.length,
-            correctCount: 0,
-            errorCount: 0,
+            correctCount: initialCorrect,
+            errorCount: initialErrors.length,
             totalTime: 0,
             startTime: Date.now(),
             wordTimes: [],
-            errorWords: [],
-            details: [] // 每题详情 {wordId, correct, snapshot}
+            errorWords: [...initialErrors], // 恢复之前的错题列表
+            details: [] // 每题详情 {wordId, correct, snapshot}，从当前开始记录
         };
+        
+        // 保存初始完成数量，用于计算总进度
+        this._initialCompletedCount = initialCompleted;
+        
         this.isActive = true;
         
         // 隐藏设置，显示练习界面
@@ -350,10 +364,12 @@ const Practice = {
         if (!task) return;
         
         // completed应该是所有答过的题目数量（无论对错）
-        // details数组包含了所有答过的题目，每个题目答完后都会push到details
-        // 所以completed应该直接使用details的长度
+        // details数组包含了当前会话中答过的题目
+        // 需要加上之前的完成数量（_initialCompletedCount）
         const details = this.practiceLog.details || [];
-        const completed = details.length; // 所有答过的题目数量
+        const currentSessionCompleted = details.length; // 当前会话中答过的题目数量
+        const previousCompleted = this._initialCompletedCount || 0; // 之前已完成的题目数量
+        const completed = previousCompleted + currentSessionCompleted; // 总完成数量
         
         const correct = this.practiceLog.correctCount || 0;
         const errors = this.practiceLog.errorWords || [];
@@ -361,7 +377,7 @@ const Practice = {
         const updates = {
             progress: {
                 total: task.progress.total,
-                completed: completed, // 所有答过的题目（无论对错）
+                completed: completed, // 所有答过的题目（无论对错）= 之前的 + 当前的
                 correct: correct,
                 errors: errors
             }
@@ -904,6 +920,12 @@ const Practice = {
      * 绕过提交限制，允许随时跳过
      */
     async skipAnswer() {
+        // 防止重复点击：如果正在处理中，直接返回
+        if (this.isSkipping) {
+            return;
+        }
+        this.isSkipping = true;
+        
         const word = this.currentWords[this.currentIndex];
         
         // 绕过提交限制：清除限制状态，允许跳过
@@ -969,6 +991,7 @@ const Practice = {
                 });
             }
             this.currentIndex++;
+            this.isSkipping = false; // 重置跳过状态
             this.showNextWord();
         });
         this._currentWordStartTime = null;
