@@ -977,6 +977,13 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    min-height: 100px;
+}
+
+.task-inbox-list.drag-over {
+    background-color: rgba(13, 110, 253, 0.1);
+    border: 2px dashed var(--bs-primary);
+    border-radius: 0.5rem;
 }
 
 .task-schedule-date-btn {

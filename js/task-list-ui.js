@@ -507,6 +507,15 @@ const TaskListUI = {
         const typeIcon = task.type === TaskList.TYPE.REVIEW ? 'bi-arrow-repeat' : 'bi-pencil-square';
         const typeClass = task.type === TaskList.TYPE.REVIEW ? 'review-task' : 'practice-task';
         
+        // 格式化日期显示
+        const scheduledDate = task.scheduledDate;
+        const dateDisplay = scheduledDate 
+            ? new Date(scheduledDate + 'T00:00:00').toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })
+            : '待排期';
+        
+        // 只有练习任务可以排期
+        const canSchedule = task.type === TaskList.TYPE.PRACTICE;
+        
         return `
             <div class="card task-card ${typeClass}" style="cursor: pointer;" title="点击查看任务详情">
                 <div class="card-body">
@@ -521,6 +530,17 @@ const TaskListUI = {
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
+                    ${canSchedule ? `
+                    <div class="mb-2 d-flex align-items-center gap-2">
+                        <label class="small text-muted mb-0" style="min-width: 70px;">复习日期：</label>
+                        <button class="btn btn-sm btn-outline-secondary task-schedule-date-btn flex-grow-1" 
+                                data-task-id="${task.id}" 
+                                style="text-align: left;"
+                                title="点击选择日期">
+                            <i class="bi bi-calendar-event"></i> ${this.escapeHtml(dateDisplay)}
+                        </button>
+                    </div>
+                    ` : ''}
                     <div class="mt-2">
                         <div class="d-flex justify-content-between small text-muted mb-1">
                             <span>进度: ${progress.completed}/${progress.total}</span>
@@ -693,12 +713,54 @@ const TaskListUI = {
                 
                 if (taskId && targetDate && source !== 'cards') {
                     // 从待排期或其他地方拖过来的任务，排期到目标日期
-                    this.scheduleTask(taskId, targetDate);
+                    const task = TaskList.getTask(taskId);
+                    if (task && task.type === TaskList.TYPE.PRACTICE) {
+                        this.scheduleTask(taskId, targetDate);
+                    }
                     
                     // 重新渲染
                     setTimeout(() => {
                         this.load();
                     }, 100);
+                }
+            });
+        });
+        
+        // 待排期区域作为拖放目标（可以从外面拖到待排期）
+        document.querySelectorAll('.task-inbox-list').forEach(inboxList => {
+            inboxList.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                inboxList.classList.add('drag-over');
+            });
+            
+            inboxList.addEventListener('dragleave', (e) => {
+                inboxList.classList.remove('drag-over');
+            });
+            
+            inboxList.addEventListener('drop', (e) => {
+                e.preventDefault();
+                inboxList.classList.remove('drag-over');
+                
+                const taskId = e.dataTransfer.getData('text/plain');
+                const source = e.dataTransfer.getData('source');
+                
+                if (taskId && source !== 'inbox') {
+                    // 从外面拖到待排期，取消排期
+                    const task = TaskList.getTask(taskId);
+                    if (task && task.type === TaskList.TYPE.PRACTICE) {
+                        TaskList.updateTask(taskId, {
+                            scheduledDate: null
+                        });
+                        if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                            WordBank.showToast('success', '已移动到待排期');
+                        }
+                        
+                        // 重新渲染
+                        setTimeout(() => {
+                            this.load();
+                        }, 100);
+                    }
                 }
             });
         });
@@ -788,11 +850,11 @@ const TaskListUI = {
                         </button>
                     </div>
                     ${inInbox ? `
-                    <div class="mb-2">
-                        <label class="small text-muted d-block mb-1">复习日期：</label>
-                        <button class="btn btn-sm btn-outline-secondary task-schedule-date-btn" 
+                    <div class="mb-2 d-flex align-items-center gap-2">
+                        <label class="small text-muted mb-0" style="min-width: 70px;">复习日期：</label>
+                        <button class="btn btn-sm btn-outline-secondary task-schedule-date-btn flex-grow-1" 
                                 data-task-id="${task.id}" 
-                                style="width: 100%; text-align: left;"
+                                style="text-align: left;"
                                 title="点击选择日期">
                             <i class="bi bi-calendar-event"></i> ${this.escapeHtml(dateDisplay)}
                         </button>
@@ -824,10 +886,6 @@ const TaskListUI = {
                                     <i class="bi bi-arrow-clockwise"></i> 重新开始
                                 </button>
                             ` : ''}
-                        </div>
-                        <div class="mt-2 small text-muted">
-                            <div>创建: ${this.formatDate(task.createdAt)}</div>
-                            ${task.updatedAt ? `<div>更新: ${this.formatDate(task.updatedAt)}</div>` : ''}
                         </div>
                     </div>
                 </div>
