@@ -856,7 +856,6 @@ const TaskListUI = {
     renderTaskCard(task, inInbox = false) {
         const progress = task.progress || { total: 0, completed: 0, correct: 0 };
         const progressPercent = progress.total > 0 ? Math.round((progress.completed / progress.total) * 100) : 0;
-        const statusBadge = this.getStatusBadge(task.status);
         const typeIcon = task.type === TaskList.TYPE.REVIEW ? 'bi-arrow-repeat' : 'bi-pencil-square';
         
         // 格式化日期显示
@@ -865,19 +864,21 @@ const TaskListUI = {
             ? new Date(scheduledDate + 'T00:00:00').toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })
             : '待排期';
         
+        // 进度条颜色：100%为绿色，其他为默认蓝色
+        const progressBarClass = progressPercent === 100 ? 'bg-success' : '';
+        
         const cardWrapper = inInbox ? '' : '<div class="col-md-6 col-lg-4">';
         const cardWrapperEnd = inInbox ? '' : '</div>';
         
         return `
             ${cardWrapper}
-            <div class="card task-card" data-task-id="${task.id}" style="cursor: pointer; ${inInbox ? 'width: 100%;' : ''}" title="点击查看任务详情">
+            <div class="card task-card" data-task-id="${task.id}" style="cursor: pointer; ${inInbox ? 'width: 100%; max-width: 350px;' : ''}" title="点击查看任务详情">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <div class="flex-grow-1">
                             <h6 class="card-title mb-1">
                                 <i class="bi ${typeIcon}"></i> ${this.escapeHtml(task.name)}
                             </h6>
-                            <span class="badge ${statusBadge.class}">${statusBadge.text}</span>
                         </div>
                         <button class="btn btn-sm btn-outline-danger task-delete-btn" data-task-id="${task.id}" title="删除">
                             <i class="bi bi-trash"></i>
