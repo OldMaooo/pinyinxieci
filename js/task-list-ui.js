@@ -391,14 +391,21 @@ const TaskListUI = {
         const currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
         const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
         
-        // 按日期分组任务
+        // 按日期分组任务（区分练习任务和复习任务）
         const tasksByDate = {};
         tasks.forEach(task => {
             if (task.scheduledDate) {
                 if (!tasksByDate[task.scheduledDate]) {
-                    tasksByDate[task.scheduledDate] = [];
+                    tasksByDate[task.scheduledDate] = {
+                        practice: [],
+                        review: []
+                    };
                 }
-                tasksByDate[task.scheduledDate].push(task);
+                if (task.type === TaskList.TYPE.REVIEW) {
+                    tasksByDate[task.scheduledDate].review.push(task);
+                } else {
+                    tasksByDate[task.scheduledDate].practice.push(task);
+                }
             }
         });
         
@@ -432,7 +439,7 @@ const TaskListUI = {
         const daysInMonth = nextMonth.getDate();
         for (let day = 1; day <= daysInMonth; day++) {
             const dateStr = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            const dateTasks = tasksByDate[dateStr] || [];
+            const dateTasks = tasksByDate[dateStr] || { practice: [], review: [] };
             const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
             const isToday = date.getTime() === today.getTime();
             
@@ -444,13 +451,25 @@ const TaskListUI = {
                     <div class="calendar-day-tasks">
             `;
             
-            // 显示任务卡片（最多显示2个，超过的显示数量）
-            dateTasks.slice(0, 2).forEach(task => {
-                html += this.renderCalendarTaskCard(task);
-            });
-            
-            if (dateTasks.length > 2) {
-                html += `<div class="calendar-task-more">+${dateTasks.length - 2}</div>`;
+            // 根据显示模式渲染任务卡片
+            if (this.currentDisplayMode === 'merged') {
+                // 合并模式：一天只显示一张卡片（如果有多个任务，合并显示）
+                const allTasks = [...dateTasks.practice, ...dateTasks.review];
+                if (allTasks.length > 0) {
+                    html += this.renderCalendarTaskCardMerged(dateTasks.practice, dateTasks.review);
+                }
+            } else {
+                // 拆分模式：分别显示练习任务和复习任务
+                if (dateTasks.practice.length > 0) {
+                    dateTasks.practice.forEach(task => {
+                        html += this.renderCalendarTaskCard(task, true); // true表示可拖拽
+                    });
+                }
+                if (dateTasks.review.length > 0) {
+                    dateTasks.review.forEach(task => {
+                        html += this.renderCalendarTaskCard(task, false); // false表示不可拖拽
+                    });
+                }
             }
             
             html += `
@@ -469,8 +488,10 @@ const TaskListUI = {
     
     /**
      * 渲染日历中的任务卡片（简化版）
+     * @param {Object} task - 任务对象
+     * @param {boolean} draggable - 是否可拖拽（练习任务可拖拽，复习任务不可拖拽）
      */
-    renderCalendarTaskCard(task) {
+    renderCalendarTaskCard(task, draggable = true) {
         const typeIcon = task.type === TaskList.TYPE.REVIEW ? 'bi-arrow-repeat' : 'bi-pencil-square';
         const typeClass = task.type === TaskList.TYPE.REVIEW ? 'review-task' : 'practice-task';
         const progress = task.progress || { total: 0, completed: 0 };
@@ -479,10 +500,65 @@ const TaskListUI = {
         return `
             <div class="calendar-task-card ${typeClass}" 
                  data-task-id="${task.id}" 
-                 draggable="true"
+                 data-task-type="${task.type}"
+                 ${draggable ? 'draggable="true"' : ''}
                  title="${this.escapeHtml(task.name)}">
                 <i class="bi ${typeIcon}"></i>
-                <span class="calendar-task-name">${this.escapeHtml(task.name.length > 8 ? task.name.substring(0, 8) + '...' : task.name)}</span>
+                <span class="calendar-task-name">${this.escapeHtml(task.name.length > 10 ? task.name.substring(0, 10) + '...' : task.name)}</span>
+                <div class="calendar-task-progress">
+                    <div class="progress" style="height: 3px;">
+                        <div class="progress-bar" style="width: ${progressPercent}%"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+    
+    /**
+     * 渲染合并模式的任务卡片（合并练习任务和复习任务）
+     * @param {Array} practiceTasks - 练习任务列表
+     * @param {Array} reviewTasks - 复习任务列表
+     */
+    renderCalendarTaskCardMerged(practiceTasks, reviewTasks) {
+        const allTasks = [...practiceTasks, ...reviewTasks];
+        if (allTasks.length === 0) return '';
+        
+        // 计算总进度
+        let totalProgress = 0;
+        let totalCompleted = 0;
+        allTasks.forEach(task => {
+            const progress = task.progress || { total: 0, completed: 0 };
+            totalProgress += progress.total;
+            totalCompleted += progress.completed;
+        });
+        const progressPercent = totalProgress > 0 ? Math.round((totalCompleted / totalProgress) * 100) : 0;
+        
+        // 生成任务名称（如果有多个任务，显示汇总信息）
+        let taskName = '';
+        if (practiceTasks.length > 0 && reviewTasks.length > 0) {
+            taskName = `练习(${practiceTasks.length}) + 复习(${reviewTasks.length})`;
+        } else if (practiceTasks.length > 0) {
+            taskName = practiceTasks.length === 1 
+                ? practiceTasks[0].name 
+                : `练习任务(${practiceTasks.length})`;
+        } else if (reviewTasks.length > 0) {
+            taskName = reviewTasks.length === 1 
+                ? reviewTasks[0].name 
+                : `复习任务(${reviewTasks.length})`;
+        }
+        
+        // 合并卡片可拖拽（如果包含练习任务）
+        const isDraggable = practiceTasks.length > 0;
+        const taskIds = allTasks.map(t => t.id).join(',');
+        
+        return `
+            <div class="calendar-task-card merged-task" 
+                 data-task-ids="${taskIds}"
+                 data-has-practice="${practiceTasks.length > 0}"
+                 ${isDraggable ? 'draggable="true"' : ''}
+                 title="${this.escapeHtml(taskName)}">
+                <i class="bi bi-layers"></i>
+                <span class="calendar-task-name">${this.escapeHtml(taskName.length > 10 ? taskName.substring(0, 10) + '...' : taskName)}</span>
                 <div class="calendar-task-progress">
                     <div class="progress" style="height: 3px;">
                         <div class="progress-bar" style="width: ${progressPercent}%"></div>
