@@ -475,7 +475,7 @@ const TaskListUI = {
             dateTasks.forEach(task => {
                 html += `
                     <div class="task-card-item" data-task-id="${task.id}" data-date="${task.scheduledDate}">
-                        ${this.renderTaskCardForCardsView(task)}
+                        ${this.renderTaskCardForCardsView(task, true)}
                     </div>
                 `;
             });
@@ -521,11 +521,12 @@ const TaskListUI = {
     
     /**
      * 渲染卡片视图中的任务卡片
+     * @param {Object} task - 任务对象
+     * @param {boolean} noCardWrapper - 是否不包含外层card（用于卡片视图）
      */
-    renderTaskCardForCardsView(task) {
+    renderTaskCardForCardsView(task, noCardWrapper = false) {
         const progress = task.progress || { total: 0, completed: 0, correct: 0 };
         const progressPercent = progress.total > 0 ? Math.round((progress.completed / progress.total) * 100) : 0;
-        const statusBadge = this.getStatusBadge(task.status);
         const typeIcon = task.type === TaskList.TYPE.REVIEW ? 'bi-arrow-repeat' : 'bi-pencil-square';
         const typeClass = task.type === TaskList.TYPE.REVIEW ? 'review-task' : 'practice-task';
         
@@ -546,60 +547,63 @@ const TaskListUI = {
         // 只有练习任务可以排期
         const canSchedule = task.type === TaskList.TYPE.PRACTICE;
         
+        // 进度条颜色：100%为绿色，其他为默认蓝色
+        const progressBarClass = progressPercent === 100 ? 'bg-success' : '';
+        
+        const cardWrapper = noCardWrapper ? '' : '<div class="card task-card ' + typeClass + '" style="cursor: pointer;" title="点击查看任务详情"><div class="card-body">';
+        const cardWrapperEnd = noCardWrapper ? '' : '</div></div>';
+        
         return `
-            <div class="card task-card ${typeClass}" style="cursor: pointer;" title="点击查看任务详情">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <div class="flex-grow-1">
-                            <h6 class="card-title mb-1">
-                                <i class="bi ${typeIcon}"></i> ${this.escapeHtml(task.name)}
-                            </h6>
-                            <span class="badge ${statusBadge.class}">${statusBadge.text}</span>
-                        </div>
-                        <button class="btn btn-sm btn-outline-danger task-delete-btn" data-task-id="${task.id}" title="删除">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
-                    ${canSchedule ? `
-                    <div class="mb-2 d-flex align-items-center gap-2">
-                        <label class="small text-muted mb-0" style="min-width: 70px;">复习日期：</label>
-                        <button class="btn btn-sm btn-outline-secondary task-schedule-date-btn flex-grow-1" 
-                                data-task-id="${task.id}" 
-                                style="text-align: left;"
-                                title="点击选择日期">
-                            <i class="bi bi-calendar-event"></i> ${this.escapeHtml(dateDisplay)}
-                        </button>
-                    </div>
-                    ` : ''}
-                    <div class="mt-2">
-                        <div class="d-flex justify-content-between small text-muted mb-1">
-                            <span>进度: ${progress.completed}/${progress.total}</span>
-                            <span>${progressPercent}%</span>
-                        </div>
-                        <div class="progress" style="height: 6px;">
-                            <div class="progress-bar" role="progressbar" style="width: ${progressPercent}%" 
-                                 aria-valuenow="${progressPercent}" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                    <div class="mt-3 d-flex gap-2">
-                        ${task.status === TaskList.STATUS.PENDING || task.status === TaskList.STATUS.PAUSED ? `
-                            <button class="btn btn-sm btn-primary flex-grow-1 task-start-btn" data-task-id="${task.id}">
-                                <i class="bi bi-play-fill"></i> ${task.status === TaskList.STATUS.PAUSED ? '继续' : '开始'}
-                            </button>
-                        ` : ''}
-                        ${task.status === TaskList.STATUS.IN_PROGRESS ? `
-                            <button class="btn btn-sm btn-primary flex-grow-1 task-continue-btn" data-task-id="${task.id}">
-                                <i class="bi bi-play-fill"></i> 继续
-                            </button>
-                        ` : ''}
-                        ${task.status === TaskList.STATUS.COMPLETED ? `
-                            <button class="btn btn-sm btn-outline-primary flex-grow-1 task-restart-btn" data-task-id="${task.id}">
-                                <i class="bi bi-arrow-clockwise"></i> 重新开始
-                            </button>
-                        ` : ''}
-                    </div>
+            ${cardWrapper}
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="flex-grow-1">
+                    <h6 class="card-title mb-1">
+                        <i class="bi ${typeIcon}"></i> ${this.escapeHtml(task.name)}
+                    </h6>
+                </div>
+                <button class="btn btn-sm btn-outline-danger task-delete-btn" data-task-id="${task.id}" title="删除">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+            ${canSchedule ? `
+            <div class="mb-2 d-flex align-items-center gap-2">
+                <label class="small text-muted mb-0" style="min-width: 70px;">复习日期：</label>
+                <button class="btn btn-sm btn-outline-secondary task-schedule-date-btn flex-grow-1" 
+                        data-task-id="${task.id}" 
+                        style="text-align: left;"
+                        title="点击选择日期">
+                    <i class="bi bi-calendar-event"></i> ${this.escapeHtml(dateDisplay)}
+                </button>
+            </div>
+            ` : ''}
+            <div class="mt-2">
+                <div class="d-flex justify-content-between small text-muted mb-1">
+                    <span>进度: ${progress.completed}/${progress.total}</span>
+                    <span>${progressPercent}%</span>
+                </div>
+                <div class="progress" style="height: 6px;">
+                    <div class="progress-bar ${progressBarClass}" role="progressbar" style="width: ${progressPercent}%" 
+                         aria-valuenow="${progressPercent}" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
+            <div class="mt-3 d-flex gap-2">
+                ${task.status === TaskList.STATUS.PENDING || task.status === TaskList.STATUS.PAUSED ? `
+                    <button class="btn btn-sm btn-primary flex-grow-1 task-start-btn" data-task-id="${task.id}">
+                        <i class="bi bi-play-fill"></i> ${task.status === TaskList.STATUS.PAUSED ? '继续' : '开始'}
+                    </button>
+                ` : ''}
+                ${task.status === TaskList.STATUS.IN_PROGRESS ? `
+                    <button class="btn btn-sm btn-primary flex-grow-1 task-continue-btn" data-task-id="${task.id}">
+                        <i class="bi bi-play-fill"></i> 继续
+                    </button>
+                ` : ''}
+                ${task.status === TaskList.STATUS.COMPLETED ? `
+                    <button class="btn btn-sm btn-outline-primary flex-grow-1 task-restart-btn" data-task-id="${task.id}">
+                        <i class="bi bi-arrow-clockwise"></i> 重新开始
+                    </button>
+                ` : ''}
+            </div>
+            ${cardWrapperEnd}
         `;
     },
     
