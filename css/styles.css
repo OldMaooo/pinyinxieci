@@ -730,17 +730,25 @@
     background-color: transparent;
     font-size: 0.8rem;
     user-select: none;
+    box-sizing: border-box;
+    vertical-align: top;
+    /* 确保选中和未选中时边框宽度一致，避免位置变化 */
+    border-width: 1px;
 }
 
 .result-toggle:not(.active) {
     border-color: #ced4da;
     color: transparent;
     background-color: transparent;
+    /* 确保边框宽度一致 */
+    border-width: 1px;
 }
 
 .result-toggle.active {
     border-color: #dc3545;
     background-color: rgba(220, 53, 69, 0.1);
+    /* 确保边框宽度一致 */
+    border-width: 1px;
 }
 
 .result-toggle:focus {

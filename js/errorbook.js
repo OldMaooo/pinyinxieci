@@ -218,9 +218,9 @@ const ErrorBook = {
                                         <div class="position-relative" style="flex-shrink: 0;">
                                             <input type="checkbox" class="form-check-input error-select" data-id="${id}" style="margin: 0;">
                                         </div>
-                                        <div class="text-muted small" title="${groupsText}" style="line-height: 1.5;">${groupsText}</div>
+                                        <div class="text-muted small" title="${groupsText}" style="line-height: 1.5; margin-top: -2px;">${groupsText}</div>
                                     </div>
-                                    ${toggleHtml ? `<div class="position-relative" style="flex-shrink: 0;">${toggleHtml}</div>` : ''}
+                                    ${toggleHtml ? `<div class="position-relative" style="flex-shrink: 0; margin-top: -4px;">${toggleHtml}</div>` : ''}
                                 </div>
                                 <div class="d-flex gap-2 align-items-center mt-2">
                                     <div class="word-box">${latestSnapshot ? `<img class="snapshot-invert" src="${latestSnapshot}" alt="手写" style="max-width: 90%; max-height: 90%; object-fit: contain;">` : '<span class="text-muted small">无快照</span>'}</div>
@@ -298,9 +298,9 @@ const ErrorBook = {
                                 <div class="position-relative" style="flex-shrink: 0;">
                                     <input type="checkbox" class="form-check-input error-select" data-id="${w.id}" style="margin: 0;">
                                 </div>
-                                <div class="text-muted small" title="${groupsText}" style="line-height: 1.5;">${groupsText}</div>
+                                <div class="text-muted small" title="${groupsText}" style="line-height: 1.5; margin-top: -2px;">${groupsText}</div>
                             </div>
-                            <div class="position-relative" style="flex-shrink: 0;">
+                            <div class="position-relative" style="flex-shrink: 0; margin-top: -4px;">
                                 <div class="result-toggle ${isWrong ? 'active' : ''}" 
                                      data-log-id="${log.id}" 
                                      data-word-id="${w.id}" 
