@@ -295,6 +295,144 @@ const TaskList = {
             completed: tasks.filter(t => t.status === this.STATUS.COMPLETED).length,
             paused: tasks.filter(t => t.status === this.STATUS.PAUSED).length
         };
+    },
+    
+    /**
+     * 生成每日复习任务
+     * 从复习计划中获取指定日期需要复习的字，创建复习任务
+     * @param {Date} date - 日期（默认为今天）
+     * @returns {Object|null} 复习任务对象，如果该日期没有需要复习的字则返回null
+     */
+    generateDailyReviewTask(date = new Date()) {
+        if (typeof ReviewPlan === 'undefined' || !ReviewPlan.getTodayReviewPlans) {
+            return null;
+        }
+        
+        // 获取该日期需要复习的计划
+        const reviewPlans = ReviewPlan.getTodayReviewPlans(date);
+        if (!reviewPlans || reviewPlans.length === 0) {
+            return null;
+        }
+        
+        // 提取所有需要复习的字的ID
+        const wordIds = reviewPlans.map(plan => plan.wordId);
+        
+        // 格式化日期为YYYY-MM-DD
+        const dateStr = this.formatDateForTask(date);
+        
+        // 检查是否已存在该日期的复习任务
+        const existingTasks = this.getAllTasks();
+        const existingReviewTask = existingTasks.find(t => 
+            t.type === this.TYPE.REVIEW && 
+            t.scheduledDate === dateStr
+        );
+        
+        if (existingReviewTask) {
+            // 更新现有任务的wordIds（可能新增了需要复习的字）
+            const existingWordIds = new Set(existingReviewTask.wordIds || []);
+            wordIds.forEach(id => existingWordIds.add(id));
+            existingReviewTask.wordIds = Array.from(existingWordIds);
+            existingReviewTask.progress.total = existingReviewTask.wordIds.length;
+            this.updateTask(existingReviewTask.id, {
+                wordIds: existingReviewTask.wordIds,
+                progress: existingReviewTask.progress
+            });
+            return existingReviewTask;
+        }
+        
+        // 创建新的复习任务
+        const task = {
+            name: `复习计划 - ${this.formatDateDisplay(date)}`,
+            wordIds: wordIds,
+            type: this.TYPE.REVIEW,
+            status: this.STATUS.PENDING,
+            scheduledDate: dateStr, // 任务日期（YYYY-MM-DD格式）
+            createdAt: new Date().toISOString(),
+            progress: {
+                total: wordIds.length,
+                completed: 0,
+                correct: 0,
+                errors: []
+            }
+        };
+        
+        const result = this.addTask(task);
+        return result.success ? result.task : null;
+    },
+    
+    /**
+     * 格式化日期为任务日期格式（YYYY-MM-DD）
+     */
+    formatDateForTask(date) {
+        const d = new Date(date);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    },
+    
+    /**
+     * 格式化日期显示（用于任务名称）
+     */
+    formatDateDisplay(date) {
+        const d = new Date(date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const taskDate = new Date(d);
+        taskDate.setHours(0, 0, 0, 0);
+        
+        const diffDays = Math.floor((taskDate - today) / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 0) {
+            return '今天';
+        } else if (diffDays === 1) {
+            return '明天';
+        } else if (diffDays === -1) {
+            return '昨天';
+        } else if (diffDays > 1 && diffDays <= 7) {
+            return `${diffDays}天后`;
+        } else if (diffDays < -1 && diffDays >= -7) {
+            return `${Math.abs(diffDays)}天前`;
+        } else {
+            return d.toLocaleDateString('zh-CN', {
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+    },
+    
+    /**
+     * 获取所有任务（包括自动生成的复习任务）
+     * 如果某天的复习任务不存在，自动生成
+     * @param {number} daysAhead - 提前生成多少天的复习任务（默认7天）
+     */
+    getAllTasksWithAutoReview(daysAhead = 7) {
+        const tasks = this.getAllTasks();
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        // 为未来几天自动生成复习任务
+        for (let i = 0; i <= daysAhead; i++) {
+            const date = new Date(today);
+            date.setDate(date.getDate() + i);
+            const dateStr = this.formatDateForTask(date);
+            
+            // 检查是否已有该日期的复习任务
+            const hasReviewTask = tasks.some(t => 
+                t.type === this.TYPE.REVIEW && 
+                t.scheduledDate === dateStr
+            );
+            
+            if (!hasReviewTask) {
+                // 尝试生成该日期的复习任务
+                const reviewTask = this.generateDailyReviewTask(date);
+                if (reviewTask) {
+                    tasks.push(reviewTask);
+                }
+            }
+        }
+        
+        return tasks;
     }
 };
 

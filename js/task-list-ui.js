@@ -5,6 +5,11 @@
 
 const TaskListUI = {
     /**
+     * 当前显示模式
+     */
+    currentViewMode: 'merged', // 'merged' | 'split' | 'calendar'
+    
+    /**
      * 初始化
      */
     init() {
@@ -23,6 +28,14 @@ const TaskListUI = {
                 this.showDeleteConfirm(null, true); // true表示清空全部
             });
         }
+        
+        // 显示模式切换
+        document.querySelectorAll('input[name="task-view-mode"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                this.currentViewMode = e.target.value;
+                this.load();
+            });
+        });
         
         // 任务拆分弹窗相关事件
         const splitModal = document.getElementById('task-split-modal');
@@ -44,13 +57,35 @@ const TaskListUI = {
     },
     
     /**
-     * 渲染任务清单
+     * 加载任务清单（根据当前显示模式）
      */
-    render() {
+    load() {
+        // 确保自动生成复习任务
+        TaskList.getAllTasksWithAutoReview(7);
+        
+        // 根据显示模式渲染
+        if (this.currentViewMode === 'calendar') {
+            this.renderCalendarView();
+        } else if (this.currentViewMode === 'split') {
+            this.renderSplitView();
+        } else {
+            this.renderMergedView();
+        }
+    },
+    
+    /**
+     * 渲染任务清单（合并视图 - 按天组织）
+     */
+    renderMergedView() {
         const container = document.getElementById('task-list-container');
+        const calendarContainer = document.getElementById('task-calendar-container');
         if (!container) return;
         
-        const tasks = TaskList.getAllTasks();
+        // 显示列表容器，隐藏日历容器
+        if (calendarContainer) calendarContainer.classList.add('d-none');
+        container.parentElement.classList.remove('d-none');
+        
+        const tasks = TaskList.getAllTasksWithAutoReview(7);
         
         if (tasks.length === 0) {
             container.innerHTML = `
@@ -62,46 +97,502 @@ const TaskListUI = {
             return;
         }
         
-        // 按状态分组
-        const grouped = {
-            [TaskList.STATUS.IN_PROGRESS]: [],
-            [TaskList.STATUS.PENDING]: [],
-            [TaskList.STATUS.PAUSED]: [],
-            [TaskList.STATUS.COMPLETED]: []
-        };
+        // 按日期分组（有scheduledDate的按日期，没有的放在"未排期"）
+        const tasksByDate = {};
+        const unscheduledTasks = [];
         
         tasks.forEach(task => {
-            if (grouped[task.status]) {
-                grouped[task.status].push(task);
+            if (task.scheduledDate) {
+                if (!tasksByDate[task.scheduledDate]) {
+                    tasksByDate[task.scheduledDate] = [];
+                }
+                tasksByDate[task.scheduledDate].push(task);
+            } else {
+                unscheduledTasks.push(task);
             }
         });
         
+        // 按日期排序
+        const sortedDates = Object.keys(tasksByDate).sort();
+        
         let html = '';
         
-        // 进行中
-        if (grouped[TaskList.STATUS.IN_PROGRESS].length > 0) {
-            html += this.renderTaskGroup('进行中', grouped[TaskList.STATUS.IN_PROGRESS]);
-        }
+        // 显示有日期的任务（按日期分组）
+        sortedDates.forEach(dateStr => {
+            const dateTasks = tasksByDate[dateStr];
+            const date = new Date(dateStr + 'T00:00:00');
+            const dateLabel = this.formatDateLabel(date);
+            
+            html += `
+                <div class="mb-4">
+                    <h6 class="text-primary mb-3">
+                        <i class="bi bi-calendar-date"></i> ${dateLabel}
+                        <span class="badge bg-primary ms-2">${dateTasks.length}</span>
+                    </h6>
+                    <div class="row g-3">
+            `;
+            
+            dateTasks.forEach(task => {
+                html += this.renderTaskCard(task);
+            });
+            
+            html += `
+                    </div>
+                </div>
+            `;
+        });
         
-        // 待开始
-        if (grouped[TaskList.STATUS.PENDING].length > 0) {
-            html += this.renderTaskGroup('待开始', grouped[TaskList.STATUS.PENDING]);
-        }
-        
-        // 已暂停
-        if (grouped[TaskList.STATUS.PAUSED].length > 0) {
-            html += this.renderTaskGroup('已暂停', grouped[TaskList.STATUS.PAUSED]);
-        }
-        
-        // 已完成
-        if (grouped[TaskList.STATUS.COMPLETED].length > 0) {
-            html += this.renderTaskGroup('已完成', grouped[TaskList.STATUS.COMPLETED]);
+        // 显示未排期的任务
+        if (unscheduledTasks.length > 0) {
+            html += `
+                <div class="mb-4">
+                    <h6 class="text-muted mb-3">
+                        <i class="bi bi-inbox"></i> 未排期
+                        <span class="badge bg-secondary ms-2">${unscheduledTasks.length}</span>
+                    </h6>
+                    <div class="row g-3">
+            `;
+            
+            unscheduledTasks.forEach(task => {
+                html += this.renderTaskCard(task);
+            });
+            
+            html += `
+                    </div>
+                </div>
+            `;
         }
         
         container.innerHTML = html;
         
         // 绑定任务卡片事件
         this.bindTaskCardEvents();
+    },
+    
+    /**
+     * 渲染拆分视图（练习任务和复习任务分开显示，但按天组织）
+     */
+    renderSplitView() {
+        const container = document.getElementById('task-list-container');
+        const calendarContainer = document.getElementById('task-calendar-container');
+        if (!container) return;
+        
+        // 显示列表容器，隐藏日历容器
+        if (calendarContainer) calendarContainer.classList.add('d-none');
+        container.parentElement.classList.remove('d-none');
+        
+        const tasks = TaskList.getAllTasksWithAutoReview(7);
+        
+        if (tasks.length === 0) {
+            container.innerHTML = `
+                <div class="text-center text-muted py-5">
+                    <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                    <p class="mt-3">暂无任务</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // 分离练习任务和复习任务
+        const practiceTasks = tasks.filter(t => t.type === TaskList.TYPE.PRACTICE);
+        const reviewTasks = tasks.filter(t => t.type === TaskList.TYPE.REVIEW);
+        
+        // 按日期分组
+        const practiceByDate = {};
+        const reviewByDate = {};
+        const unscheduledPractice = [];
+        const unscheduledReview = [];
+        
+        practiceTasks.forEach(task => {
+            if (task.scheduledDate) {
+                if (!practiceByDate[task.scheduledDate]) {
+                    practiceByDate[task.scheduledDate] = [];
+                }
+                practiceByDate[task.scheduledDate].push(task);
+            } else {
+                unscheduledPractice.push(task);
+            }
+        });
+        
+        reviewTasks.forEach(task => {
+            if (task.scheduledDate) {
+                if (!reviewByDate[task.scheduledDate]) {
+                    reviewByDate[task.scheduledDate] = [];
+                }
+                reviewByDate[task.scheduledDate].push(task);
+            } else {
+                unscheduledReview.push(task);
+            }
+        });
+        
+        // 合并所有日期并排序
+        const allDates = new Set([...Object.keys(practiceByDate), ...Object.keys(reviewByDate)]);
+        const sortedDates = Array.from(allDates).sort();
+        
+        let html = '';
+        
+        // 按日期显示
+        sortedDates.forEach(dateStr => {
+            const date = new Date(dateStr + 'T00:00:00');
+            const dateLabel = this.formatDateLabel(date);
+            const practiceTasksForDate = practiceByDate[dateStr] || [];
+            const reviewTasksForDate = reviewByDate[dateStr] || [];
+            
+            html += `
+                <div class="mb-4">
+                    <h6 class="text-primary mb-3">
+                        <i class="bi bi-calendar-date"></i> ${dateLabel}
+                    </h6>
+            `;
+            
+            // 练习任务
+            if (practiceTasksForDate.length > 0) {
+                html += `
+                    <div class="mb-3">
+                        <h6 class="text-muted small mb-2">
+                            <i class="bi bi-pencil-square"></i> 练习任务
+                            <span class="badge bg-secondary ms-2">${practiceTasksForDate.length}</span>
+                        </h6>
+                        <div class="row g-3">
+                `;
+                practiceTasksForDate.forEach(task => {
+                    html += this.renderTaskCard(task);
+                });
+                html += `</div></div>`;
+            }
+            
+            // 复习任务
+            if (reviewTasksForDate.length > 0) {
+                html += `
+                    <div class="mb-3">
+                        <h6 class="text-muted small mb-2">
+                            <i class="bi bi-arrow-repeat"></i> 复习任务
+                            <span class="badge bg-info ms-2">${reviewTasksForDate.length}</span>
+                        </h6>
+                        <div class="row g-3">
+                `;
+                reviewTasksForDate.forEach(task => {
+                    html += this.renderTaskCard(task);
+                });
+                html += `</div></div>`;
+            }
+            
+            html += `</div>`;
+        });
+        
+        // 未排期的任务
+        if (unscheduledPractice.length > 0 || unscheduledReview.length > 0) {
+            html += `
+                <div class="mb-4">
+                    <h6 class="text-muted mb-3">
+                        <i class="bi bi-inbox"></i> 未排期
+                    </h6>
+            `;
+            
+            if (unscheduledPractice.length > 0) {
+                html += `
+                    <div class="mb-3">
+                        <h6 class="text-muted small mb-2">
+                            <i class="bi bi-pencil-square"></i> 练习任务
+                            <span class="badge bg-secondary ms-2">${unscheduledPractice.length}</span>
+                        </h6>
+                        <div class="row g-3">
+                `;
+                unscheduledPractice.forEach(task => {
+                    html += this.renderTaskCard(task);
+                });
+                html += `</div></div>`;
+            }
+            
+            if (unscheduledReview.length > 0) {
+                html += `
+                    <div class="mb-3">
+                        <h6 class="text-muted small mb-2">
+                            <i class="bi bi-arrow-repeat"></i> 复习任务
+                            <span class="badge bg-info ms-2">${unscheduledReview.length}</span>
+                        </h6>
+                        <div class="row g-3">
+                `;
+                unscheduledReview.forEach(task => {
+                    html += this.renderTaskCard(task);
+                });
+                html += `</div></div>`;
+            }
+            
+            html += `</div>`;
+        }
+        
+        container.innerHTML = html;
+        
+        // 绑定任务卡片事件
+        this.bindTaskCardEvents();
+    },
+    
+    /**
+     * 渲染日历视图
+     */
+    renderCalendarView() {
+        const container = document.getElementById('task-list-container');
+        const calendarContainer = document.getElementById('task-calendar-container');
+        if (!container || !calendarContainer) return;
+        
+        // 隐藏列表容器，显示日历容器
+        container.parentElement.classList.add('d-none');
+        calendarContainer.classList.remove('d-none');
+        
+        const tasks = TaskList.getAllTasksWithAutoReview(30); // 生成30天的任务
+        
+        // 渲染日历
+        this.renderCalendar(calendarContainer, tasks);
+        
+        // 渲染待排期任务
+        this.renderInboxTasks(tasks);
+        
+        // 绑定拖拽事件
+        this.bindDragEvents();
+    },
+    
+    /**
+     * 格式化日期标签
+     */
+    formatDateLabel(date) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const taskDate = new Date(date);
+        taskDate.setHours(0, 0, 0, 0);
+        
+        const diffDays = Math.floor((taskDate - today) / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 0) {
+            return '今天';
+        } else if (diffDays === 1) {
+            return '明天';
+        } else if (diffDays === -1) {
+            return '昨天';
+        } else if (diffDays > 1 && diffDays <= 7) {
+            return `${diffDays}天后`;
+        } else if (diffDays < -1 && diffDays >= -7) {
+            return `${Math.abs(diffDays)}天前`;
+        } else {
+            return date.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'long'
+            });
+        }
+    },
+    
+    /**
+     * 渲染日历
+     */
+    renderCalendar(container, tasks) {
+        const calendarArea = container.querySelector('#task-calendar-area');
+        if (!calendarArea) return;
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        // 获取当前月份的第一天和最后一天
+        const currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        
+        // 按日期分组任务
+        const tasksByDate = {};
+        tasks.forEach(task => {
+            if (task.scheduledDate) {
+                if (!tasksByDate[task.scheduledDate]) {
+                    tasksByDate[task.scheduledDate] = [];
+                }
+                tasksByDate[task.scheduledDate].push(task);
+            }
+        });
+        
+        // 生成日历HTML
+        let html = `
+            <div class="calendar-header mb-3">
+                <h5 class="mb-0">${currentMonth.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long' })}</h5>
+            </div>
+            <div class="calendar-grid">
+                <div class="calendar-weekdays">
+                    <div class="calendar-weekday">日</div>
+                    <div class="calendar-weekday">一</div>
+                    <div class="calendar-weekday">二</div>
+                    <div class="calendar-weekday">三</div>
+                    <div class="calendar-weekday">四</div>
+                    <div class="calendar-weekday">五</div>
+                    <div class="calendar-weekday">六</div>
+                </div>
+                <div class="calendar-days">
+        `;
+        
+        // 获取第一天是星期几（0=周日）
+        const firstDay = currentMonth.getDay();
+        
+        // 填充空白（上个月的日期）
+        for (let i = 0; i < firstDay; i++) {
+            html += '<div class="calendar-day empty"></div>';
+        }
+        
+        // 生成当前月的日期
+        const daysInMonth = nextMonth.getDate();
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dateStr = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const dateTasks = tasksByDate[dateStr] || [];
+            const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+            const isToday = date.getTime() === today.getTime();
+            
+            html += `
+                <div class="calendar-day ${isToday ? 'today' : ''}" 
+                     data-date="${dateStr}" 
+                     data-droppable="true">
+                    <div class="calendar-day-number">${day}</div>
+                    <div class="calendar-day-tasks">
+            `;
+            
+            // 显示任务卡片（最多显示2个，超过的显示数量）
+            dateTasks.slice(0, 2).forEach(task => {
+                html += this.renderCalendarTaskCard(task);
+            });
+            
+            if (dateTasks.length > 2) {
+                html += `<div class="calendar-task-more">+${dateTasks.length - 2}</div>`;
+            }
+            
+            html += `
+                    </div>
+                </div>
+            `;
+        }
+        
+        html += `
+                </div>
+            </div>
+        `;
+        
+        calendarArea.innerHTML = html;
+    },
+    
+    /**
+     * 渲染日历中的任务卡片（简化版）
+     */
+    renderCalendarTaskCard(task) {
+        const typeIcon = task.type === TaskList.TYPE.REVIEW ? 'bi-arrow-repeat' : 'bi-pencil-square';
+        const typeClass = task.type === TaskList.TYPE.REVIEW ? 'review-task' : 'practice-task';
+        const progress = task.progress || { total: 0, completed: 0 };
+        const progressPercent = progress.total > 0 ? Math.round((progress.completed / progress.total) * 100) : 0;
+        
+        return `
+            <div class="calendar-task-card ${typeClass}" 
+                 data-task-id="${task.id}" 
+                 draggable="true"
+                 title="${this.escapeHtml(task.name)}">
+                <i class="bi ${typeIcon}"></i>
+                <span class="calendar-task-name">${this.escapeHtml(task.name.length > 8 ? task.name.substring(0, 8) + '...' : task.name)}</span>
+                <div class="calendar-task-progress">
+                    <div class="progress" style="height: 3px;">
+                        <div class="progress-bar" style="width: ${progressPercent}%"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+    
+    /**
+     * 渲染待排期任务（Inbox）
+     */
+    renderInboxTasks(tasks) {
+        const inboxList = document.getElementById('task-inbox-list');
+        if (!inboxList) return;
+        
+        const unscheduledTasks = tasks.filter(t => !t.scheduledDate);
+        
+        if (unscheduledTasks.length === 0) {
+            inboxList.innerHTML = '<div class="text-center text-muted py-3 small">暂无待排期任务</div>';
+            return;
+        }
+        
+        let html = '';
+        unscheduledTasks.forEach(task => {
+            html += `
+                <div class="task-inbox-item mb-2" 
+                     data-task-id="${task.id}" 
+                     draggable="true">
+                    ${this.renderTaskCard(task, true)}
+                </div>
+            `;
+        });
+        
+        inboxList.innerHTML = html;
+    },
+    
+    /**
+     * 绑定拖拽事件
+     */
+    bindDragEvents() {
+        // 任务卡片拖拽
+        document.querySelectorAll('.calendar-task-card, .task-inbox-item').forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', item.getAttribute('data-task-id'));
+                item.classList.add('dragging');
+            });
+            
+            item.addEventListener('dragend', (e) => {
+                item.classList.remove('dragging');
+            });
+        });
+        
+        // 日历日期拖放
+        document.querySelectorAll('.calendar-day[data-droppable="true"]').forEach(day => {
+            day.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                day.classList.add('drag-over');
+            });
+            
+            day.addEventListener('dragleave', (e) => {
+                day.classList.remove('drag-over');
+            });
+            
+            day.addEventListener('drop', (e) => {
+                e.preventDefault();
+                day.classList.remove('drag-over');
+                
+                const taskId = e.dataTransfer.getData('text/plain');
+                const targetDate = day.getAttribute('data-date');
+                
+                if (taskId && targetDate) {
+                    this.scheduleTask(taskId, targetDate);
+                }
+            });
+        });
+    },
+    
+    /**
+     * 将任务排期到指定日期
+     */
+    scheduleTask(taskId, dateStr) {
+        const task = TaskList.getTask(taskId);
+        if (!task) return;
+        
+        TaskList.updateTask(taskId, {
+            scheduledDate: dateStr
+        });
+        
+        // 重新渲染
+        this.load();
+        
+        if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+            WordBank.showToast('success', '任务已排期');
+        }
+    },
+    
+    /**
+     * 渲染任务清单（保持向后兼容）
+     */
+    render() {
+        this.load();
     },
     
     /**
