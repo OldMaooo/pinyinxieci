@@ -344,8 +344,7 @@ const TaskListUI = {
         unscheduledTasks.forEach(task => {
             html += `
                 <div class="task-inbox-item mb-2" 
-                     data-task-id="${task.id}" 
-                     draggable="true">
+                     data-task-id="${task.id}">
                     ${this.renderTaskCard(task, true)}
                 </div>
             `;
@@ -576,20 +575,20 @@ const TaskListUI = {
      * 绑定拖拽事件
      */
     bindDragEvents() {
-        // 待排期任务拖拽
-        document.querySelectorAll('.task-inbox-item').forEach(item => {
-            item.addEventListener('dragstart', (e) => {
-                e.dataTransfer.effectAllowed = 'move';
-                const taskId = item.getAttribute('data-task-id');
-                e.dataTransfer.setData('text/plain', taskId);
-                e.dataTransfer.setData('source', 'inbox');
-                item.classList.add('dragging');
-            });
-            
-            item.addEventListener('dragend', (e) => {
-                item.classList.remove('dragging');
-            });
-        });
+        // 待排期任务拖拽 - 已禁用，确保日期选择按钮可以正常点击
+        // document.querySelectorAll('.task-inbox-item').forEach(item => {
+        //     item.addEventListener('dragstart', (e) => {
+        //         e.dataTransfer.effectAllowed = 'move';
+        //         const taskId = item.getAttribute('data-task-id');
+        //         e.dataTransfer.setData('text/plain', taskId);
+        //         e.dataTransfer.setData('source', 'inbox');
+        //         item.classList.add('dragging');
+        //     });
+        //     
+        //     item.addEventListener('dragend', (e) => {
+        //         item.classList.remove('dragging');
+        //     });
+        // });
         
         // 日历中的任务卡片拖拽（只有练习任务可拖拽）
         document.querySelectorAll('.calendar-task-card[draggable="true"]').forEach(item => {
