@@ -440,28 +440,67 @@ const TaskListUI = {
     },
     
     /**
+     * 检查家长验证是否在有效期内（5分钟）
+     */
+    isAdminVerified() {
+        const verifiedTime = localStorage.getItem('admin_verified_time');
+        if (!verifiedTime) return false;
+        
+        const now = Date.now();
+        const elapsed = now - parseInt(verifiedTime);
+        const fiveMinutes = 5 * 60 * 1000; // 5分钟（毫秒）
+        
+        return elapsed < fiveMinutes;
+    },
+    
+    /**
+     * 保存家长验证时间戳
+     */
+    saveAdminVerified() {
+        localStorage.setItem('admin_verified_time', Date.now().toString());
+    },
+    
+    /**
      * 显示删除确认（需要家长验证）
      * @param {string|null} taskId - 任务ID，如果为null且isClearAll为true，则清空全部
      * @param {boolean} isClearAll - 是否清空全部
      */
     showDeleteConfirm(taskId, isClearAll = false) {
+        // 检查是否在5分钟内已验证过
+        if (this.isAdminVerified()) {
+            // 直接执行删除操作
+            this.executeDelete(taskId, isClearAll);
+            return;
+        }
+        
+        // 需要重新验证
         const password = prompt('请输入管理员密码以确认删除：\n（输入英文字母Admin，区分大小写）');
         if (password === 'Admin') {
-            if (isClearAll) {
-                if (confirm('确定要清空所有任务吗？此操作不可恢复。')) {
-                    TaskList.clearAllTasks();
-                    this.render();
-                    this.updateBadge();
-                }
-            } else if (taskId) {
-                if (confirm('确定要删除这个任务吗？')) {
-                    TaskList.deleteTask(taskId);
-                    this.render();
-                    this.updateBadge();
-                }
-            }
+            // 保存验证时间戳
+            this.saveAdminVerified();
+            // 执行删除操作
+            this.executeDelete(taskId, isClearAll);
         } else if (password !== null) {
             alert('密码错误，删除操作已取消。');
+        }
+    },
+    
+    /**
+     * 执行删除操作
+     */
+    executeDelete(taskId, isClearAll) {
+        if (isClearAll) {
+            if (confirm('确定要清空所有任务吗？此操作不可恢复。')) {
+                TaskList.clearAllTasks();
+                this.render();
+                this.updateBadge();
+            }
+        } else if (taskId) {
+            if (confirm('确定要删除这个任务吗？')) {
+                TaskList.deleteTask(taskId);
+                this.render();
+                this.updateBadge();
+            }
         }
     },
     

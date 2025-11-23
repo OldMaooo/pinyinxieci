@@ -920,6 +920,20 @@ const Practice = {
             clearInterval(this.timer);
         }
         
+        // 检查是否已存在该题目的记录，如果存在则移除旧的（防止重复）
+        const existingIdx = this.practiceLog.details.findIndex(d => d.wordId === word.id);
+        if (existingIdx >= 0) {
+            const oldDetail = this.practiceLog.details[existingIdx];
+            // 如果旧记录是正确的，需要调整计数
+            if (oldDetail.correct) {
+                this.practiceLog.correctCount = Math.max(0, this.practiceLog.correctCount - 1);
+            } else {
+                // 如果旧记录是错误，需要调整计数（避免重复计数）
+                this.practiceLog.errorCount = Math.max(0, this.practiceLog.errorCount - 1);
+            }
+            this.practiceLog.details.splice(existingIdx, 1);
+        }
+        
         // 记录为错误（不会）
         this.practiceLog.errorCount++;
         this.practiceLog.wordTimes.push(wordTime);
@@ -938,6 +952,11 @@ const Practice = {
         
         // 持续草稿保存
         this.saveAutosaveDraft();
+        
+        // 更新任务进度（如果有任务，在答题后立即更新）
+        if (this.currentTaskId && typeof TaskList !== 'undefined') {
+            this.updateTaskProgress(false);
+        }
         
         // 2秒后下一题
         this.scheduleNextWord(2000, () => {
