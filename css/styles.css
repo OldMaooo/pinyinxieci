@@ -957,8 +957,8 @@
 }
 
 .task-inbox-item {
-    cursor: move;
     width: 100%;
+    max-width: 350px;
     margin-bottom: 1rem;
 }
 
