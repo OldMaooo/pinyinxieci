@@ -110,7 +110,57 @@ const Storage = {
         }
         this.saveWordMastery(mastery);
     },
-
+    
+    /**
+     * 复习计划管理
+     */
+    getAllReviewPlans() {
+        const data = localStorage.getItem(this.KEYS.REVIEW_PLANS);
+        const plans = data ? JSON.parse(data) : {};
+        return Object.values(plans);
+    },
+    
+    saveAllReviewPlans(plans) {
+        // plans可以是对象（wordId为key）或数组
+        let plansObj = {};
+        if (Array.isArray(plans)) {
+            plans.forEach(plan => {
+                if (plan.wordId) {
+                    plansObj[plan.wordId] = plan;
+                }
+            });
+        } else {
+            plansObj = plans;
+        }
+        localStorage.setItem(this.KEYS.REVIEW_PLANS, JSON.stringify(plansObj));
+    },
+    
+    getReviewPlan(wordId) {
+        const plans = this.getAllReviewPlans();
+        return plans.find(p => p.wordId === wordId) || null;
+    },
+    
+    saveReviewPlan(plan) {
+        if (!plan || !plan.wordId) {
+            console.error('[Storage.saveReviewPlan] 无效的计划对象');
+            return;
+        }
+        
+        const plans = this.getAllReviewPlans();
+        const plansObj = {};
+        plans.forEach(p => {
+            plansObj[p.wordId] = p;
+        });
+        plansObj[plan.wordId] = plan;
+        this.saveAllReviewPlans(plansObj);
+    },
+    
+    deleteReviewPlan(wordId) {
+        const plans = this.getAllReviewPlans();
+        const filtered = plans.filter(p => p.wordId !== wordId);
+        this.saveAllReviewPlans(filtered);
+    },
+    
     /**
      * 题库管理
      */
