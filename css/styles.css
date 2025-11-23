@@ -487,6 +487,9 @@
     /* 拼音使用系统默认字体，不使用楷体 */
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
     letter-spacing: 0.02em;
+    /* 默认黑色，加粗 */
+    color: #212529;
+    font-weight: 600;
     word-spacing: 0.1em;
     display: flex;
     align-items: center;

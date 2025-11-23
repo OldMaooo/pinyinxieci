@@ -1013,7 +1013,9 @@ const Practice = {
             const icon = isCorrect 
                 ? '<i class="bi bi-check-circle-fill text-success me-2" style="font-size: 1.2em;"></i>' 
                 : '<i class="bi bi-x-circle-fill text-danger me-2" style="font-size: 1.2em;"></i>';
+            // 默认使用黑色，加粗，拼音和中文粗细保持一致
             const color = isCorrect ? 'text-success' : 'text-danger';
+            const defaultStyle = 'color: #212529; font-weight: 600;';
             
             let displayText = this._currentDisplayText || word.pinyin || word.word;
             const correctWord = word.word;
@@ -1023,6 +1025,7 @@ const Practice = {
             }
             
             let replacements = 0;
+            // 正确答案用绿色加粗，错误答案用红色加粗，但默认显示用黑色加粗
             const wrapText = () => `<span class="${color} fw-bold">${correctWord}</span>`;
             
             if (wordPinyin && wordPinyin.trim()) {
@@ -1047,7 +1050,8 @@ const Practice = {
                 displayText = `${displayText} ${wrapText()}`;
             }
             
-            pinyinDisplay.innerHTML = icon + displayText;
+            // 确保整个显示文本使用黑色加粗样式（拼音和中文保持一致）
+            pinyinDisplay.innerHTML = icon + `<span style="${defaultStyle}">${displayText}</span>`;
         }
         
         // 错误时在田字格中显示正确答案（楷体红色）

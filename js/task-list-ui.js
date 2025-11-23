@@ -281,7 +281,24 @@ const TaskListUI = {
         const grouped = this.groupWordsBySemesterUnit(taskWords);
         const semesters = this.sortSemesters(Object.keys(grouped));
         
-        // 渲染详情内容
+        // 获取字的掌握状态（用于显示完成率）
+        const logs = (Storage.getPracticeLogsFiltered && Storage.getPracticeLogsFiltered()) || Storage.getPracticeLogs() || [];
+        const errorWords = Storage.getErrorWordsFiltered() || [];
+        const errorWordIds = new Set(errorWords.map(ew => ew.wordId));
+        
+        // 统计每个字的正确次数
+        const wordCorrectCount = new Map();
+        logs.forEach(log => {
+            if (log.details && Array.isArray(log.details)) {
+                log.details.forEach(detail => {
+                    if (detail.correct) {
+                        wordCorrectCount.set(detail.wordId, (wordCorrectCount.get(detail.wordId) || 0) + 1);
+                    }
+                });
+            }
+        });
+        
+        // 渲染详情内容（使用表格视图）
         let html = `
             <div class="mb-3">
                 <h6>任务信息</h6>
@@ -300,30 +317,91 @@ const TaskListUI = {
         if (semesters.length === 0) {
             html += '<div class="text-center text-muted py-3">暂无题目</div>';
         } else {
+            // 按学期划分，每个学期一个表格
             semesters.forEach(semester => {
-                html += `<div class="mb-4">`;
-                html += `<h6 class="mb-2 text-primary">${semester}</h6>`;
-                
                 const units = this.sortUnits(grouped[semester]);
+                
+                // 计算学期的完成率
+                let semesterMasteredCount = 0;
+                let semesterTotalCount = 0;
                 units.forEach(unitKey => {
                     const words = grouped[semester][unitKey];
+                    if (Array.isArray(words) && words.length > 0) {
+                        semesterTotalCount += words.length;
+                        words.forEach(w => {
+                            const isError = errorWordIds.has(w.id);
+                            const hasCorrect = wordCorrectCount.get(w.id) > 0;
+                            const isMastered = hasCorrect && !isError;
+                            if (isMastered) semesterMasteredCount++;
+                        });
+                    }
+                });
+                const semesterPieHtml = typeof PracticeRange !== 'undefined' && PracticeRange.generateCompletionPie 
+                    ? PracticeRange.generateCompletionPie(semesterMasteredCount, semesterTotalCount)
+                    : '';
+                
+                html += `
+                    <div class="mb-4">
+                        <div class="d-flex align-items-center mb-2">
+                            <h6 class="mb-0 text-primary">${semester}</h6>
+                            <span style="margin-left: 0.5rem; display: inline-flex; align-items: center;">${semesterPieHtml}</span>
+                        </div>
+                        <table class="table table-sm mb-0 practice-range-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 130px;">单元</th>
+                                    <th style="min-width: 300px;">汉字</th>
+                                    <th style="width: 60px; text-align: center;">字数</th>
+                                    <th style="width: 60px; text-align: center;">完成</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                units.forEach(unitKey => {
+                    const words = grouped[semester][unitKey];
+                    if (!Array.isArray(words) || words.length === 0) {
+                        return;
+                    }
                     const unitLabel = words.unitLabel || this.formatUnitLabel(unitKey);
                     
-                    html += `<div class="mb-3 ps-3 border-start border-2">`;
-                    html += `<div class="fw-bold mb-2">${unitLabel} <span class="text-muted small">(${words.length} 个字)</span></div>`;
-                    html += `<div class="d-flex flex-wrap gap-2">`;
+                    // 计算每个字的状态和完成率
+                    let masteredCount = 0;
+                    const wordTags = words.map(w => {
+                        const isError = errorWordIds.has(w.id) || task.progress.errors.includes(w.id);
+                        const hasCorrect = wordCorrectCount.get(w.id) > 0;
+                        const isMastered = hasCorrect && !isError;
+                        if (isMastered) masteredCount++;
+                        
+                        // 确定tag样式（优先级：已掌握 > 有错误 > 未测试）
+                        let tagClass = 'word-tag-default';
+                        if (isMastered) {
+                            tagClass = 'word-tag-mastered';
+                        } else if (isError) {
+                            tagClass = 'word-tag-error';
+                        }
+                        
+                        return `<span class="word-tag ${tagClass}">${w.word}</span>`;
+                    }).join('');
                     
-                    words.forEach(word => {
-                        // 检查是否在错误列表中
-                        const isError = task.progress.errors.includes(word.id);
-                        const tagClass = isError ? 'word-tag-error' : 'word-tag word-tag-default';
-                        html += `<span class="word-tag ${tagClass}">${word.word}</span>`;
-                    });
+                    // 计算完成率并生成饼图
+                    const completionRateHtml = typeof PracticeRange !== 'undefined' && PracticeRange.generateCompletionPie
+                        ? PracticeRange.generateCompletionPie(masteredCount, words.length)
+                        : '';
                     
-                    html += `</div></div>`;
+                    html += `<tr class="unit-row" data-semester="${semester}" data-unit="${unitKey}">`;
+                    html += `<td>${unitLabel}</td>`;
+                    html += `<td class="word-tags-cell">${wordTags}</td>`;
+                    html += `<td style="text-align: center;">${words.length}</td>`;
+                    html += `<td style="text-align: center;">${completionRateHtml}</td>`;
+                    html += `</tr>`;
                 });
                 
-                html += `</div>`;
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
             });
         }
         
