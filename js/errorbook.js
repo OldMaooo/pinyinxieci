@@ -220,7 +220,7 @@ const ErrorBook = {
                                     <input type="checkbox" class="form-check-input error-select" data-id="${id}">
                                 </div>
                                 <div class="d-flex justify-content-between align-items-start">
-                                    <div class="d-flex align-items-start gap-2">
+                                    <div class="d-flex align-items-start gap-2" style="margin-left: 1.5rem;">
                                         <div>
                                             <div class="text-muted small mt-1" title="${groupsText}">${groupsText}</div>
                                         </div>
