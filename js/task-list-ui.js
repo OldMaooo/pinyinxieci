@@ -5,9 +5,9 @@
 
 const TaskListUI = {
     /**
-     * 当前显示模式
+     * 当前显示模式（合并/拆分）
      */
-    currentViewMode: 'merged', // 'merged' | 'split' | 'calendar'
+    currentDisplayMode: 'merged', // 'merged' | 'split'
     
     /**
      * 初始化
@@ -29,10 +29,10 @@ const TaskListUI = {
             });
         }
         
-        // 显示模式切换
-        document.querySelectorAll('input[name="task-view-mode"]').forEach(radio => {
+        // 显示模式切换（合并/拆分）
+        document.querySelectorAll('input[name="task-display-mode"]').forEach(radio => {
             radio.addEventListener('change', (e) => {
-                this.currentViewMode = e.target.value;
+                this.currentDisplayMode = e.target.value;
                 this.load();
             });
         });
@@ -57,20 +57,14 @@ const TaskListUI = {
     },
     
     /**
-     * 加载任务清单（根据当前显示模式）
+     * 加载任务清单（只使用日历视图）
      */
     load() {
         // 确保自动生成复习任务
-        TaskList.getAllTasksWithAutoReview(7);
+        TaskList.getAllTasksWithAutoReview(30);
         
-        // 根据显示模式渲染
-        if (this.currentViewMode === 'calendar') {
-            this.renderCalendarView();
-        } else if (this.currentViewMode === 'split') {
-            this.renderSplitView();
-        } else {
-            this.renderMergedView();
-        }
+        // 只渲染日历视图
+        this.renderCalendarView();
     },
     
     /**

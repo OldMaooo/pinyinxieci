@@ -902,8 +902,16 @@
     color: white;
     border-radius: 0.25rem;
     font-size: 0.75rem;
-    cursor: move;
     transition: opacity 0.2s;
+    margin-bottom: 0.25rem;
+}
+
+.calendar-task-card[draggable="true"] {
+    cursor: move;
+}
+
+.calendar-task-card:not([draggable="true"]) {
+    cursor: default;
 }
 
 .calendar-task-card.dragging {
@@ -916,6 +924,10 @@
 
 .calendar-task-card.practice-task {
     background-color: var(--bs-primary);
+}
+
+.calendar-task-card.merged-task {
+    background-color: var(--bs-success);
 }
 
 .calendar-task-name {

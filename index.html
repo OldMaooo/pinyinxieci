@@ -434,19 +434,15 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0"><i class="bi bi-list-check"></i> 任务清单</h5>
                     <div class="d-flex gap-2 align-items-center">
-                        <!-- 显示模式切换 -->
+                        <!-- 显示模式切换（合并/拆分） -->
                         <div class="btn-group" role="group">
-                            <input type="radio" class="btn-check" name="task-view-mode" id="task-view-merged" value="merged" checked>
-                            <label class="btn btn-sm btn-outline-primary" for="task-view-merged">
-                                <i class="bi bi-calendar3"></i> 按天视图
+                            <input type="radio" class="btn-check" name="task-display-mode" id="task-display-merged" value="merged" checked>
+                            <label class="btn btn-sm btn-outline-primary" for="task-display-merged">
+                                <i class="bi bi-layers"></i> 合并模式
                             </label>
-                            <input type="radio" class="btn-check" name="task-view-mode" id="task-view-split" value="split">
-                            <label class="btn btn-sm btn-outline-primary" for="task-view-split">
-                                <i class="bi bi-list-ul"></i> 拆分视图
-                            </label>
-                            <input type="radio" class="btn-check" name="task-view-mode" id="task-view-calendar" value="calendar">
-                            <label class="btn btn-sm btn-outline-primary" for="task-view-calendar">
-                                <i class="bi bi-calendar-month"></i> 日历视图
+                            <input type="radio" class="btn-check" name="task-display-mode" id="task-display-split" value="split">
+                            <label class="btn btn-sm btn-outline-primary" for="task-display-split">
+                                <i class="bi bi-list-ul"></i> 拆分模式
                             </label>
                         </div>
                         <button class="btn btn-sm btn-outline-danger" id="task-list-clear-all-btn">
@@ -455,21 +451,14 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <!-- 按天视图和拆分视图的容器 -->
-                    <div id="task-list-container" class="task-list-view">
-                        <div class="text-center text-muted py-5">
-                            <i class="bi bi-inbox" style="font-size: 3rem;"></i>
-                            <p class="mt-3">暂无任务</p>
-                        </div>
-                    </div>
-                    <!-- 日历视图的容器 -->
-                    <div id="task-calendar-container" class="task-list-view d-none">
+                    <!-- 日历视图容器 -->
+                    <div id="task-calendar-container" class="task-list-view">
                         <div class="d-flex gap-3" style="height: calc(100vh - 200px);">
                             <!-- 日历区域 -->
                             <div class="flex-grow-1" id="task-calendar-area">
                                 <div class="text-center text-muted py-5">
                                     <i class="bi bi-calendar-month" style="font-size: 3rem;"></i>
-                                    <p class="mt-3">日历视图</p>
+                                    <p class="mt-3">加载中...</p>
                                 </div>
                             </div>
                             <!-- 待排期任务区域（Inbox） -->
