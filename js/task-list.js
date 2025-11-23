@@ -204,33 +204,77 @@ const TaskList = {
         // 按学期分组
         const bySemester = {};
         selectedUnits.forEach(unit => {
-            const semester = `${unit.grade}${unit.semester}`;
+            // 学期格式：一年级上册 -> 一上，二年级下册 -> 二下
+            const gradeNum = this._gradeToNumber(unit.grade);
+            const semester = `${gradeNum}${unit.semester}`;
             if (!bySemester[semester]) {
                 bySemester[semester] = [];
             }
             bySemester[semester].push(unit);
         });
         
-        const semesterKeys = Object.keys(bySemester);
+        const semesterKeys = Object.keys(bySemester).sort();
         
-        // 如果只有一个学期，显示详细信息
+        // 如果只有一个学期
         if (semesterKeys.length === 1) {
-            const units = bySemester[semesterKeys[0]];
-            if (units.length <= 3) {
-                const unitNames = units.map(u => `${u.unit}`).join('、');
-                return `${semesterKeys[0]}${unitNames}`;
+            const semester = semesterKeys[0];
+            const units = bySemester[semester];
+            
+            // 提取单元编号并排序
+            const unitNumbers = units.map(u => {
+                // 从unitLabel或unit中提取数字
+                const match = (u.unitLabel || u.unit || '').match(/(\d+)/);
+                return match ? parseInt(match[1]) : 0;
+            }).filter(n => n > 0).sort((a, b) => a - b);
+            
+            if (unitNumbers.length === 0) {
+                return `${semester}_${units.length}个单元`;
+            }
+            
+            if (unitNumbers.length === 1) {
+                return `${semester}_${unitNumbers[0]}单元`;
+            } else if (unitNumbers.length <= 3) {
+                // 1-3个单元，显示所有：三上_1/3/8单元
+                return `${semester}_${unitNumbers.join('/')}单元`;
             } else {
-                return `${semesterKeys[0]}${units[0].unit}-${units[units.length - 1].unit}`;
+                // 多个单元，显示范围：三上_1-8单元
+                return `${semester}_${unitNumbers[0]}-${unitNumbers[unitNumbers.length - 1]}单元`;
             }
         }
         
-        // 多个学期，显示主要范围
-        if (semesterKeys.length <= 3) {
-            return semesterKeys.join('、');
+        // 多个学期，显示主要学期和单元范围
+        if (semesterKeys.length <= 2) {
+            const parts = semesterKeys.map(semester => {
+                const units = bySemester[semester];
+                const unitNumbers = units.map(u => {
+                    const match = (u.unitLabel || u.unit || '').match(/(\d+)/);
+                    return match ? parseInt(match[1]) : 0;
+                }).filter(n => n > 0).sort((a, b) => a - b);
+                
+                if (unitNumbers.length === 0) {
+                    return `${semester}_${units.length}个单元`;
+                } else if (unitNumbers.length === 1) {
+                    return `${semester}_${unitNumbers[0]}单元`;
+                } else {
+                    return `${semester}_${unitNumbers[0]}-${unitNumbers[unitNumbers.length - 1]}单元`;
+                }
+            });
+            return parts.join('、');
         }
         
-        // 超过3个范围，显示"多单元"
-        return '多单元';
+        // 超过2个学期，显示学期范围
+        return `${semesterKeys[0]}-${semesterKeys[semesterKeys.length - 1]}`;
+    },
+    
+    /**
+     * 年级转数字（一->1, 二->2, ...）
+     */
+    _gradeToNumber(grade) {
+        const map = {
+            '一': '1', '二': '2', '三': '3', '四': '4', '五': '5', '六': '6',
+            '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6'
+        };
+        return map[grade] || grade;
     },
     
     /**

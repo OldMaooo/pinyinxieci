@@ -93,6 +93,7 @@
 
 .practice-range-accordion {
     padding-top: 0;
+    min-width: 100%; /* 确保收起时宽度不变 */
 }
 .practice-range-accordion .accordion-item {
     border: 1px solid var(--bs-border-color);

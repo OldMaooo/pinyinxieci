@@ -135,12 +135,29 @@ const Practice = {
             Storage.saveSettings(settings);
         }
         
-        // 获取题目（支持错题集一键练习）
+        // 获取题目（支持错题集一键练习和任务模式）
         let words = [];
+        let currentTaskId = null;
+        
+        // 检查是否从任务清单开始
+        const taskIdFromStorage = localStorage.getItem('current_task_id');
+        if (taskIdFromStorage && typeof TaskList !== 'undefined') {
+            const task = TaskList.getTask(taskIdFromStorage);
+            if (task) {
+                currentTaskId = taskIdFromStorage;
+                const wordBank = Storage.getWordBank();
+                words = wordBank.filter(w => task.wordIds.includes(w.id));
+                
+                // 保留所有题目，从completed位置开始（在设置currentIndex时处理）
+            }
+            // 清除标记
+            localStorage.removeItem('current_task_id');
+        }
+        
         const errorOnly = localStorage.getItem('practice_error_only') === '1';
         const errorWordIdsJson = localStorage.getItem('practice_error_word_ids');
         
-        if (errorWordIdsJson) {
+        if (words.length === 0 && errorWordIdsJson) {
             // 优先使用从结果页传入的错题ID列表（当前轮的错题）
             try {
                 const errorWordIds = JSON.parse(errorWordIdsJson);
@@ -152,19 +169,24 @@ const Practice = {
                 console.error('解析错题ID列表失败:', e);
                 localStorage.removeItem('practice_error_word_ids');
             }
-        } else if (errorOnly) {
+        } else if (words.length === 0 && errorOnly) {
             const errorWords = Storage.getErrorWordsFiltered();
             const wordBank = Storage.getWordBank();
             words = wordBank.filter(w => errorWords.some(ew => ew.wordId === w.id));
             // 重置标记
             localStorage.removeItem('practice_error_only');
-        } else if (typeof PracticeRange !== 'undefined' && PracticeRange.getSelectedWords) {
+        } else if (words.length === 0 && typeof PracticeRange !== 'undefined' && PracticeRange.getSelectedWords) {
             // 仅读取练习页容器中的选择，避免与首页重复
             words = PracticeRange.getSelectedWords('practice-range-container');
-        } else {
+        } else if (words.length === 0) {
             // 降级：使用原来的范围选择
             const range = document.getElementById('practice-range-select')?.value || 'all';
             words = this.getWordsByRange(range);
+        }
+        
+        // 保存当前任务ID
+        if (currentTaskId) {
+            this.currentTaskId = currentTaskId;
         }
         
         if (words.length === 0) {
@@ -209,7 +231,20 @@ const Practice = {
         }
         
         this.currentWords = words;
-        this.currentIndex = 0;
+        
+        // 如果是从任务继续，使用任务的进度
+        let task = null;
+        if (currentTaskId && typeof TaskList !== 'undefined') {
+            task = TaskList.getTask(currentTaskId);
+        }
+        
+        if (currentTaskId && task && task.progress && task.progress.completed > 0) {
+            // 从上次停止的地方继续（completed表示已完成的数量，即当前要答的题目索引）
+            this.currentIndex = task.progress.completed;
+        } else {
+            this.currentIndex = 0;
+        }
+        
         this.history = []; // 重置历史记录
         
         // 重置提交限制相关状态（容错机制）
@@ -286,10 +321,60 @@ const Practice = {
         try {
             // 使用草稿保存而不是写入正式练习记录，避免生成重复的按轮记录
             this.saveAutosaveDraft();
+            
+            // 如果有任务ID，更新任务进度
+            if (this.currentTaskId && typeof TaskList !== 'undefined') {
+                this.updateTaskProgress(true); // true表示中断
+            }
         } catch(e) {
             console.warn('保存未完成练习失败:', e);
         } finally {
             this.isActive = false;
+        }
+    },
+    
+    /**
+     * 更新任务进度
+     * @param {boolean} paused - 是否暂停（中断）
+     */
+    updateTaskProgress(paused = false) {
+        if (!this.currentTaskId || !this.practiceLog || typeof TaskList === 'undefined') return;
+        
+        const task = TaskList.getTask(this.currentTaskId);
+        if (!task) return;
+        
+        // completed应该是已答题的数量（currentIndex表示当前要答的题目索引）
+        const completed = this.currentIndex;
+        const correct = this.practiceLog.correctCount || 0;
+        const errors = this.practiceLog.errorWords || [];
+        
+        const updates = {
+            progress: {
+                total: task.progress.total,
+                completed: completed,
+                correct: correct,
+                errors: errors
+            }
+        };
+        
+        if (paused) {
+            updates.status = TaskList.STATUS.PAUSED;
+        } else if (completed >= task.progress.total) {
+            updates.status = TaskList.STATUS.COMPLETED;
+        } else {
+            updates.status = TaskList.STATUS.IN_PROGRESS;
+        }
+        
+        TaskList.updateTask(this.currentTaskId, updates);
+        
+        // 更新任务清单UI（如果任务清单页面可见）
+        if (typeof TaskListUI !== 'undefined') {
+            TaskListUI.updateBadge();
+            // 如果任务清单页面当前可见，刷新显示
+            const taskListPage = document.getElementById('tasklist');
+            if (taskListPage && !taskListPage.classList.contains('d-none')) {
+                TaskListUI.render();
+            }
         }
     },
     
@@ -726,6 +811,11 @@ const Practice = {
             // 持续草稿保存
             this.saveAutosaveDraft();
             
+            // 更新任务进度（如果有任务）
+            if (this.currentTaskId && typeof TaskList !== 'undefined') {
+                this.updateTaskProgress(false);
+            }
+            
             // 恢复按钮状态
             this.isSubmitting = false;
             submitBtn.disabled = false;
@@ -985,6 +1075,11 @@ const Practice = {
             return;
         }
         
+        // 如果有任务ID，更新任务进度
+        if (this.currentTaskId && typeof TaskList !== 'undefined') {
+            this.updateTaskProgress(false); // false表示完成
+        }
+        
         // 跳转到结果页面
         if (log && typeof Main !== 'undefined') {
             Main.showResults(log.id);
@@ -994,6 +1089,9 @@ const Practice = {
         if (typeof Storage !== 'undefined' && Storage.clearPracticeAutosave) {
             Storage.clearPracticeAutosave();
         }
+        
+        // 清除任务ID
+        this.currentTaskId = null;
     },
     
     _buildPracticeLogPayload({ partial, isDebug }) {

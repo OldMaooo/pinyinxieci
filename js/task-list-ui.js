@@ -16,15 +16,11 @@ const TaskListUI = {
      * 绑定事件
      */
     bindEvents() {
-        // 清空全部按钮
+        // 清空全部按钮（需要家长验证）
         const clearAllBtn = document.getElementById('task-list-clear-all-btn');
         if (clearAllBtn) {
             clearAllBtn.addEventListener('click', () => {
-                if (confirm('确定要清空所有任务吗？此操作不可恢复。')) {
-                    TaskList.clearAllTasks();
-                    this.render();
-                    this.updateBadge();
-                }
+                this.showDeleteConfirm(null, true); // true表示清空全部
             });
         }
         
@@ -208,16 +204,12 @@ const TaskListUI = {
      * 绑定任务卡片事件
      */
     bindTaskCardEvents() {
-        // 删除按钮
+        // 删除按钮（需要家长验证）
         document.querySelectorAll('.task-delete-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const taskId = btn.getAttribute('data-task-id');
-                if (confirm('确定要删除这个任务吗？')) {
-                    TaskList.deleteTask(taskId);
-                    this.render();
-                    this.updateBadge();
-                }
+                this.showDeleteConfirm(taskId);
             });
         });
         
@@ -263,9 +255,11 @@ const TaskListUI = {
         }
         
         // 更新任务状态
-        TaskList.updateTask(taskId, {
-            status: TaskList.STATUS.IN_PROGRESS
-        });
+        if (task.status === TaskList.STATUS.PENDING || task.status === TaskList.STATUS.PAUSED) {
+            TaskList.updateTask(taskId, {
+                status: TaskList.STATUS.IN_PROGRESS
+            });
+        }
         
         // 跳转到练习页面并开始
         if (typeof Main !== 'undefined') {
@@ -277,8 +271,6 @@ const TaskListUI = {
         
         // 触发开始练习
         if (typeof Practice !== 'undefined') {
-            // 需要根据任务中的wordIds来开始练习
-            // 这里先标记，等Practice模块支持任务模式后再实现
             Practice.start({ taskId: taskId });
         }
     },
@@ -440,6 +432,32 @@ const TaskListUI = {
             hour: '2-digit',
             minute: '2-digit'
         });
+    },
+    
+    /**
+     * 显示删除确认（需要家长验证）
+     * @param {string|null} taskId - 任务ID，如果为null且isClearAll为true，则清空全部
+     * @param {boolean} isClearAll - 是否清空全部
+     */
+    showDeleteConfirm(taskId, isClearAll = false) {
+        const password = prompt('请输入管理员密码以确认删除：\n（输入英文字母Admin，区分大小写）');
+        if (password === 'Admin') {
+            if (isClearAll) {
+                if (confirm('确定要清空所有任务吗？此操作不可恢复。')) {
+                    TaskList.clearAllTasks();
+                    this.render();
+                    this.updateBadge();
+                }
+            } else if (taskId) {
+                if (confirm('确定要删除这个任务吗？')) {
+                    TaskList.deleteTask(taskId);
+                    this.render();
+                    this.updateBadge();
+                }
+            }
+        } else if (password !== null) {
+            alert('密码错误，删除操作已取消。');
+        }
     },
     
     /**
