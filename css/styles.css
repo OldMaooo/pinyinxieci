@@ -821,13 +821,7 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
 }
 
-.task-card.practice-task {
-    border-left: 3px solid #0d6efd;
-}
-
-.task-card.review-task {
-    border-left: 3px solid #0dcaf0;
-}
+/* 已移除左侧蓝色条样式 */
 
 /* 日历视图样式 */
 .calendar-grid {

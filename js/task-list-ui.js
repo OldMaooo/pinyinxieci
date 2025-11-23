@@ -900,7 +900,7 @@ const TaskListUI = {
                             <span>${progressPercent}%</span>
                         </div>
                         <div class="progress" style="height: 6px;">
-                            <div class="progress-bar" role="progressbar" style="width: ${progressPercent}%" 
+                            <div class="progress-bar ${progressBarClass}" role="progressbar" style="width: ${progressPercent}%" 
                                  aria-valuenow="${progressPercent}" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
