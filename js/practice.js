@@ -160,6 +160,12 @@ const Practice = {
             localStorage.removeItem('current_task_id');
         }
         
+        // 检查是否从复习计划或options传入wordIds
+        if (words.length === 0 && options.wordIds && Array.isArray(options.wordIds)) {
+            const wordBank = Storage.getWordBank();
+            words = wordBank.filter(w => options.wordIds.includes(w.id));
+        }
+        
         const errorOnly = localStorage.getItem('practice_error_only') === '1';
         const errorWordIdsJson = localStorage.getItem('practice_error_word_ids');
         
@@ -633,11 +639,17 @@ const Practice = {
                         this.practiceLog.correctCount++;
                         this.practiceLog.details.push({ wordId: word.id, correct: true, snapshot, displayText: this._currentDisplayText });
                         this.showFeedback(true, word, '');
+                        
+                        // 如果是复习计划中的字，更新复习计划状态
+                        this.updateReviewPlanIfNeeded(word.id, true);
                     } else {
                         this.practiceLog.errorCount++;
                         await this.recordError(word, snapshot);
                         this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot, displayText: this._currentDisplayText });
                         this.showFeedback(false, word, result.recognized || '时间到');
+                        
+                        // 如果是复习计划中的字，更新复习计划状态
+                        this.updateReviewPlanIfNeeded(word.id, false);
                     }
                 } catch (e) {
                     this.practiceLog.errorCount++;

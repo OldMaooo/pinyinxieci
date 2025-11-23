@@ -50,6 +50,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#wordbank">题库管理</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#reviewplan">
+                            <i class="bi bi-calendar-check"></i> 复习计划
+                        </a>
+                    </li>
                     <li class="nav-item ms-3">
                         <button class="btn btn-sm btn-outline-secondary align-self-center" id="theme-toggle-btn">
                             <i class="bi bi-brightness-high"></i> 主题
@@ -439,6 +444,27 @@
                         <div class="text-center text-muted py-5">
                             <i class="bi bi-inbox" style="font-size: 3rem;"></i>
                             <p class="mt-3">暂无任务</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 复习计划页面 -->
+        <section id="reviewplan" class="page-section d-none">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-calendar-check"></i> 艾宾浩斯复习计划</h5>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-primary" id="review-plan-refresh-btn">
+                            <i class="bi bi-arrow-clockwise"></i> 刷新
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="review-plan-container">
+                        <div class="text-center text-muted py-3">
+                            <span class="spinner-border spinner-border-sm me-2"></span>加载中...
                         </div>
                     </div>
                 </div>

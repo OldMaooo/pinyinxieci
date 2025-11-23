@@ -228,6 +228,10 @@ const Main = {
                     }
                 }, 100);
             }
+        } else if (pageId === 'reviewplan') {
+            if (typeof ReviewPlanUI !== 'undefined' && ReviewPlanUI.load) {
+                ReviewPlanUI.load();
+            }
         }
     },
     

@@ -255,10 +255,15 @@ const Storage = {
             date: new Date().toISOString()
         } : null;
 
+        const now = new Date().toISOString();
         if (errorWord) {
             // 更新已有错题
-            errorWord.lastErrorDate = new Date().toISOString();
+            errorWord.lastErrorDate = now;
             errorWord.errorCount += 1;
+            // 如果还没有markedAt，添加它（用于复习计划）
+            if (!errorWord.markedAt) {
+                errorWord.markedAt = errorWord.firstErrorDate || now;
+            }
             if (snapshotData) {
                 errorWord.handwritingSnapshots = errorWord.handwritingSnapshots || [];
                 errorWord.handwritingSnapshots.push(snapshotData);
@@ -269,9 +274,9 @@ const Storage = {
                 wordId: wordId,
                 word: word,
                 pinyin: pinyin,
-                markedAt: new Date().toISOString(), // 用于复习计划
-                firstErrorDate: new Date().toISOString(),
-                lastErrorDate: new Date().toISOString(),
+                markedAt: now, // 用于复习计划
+                firstErrorDate: now,
+                lastErrorDate: now,
                 errorCount: 1,
                 handwritingSnapshots: snapshotData ? [snapshotData] : []
             };
