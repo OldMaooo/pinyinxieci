@@ -531,8 +531,16 @@ const TaskListUI = {
         
         // 格式化日期显示
         const scheduledDate = task.scheduledDate;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const taskDate = scheduledDate ? new Date(scheduledDate + 'T00:00:00') : null;
+        const isToday = taskDate && taskDate.getTime() === today.getTime();
+        
+        // 日期显示：如果是今天，显示"今天"，否则显示完整日期
         const dateDisplay = scheduledDate 
-            ? new Date(scheduledDate + 'T00:00:00').toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })
+            ? (isToday 
+                ? '今天' 
+                : taskDate.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }))
             : '待排期';
         
         // 只有练习任务可以排期
