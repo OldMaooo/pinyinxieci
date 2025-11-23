@@ -267,7 +267,14 @@ const TaskListUI = {
         }
         
         const modal = new bootstrap.Modal(document.getElementById('task-detail-modal'));
+        const modalEl = document.getElementById('task-detail-modal');
+        const titleEl = document.getElementById('task-detail-title');
         const contentEl = document.getElementById('task-detail-content');
+        
+        // 设置弹窗标题为任务名称
+        if (titleEl) {
+            titleEl.textContent = task.name;
+        }
         
         // 显示加载中
         contentEl.innerHTML = '<div class="text-center text-muted py-3"><span class="spinner-border spinner-border-sm me-2"></span>加载中...</div>';
@@ -301,13 +308,11 @@ const TaskListUI = {
         // 渲染详情内容（使用表格视图）
         let html = `
             <div class="mb-3">
-                <h6>任务信息</h6>
-                <div class="small text-muted">
-                    <div>任务名称: <strong>${this.escapeHtml(task.name)}</strong></div>
-                    <div>题目总数: ${task.progress.total}</div>
-                    <div>已完成: ${task.progress.completed}</div>
-                    <div>正确: ${task.progress.correct}</div>
-                    <div>错误: ${task.progress.errors.length}</div>
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 small">
+                    <div><span class="text-muted">题目总数:</span> <strong>${task.progress.total}</strong></div>
+                    <div><span class="text-muted">已完成:</span> <strong>${task.progress.completed}</strong></div>
+                    <div><span class="text-muted">正确:</span> <strong class="text-success">${task.progress.correct}</strong></div>
+                    <div><span class="text-muted">错误:</span> <strong class="text-danger">${task.progress.errors.length}</strong></div>
                 </div>
             </div>
             <hr>

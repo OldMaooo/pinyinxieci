@@ -405,7 +405,7 @@
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title"><i class="bi bi-list-check"></i> 任务详情</h5>
+                        <h5 class="modal-title"><i class="bi bi-list-check"></i> <span id="task-detail-title">任务详情</span></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
@@ -493,10 +493,15 @@
                                             </button>
                                             <p class="text-muted small mb-2">包含题库、练习记录、错题本、设置</p>
                                             
-                                            <button class="btn btn-outline-success w-100" id="export-wordbank-btn">
+                                            <button class="btn btn-outline-success w-100 mb-2" id="export-wordbank-btn">
                                                 <i class="bi bi-file-earmark-text"></i> 仅导出题库
                                             </button>
-                                            <p class="text-muted small mt-2">仅包含题库数据</p>
+                                            <p class="text-muted small mb-2">仅包含题库数据</p>
+                                            
+                                            <button class="btn btn-outline-primary w-100" id="export-errors-btn">
+                                                <i class="bi bi-file-earmark-excel"></i> 导出错题和复习计划
+                                            </button>
+                                            <p class="text-muted small mt-2">仅包含错题和未来复习计划（轻量文件）</p>
                                         </div>
                                     </div>
                                     
@@ -527,69 +532,41 @@
                         </div>
                     </div>
                     
-                    <!-- 识别服务配置 -->
+                    <!-- 题库管理：设置掌握状态 -->
                     <div class="row mb-4">
                         <div class="col-12">
-                            <div class="card border-info">
-                                <div class="card-header bg-info text-white">
-                                    <h5 class="mb-0"><i class="bi bi-cloud-check"></i> 识别服务配置</h5>
+                            <div class="card border-success">
+                                <div class="card-header bg-success text-white">
+                                    <h5 class="mb-0"><i class="bi bi-check-circle"></i> 设置掌握状态</h5>
                                 </div>
                                 <div class="card-body">
                                     <div class="alert alert-info">
                                         <i class="bi bi-info-circle"></i> 
-                                        GitHub Pages 环境需要配置云端代理才能使用手写识别功能。系统已自动检测并配置，你也可以手动修改。
+                                        在下方选择要设置的单元，然后批量设置掌握状态
                                     </div>
                                     
-                                    <div class="mb-3">
-                                        <label class="form-label">云端代理地址：</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" id="proxy-base-input" 
-                                                   placeholder="https://pinyinxieci.vercel.app" 
-                                                   value="https://pinyinxieci.vercel.app">
-                                            <button class="btn btn-outline-primary" id="test-proxy-btn">
-                                                <i class="bi bi-check-circle"></i> 测试连接
-                                            </button>
-                                            <button class="btn btn-primary" id="save-proxy-btn">
-                                                <i class="bi bi-save"></i> 保存
-                                            </button>
-                                        </div>
-                                        <div class="form-text">
-                                            当前状态：<span id="proxy-status-text" class="text-muted">检测中...</span>
+                                    <!-- 练习范围视图（复用） -->
+                                    <div id="wordbank-practice-range-container" style="max-height: 600px; overflow-y: auto;">
+                                        <div class="text-center text-muted py-3">
+                                            <span class="spinner-border spinner-border-sm me-2"></span>加载中...
                                         </div>
                                     </div>
                                     
-                                    <div class="d-flex gap-2">
-                                        <button class="btn btn-sm btn-outline-secondary" id="reset-proxy-btn">
-                                            <i class="bi bi-arrow-clockwise"></i> 恢复默认
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-info" id="auto-detect-proxy-btn">
-                                            <i class="bi bi-magic"></i> 自动检测
-                                        </button>
+                                    <!-- 批量操作工具栏 -->
+                                    <div class="mt-3 d-flex gap-2 align-items-center flex-wrap" id="wordbank-batch-toolbar" style="display: none !important;">
+                                        <span class="text-muted">已选择 <strong id="wordbank-selected-count">0</strong> 个字</span>
+                                        <div class="ms-auto d-flex gap-2">
+                                            <button class="btn btn-sm btn-success" id="wordbank-batch-master-btn" disabled>
+                                                <i class="bi bi-check-circle"></i> 设为已掌握
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary" id="wordbank-batch-unmaster-btn" disabled>
+                                                <i class="bi bi-x-circle"></i> 设为未掌握
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- 题库列表 -->
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>生字</th>
-                                    <th>拼音</th>
-                                    <th>年级</th>
-                                    <th>学期</th>
-                                    <th>单元</th>
-                                    <th>操作</th>
-                                </tr>
-                            </thead>
-                            <tbody id="wordbank-table-body">
-                                <tr>
-                                    <td colspan="6" class="text-center text-muted">暂无数据，请先导入题库</td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
@@ -619,6 +596,7 @@
     <script src="js/word-groups.js" onerror="console.error('[ERROR] word-groups.js加载失败！', this.src)"></script>
     <script src="js/recognition.js"></script>
     <script src="js/wordbank.js"></script>
+    <script src="js/export.js"></script>
     <script src="js/handwriting.js"></script>
     <script src="js/practice.js"></script>
     <script src="js/statistics.js"></script>

@@ -293,8 +293,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // 识别服务配置
-    WordBank.initProxyConfig();
+    // 导出错题和复习计划
+    const exportErrorsBtn = document.getElementById('export-errors-btn');
+    if (exportErrorsBtn) {
+        exportErrorsBtn.addEventListener('click', () => {
+            if (typeof Export !== 'undefined') {
+                Export.exportErrorsAndReviewPlan();
+            } else {
+                alert('导出模块未加载');
+            }
+        });
+    }
 });
 
 // 识别服务配置相关方法

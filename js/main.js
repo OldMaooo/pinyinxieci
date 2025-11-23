@@ -217,7 +217,12 @@ const Main = {
                 TaskListUI.render();
             }
         } else if (pageId === 'wordbank') {
-            WordBank.loadWordBank();
+            if (typeof WordBank !== 'undefined' && WordBank.loadWordBank) {
+                WordBank.loadWordBank();
+            }
+            if (typeof WordBank !== 'undefined' && WordBank.loadMasteryView) {
+                WordBank.loadMasteryView();
+            }
         }
     },
     
