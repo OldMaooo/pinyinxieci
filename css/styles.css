@@ -996,17 +996,19 @@
 
 /* 卡片视图样式 */
 .task-cards-grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
     padding: 1rem 0;
     align-items: flex-start;
 }
 
+.task-cards-date-header {
+    grid-column: 1 / -1;
+    margin-bottom: 0.5rem;
+}
+
 .task-card-item {
-    flex: 0 0 100%;
-    width: 100%;
-    max-width: 100%;
     transition: transform 0.2s, box-shadow 0.2s;
     background-color: var(--bs-body-bg);
     border-radius: 0.5rem;

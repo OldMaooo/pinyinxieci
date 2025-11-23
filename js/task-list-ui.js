@@ -440,23 +440,45 @@ const TaskListUI = {
             return;
         }
         
+        // 按日期分组任务
+        const tasksByDate = {};
+        scheduledTasks.forEach(task => {
+            const dateStr = task.scheduledDate;
+            if (!tasksByDate[dateStr]) {
+                tasksByDate[dateStr] = [];
+            }
+            tasksByDate[dateStr].push(task);
+        });
+        
+        // 按日期排序
+        const sortedDates = Object.keys(tasksByDate).sort();
+        
         let html = '<div class="task-cards-grid">';
         
-        scheduledTasks.forEach(task => {
-            const taskDate = new Date(task.scheduledDate + 'T00:00:00');
-            const relativeTime = this.getRelativeTimeLabel(taskDate, today);
+        sortedDates.forEach(dateStr => {
+            const dateTasks = tasksByDate[dateStr];
+            const taskDate = new Date(dateStr + 'T00:00:00');
+            const isToday = taskDate.getTime() === today.getTime();
             
-            html += `
-                <div class="task-card-item" data-task-id="${task.id}" data-date="${task.scheduledDate}">
-                    <div class="task-card-header">
-                        <span class="task-card-time-label">${relativeTime}</span>
-                        <span class="task-card-date">${taskDate.toLocaleDateString('zh-CN', { month: 'long', day: 'numeric' })}</span>
+            // 如果是今天，显示一个标题
+            if (isToday) {
+                html += `
+                    <div class="task-cards-date-header">
+                        <h6 class="mb-2 text-primary">
+                            <i class="bi bi-calendar-check"></i> 今天
+                        </h6>
                     </div>
-                    <div class="task-card-body">
+                `;
+            }
+            
+            // 渲染该日期的所有任务卡片
+            dateTasks.forEach(task => {
+                html += `
+                    <div class="task-card-item" data-task-id="${task.id}" data-date="${task.scheduledDate}">
                         ${this.renderTaskCardForCardsView(task)}
                     </div>
-                </div>
-            `;
+                `;
+            });
         });
         
         html += '</div>';
