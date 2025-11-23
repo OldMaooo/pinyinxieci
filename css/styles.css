@@ -209,6 +209,10 @@
     min-height: 0.75rem !important;
     max-width: 0.75rem !important;
     max-height: 0.75rem !important;
+    /* 确保checked状态不会改变位置 */
+    position: relative !important;
+    margin: 0.25rem !important;
+    flex-shrink: 0 !important;
 }
 
 /* 结果页复选框也减小 */
@@ -219,6 +223,26 @@
     min-height: 0.75rem !important;
     max-width: 0.75rem !important;
     max-height: 0.75rem !important;
+    /* 确保checked状态不会改变位置 */
+    position: relative !important;
+    margin: 0.25rem !important;
+    flex-shrink: 0 !important;
+}
+
+/* 确保result-toggle可以点击 */
+.result-toggle {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+/* 确保错题页中result-toggle和error-select的z-index正确 */
+#errorbook .card-body.position-relative .error-select {
+    z-index: 10 !important;
+}
+
+#errorbook .card-body.position-relative .result-toggle {
+    z-index: 5 !important;
+    pointer-events: auto !important;
 }
 .practice-range-accordion .accordion-header .accordion-button {
     cursor: pointer;

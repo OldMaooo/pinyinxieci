@@ -202,23 +202,26 @@ const ErrorBook = {
                 const groupsText = this.escapeHtml(groupsTextRaw);
                 const canToggle = Array.isArray(log.details) && log.details.length > 0;
                 const toggleHtml = canToggle ? `
-                    <div class="position-absolute top-0 end-0 me-2 mt-1">
+                    <div class="position-absolute top-0 end-0 me-2 mt-1" style="z-index: 5; pointer-events: auto;">
                         <div class="result-toggle ${d.correct ? '' : 'active'}" 
                              data-log-id="${log.id}" 
                              data-word-id="${w.id}"
                              data-item-idx="${d._idx}"
-                             data-is-wrong="${(!d.correct).toString()}">
+                             data-is-wrong="${(!d.correct).toString()}"
+                             style="pointer-events: auto; cursor: pointer;">
                             <span class="result-toggle-icon">${d.correct ? '' : '✕'}</span>
                         </div>
                     </div>` : '';
                 return `
                     <div class="col">
                         <div class="card h-100 shadow-sm position-relative">
-                            ${toggleHtml}
                             <div class="card-body p-2 position-relative">
-                                <div class="position-absolute top-0 end-0 me-2 mt-1">
+                                <!-- 蓝色复选框在前面（z-index更高） -->
+                                <div class="position-absolute top-0 end-0 me-2 mt-1" style="z-index: 10;">
                                     <input type="checkbox" class="form-check-input error-select" data-id="${id}">
                                 </div>
+                                <!-- 红色叉叉复选框在后面，但可以点击 -->
+                                ${toggleHtml}
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="d-flex align-items-start gap-2">
                                         <div>
@@ -297,12 +300,18 @@ const ErrorBook = {
             <div class="col">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body p-2 position-relative">
-                        <div class="position-absolute top-0 end-0 me-2 mt-1">
+                        <!-- 蓝色复选框在前面（z-index更高） -->
+                        <div class="position-absolute top-0 end-0 me-2 mt-1" style="z-index: 10;">
+                            <input type="checkbox" class="form-check-input error-select" data-id="${w.id}">
+                        </div>
+                        <!-- 红色叉叉复选框在后面，但可以点击 -->
+                        <div class="position-absolute top-0 end-0 me-2 mt-1" style="z-index: 5; pointer-events: auto;">
                             <div class="result-toggle ${isWrong ? 'active' : ''}" 
                                  data-log-id="${log.id}" 
                                  data-word-id="${w.id}" 
                                  data-item-idx="${idx}" 
-                                 data-is-wrong="${isWrong}">
+                                 data-is-wrong="${isWrong}"
+                                 style="pointer-events: auto; cursor: pointer;">
                                 <span class="result-toggle-icon">${isWrong ? '✕' : ''}</span>
                             </div>
                         </div>

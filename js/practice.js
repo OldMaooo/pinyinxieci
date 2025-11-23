@@ -1114,12 +1114,14 @@ const Practice = {
                     // 如果原始文本不包含目标字（可能是纯拼音词组），保留原始格式并添加正确答案
                     // 例如："xī方, xī边, 东xī" 应该显示为 "xī方, xī边, 东xī 西"（西字为红色加粗）
                     // 或者 "rì出, rì落, rì记" 应该显示为 "rì出, rì落, rì记 日"（日字为红色加粗）
+                    // 或者 "tā们, tā的, tā人" 应该显示为 "tā们, tā的, tā人 他"（他字为红色加粗）
                     // 确保添加正确答案，即使原始文本是纯拼音
                     displayText = originalText + ' ' + wrapText();
                 }
             }
             
             // 确保整个显示文本使用黑色加粗样式（拼音和中文保持一致）
+            // 注意：displayText已经包含了HTML（wrapText返回的是HTML），所以直接使用innerHTML
             pinyinDisplay.innerHTML = icon + `<span style="${defaultStyle}">${displayText}</span>`;
         }
         
