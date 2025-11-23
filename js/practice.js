@@ -253,7 +253,14 @@ const Practice = {
         if (currentTaskId && task && task.progress && task.progress.completed > 0) {
             // 从上次停止的地方继续（completed表示已完成的数量，即当前要答的题目索引）
             // 确保currentIndex不会超过words.length，避免直接跳转到结果页
-            this.currentIndex = Math.min(task.progress.completed, words.length - 1);
+            // 如果completed已经等于或超过total，说明任务已完成，不应该继续
+            if (task.progress.completed >= task.progress.total) {
+                // 任务已完成，不应该继续练习
+                console.warn('[Practice.start] 任务已完成，不应该继续练习');
+                this.currentIndex = words.length; // 设置为words.length，让showNextWord直接finish
+            } else {
+                this.currentIndex = Math.min(task.progress.completed, words.length - 1);
+            }
         } else {
             this.currentIndex = 0;
         }
@@ -393,6 +400,9 @@ const Practice = {
         if (paused) {
             updates.status = TaskList.STATUS.PAUSED;
         } else if (completed >= task.progress.total) {
+            // 只有当completed真正等于或超过total时才标记为完成
+            // 注意：completed是已答题目数，不应该因为更新进度就结束任务
+            // 任务结束应该由finish()方法触发，而不是updateTaskProgress
             updates.status = TaskList.STATUS.COMPLETED;
         } else {
             updates.status = TaskList.STATUS.IN_PROGRESS;
@@ -1072,10 +1082,9 @@ const Practice = {
                 if (originalText.includes(correctWord)) {
                     displayText = originalText.replace(wordRegex, wrapText());
                 } else {
-                    // 如果原始文本不包含目标字（可能是纯拼音词组），尝试在词组中查找并替换
-                    // 例如："ěr朵, ěr机, ěr环" 应该替换为 "ěr<span>朵</span>, ěr<span>机</span>, ěr<span>环</span>"
-                    // 但这里我们只替换目标字，所以如果找不到，就保留原始格式
-                    displayText = originalText;
+                    // 如果原始文本不包含目标字（可能是纯拼音词组），保留原始格式并添加正确答案
+                    // 例如："xī方, xī边, 东xī" 应该显示为 "xī方, xī边, 东<span class="text-danger fw-bold">西</span>"
+                    displayText = originalText + ' ' + wrapText();
                 }
             }
             

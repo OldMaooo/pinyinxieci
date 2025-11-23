@@ -182,6 +182,20 @@
 .form-check-input.semester-checkbox {
     border-radius: 0.15rem !important; /* Reduced border radius */
 }
+
+/* 错题页复选框和红色叉尺寸减小一半 */
+.error-select,
+.error-round-select {
+    width: 0.75rem !important;
+    height: 0.75rem !important;
+    margin-top: 0.25rem !important;
+}
+
+/* 错题页红色叉图标尺寸减小 */
+.error-word-info .bi-x-circle-fill,
+.errorbook .bi-x-circle-fill {
+    font-size: 0.5rem !important;
+}
 .practice-range-accordion .accordion-header .accordion-button {
     cursor: pointer;
 }
