@@ -108,6 +108,14 @@ const ErrorBook = {
                         Statistics.updateResultItemStatus(logId, itemIdx, !isWrong);
                     }
                 }
+                // 确保确认修改按钮被启用
+                if (typeof Statistics !== 'undefined') {
+                    Statistics.hasChanges = true;
+                    const confirmBtn = document.getElementById('confirm-changes-btn');
+                    if (confirmBtn) {
+                        confirmBtn.disabled = false;
+                    }
+                }
             });
         });
     },
