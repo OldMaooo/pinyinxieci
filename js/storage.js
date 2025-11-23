@@ -212,7 +212,7 @@ const Storage = {
             errorWord.errorCount += 1;
             if (snapshotData) {
                 errorWord.handwritingSnapshots = errorWord.handwritingSnapshots || [];
-                errorWord.handwritingSnapshots.push(snapshotData);
+            errorWord.handwritingSnapshots.push(snapshotData);
             }
         } else {
             // 创建新错题记录
@@ -237,7 +237,7 @@ const Storage = {
         const errorWords = this.getErrorWords();
         const filtered = errorWords.filter(ew => ew.wordId !== wordId);
         if (filtered.length !== errorWords.length) {
-            this.saveErrorWords(filtered);
+        this.saveErrorWords(filtered);
             updated = true;
         }
         const debugErrors = this.getErrorWords({ debug: true });

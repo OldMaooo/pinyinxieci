@@ -12,8 +12,11 @@
 const http = require('http');
 const https = require('https');
 const url = require('url');
+const fs = require('fs');
+const path = require('path');
 
 const PORT = 3001;
+const PROJECT_ROOT = path.resolve(__dirname, '..');
 
 const server = http.createServer((req, res) => {
     // 设置CORS头
@@ -41,10 +44,83 @@ const server = http.createServer((req, res) => {
     }
     
     // 解析请求路径
-    const path = url.parse(req.url).pathname;
+    let requestPath = url.parse(req.url).pathname;
+    // 解码 URL 编码的路径（处理中文文件名）
+    try {
+        requestPath = decodeURIComponent(requestPath);
+    } catch (e) {
+        // 如果解码失败，使用原始路径
+    }
+    
+    // 处理静态文件请求
+    if (req.method === 'GET' && !requestPath.startsWith('/api/')) {
+        let filePath;
+        
+        // 如果请求的是根路径，返回 index.html
+        if (requestPath === '/') {
+            filePath = path.join(PROJECT_ROOT, 'index.html');
+        } else {
+            // 去掉前导斜杠，然后拼接项目根目录
+            const relativePath = requestPath.startsWith('/') ? requestPath.slice(1) : requestPath;
+            filePath = path.join(PROJECT_ROOT, relativePath);
+        }
+        
+        // 安全检查：确保文件在项目目录内
+        if (!filePath.startsWith(PROJECT_ROOT)) {
+            res.writeHead(403, { 'Content-Type': 'text/plain' });
+            res.end('Forbidden');
+            return;
+        }
+        
+        // 检查文件是否存在
+        fs.stat(filePath, (err, stats) => {
+            if (err) {
+                console.error(`[Static] File not found: ${filePath}`, err.message);
+                res.writeHead(404, { 'Content-Type': 'text/plain' });
+                res.end('Not Found');
+                return;
+            }
+            if (!stats.isFile()) {
+                console.error(`[Static] Not a file: ${filePath}`);
+                res.writeHead(404, { 'Content-Type': 'text/plain' });
+                res.end('Not Found');
+                return;
+            }
+            
+            // 读取文件
+            fs.readFile(filePath, (err, data) => {
+                if (err) {
+                    res.writeHead(500, { 'Content-Type': 'text/plain' });
+                    res.end('Internal Server Error');
+                    return;
+                }
+                
+                // 设置 MIME 类型
+                const ext = path.extname(filePath).toLowerCase();
+                const mimeTypes = {
+                    '.html': 'text/html',
+                    '.js': 'application/javascript',
+                    '.css': 'text/css',
+                    '.json': 'application/json',
+                    '.png': 'image/png',
+                    '.jpg': 'image/jpeg',
+                    '.gif': 'image/gif',
+                    '.svg': 'image/svg+xml',
+                    '.ttf': 'font/ttf',
+                    '.woff': 'font/woff',
+                    '.woff2': 'font/woff2'
+                };
+                const contentType = mimeTypes[ext] || 'application/octet-stream';
+                
+                res.writeHead(200, { 'Content-Type': contentType });
+                res.end(data);
+            });
+        });
+        return;
+    }
     
     // 如果是Token获取（GET请求）
-    if (path === '/api/oauth/token' && req.method === 'GET') {
+    if (requestPath === '/api/oauth/token' && req.method === 'GET') {
         try {
             const queryParams = url.parse(req.url, true).query;
             const apiKey = queryParams.client_id;
@@ -84,7 +160,7 @@ const server = http.createServer((req, res) => {
     
     req.on('end', () => {
         try {
-            if (path === '/api/ocr/handwriting' || path === '/api/baidu-proxy') {
+            if (requestPath === '/api/ocr/handwriting' || requestPath === '/api/baidu-proxy') {
                 // 手写识别API代理 - 支持 JSON 和 form-urlencoded 两种格式
                 let accessToken, imageBase64;
                 
@@ -173,7 +249,8 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-    console.log(`✅ 代理服务器已启动: http://localhost:${PORT}`);
-    console.log(`📝 请确保前端代码指向此代理服务器`);
+    console.log(`✅ 服务器已启动: http://localhost:${PORT}`);
+    console.log(`📝 访问应用: http://localhost:${PORT}/`);
+    console.log(`🔧 API 代理: http://localhost:${PORT}/api/`);
 });
 

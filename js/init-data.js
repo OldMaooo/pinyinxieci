@@ -138,14 +138,14 @@ const InitData = {
         const version = typeof APP_VERSION !== 'undefined' ? APP_VERSION.version : Date.now();
         const timestamp = `?v=${version}&t=${Date.now()}`;
         let resp = await fetch(`data/wordbank/三年级上册.json${timestamp}`, { cache: 'no-cache' });
-        if (!resp.ok) {
+            if (!resp.ok) {
             resp = await fetch(`data/三年级上册写字表.json${timestamp}`, { cache: 'no-cache' });
-        }
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        const data = await resp.json();
-        const wordsToImport = Array.isArray(data) ? data : (data.wordBank || []);
+            }
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const data = await resp.json();
+            const wordsToImport = Array.isArray(data) ? data : (data.wordBank || []);
         let imported = 0;
-        wordsToImport.forEach(word => {
+            wordsToImport.forEach(word => {
             const result = Storage.addWord({
                 word: word.word,
                 pinyin: word.pinyin || '',

@@ -198,7 +198,7 @@ const Practice = {
             wordCount = this.forcedWordCount;
             forcedMode = true;
         }
-
+        
         // 随机选择或限制数量
         if (!forcedMode && wordCount !== 'all') {
             words = this.shuffleArray(words).slice(0, wordCount);
@@ -604,8 +604,8 @@ const Practice = {
                     consecutiveBlockCount: this.consecutiveBlockCount
                 });
                 alert(`请等待 ${remainingSeconds} 秒后再提交`);
-                return;
-            }
+            return;
+        }
         } else {
             // 提交未被拦截，重置连续拦截计数
             this.consecutiveBlockCount = 0;
@@ -684,9 +684,19 @@ const Practice = {
             if (result.passed) {
                 // 正确
                 if (this.mode === 'normal') {
+                    // 检查是否已存在该题目的记录，如果存在则移除旧的（防止重复）
+                    const existingIdx = this.practiceLog.details.findIndex(d => d.wordId === word.id);
+                    if (existingIdx >= 0) {
+                        const oldDetail = this.practiceLog.details[existingIdx];
+                        // 如果旧记录是错误，需要调整计数
+                        if (!oldDetail.correct) {
+                            this.practiceLog.errorCount = Math.max(0, this.practiceLog.errorCount - 1);
+                        }
+                        this.practiceLog.details.splice(existingIdx, 1);
+                    }
                     this.practiceLog.correctCount++;
                     // 保存详情（保留正确也保留快照）
-                this.practiceLog.details.push({ wordId: word.id, correct: true, snapshot, displayText: this._currentDisplayText });
+                    this.practiceLog.details.push({ wordId: word.id, correct: true, snapshot, displayText: this._currentDisplayText });
                     this.showFeedback(true, word, '');
                 } else {
                     // 纸质模式：不反馈对错，快速进入下一题
@@ -695,9 +705,19 @@ const Practice = {
             } else {
                 // 错误
                 if (this.mode === 'normal') {
+                    // 检查是否已存在该题目的记录，如果存在则移除旧的（防止重复）
+                    const existingIdx = this.practiceLog.details.findIndex(d => d.wordId === word.id);
+                    if (existingIdx >= 0) {
+                        const oldDetail = this.practiceLog.details[existingIdx];
+                        // 如果旧记录是正确的，需要调整计数
+                        if (oldDetail.correct) {
+                            this.practiceLog.correctCount = Math.max(0, this.practiceLog.correctCount - 1);
+                        }
+                        this.practiceLog.details.splice(existingIdx, 1);
+                    }
                     this.practiceLog.errorCount++;
                     await this.recordError(word, snapshot);
-                this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot, displayText: this._currentDisplayText });
+                    this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot, displayText: this._currentDisplayText });
                     this.showFeedback(false, word, result.recognized);
                 } else {
                     document.getElementById('feedback-area').innerHTML = '';

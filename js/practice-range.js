@@ -35,11 +35,215 @@ const PracticeRange = {
             return;
         }
 
-        const grouped = this.groupWordsBySemesterUnit(wordBank);
-        console.log(`[PracticeRange] ${containerId} grouped semesters:`, Object.keys(grouped));
-        const semesters = this.sortSemesters(Object.keys(grouped));
-        const accordionId = `${containerId}-accordion`;
+        // 首页使用表格视图，模态框使用原来的折叠视图
+        if (containerId === 'practice-range-container-home' && options.context === 'home') {
+            this.renderTableView(container, wordBank, options);
+        } else {
+            this.renderAccordionView(container, wordBank, options);
+        }
+    },
+    
+    // 生成完成率饼图SVG
+    generateCompletionPie(masteredCount, totalCount) {
+        // 检测当前主题模式
+        const isDarkMode = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+        // 浅色模式用#ced4da（比bar的#e9ecef更深），深色模式用#495057
+        const grayColor = isDarkMode ? '#495057' : '#ced4da';
+        
+        if (totalCount === 0) {
+            return `<div class="completion-pie"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="${grayColor}"/></svg></div>`;
+        }
+        
+        const percentage = masteredCount / totalCount;
+        const radius = 9;
+        const centerX = 10;
+        const centerY = 10;
+        
+        // 如果全部掌握，显示绿色带勾
+        if (percentage === 1) {
+            return '<div class="completion-pie completion-pie-mastered"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#28a745"/><path d="M6 10 L9 13 L14 7" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>';
+        }
+        
+        // 否则显示比例饼图
+        if (percentage === 0) {
+            return `<div class="completion-pie"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="${grayColor}"/></svg></div>`;
+        }
+        
+        // 计算弧的路径（从顶部开始，顺时针）
+        const angle = percentage * 360;
+        const startAngle = -90; // 从顶部开始
+        const endAngle = startAngle + angle;
+        const startRad = (startAngle * Math.PI) / 180;
+        const endRad = (endAngle * Math.PI) / 180;
+        
+        const x1 = centerX + radius * Math.cos(startRad);
+        const y1 = centerY + radius * Math.sin(startRad);
+        const x2 = centerX + radius * Math.cos(endRad);
+        const y2 = centerY + radius * Math.sin(endRad);
+        
+        const largeArcFlag = angle > 180 ? 1 : 0;
+        const pathData = `M ${centerX} ${centerY} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
+        
+        return `<div class="completion-pie"><svg width="20" height="20" viewBox="0 0 20 20">
+            <circle cx="10" cy="10" r="9" fill="${grayColor}"/>
+            <path d="${pathData}" fill="#28a745"/>
+        </svg></div>`;
+    },
 
+    renderTableView(container, wordBank, options = {}) {
+        const grouped = this.groupWordsBySemesterUnit(wordBank);
+        const semesters = this.sortSemesters(Object.keys(grouped));
+        
+        // 获取字的掌握状态
+        const logs = (Storage.getPracticeLogsFiltered && Storage.getPracticeLogsFiltered()) || Storage.getPracticeLogs() || [];
+        const errorWords = Storage.getErrorWordsFiltered() || [];
+        const errorWordIds = new Set(errorWords.map(ew => ew.wordId));
+        
+        // 统计每个字的正确次数
+        const wordCorrectCount = new Map();
+        logs.forEach(log => {
+            if (log.details && Array.isArray(log.details)) {
+                log.details.forEach(detail => {
+                    if (detail.correct) {
+                        wordCorrectCount.set(detail.wordId, (wordCorrectCount.get(detail.wordId) || 0) + 1);
+                    }
+                });
+            }
+        });
+        
+        let html = '<div class="practice-range-selector d-flex flex-column" style="height: 100%;">';
+        html += this.renderToolbar(options);
+        html += '<div class="flex-grow-1" style="overflow-y: auto; min-height: 0;">';
+        
+        const accordionId = `${container.id}-accordion`;
+        html += `<div class="accordion practice-range-accordion" id="${accordionId}">`;
+        
+        // 按学期划分，每个学期一个表格
+        semesters.forEach((semesterKey, idx) => {
+            const units = this.sortUnits(grouped[semesterKey]);
+            const headingId = `${accordionId}-heading-${idx}`;
+            const collapseId = `${accordionId}-collapse-${idx}`;
+            const isFirst = idx < 3; // 前3个学期默认展开
+            
+            // 计算学期的完成率（所有单元的字）
+            let semesterMasteredCount = 0;
+            let semesterTotalCount = 0;
+            units.forEach(unitKey => {
+                const words = grouped[semesterKey][unitKey];
+                if (Array.isArray(words) && words.length > 0) {
+                    semesterTotalCount += words.length;
+                    words.forEach(w => {
+                        const isError = errorWordIds.has(w.id);
+                        const hasCorrect = wordCorrectCount.get(w.id) > 0;
+                        const isMastered = hasCorrect && !isError;
+                        if (isMastered) semesterMasteredCount++;
+                    });
+                }
+            });
+            const semesterPieHtml = this.generateCompletionPie(semesterMasteredCount, semesterTotalCount);
+            
+            html += `
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="${headingId}">
+                        <div class="d-flex align-items-center w-100 practice-semester-header" style="padding: 0;">
+                            <div class="semester-checkbox-wrapper" style="flex-shrink: 0; padding: 0.5rem 0.5rem 0.5rem 0.75rem; cursor: default; display: flex; align-items: center;">
+                                <input type="checkbox" class="form-check-input semester-checkbox"
+                                       data-semester="${semesterKey}"
+                                       style="margin: 0; cursor: pointer; width: 0.6em; height: 0.6em; vertical-align: middle;">
+                            </div>
+                            <button class="accordion-button practice-semester-btn ${isFirst ? '' : 'collapsed'}" type="button"
+                                    data-collapse-target="#${collapseId}"
+                                    aria-expanded="${isFirst}" aria-controls="${collapseId}"
+                                    style="flex: 1; border: none; padding: 0.5rem 0.75rem; text-align: left; cursor: pointer; display: flex; align-items: center;">
+                                <span>${semesterKey}</span>
+                                <span style="margin-left: 0.5rem; display: inline-flex; align-items: center;">${semesterPieHtml}</span>
+                            </button>
+                        </div>
+                    </h2>
+                    <div id="${collapseId}"
+                         class="accordion-collapse collapse ${isFirst ? 'show' : ''}"
+                         aria-labelledby="${headingId}" data-bs-parent="#${accordionId}">
+                        <div class="accordion-body p-2">
+                            <table class="table table-sm mb-0 practice-range-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 130px;">单元</th>
+                                        <th style="min-width: 300px;">汉字</th>
+                                        <th style="width: 60px; text-align: center;">字数</th>
+                                        <th style="width: 60px; text-align: center;">完成</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+            `;
+            
+            units.forEach(unitKey => {
+                const words = grouped[semesterKey][unitKey];
+                if (!Array.isArray(words) || words.length === 0) {
+                    return; // 跳过无效的单元
+                }
+                const unitLabel = words.unitLabel || this.formatUnitLabel(unitKey);
+                const sanitized = this.sanitizeId(`${semesterKey}-${unitKey}`);
+                
+                // 计算每个字的状态和完成率
+                let masteredCount = 0;
+                const wordTags = words.map(w => {
+                    const isError = errorWordIds.has(w.id);
+                    const hasCorrect = wordCorrectCount.get(w.id) > 0;
+                    // 已掌握：有正确记录且无错误
+                    const isMastered = hasCorrect && !isError;
+                    if (isMastered) masteredCount++;
+                    
+                    // 确定tag样式（优先级：已掌握 > 有错误 > 未测试）
+                    let tagClass = 'word-tag-default';
+                    if (isMastered) {
+                        tagClass = 'word-tag-mastered';
+                    } else if (isError) {
+                        // 测试过且有错误
+                        tagClass = 'word-tag-error';
+                    }
+                    // 否则保持默认灰色（未测试）
+                    
+                    return `<span class="word-tag ${tagClass}">${w.word}</span>`;
+                }).join('');
+                
+                // 计算完成率并生成饼图
+                const completionRateHtml = this.generateCompletionPie(masteredCount, words.length);
+                
+                html += `<tr class="unit-row" data-semester="${semesterKey}" data-unit="${unitKey}" data-row-id="${sanitized}" style="cursor: pointer;">`;
+                html += `<td><input type="checkbox" class="form-check-input unit-checkbox me-2" data-semester="${semesterKey}" data-unit="${unitKey}">${unitLabel}</td>`;
+                html += `<td class="word-tags-cell">${wordTags}</td>`;
+                html += `<td style="text-align: center;">${words.length}</td>`;
+                html += `<td style="text-align: center;">${completionRateHtml}</td>`;
+                html += `</tr>`;
+            });
+            
+            html += `
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += '</div></div></div>';
+        container.innerHTML = html;
+        
+        this.bindContainerEvents(container, options);
+        this.restoreSelection(container);
+        const saved = this.getSavedSelection();
+        if (!saved || Object.keys(saved).length === 0) {
+            this.selectAll(container, options);
+        } else {
+            this.updateSelectedCount(container, options);
+        }
+    },
+    
+    renderAccordionView(container, wordBank, options = {}) {
+        const grouped = this.groupWordsBySemesterUnit(wordBank);
+        const semesters = this.sortSemesters(Object.keys(grouped));
+        const accordionId = `${container.id}-accordion`;
+        
         let html = '<div class="practice-range-selector">';
         html += this.renderToolbar(options);
         html += '<div class="p-3">';
@@ -51,17 +255,22 @@ const PracticeRange = {
             const collapseId = `${accordionId}-collapse-${idx}`;
             const isFirst = idx === 0;
 
-            html += `
+        html += `
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="${headingId}">
-                        <button class="accordion-button practice-semester-btn ${isFirst ? '' : 'collapsed'}" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#${collapseId}"
-                                aria-expanded="${isFirst}" aria-controls="${collapseId}">
-                            <input type="checkbox" class="form-check-input semester-checkbox me-2"
-                                   data-semester="${semesterKey}"
-                                   onclick="event.stopPropagation();">
-                            <span>${semesterKey}</span>
-                        </button>
+                        <div class="d-flex align-items-center w-100 practice-semester-header" style="padding: 0;">
+                            <div class="semester-checkbox-wrapper" style="flex-shrink: 0; padding: 0.5rem 0.5rem 0.5rem 0.75rem; cursor: default; display: flex; align-items: center;">
+                                <input type="checkbox" class="form-check-input semester-checkbox"
+                                       data-semester="${semesterKey}"
+                                       style="margin: 0; cursor: pointer; width: 0.6em; height: 0.6em; vertical-align: middle;">
+                            </div>
+                            <button class="accordion-button practice-semester-btn ${isFirst ? '' : 'collapsed'}" type="button"
+                                    data-collapse-target="#${collapseId}"
+                                    aria-expanded="${isFirst}" aria-controls="${collapseId}"
+                                    style="flex: 1; border: none; padding: 0.5rem 0.75rem; text-align: left; cursor: pointer;">
+                                <span>${semesterKey}</span>
+                            </button>
+                        </div>
                     </h2>
                     <div id="${collapseId}"
                          class="accordion-collapse collapse ${isFirst ? 'show' : ''}"
@@ -78,7 +287,7 @@ const PracticeRange = {
                     <div class="unit-item mb-2 d-flex align-items-center gap-2 unit-row"
                          data-semester="${semesterKey}" data-unit="${unitKey}" data-row-id="${sanitized}"
                          style="cursor: pointer;">
-                        <input type="checkbox" class="form-check-input unit-checkbox"
+                        <input type="checkbox" class="form-check-input unit-checkbox" 
                                data-semester="${semesterKey}" data-unit="${unitKey}">
                         <div class="flex-shrink-0">
                             <strong>${unitLabel}</strong>
@@ -97,10 +306,10 @@ const PracticeRange = {
                 </div>
             `;
         });
-
+        
         html += '</div></div></div>';
         container.innerHTML = html;
-
+        
         this.bindContainerEvents(container, options);
         this.restoreSelection(container);
         const saved = this.getSavedSelection();
@@ -119,13 +328,15 @@ const PracticeRange = {
         return `
             <div class="${stickyClasses}" style="z-index: 10;">
                 <div class="d-flex align-items-center gap-2 flex-wrap">
-                    <button class="btn btn-sm btn-outline-primary" data-action="select-all">全选</button>
-                    <button class="btn btn-sm btn-outline-secondary" data-action="deselect-all">全不选</button>
+                    <div class="form-check m-0">
+                        <input class="form-check-input" type="checkbox" id="select-all-checkbox" data-action="select-all">
+                        <label class="form-check-label" for="select-all-checkbox" style="cursor: pointer;">全选</label>
+                    </div>
                     ${showOnlyWrongToggle ? `
-                        <div class="form-check form-switch m-0">
+                    <div class="form-check form-switch m-0">
                             <input class="form-check-input" type="checkbox" data-toggle="only-wrong" id="only-wrong-toggle">
                             <label class="form-check-label" for="only-wrong-toggle">只练错题</label>
-                        </div>
+                    </div>
                     ` : ''}
                     <span class="ms-auto text-muted" data-selected-count>已选择: 0 个字</span>
                 </div>
@@ -134,52 +345,148 @@ const PracticeRange = {
     },
 
     bindContainerEvents(container, options = {}) {
-        container.querySelector('[data-action="select-all"]')?.addEventListener('click', () => {
-            this.selectAll(container, options);
-        });
-        container.querySelector('[data-action="deselect-all"]')?.addEventListener('click', () => {
-            this.deselectAll(container, options);
-        });
+        const selectAllCheckbox = container.querySelector('#select-all-checkbox');
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    this.selectAll(container, options);
+                } else {
+                    this.deselectAll(container, options);
+                }
+                selectAllCheckbox.checked = e.target.checked;
+            });
+            
+            // 监听所有复选框变化，更新全选状态
+            const updateSelectAllState = () => {
+                const allCheckboxes = container.querySelectorAll('.unit-checkbox');
+                const checkedCount = container.querySelectorAll('.unit-checkbox:checked').length;
+                selectAllCheckbox.checked = allCheckboxes.length > 0 && checkedCount === allCheckboxes.length;
+                selectAllCheckbox.indeterminate = checkedCount > 0 && checkedCount < allCheckboxes.length;
+            };
+            
+            // 初始状态
+            setTimeout(updateSelectAllState, 100);
+            
+            // 监听单元复选框变化
+            container.querySelectorAll('.unit-checkbox').forEach(cb => {
+                cb.addEventListener('change', updateSelectAllState);
+            });
+        }
 
         if (options.showOnlyWrongToggle) {
-            const toggle = container.querySelector('[data-toggle="only-wrong"]');
-            if (toggle) {
-                try {
-                    toggle.checked = localStorage.getItem('practice_error_only') === '1';
+        const toggle = container.querySelector('[data-toggle="only-wrong"]');
+        if (toggle) {
+            try {
+                toggle.checked = localStorage.getItem('practice_error_only') === '1';
                 } catch (e) {}
                 toggle.addEventListener('change', (e) => {
                     try {
                         if (e.target.checked) localStorage.setItem('practice_error_only', '1');
                         else localStorage.removeItem('practice_error_only');
                     } catch (err) {
-                        console.warn('保存“只练错题”状态失败', err);
-                    }
-                });
-            }
+                        console.warn('保存"只练错题"状态失败', err);
+                }
+            });
+        }
         }
 
         container.querySelectorAll('.semester-checkbox').forEach(checkbox => {
+            // 只阻止事件冒泡，不阻止默认行为
+            checkbox.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // 不调用 preventDefault()，让复选框的默认行为（切换选中状态）正常工作
+            }, false);
+            
             checkbox.addEventListener('change', (e) => {
+                e.stopPropagation();
                 const semester = e.target.dataset.semester;
                 this.toggleSemester(container, semester, e.target.checked);
                 this.updateSelectedCount(container, options);
             });
         });
-
+        
+        // 阻止复选框包装器的点击事件冒泡
+        container.querySelectorAll('.semester-checkbox-wrapper').forEach(wrapper => {
+            wrapper.addEventListener('click', (e) => {
+                // 如果点击的是复选框本身，不阻止，让它正常工作
+                if (e.target.type === 'checkbox') {
+                    return; // 让复选框的默认行为执行
+                }
+                e.stopPropagation();
+            });
+        });
+        
         container.querySelectorAll('.unit-checkbox').forEach(checkbox => {
             checkbox.addEventListener('change', () => {
                 this.updateSemesterCheckboxState(container, checkbox.dataset.semester);
                 this.updateSelectedCount(container, options);
             });
         });
-
+        
         container.querySelectorAll('.unit-row').forEach(row => {
             row.addEventListener('click', (e) => {
                 if (e.target.closest('input')) return;
                 const checkbox = row.querySelector('.unit-checkbox');
-                if (!checkbox) return;
+            if (!checkbox) return;
                 checkbox.checked = !checkbox.checked;
                 checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+        });
+        
+        // 阻止 header 容器响应点击（除了按钮区域）
+        container.querySelectorAll('.practice-semester-header').forEach(header => {
+            header.addEventListener('click', (e) => {
+                // 如果点击的是复选框区域，只阻止冒泡，不阻止默认行为
+                if (e.target.closest('.semester-checkbox-wrapper') || e.target.closest('.semester-checkbox')) {
+                    e.stopPropagation();
+                    // 不调用 preventDefault()，让复选框正常工作
+                }
+            }, true);
+        });
+        
+        // 手动控制展开/收起（替代 Bootstrap 的自动处理）
+        container.querySelectorAll('.practice-semester-btn[data-collapse-target]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // 如果点击的是复选框区域，不处理展开/收起，但也不阻止复选框的默认行为
+                if (e.target.closest('.semester-checkbox-wrapper') || e.target.closest('.semester-checkbox')) {
+                    e.stopPropagation();
+                    // 不调用 preventDefault()，让复选框正常工作
+                    return;
+                }
+                
+                const targetId = btn.getAttribute('data-collapse-target');
+                const target = document.querySelector(targetId);
+                if (!target) return;
+                
+                const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+                
+                // 使用 Bootstrap Collapse API
+                if (typeof bootstrap !== 'undefined' && bootstrap.Collapse) {
+                    const bsCollapse = new bootstrap.Collapse(target, {
+                        toggle: false
+                    });
+                    
+                    if (isExpanded) {
+                        bsCollapse.hide();
+                        btn.setAttribute('aria-expanded', 'false');
+                        btn.classList.add('collapsed');
+                    } else {
+                        bsCollapse.show();
+                        btn.setAttribute('aria-expanded', 'true');
+                        btn.classList.remove('collapsed');
+                    }
+                } else {
+                    // Fallback: 手动切换类
+                    if (isExpanded) {
+                        target.classList.remove('show');
+                        btn.setAttribute('aria-expanded', 'false');
+                        btn.classList.add('collapsed');
+                    } else {
+                        target.classList.add('show');
+                        btn.setAttribute('aria-expanded', 'true');
+                        btn.classList.remove('collapsed');
+                    }
+                }
             });
         });
     },
@@ -191,7 +498,7 @@ const PracticeRange = {
         });
         this.updateSelectedCount(container, options);
     },
-
+    
     deselectAll(container, options = {}) {
         container.querySelectorAll('.unit-checkbox, .semester-checkbox').forEach(cb => {
             cb.checked = false;
@@ -199,7 +506,7 @@ const PracticeRange = {
         });
         this.updateSelectedCount(container, options);
     },
-
+    
     toggleSemester(container, semesterKey, checked) {
         container.querySelectorAll(`.unit-checkbox[data-semester="${semesterKey}"]`).forEach(cb => {
             cb.checked = checked;
@@ -238,7 +545,7 @@ const PracticeRange = {
             this.updateDynamicCountButton(total);
         }
     },
-
+    
     updateDynamicCountButton(count) {
         const oldBtn = document.getElementById('word-count-quick-dynamic');
         if (oldBtn) oldBtn.remove();
@@ -261,7 +568,7 @@ const PracticeRange = {
             }
         });
     },
-
+    
     getSelectedWords(containerId) {
         const fallback = document.getElementById('practice-range-container') ||
                          document.getElementById('practice-range-container-home');
@@ -280,7 +587,7 @@ const PracticeRange = {
         });
         return selectedWords;
     },
-
+    
     syncSelection(fromId, toId) {
         const fromRoot = document.getElementById(fromId);
         const toRoot = document.getElementById(toId);

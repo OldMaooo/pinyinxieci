@@ -20,7 +20,7 @@ const WordGroups = {
      * @param {string|string[]} sources - 数据源路径，可以是单个路径或路径数组
      * @returns {Promise} 加载完成的Promise
      */
-    async load(sources = ['data/word-groups-grade3-up.json']) {
+    async load(sources = ['data/word-groups-all.json']) {
         // 如果正在加载，返回现有的Promise
         if (this._loading && this._loadPromise) {
             return this._loadPromise;
@@ -61,7 +61,7 @@ const WordGroups = {
                         console.warn(`[WordGroups] 加载词组数据失败: ${source}`, error);
                         return {};
                     });
-            })
+                    })
         ).then(() => {
             this._loaded = true;
             this._loading = false;

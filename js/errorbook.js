@@ -300,7 +300,6 @@ const ErrorBook = {
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="d-flex align-items-start gap-2">
                                 <div>
-                                    <div class="fw-bold" style="font-size: 1.5rem; line-height: 1;">${w.word}</div>
                                     <div class="text-muted small mt-1" title="${groupsText}">${groupsText}</div>
                                 </div>
                             </div>
@@ -353,7 +352,7 @@ const ErrorBook = {
                     <div class="word-box me-1 mb-1">
                         <img class="snapshot-invert" src="${s.snapshot}" style="max-width: 90%; max-height: 90%; object-fit: contain;">
                     </div>
-                `).join('');
+            `).join('');
             return `<tr>
                 <td><input type="checkbox" class="form-check-input error-select" data-id="${ew.wordId}"></td>
                 <td class="summary-word">${w.word}</td>

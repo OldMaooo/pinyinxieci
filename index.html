@@ -18,7 +18,7 @@
 </head>
 <body>
     <!-- 导航栏 -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#home">
                 <i class="bi bi-pencil-square"></i> 看拼音写词
@@ -129,95 +129,53 @@
     </div>
 
     <!-- 主内容区 -->
-    <div class="container-fluid mt-4">
+    <div class="container-fluid mt-0">
         
         <!-- 首页 -->
-        <section id="home" class="page-section">
-            <div class="row g-4">
+        <section id="home" class="page-section" style="height: calc(100vh - 120px); display: flex; flex-direction: column;">
+            <div class="row g-4 flex-grow-1" style="min-height: 0; max-width: 1600px; margin: 0 auto; flex-wrap: nowrap;">
                 <!-- 左栏：设置项（竖排） -->
-                <div class="col-lg-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0"><i class="bi bi-gear"></i> 题目设置</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-3 flex-column">
-                                <div class="col-12">
-                                    <label class="form-label">题目数量</label>
-                                    <input type="number" class="form-control" id="word-count-input-home" value="20" min="1" placeholder="输入数量">
-                                    <div class="d-flex gap-2 flex-wrap mt-2">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary word-count-quick" data-value="10">10</button>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary word-count-quick" data-value="20">20</button>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary word-count-quick" data-value="50">50</button>
-                                        <!-- 动态按钮将插入在此处之后 -->
-                                    </div>
-                                    <div class="form-text">可直接输入或点击快捷选项</div>
+                <div class="col-auto" style="width: 300px; flex-shrink: 0;">
+                    <div class="practice-settings-sticky">
+                        <div class="row g-3 flex-column">
+                            <div class="col-12">
+                                <label class="form-label">题目数量</label>
+                                <input type="number" class="form-control" id="word-count-input-home" value="20" min="1" placeholder="输入数量">
+                                <div class="d-flex gap-2 flex-wrap mt-2">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary word-count-quick" data-value="10">10</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary word-count-quick" data-value="20">20</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary word-count-quick" data-value="50">50</button>
+                                    <!-- 动态按钮将插入在此处之后 -->
                                 </div>
-                                <div class="col-12">
-                                    <label class="form-label">时间限制（秒/字）</label>
-                                    <input type="number" class="form-control" id="time-limit-input-home" value="30" min="5" max="120">
-                                </div>
-                                <div class="col-12">
-                            <label class="form-label">练习模式</label>
-                            <select class="form-select" id="practice-mode-select-home" style="max-width: 220px;">
-                                <option value="normal" selected>标准模式（识别+判题）</option>
-                                <option value="paper">纸质书写模式（不判题）</option>
-                            </select>
-                        </div>
-                                <div class="col-12">
-                                    <button class="btn btn-primary" id="start-practice-btn-home"><i class="bi bi-play-fill"></i> 开始练习</button>
-                                </div>
+                                <div class="form-text">可直接输入或点击快捷选项</div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">时间限制（秒/字）</label>
+                                <input type="number" class="form-control" id="time-limit-input-home" value="30" min="5" max="120">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">练习模式</label>
+                                <select class="form-select" id="practice-mode-select-home" style="max-width: 220px;">
+                                    <option value="normal" selected>标准模式（识别+判题）</option>
+                                    <option value="paper">纸质书写模式（不判题）</option>
+                                </select>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- 右栏：练习范围 -->
-                <div class="col-lg-6">
-                    <div class="card h-100">
-                        <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="col practice-range-col">
+                    <div class="card h-100 d-flex flex-column" style="position: relative; width: 100%;">
+                        <div class="card-header d-flex justify-content-between align-items-center" style="flex-shrink: 0;">
                             <h5 class="mb-0"><i class="bi bi-layers"></i> 练习范围</h5>
                             <button class="btn btn-sm btn-outline-primary" id="refresh-wordbank-btn" type="button" title="重新加载1-6年级默认题库">
                                 <i class="bi bi-arrow-repeat"></i> 刷新默认题库
                             </button>
                         </div>
-                        <div class="card-body">
-                            <div class="border rounded p-0" style="max-height: 420px; overflow-y: auto; position: relative;">
-                                <div id="practice-range-container-home"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 学习统计：移动到页面底部 -->
-            <div class="card mt-4">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="bi bi-graph-up"></i> 学习统计</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-3">
-                            <div class="stat-item">
-                                <div class="stat-value" id="stat-total-words">0</div>
-                                <div class="stat-label">总词数</div>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="stat-item">
-                                <div class="stat-value" id="stat-practiced">0</div>
-                                <div class="stat-label">已练习</div>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="stat-item">
-                                <div class="stat-value" id="stat-accuracy">0%</div>
-                                <div class="stat-label">正确率</div>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="stat-item">
-                                <div class="stat-value" id="stat-error-words">0</div>
-                                <div class="stat-label">错题数</div>
+                        <div class="card-body flex-grow-1 d-flex flex-column" style="min-height: 0; padding: 0; position: relative;">
+                            <div id="practice-range-container-home" class="flex-grow-1" style="overflow-y: auto; min-height: 0;"></div>
+                            <div class="border-top p-3 bg-body" style="position: sticky; bottom: 0; z-index: 10; flex-shrink: 0; margin-top: 0;">
+                                <button class="btn btn-primary w-100" id="start-practice-btn-home"><i class="bi bi-play-fill"></i> 开始练习</button>
                             </div>
                         </div>
                     </div>
@@ -700,9 +658,9 @@
         <button type="button" class="btn btn-primary" id="errorbook-practice-confirm-btn">
           <i class="bi bi-play-fill"></i> 开始练习
         </button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 </body>
 </html>

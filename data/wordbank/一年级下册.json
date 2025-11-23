@@ -11,7 +11,13 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "阅读 14",
-      "unitOrder": 28
+      "unitOrder": 28,
+      "groups": [
+        "安全",
+        "安静",
+        "安心",
+        "安居"
+      ]
     },
     {
       "id": "一年级下册-628A",
@@ -20,7 +26,13 @@
       "semester": "下",
       "unit": 8,
       "unitLabel": "阅读 8",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "把手",
+        "把住",
+        "把门",
+        "把玩"
+      ]
     },
     {
       "id": "一年级下册-767E",
@@ -29,7 +41,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "阅读 16",
-      "unitOrder": 30
+      "unitOrder": 30,
+      "groups": [
+        "百合",
+        "百姓",
+        "百年",
+        "百货"
+      ]
     },
     {
       "id": "一年级下册-5305",
@@ -38,7 +56,12 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "识字 7",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "包括",
+        "包裹",
+        "书包"
+      ]
     },
     {
       "id": "一年级下册-9971",
@@ -47,7 +70,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "语文园地五",
-      "unitOrder": 22
+      "unitOrder": 22,
+      "groups": [
+        "饱满",
+        "吃饱",
+        "饱和",
+        "饱足"
+      ]
     },
     {
       "id": "一年级下册-62B1",
@@ -56,7 +85,12 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "语文园地五",
-      "unitOrder": 22
+      "unitOrder": 22,
+      "groups": [
+        "拥抱",
+        "抱头",
+        "抱怨"
+      ]
     },
     {
       "id": "一年级下册-5317",
@@ -65,7 +99,11 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "阅读 3",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "西北",
+        "东北"
+      ]
     },
     {
       "id": "一年级下册-8D1D",
@@ -74,7 +112,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "阅读 11",
-      "unitOrder": 24
+      "unitOrder": 24,
+      "groups": [
+        "贝壳",
+        "贝类",
+        "贝雕",
+        "贝母"
+      ]
     },
     {
       "id": "一年级下册-7B14",
@@ -83,7 +127,13 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "阅读 14",
-      "unitOrder": 28
+      "unitOrder": 28,
+      "groups": [
+        "铅笔",
+        "毛笔",
+        "钢笔",
+        "画笔"
+      ]
     },
     {
       "id": "一年级下册-8FB9",
@@ -92,7 +142,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "阅读 20",
-      "unitOrder": 35
+      "unitOrder": 35,
+      "groups": [
+        "左边",
+        "右边",
+        "西边",
+        "岸边"
+      ]
     },
     {
       "id": "一年级下册-91C7",
@@ -101,7 +157,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "阅读 10",
-      "unitOrder": 23
+      "unitOrder": 23,
+      "groups": [
+        "采花",
+        "采蜜",
+        "采用",
+        "采摘"
+      ]
     },
     {
       "id": "一年级下册-8349",
@@ -110,7 +172,12 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "阅读 20",
-      "unitOrder": 35
+      "unitOrder": 35,
+      "groups": [
+        "水草",
+        "蒲草",
+        "茂草"
+      ]
     },
     {
       "id": "一年级下册-518C",
@@ -119,7 +186,12 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "语文园地四",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "手册",
+        "名册",
+        "册页"
+      ]
     },
     {
       "id": "一年级下册-4EA7",
@@ -128,7 +200,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "阅读 1",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "生产",
+        "产地",
+        "产量",
+        "产房"
+      ]
     },
     {
       "id": "一年级下册-5531",
@@ -137,7 +215,13 @@
       "semester": "下",
       "unit": 12,
       "unitLabel": "阅读 12",
-      "unitOrder": 25
+      "unitOrder": 25,
+      "groups": [
+        "唱歌",
+        "唱戏",
+        "唱响",
+        "唱片"
+      ]
     },
     {
       "id": "一年级下册-8F66",
@@ -146,7 +230,13 @@
       "semester": "下",
       "unit": 15,
       "unitLabel": "阅读 15",
-      "unitOrder": 29
+      "unitOrder": 29,
+      "groups": [
+        "拉车",
+        "车轴",
+        "车票",
+        "搭车"
+      ]
     },
     {
       "id": "一年级下册-5403",
@@ -155,7 +245,11 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "阅读 9",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "吃苦",
+        "试吃"
+      ]
     },
     {
       "id": "一年级下册-6C60",
@@ -164,7 +258,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "阅读 10",
-      "unitOrder": 23
+      "unitOrder": 23,
+      "groups": [
+        "水池",
+        "池塘",
+        "游池",
+        "花池"
+      ]
     },
     {
       "id": "一年级下册-5E8A",
@@ -173,7 +273,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "阅读 7",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "床铺",
+        "床单",
+        "床头",
+        "上床"
+      ]
     },
     {
       "id": "一年级下册-5439",
@@ -182,7 +288,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "吹风",
+        "吹笛",
+        "吹奏",
+        "吹气"
+      ]
     },
     {
       "id": "一年级下册-6625",
@@ -191,7 +303,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "春天",
+        "春风",
+        "春雨",
+        "春光"
+      ]
     },
     {
       "id": "一年级下册-4ECE",
@@ -200,7 +318,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "阅读 5",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "从前",
+        "从来",
+        "从小",
+        "从此"
+      ]
     },
     {
       "id": "一年级下册-5BF8",
@@ -209,7 +333,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "语文园地三",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "寸步",
+        "寸土",
+        "寸心",
+        "寸尺"
+      ]
     },
     {
       "id": "一年级下册-6253",
@@ -218,7 +348,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "识字 7",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "打碎",
+        "打雷",
+        "击打",
+        "打击"
+      ]
     },
     {
       "id": "一年级下册-5F53",
@@ -227,7 +363,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "阅读 6",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "当时",
+        "当心",
+        "当众",
+        "当班"
+      ]
     },
     {
       "id": "一年级下册-515A",
@@ -236,7 +378,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "阅读 1",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "党旗",
+        "党员",
+        "党课",
+        "党章"
+      ]
     },
     {
       "id": "一年级下册-5230",
@@ -245,7 +393,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "阅读 19",
-      "unitOrder": 34
+      "unitOrder": 34,
+      "groups": [
+        "到处",
+        "钓到",
+        "踩到",
+        "等到"
+      ]
     },
     {
       "id": "一年级下册-9053",
@@ -254,7 +408,12 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "阅读 14",
-      "unitOrder": 28
+      "unitOrder": 28,
+      "groups": [
+        "频道",
+        "管道",
+        "厚道"
+      ]
     },
     {
       "id": "一年级下册-5730",
@@ -263,7 +422,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "阅读 7",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "地方",
+        "地上",
+        "地下",
+        "地里"
+      ]
     },
     {
       "id": "一年级下册-7684",
@@ -272,7 +437,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "阅读 3",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "好的",
+        "真的",
+        "是的",
+        "我的"
+      ]
     },
     {
       "id": "一年级下册-706F",
@@ -281,7 +452,13 @@
       "semester": "下",
       "unit": 15,
       "unitLabel": "阅读 15",
-      "unitOrder": 29
+      "unitOrder": 29,
+      "groups": [
+        "灯光",
+        "灯火",
+        "灯笼",
+        "灯塔"
+      ]
     },
     {
       "id": "一年级下册-70B9",
@@ -290,7 +467,12 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "阅读 16",
-      "unitOrder": 30
+      "unitOrder": 30,
+      "groups": [
+        "雨点",
+        "点睛",
+        "优点"
+      ]
     },
     {
       "id": "一年级下册-7535",
@@ -299,7 +481,11 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "语文园地四",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "雷电",
+        "充电"
+      ]
     },
     {
       "id": "一年级下册-4E01",
@@ -308,7 +494,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "语文园地三",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "丁字路",
+        "丁当",
+        "丁点",
+        "丁丁"
+      ]
     },
     {
       "id": "一年级下册-51AC",
@@ -317,7 +509,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "冬天",
+        "冬季",
+        "冬雪",
+        "冬眠"
+      ]
     },
     {
       "id": "一年级下册-52A8",
@@ -326,7 +524,13 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "识字 4",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "动作",
+        "动听",
+        "动心",
+        "动身"
+      ]
     },
     {
       "id": "一年级下册-90FD",
@@ -335,7 +539,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "阅读 16",
-      "unitOrder": 30
+      "unitOrder": 30,
+      "groups": [
+        "都是",
+        "都有",
+        "都要",
+        "都会"
+      ]
     },
     {
       "id": "一年级下册-6597",
@@ -344,7 +554,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "语文园地六",
-      "unitOrder": 27
+      "unitOrder": 27,
+      "groups": [
+        "战斗",
+        "斗争",
+        "斗篷",
+        "斗笠"
+      ]
     },
     {
       "id": "一年级下册-8C46",
@@ -353,7 +569,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "语文园地六",
-      "unitOrder": 27
+      "unitOrder": 27,
+      "groups": [
+        "黄豆",
+        "豆芽",
+        "豆浆",
+        "豆沙"
+      ]
     },
     {
       "id": "一年级下册-5BF9",
@@ -362,7 +584,11 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "识字 6",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "相对",
+        "对岸"
+      ]
     },
     {
       "id": "一年级下册-6735",
@@ -371,7 +597,11 @@
       "semester": "下",
       "unit": 12,
       "unitLabel": "阅读 12",
-      "unitOrder": 25
+      "unitOrder": 25,
+      "groups": [
+        "云朵",
+        "耳朵"
+      ]
     },
     {
       "id": "一年级下册-65B9",
@@ -380,7 +610,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "阅读 2",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "方法",
+        "西方",
+        "东方",
+        "秘方"
+      ]
     },
     {
       "id": "一年级下册-623F",
@@ -389,7 +625,11 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "识字 5",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "厂房",
+        "房屋"
+      ]
     },
     {
       "id": "一年级下册-653E",
@@ -398,7 +638,11 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "阅读 14",
-      "unitOrder": 28
+      "unitOrder": 28,
+      "groups": [
+        "摆放",
+        "放弃"
+      ]
     },
     {
       "id": "一年级下册-98DE",
@@ -407,7 +651,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "飞机",
+        "飞行",
+        "飞翔",
+        "飞鸟"
+      ]
     },
     {
       "id": "一年级下册-5206",
@@ -416,7 +666,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "阅读 9",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "十分",
+        "部分",
+        "均分",
+        "划分"
+      ]
     },
     {
       "id": "一年级下册-7236",
@@ -425,7 +681,12 @@
       "semester": "下",
       "unit": 8,
       "unitLabel": "语文园地八",
-      "unitOrder": 36
+      "unitOrder": 36,
+      "groups": [
+        "父亲",
+        "父母",
+        "父爱"
+      ]
     },
     {
       "id": "一年级下册-8D76",
@@ -434,7 +695,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "阅读 20",
-      "unitOrder": 35
+      "unitOrder": 35,
+      "groups": [
+        "赶路",
+        "赶集",
+        "赶紧",
+        "赶快"
+      ]
     },
     {
       "id": "一年级下册-5E72",
@@ -443,7 +710,12 @@
       "semester": "下",
       "unit": 18,
       "unitLabel": "阅读 18",
-      "unitOrder": 33
+      "unitOrder": 33,
+      "groups": [
+        "肯干",
+        "枯干",
+        "晒干"
+      ]
     },
     {
       "id": "一年级下册-9AD8",
@@ -452,7 +724,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "阅读 17",
-      "unitOrder": 31
+      "unitOrder": 31,
+      "groups": [
+        "升高",
+        "长高",
+        "高阁",
+        "登高"
+      ]
     },
     {
       "id": "一年级下册-544A",
@@ -461,7 +739,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "阅读 3",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "告诉",
+        "告别",
+        "告状",
+        "告示"
+      ]
     },
     {
       "id": "一年级下册-5171",
@@ -470,7 +754,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "阅读 1",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "共同",
+        "一共",
+        "共有",
+        "共享"
+      ]
     },
     {
       "id": "一年级下册-53E4",
@@ -479,7 +769,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "识字 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "古老",
+        "古诗",
+        "古城",
+        "古人"
+      ]
     },
     {
       "id": "一年级下册-6545",
@@ -488,7 +784,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "阅读 7",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "故事",
+        "故乡",
+        "故意",
+        "故宫"
+      ]
     },
     {
       "id": "一年级下册-74DC",
@@ -497,7 +799,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "阅读 17",
-      "unitOrder": 31
+      "unitOrder": 31,
+      "groups": [
+        "西瓜",
+        "南瓜",
+        "冬瓜",
+        "黄瓜"
+      ]
     },
     {
       "id": "一年级下册-5149",
@@ -506,7 +814,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "阅读 1",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "阳光",
+        "光明",
+        "光亮",
+        "光芒"
+      ]
     },
     {
       "id": "一年级下册-5E7F",
@@ -515,7 +829,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "阅读 3",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "广场",
+        "广大",
+        "广告",
+        "广厦"
+      ]
     },
     {
       "id": "一年级下册-56FD",
@@ -524,7 +844,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "阅读 16",
-      "unitOrder": 30
+      "unitOrder": 30,
+      "groups": [
+        "法国",
+        "中国",
+        "国王",
+        "祖国"
+      ]
     },
     {
       "id": "一年级下册-8FC7",
@@ -533,7 +859,12 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "阅读 20",
-      "unitOrder": 35
+      "unitOrder": 35,
+      "groups": [
+        "错过",
+        "透过",
+        "度过"
+      ]
     },
     {
       "id": "一年级下册-8FD8",
@@ -542,7 +873,13 @@
       "semester": "下",
       "unit": 18,
       "unitLabel": "阅读 18",
-      "unitOrder": 33
+      "unitOrder": 33,
+      "groups": [
+        "还有",
+        "还要",
+        "还是",
+        "还来"
+      ]
     },
     {
       "id": "一年级下册-597D",
@@ -551,7 +888,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "阅读 5",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "正好",
+        "也好",
+        "好处",
+        "备好"
+      ]
     },
     {
       "id": "一年级下册-5408",
@@ -560,7 +903,11 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "语文园地一",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "组合",
+        "汇合"
+      ]
     },
     {
       "id": "一年级下册-6CB3",
@@ -569,7 +916,11 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "阅读 4",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "黄河",
+        "河岸"
+      ]
     },
     {
       "id": "一年级下册-7EA2",
@@ -578,7 +929,11 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "识字 4",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "脸红",
+        "红枫"
+      ]
     },
     {
       "id": "一年级下册-540E",
@@ -587,7 +942,12 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "阅读 2",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "王后",
+        "退后",
+        "落后"
+      ]
     },
     {
       "id": "一年级下册-80E1",
@@ -596,7 +956,12 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "识字 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "胡同",
+        "胡琴",
+        "胡说"
+      ]
     },
     {
       "id": "一年级下册-6237",
@@ -605,7 +970,13 @@
       "semester": "下",
       "unit": 8,
       "unitLabel": "语文园地八",
-      "unitOrder": 36
+      "unitOrder": 36,
+      "groups": [
+        "户口",
+        "门户",
+        "户外",
+        "家户"
+      ]
     },
     {
       "id": "一年级下册-82B1",
@@ -614,7 +985,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "碎花",
+        "梅花",
+        "花瓣",
+        "水花"
+      ]
     },
     {
       "id": "一年级下册-753B",
@@ -623,7 +1000,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "阅读 6",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "画画",
+        "画笔",
+        "画布",
+        "画家"
+      ]
     },
     {
       "id": "一年级下册-6B22",
@@ -632,7 +1015,11 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "识字 5",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "狂欢",
+        "喜欢"
+      ]
     },
     {
       "id": "一年级下册-56DE",
@@ -641,7 +1028,11 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "阅读 5",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "回去",
+        "返回"
+      ]
     },
     {
       "id": "一年级下册-4F1A",
@@ -650,7 +1041,12 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "阅读 3",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "误会",
+        "不会",
+        "奥运会"
+      ]
     },
     {
       "id": "一年级下册-673A",
@@ -659,7 +1055,12 @@
       "semester": "下",
       "unit": 12,
       "unitLabel": "阅读 12",
-      "unitOrder": 25
+      "unitOrder": 25,
+      "groups": [
+        "耳机",
+        "机器",
+        "司机"
+      ]
     },
     {
       "id": "一年级下册-5DF1",
@@ -668,7 +1069,13 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "阅读 4",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "自己",
+        "己方",
+        "己任",
+        "己见"
+      ]
     },
     {
       "id": "一年级下册-52A0",
@@ -677,7 +1084,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "阅读 13",
-      "unitOrder": 26
+      "unitOrder": 26,
+      "groups": [
+        "加法",
+        "加油",
+        "加入",
+        "加重"
+      ]
     },
     {
       "id": "一年级下册-5BB6",
@@ -686,7 +1099,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "阅读 19",
-      "unitOrder": 34
+      "unitOrder": 34,
+      "groups": [
+        "在家",
+        "大家",
+        "厂家",
+        "持家"
+      ]
     },
     {
       "id": "一年级下册-5C16",
@@ -695,7 +1114,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "阅读 10",
-      "unitOrder": 23
+      "unitOrder": 23,
+      "groups": [
+        "尖刀",
+        "尖角",
+        "尖端",
+        "尖叫"
+      ]
     },
     {
       "id": "一年级下册-95F4",
@@ -704,7 +1129,11 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "阅读 9",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "林间",
+        "中间"
+      ]
     },
     {
       "id": "一年级下册-6C5F",
@@ -713,7 +1142,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "阅读 2",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "江河",
+        "长江",
+        "江水",
+        "江面"
+      ]
     },
     {
       "id": "一年级下册-8BB2",
@@ -722,7 +1157,13 @@
       "semester": "下",
       "unit": 8,
       "unitLabel": "阅读 8",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "讲话",
+        "讲课",
+        "讲理",
+        "讲故事"
+      ]
     },
     {
       "id": "一年级下册-4EA4",
@@ -731,7 +1172,13 @@
       "semester": "下",
       "unit": 8,
       "unitLabel": "语文园地八",
-      "unitOrder": 36
+      "unitOrder": 36,
+      "groups": [
+        "交通",
+        "交友",
+        "交流",
+        "交班"
+      ]
     },
     {
       "id": "一年级下册-89D2",
@@ -740,7 +1187,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "阅读 10",
-      "unitOrder": 23
+      "unitOrder": 23,
+      "groups": [
+        "三角",
+        "角度",
+        "角落",
+        "牛角"
+      ]
     },
     {
       "id": "一年级下册-53EB",
@@ -749,7 +1202,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "阅读 5",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "叫喊",
+        "叫声",
+        "叫卖",
+        "叫醒"
+      ]
     },
     {
       "id": "一年级下册-8282",
@@ -758,7 +1217,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "阅读 9",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "节日",
+        "节奏",
+        "节气",
+        "节约"
+      ]
     },
     {
       "id": "一年级下册-5DFE",
@@ -767,7 +1232,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "语文园地七",
-      "unitOrder": 32
+      "unitOrder": 32,
+      "groups": [
+        "毛巾",
+        "手巾",
+        "头巾",
+        "围巾"
+      ]
     },
     {
       "id": "一年级下册-4ECA",
@@ -776,7 +1247,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "识字 6",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "今天",
+        "今年",
+        "今夜",
+        "今晨"
+      ]
     },
     {
       "id": "一年级下册-65A4",
@@ -785,7 +1262,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "语文园地三",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "斤两",
+        "公斤",
+        "斤秤",
+        "半斤"
+      ]
     },
     {
       "id": "一年级下册-8FD1",
@@ -794,7 +1277,13 @@
       "semester": "下",
       "unit": 8,
       "unitLabel": "识字 8",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "近日",
+        "近期",
+        "附近",
+        "靠近"
+      ]
     },
     {
       "id": "一年级下册-8FDB",
@@ -803,7 +1292,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "阅读 17",
-      "unitOrder": 31
+      "unitOrder": 31,
+      "groups": [
+        "进入",
+        "进出",
+        "进步",
+        "前进"
+      ]
     },
     {
       "id": "一年级下册-4EAC",
@@ -812,7 +1307,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "阅读 3",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "北京",
+        "京城",
+        "京剧",
+        "京味"
+      ]
     },
     {
       "id": "一年级下册-4E95",
@@ -821,7 +1322,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "阅读 2",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "水井",
+        "井口",
+        "井盖",
+        "井水"
+      ]
     },
     {
       "id": "一年级下册-4E45",
@@ -830,7 +1337,13 @@
       "semester": "下",
       "unit": 18,
       "unitLabel": "阅读 18",
-      "unitOrder": 33
+      "unitOrder": 33,
+      "groups": [
+        "很久",
+        "久久",
+        "久等",
+        "长久"
+      ]
     },
     {
       "id": "一年级下册-5361",
@@ -839,7 +1352,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "语文园地一",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "卡片",
+        "卡车",
+        "卡通",
+        "刷卡"
+      ]
     },
     {
       "id": "一年级下册-770B",
@@ -848,7 +1367,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "阅读 13",
-      "unitOrder": 26
+      "unitOrder": 26,
+      "groups": [
+        "看牛",
+        "看鸟",
+        "看你",
+        "看男"
+      ]
     },
     {
       "id": "一年级下册-8BFE",
@@ -857,7 +1382,11 @@
       "semester": "下",
       "unit": 15,
       "unitLabel": "阅读 15",
-      "unitOrder": 29
+      "unitOrder": 29,
+      "groups": [
+        "备课",
+        "功课"
+      ]
     },
     {
       "id": "一年级下册-7A7A",
@@ -866,7 +1395,12 @@
       "semester": "下",
       "unit": 18,
       "unitLabel": "阅读 18",
-      "unitOrder": 33
+      "unitOrder": 33,
+      "groups": [
+        "天空",
+        "抽空",
+        "凌空"
+      ]
     },
     {
       "id": "一年级下册-5FEB",
@@ -875,7 +1409,12 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "阅读 6",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "快速",
+        "爽快",
+        "凉快"
+      ]
     },
     {
       "id": "一年级下册-8001",
@@ -884,7 +1423,11 @@
       "semester": "下",
       "unit": 15,
       "unitLabel": "阅读 15",
-      "unitOrder": 29
+      "unitOrder": 29,
+      "groups": [
+        "老爸",
+        "苍老"
+      ]
     },
     {
       "id": "一年级下册-4E50",
@@ -893,7 +1436,11 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "阅读 6",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "奏乐",
+        "乐器"
+      ]
     },
     {
       "id": "一年级下册-6CEA",
@@ -902,7 +1449,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "阅读 11",
-      "unitOrder": 24
+      "unitOrder": 24,
+      "groups": [
+        "眼泪",
+        "泪水",
+        "泪光",
+        "泪痕"
+      ]
     },
     {
       "id": "一年级下册-6797",
@@ -911,7 +1464,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "阅读 16",
-      "unitOrder": 30
+      "unitOrder": 30,
+      "groups": [
+        "树林",
+        "森林",
+        "竹林",
+        "林间"
+      ]
     },
     {
       "id": "一年级下册-6BDB",
@@ -920,7 +1479,11 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "阅读 6",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "羽毛",
+        "棕毛"
+      ]
     },
     {
       "id": "一年级下册-4E48",
@@ -929,7 +1492,12 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "识字 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "什么",
+        "怎么",
+        "多么"
+      ]
     },
     {
       "id": "一年级下册-6CA1",
@@ -938,7 +1506,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "阅读 19",
-      "unitOrder": 34
+      "unitOrder": 34,
+      "groups": [
+        "没有",
+        "没来",
+        "没去",
+        "没空"
+      ]
     },
     {
       "id": "一年级下册-7F8E",
@@ -947,7 +1521,13 @@
       "semester": "下",
       "unit": 12,
       "unitLabel": "阅读 12",
-      "unitOrder": 25
+      "unitOrder": 25,
+      "groups": [
+        "欧美",
+        "精美",
+        "柔美",
+        "优美"
+      ]
     },
     {
       "id": "一年级下册-4EEC",
@@ -956,7 +1536,11 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "阅读 5",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "我们",
+        "人们"
+      ]
     },
     {
       "id": "一年级下册-7C73",
@@ -965,7 +1549,11 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "阅读 9",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "虾米",
+        "厘米"
+      ]
     },
     {
       "id": "一年级下册-9762",
@@ -974,7 +1562,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "阅读 13",
-      "unitOrder": 26
+      "unitOrder": 26,
+      "groups": [
+        "拉面",
+        "左面",
+        "右面",
+        "下面"
+      ]
     },
     {
       "id": "一年级下册-82D7",
@@ -983,7 +1577,12 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "识字 3",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "禾苗",
+        "秧苗",
+        "苗圃"
+      ]
     },
     {
       "id": "一年级下册-660E",
@@ -992,7 +1591,13 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "识字 4",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "明白",
+        "透明",
+        "英明",
+        "申明"
+      ]
     },
     {
       "id": "一年级下册-6015",
@@ -1001,7 +1606,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "阅读 19",
-      "unitOrder": 34
+      "unitOrder": 34,
+      "groups": [
+        "害怕",
+        "怕冷",
+        "怕黑",
+        "怕生"
+      ]
     },
     {
       "id": "一年级下册-8DD1",
@@ -1010,7 +1621,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "识字 7",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "跑步",
+        "赛跑",
+        "奔跑",
+        "跑道"
+      ]
     },
     {
       "id": "一年级下册-76AE",
@@ -1019,7 +1636,12 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "识字 7",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "鹿皮",
+        "鲨皮",
+        "虾皮"
+      ]
     },
     {
       "id": "一年级下册-7247",
@@ -1028,7 +1650,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "语文园地一",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "碎片",
+        "叶片",
+        "药片",
+        "底片"
+      ]
     },
     {
       "id": "一年级下册-5E73",
@@ -1037,7 +1665,11 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "阅读 14",
-      "unitOrder": 28
+      "unitOrder": 28,
+      "groups": [
+        "平静",
+        "平均"
+      ]
     },
     {
       "id": "一年级下册-6C14",
@@ -1046,7 +1678,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "阅读 11",
-      "unitOrder": 24
+      "unitOrder": 24,
+      "groups": [
+        "天气",
+        "透气",
+        "湿气",
+        "怒气"
+      ]
     },
     {
       "id": "一年级下册-5343",
@@ -1055,7 +1693,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "语文园地三",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "千年",
+        "千里",
+        "千万",
+        "千米"
+      ]
     },
     {
       "id": "一年级下册-524D",
@@ -1064,7 +1708,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "阅读 7",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "前面",
+        "前方",
+        "前途",
+        "以前"
+      ]
     },
     {
       "id": "一年级下册-9752",
@@ -1073,7 +1723,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "识字 3",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "青山",
+        "青青",
+        "青菜",
+        "青春"
+      ]
     },
     {
       "id": "一年级下册-6E05",
@@ -1082,7 +1738,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "识字 3",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "清楚",
+        "清洁",
+        "清水",
+        "清晨"
+      ]
     },
     {
       "id": "一年级下册-6674",
@@ -1091,7 +1753,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "识字 3",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "晴天",
+        "放晴",
+        "晴空",
+        "晴朗"
+      ]
     },
     {
       "id": "一年级下册-8BF7",
@@ -1100,7 +1768,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "识字 3",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "请客",
+        "请求",
+        "请教",
+        "请假"
+      ]
     },
     {
       "id": "一年级下册-8BA9",
@@ -1109,7 +1783,13 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "阅读 4",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "让开",
+        "让路",
+        "让座",
+        "让位"
+      ]
     },
     {
       "id": "一年级下册-8BA4",
@@ -1118,7 +1798,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "语文园地二",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "认识",
+        "认字",
+        "认错",
+        "认真"
+      ]
     },
     {
       "id": "一年级下册-8089",
@@ -1127,7 +1813,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "阅读 9",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "肉类",
+        "肉片",
+        "猪肉",
+        "肉汤"
+      ]
     },
     {
       "id": "一年级下册-5165",
@@ -1136,7 +1828,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "识字 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "钻入",
+        "深入",
+        "汇入",
+        "介入"
+      ]
     },
     {
       "id": "一年级下册-4F1E",
@@ -1145,7 +1843,13 @@
       "semester": "下",
       "unit": 12,
       "unitLabel": "阅读 12",
-      "unitOrder": 25
+      "unitOrder": 25,
+      "groups": [
+        "雨伞",
+        "阳伞",
+        "伞柄",
+        "撑伞"
+      ]
     },
     {
       "id": "一年级下册-8272",
@@ -1154,7 +1858,13 @@
       "semester": "下",
       "unit": 8,
       "unitLabel": "阅读 8",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "白色",
+        "黄色",
+        "蓝色",
+        "脸色"
+      ]
     },
     {
       "id": "一年级下册-6C99",
@@ -1163,7 +1873,12 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "识字 7",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "沙滩",
+        "沙石",
+        "沙尘"
+      ]
     },
     {
       "id": "一年级下册-8EAB",
@@ -1172,7 +1887,13 @@
       "semester": "下",
       "unit": 18,
       "unitLabel": "阅读 18",
-      "unitOrder": 33
+      "unitOrder": 33,
+      "groups": [
+        "身体",
+        "身影",
+        "身边",
+        "身高"
+      ]
     },
     {
       "id": "一年级下册-4EC0",
@@ -1181,7 +1902,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "识字 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "什么",
+        "什物",
+        "什锦",
+        "什一"
+      ]
     },
     {
       "id": "一年级下册-751F",
@@ -1190,7 +1917,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "识字 3",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "先生",
+        "卫生",
+        "女生",
+        "萌生"
+      ]
     },
     {
       "id": "一年级下册-5E08",
@@ -1199,7 +1932,13 @@
       "semester": "下",
       "unit": 15,
       "unitLabel": "阅读 15",
-      "unitOrder": 29
+      "unitOrder": 29,
+      "groups": [
+        "老师",
+        "师傅",
+        "师生",
+        "师范"
+      ]
     },
     {
       "id": "一年级下册-65F6",
@@ -1208,7 +1947,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "阅读 16",
-      "unitOrder": 30
+      "unitOrder": 30,
+      "groups": [
+        "有时",
+        "午时",
+        "及时",
+        "准时"
+      ]
     },
     {
       "id": "一年级下册-9996",
@@ -1217,7 +1962,11 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "阅读 10",
-      "unitOrder": 23
+      "unitOrder": 23,
+      "groups": [
+        "部首",
+        "首肯"
+      ]
     },
     {
       "id": "一年级下册-4E66",
@@ -1226,7 +1975,12 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "阅读 6",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "书本",
+        "读书",
+        "念书"
+      ]
     },
     {
       "id": "一年级下册-53CC",
@@ -1235,7 +1989,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "识字 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "双手",
+        "双眼",
+        "双人",
+        "双层"
+      ]
     },
     {
       "id": "一年级下册-8BF4",
@@ -1244,7 +2004,13 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "阅读 4",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "说牛",
+        "说鸟",
+        "说你",
+        "说男"
+      ]
     },
     {
       "id": "一年级下册-601D",
@@ -1253,7 +2019,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "阅读 7",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "思念",
+        "思想",
+        "思考",
+        "思路"
+      ]
     },
     {
       "id": "一年级下册-4ED6",
@@ -1262,7 +2034,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "阅读 5",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "他们",
+        "他的",
+        "他人",
+        "他乡"
+      ]
     },
     {
       "id": "一年级下册-5B83",
@@ -1271,7 +2049,12 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "阅读 11",
-      "unitOrder": 24
+      "unitOrder": 24,
+      "groups": [
+        "它们",
+        "它的",
+        "它家"
+      ]
     },
     {
       "id": "一年级下册-5979",
@@ -1280,7 +2063,12 @@
       "semester": "下",
       "unit": 18,
       "unitLabel": "阅读 18",
-      "unitOrder": 33
+      "unitOrder": 33,
+      "groups": [
+        "她们",
+        "她的",
+        "她家"
+      ]
     },
     {
       "id": "一年级下册-53F0",
@@ -1289,7 +2077,13 @@
       "semester": "下",
       "unit": 12,
       "unitLabel": "阅读 12",
-      "unitOrder": 25
+      "unitOrder": 25,
+      "groups": [
+        "台灯",
+        "台阶",
+        "舞台",
+        "平台"
+      ]
     },
     {
       "id": "一年级下册-592A",
@@ -1298,7 +2092,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "阅读 1",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "太阳",
+        "太多",
+        "太大",
+        "太平"
+      ]
     },
     {
       "id": "一年级下册-542C",
@@ -1307,7 +2107,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "阅读 16",
-      "unitOrder": 30
+      "unitOrder": 30,
+      "groups": [
+        "听牛",
+        "听鸟",
+        "听你",
+        "听男"
+      ]
     },
     {
       "id": "一年级下册-5154",
@@ -1316,7 +2122,12 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "阅读 17",
-      "unitOrder": 31
+      "unitOrder": 31,
+      "groups": [
+        "野兔",
+        "兔毛",
+        "兔洞"
+      ]
     },
     {
       "id": "一年级下册-73A9",
@@ -1325,7 +2136,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "阅读 11",
-      "unitOrder": 24
+      "unitOrder": 24,
+      "groups": [
+        "玩具",
+        "玩耍",
+        "玩球",
+        "玩笑"
+      ]
     },
     {
       "id": "一年级下册-4E07",
@@ -1334,7 +2151,13 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "识字 4",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "万里",
+        "千万",
+        "万物",
+        "万家"
+      ]
     },
     {
       "id": "一年级下册-7F51",
@@ -1343,7 +2166,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "识字 5",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "网络",
+        "网线",
+        "渔网",
+        "网球"
+      ]
     },
     {
       "id": "一年级下册-5F80",
@@ -1352,7 +2181,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "阅读 17",
-      "unitOrder": 31
+      "unitOrder": 31,
+      "groups": [
+        "往返",
+        "往来",
+        "往事",
+        "往前"
+      ]
     },
     {
       "id": "一年级下册-4E3A",
@@ -1361,7 +2196,12 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "阅读 19",
-      "unitOrder": 34
+      "unitOrder": 34,
+      "groups": [
+        "为了",
+        "作为",
+        "成为"
+      ]
     },
     {
       "id": "一年级下册-6587",
@@ -1370,7 +2210,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "语文园地一",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "文章",
+        "文化",
+        "文字",
+        "文具"
+      ]
     },
     {
       "id": "一年级下册-95EE",
@@ -1379,7 +2225,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "阅读 13",
-      "unitOrder": 26
+      "unitOrder": 26,
+      "groups": [
+        "问答",
+        "问题",
+        "询问",
+        "问候"
+      ]
     },
     {
       "id": "一年级下册-65E0",
@@ -1388,7 +2240,13 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "识字 4",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "没有",
+        "无法",
+        "无论",
+        "无限"
+      ]
     },
     {
       "id": "一年级下册-7269",
@@ -1397,7 +2255,11 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "识字 5",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "药物",
+        "睹物"
+      ]
     },
     {
       "id": "一年级下册-5915",
@@ -1406,7 +2268,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "识字 6",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "夕阳",
+        "夕照",
+        "夕霞",
+        "朝夕"
+      ]
     },
     {
       "id": "一年级下册-4E60",
@@ -1415,7 +2283,13 @@
       "semester": "下",
       "unit": 8,
       "unitLabel": "识字 8",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "学习",
+        "习惯",
+        "习题",
+        "习武"
+      ]
     },
     {
       "id": "一年级下册-6D17",
@@ -1424,7 +2298,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "语文园地七",
-      "unitOrder": 32
+      "unitOrder": 32,
+      "groups": [
+        "洗手",
+        "洗衣",
+        "洗澡",
+        "洗刷"
+      ]
     },
     {
       "id": "一年级下册-7EC6",
@@ -1433,7 +2313,11 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "识字 6",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "粗细",
+        "底细"
+      ]
     },
     {
       "id": "一年级下册-5413",
@@ -1442,7 +2326,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "阅读 19",
-      "unitOrder": 34
+      "unitOrder": 34,
+      "groups": [
+        "吓人",
+        "恐吓",
+        "吓唬",
+        "吓坏"
+      ]
     },
     {
       "id": "一年级下册-4E61",
@@ -1451,7 +2341,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "阅读 7",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "乡村",
+        "故乡",
+        "乡音",
+        "乡亲"
+      ]
     },
     {
       "id": "一年级下册-5411",
@@ -1460,7 +2356,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "阅读 20",
-      "unitOrder": 35
+      "unitOrder": 35,
+      "groups": [
+        "方向",
+        "向前",
+        "向上",
+        "向下"
+      ]
     },
     {
       "id": "一年级下册-8C61",
@@ -1469,7 +2371,11 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "阅读 19",
-      "unitOrder": 34
+      "unitOrder": 34,
+      "groups": [
+        "景象",
+        "印象"
+      ]
     },
     {
       "id": "一年级下册-7B11",
@@ -1478,7 +2384,13 @@
       "semester": "下",
       "unit": 8,
       "unitLabel": "阅读 8",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "笑声",
+        "笑脸",
+        "微笑",
+        "欢笑"
+      ]
     },
     {
       "id": "一年级下册-5199",
@@ -1487,7 +2399,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "语文园地二",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "写字",
+        "写作",
+        "写信",
+        "写生"
+      ]
     },
     {
       "id": "一年级下册-661F",
@@ -1496,7 +2414,11 @@
       "semester": "下",
       "unit": 18,
       "unitLabel": "阅读 18",
-      "unitOrder": 33
+      "unitOrder": 33,
+      "groups": [
+        "星球",
+        "恒星"
+      ]
     },
     {
       "id": "一年级下册-884C",
@@ -1505,7 +2427,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "阅读 20",
-      "unitOrder": 35
+      "unitOrder": 35,
+      "groups": [
+        "也行",
+        "爬行",
+        "旅行",
+        "另行"
+      ]
     },
     {
       "id": "一年级下册-5174",
@@ -1514,7 +2442,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "阅读 17",
-      "unitOrder": 31
+      "unitOrder": 31,
+      "groups": [
+        "兴奋",
+        "兴起",
+        "高兴",
+        "振兴"
+      ]
     },
     {
       "id": "一年级下册-5B66",
@@ -1523,7 +2457,12 @@
       "semester": "下",
       "unit": 8,
       "unitLabel": "识字 8",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "上学",
+        "退学",
+        "在学校"
+      ]
     },
     {
       "id": "一年级下册-96EA",
@@ -1532,7 +2471,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "识字 6",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "下雪",
+        "雪花",
+        "雪人",
+        "雪地"
+      ]
     },
     {
       "id": "一年级下册-8A00",
@@ -1541,7 +2486,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "识字 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "语言",
+        "言语",
+        "言行",
+        "箴言"
+      ]
     },
     {
       "id": "一年级下册-773C",
@@ -1550,7 +2501,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "阅读 11",
-      "unitOrder": 24
+      "unitOrder": 24,
+      "groups": [
+        "瞪眼",
+        "瞅一眼",
+        "眼睛",
+        "睁眼"
+      ]
     },
     {
       "id": "一年级下册-9633",
@@ -1559,7 +2516,12 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "阅读 1",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "朝阳",
+        "晒太阳",
+        "斜阳"
+      ]
     },
     {
       "id": "一年级下册-6837",
@@ -1568,7 +2530,11 @@
       "semester": "下",
       "unit": 8,
       "unitLabel": "阅读 8",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "一样",
+        "样式"
+      ]
     },
     {
       "id": "一年级下册-9875",
@@ -1577,7 +2543,13 @@
       "semester": "下",
       "unit": 8,
       "unitLabel": "语文园地八",
-      "unitOrder": 36
+      "unitOrder": 36,
+      "groups": [
+        "页码",
+        "书页",
+        "封页",
+        "页眉"
+      ]
     },
     {
       "id": "一年级下册-8863",
@@ -1586,7 +2558,13 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "语文园地四",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "衣服",
+        "衣裳",
+        "衣领",
+        "雨衣"
+      ]
     },
     {
       "id": "一年级下册-4E49",
@@ -1595,7 +2573,13 @@
       "semester": "下",
       "unit": 8,
       "unitLabel": "识字 8",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "义务",
+        "正义",
+        "义气",
+        "义工"
+      ]
     },
     {
       "id": "一年级下册-9C7C",
@@ -1604,7 +2588,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "阅读 13",
-      "unitOrder": 26
+      "unitOrder": 26,
+      "groups": [
+        "鲫鱼",
+        "鲨鱼",
+        "鲤鱼",
+        "钓鱼"
+      ]
     },
     {
       "id": "一年级下册-8BED",
@@ -1613,7 +2603,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "识字 6",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "语言",
+        "语文",
+        "语气",
+        "语音"
+      ]
     },
     {
       "id": "一年级下册-7389",
@@ -1622,7 +2618,13 @@
       "semester": "下",
       "unit": 8,
       "unitLabel": "识字 8",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "玉石",
+        "玉器",
+        "白玉",
+        "玉雕"
+      ]
     },
     {
       "id": "一年级下册-5143",
@@ -1631,7 +2633,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "语文园地三",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "元旦",
+        "元宵",
+        "元气",
+        "元宝"
+      ]
     },
     {
       "id": "一年级下册-8FDC",
@@ -1640,7 +2648,13 @@
       "semester": "下",
       "unit": 8,
       "unitLabel": "识字 8",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "远方",
+        "远处",
+        "遥远",
+        "远行"
+      ]
     },
     {
       "id": "一年级下册-8FD0",
@@ -1649,7 +2663,11 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "识字 5",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "命运",
+        "奥运会"
+      ]
     },
     {
       "id": "一年级下册-518D",
@@ -1658,7 +2676,13 @@
       "semester": "下",
       "unit": 8,
       "unitLabel": "阅读 8",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "再见",
+        "再来",
+        "再去",
+        "再说"
+      ]
     },
     {
       "id": "一年级下册-65E9",
@@ -1667,7 +2691,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "阅读 10",
-      "unitOrder": 23
+      "unitOrder": 23,
+      "groups": [
+        "早晨",
+        "早上",
+        "早饭",
+        "早读"
+      ]
     },
     {
       "id": "一年级下册-9020",
@@ -1676,7 +2706,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "识字 5",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "制造",
+        "造句",
+        "造纸",
+        "创造"
+      ]
     },
     {
       "id": "一年级下册-7AD9",
@@ -1685,7 +2721,13 @@
       "semester": "下",
       "unit": 15,
       "unitLabel": "阅读 15",
-      "unitOrder": 29
+      "unitOrder": 29,
+      "groups": [
+        "车站",
+        "站立",
+        "站台",
+        "站岗"
+      ]
     },
     {
       "id": "一年级下册-627E",
@@ -1694,7 +2736,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "阅读 20",
-      "unitOrder": 35
+      "unitOrder": 35,
+      "groups": [
+        "寻找",
+        "找人",
+        "找回",
+        "找钱"
+      ]
     },
     {
       "id": "一年级下册-8FD9",
@@ -1703,7 +2751,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "阅读 13",
-      "unitOrder": 26
+      "unitOrder": 26,
+      "groups": [
+        "这里",
+        "这个",
+        "这样",
+        "这时"
+      ]
     },
     {
       "id": "一年级下册-7740",
@@ -1712,7 +2766,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "阅读 17",
-      "unitOrder": 31
+      "unitOrder": 31,
+      "groups": [
+        "看着",
+        "听着",
+        "说着",
+        "走着"
+      ]
     },
     {
       "id": "一年级下册-652F",
@@ -1721,7 +2781,13 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "语文园地四",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "支撑",
+        "支架",
+        "支流",
+        "支票"
+      ]
     },
     {
       "id": "一年级下册-77E5",
@@ -1730,7 +2796,13 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "阅读 14",
-      "unitOrder": 28
+      "unitOrder": 28,
+      "groups": [
+        "知道",
+        "知识",
+        "知己",
+        "知晓"
+      ]
     },
     {
       "id": "一年级下册-6B62",
@@ -1739,7 +2811,12 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "语文园地三",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "阻止",
+        "静止",
+        "停止"
+      ]
     },
     {
       "id": "一年级下册-4E3B",
@@ -1748,7 +2825,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "阅读 2",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "主要",
+        "主人",
+        "主意",
+        "主持"
+      ]
     },
     {
       "id": "一年级下册-4F4F",
@@ -1757,7 +2840,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "阅读 2",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "住下",
+        "住家",
+        "住址",
+        "住手"
+      ]
     },
     {
       "id": "一年级下册-5B57",
@@ -1766,7 +2855,13 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "识字 4",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "文字",
+        "字母",
+        "字迹",
+        "字典"
+      ]
     },
     {
       "id": "一年级下册-81EA",
@@ -1775,7 +2870,13 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "阅读 4",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "自己",
+        "自由",
+        "自然",
+        "自大"
+      ]
     },
     {
       "id": "一年级下册-8D70",
@@ -1784,7 +2885,12 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "阅读 4",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "先走",
+        "夺走",
+        "取走"
+      ]
     },
     {
       "id": "一年级下册-8DB3",
@@ -1793,7 +2899,11 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "识字 7",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "足球",
+        "充足"
+      ]
     },
     {
       "id": "一年级下册-5750",
@@ -1802,7 +2912,13 @@
       "semester": "下",
       "unit": 15,
       "unitLabel": "阅读 15",
-      "unitOrder": 29
+      "unitOrder": 29,
+      "groups": [
+        "坐下",
+        "坐车",
+        "坐班",
+        "坐牢"
+      ]
     }
   ]
 }

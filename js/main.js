@@ -68,9 +68,9 @@ const Main = {
         // 绑定导航链接
         this.bindNavLinks();
         
-            // 绑定结果页面按钮
-            this.bindResultButtons();
-            
+        // 绑定结果页面按钮
+        this.bindResultButtons();
+
             // 绑定首页快捷按钮
             this.bindQuickButtons();
             this.bindWordBankRefreshButton();
@@ -182,9 +182,9 @@ const Main = {
             // 如果是练习页面，重新初始化范围选择器
             if (pageId === 'practice') {
                 if (typeof PracticeRange !== 'undefined') {
-                    setTimeout(() => {
-                        PracticeRange.init();
-                    }, 100);
+                setTimeout(() => {
+                    PracticeRange.init();
+                }, 100);
                 }
                 if (typeof Practice !== 'undefined' && Practice.syncForcedWordStateFromStorage) {
                     Practice.syncForcedWordStateFromStorage();
@@ -323,14 +323,14 @@ const Main = {
                 if (timeInput) timeInput.value = isFinite(time) && time > 0 ? String(time) : '30';
                 // 直接开始练习，跳过练习范围选择页面
                 // 先同步范围选择（在后台进行）
-                if (typeof PracticeRange !== 'undefined' && PracticeRange.syncSelection) {
-                    PracticeRange.syncSelection('practice-range-container-home', 'practice-range-container');
-                }
+                    if (typeof PracticeRange !== 'undefined' && PracticeRange.syncSelection) {
+                        PracticeRange.syncSelection('practice-range-container-home', 'practice-range-container');
+                    }
                 // 直接开始练习
-                if (typeof Practice !== 'undefined') {
+                    if (typeof Practice !== 'undefined') {
                     this.showPage('practice');
-                    Practice.start();
-                }
+                        Practice.start();
+                    }
             });
         }
 
@@ -370,7 +370,7 @@ const Main = {
                             PracticeRange.setErrorWordsFromLog(log.errorWords);
                         }
                         // 切换到练习页面并开始练习
-                        this.showPage('practice');
+                this.showPage('practice');
                         if (typeof Practice !== 'undefined') {
                             Practice.start();
                         }

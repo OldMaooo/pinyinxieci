@@ -11,7 +11,13 @@
       "semester": "上",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "岸边",
+        "海岸",
+        "河岸",
+        "对岸"
+      ]
     },
     {
       "id": "三年级上册-6848",
@@ -20,7 +26,13 @@
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "案件",
+        "方案",
+        "答案",
+        "案板"
+      ]
     },
     {
       "id": "三年级上册-5965",
@@ -29,7 +41,13 @@
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "奥秘",
+        "深奥",
+        "奥运会",
+        "奥妙"
+      ]
     },
     {
       "id": "三年级上册-677F",
@@ -38,7 +56,12 @@
       "semester": "上",
       "unit": 8,
       "unitLabel": "课文 8",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "木板",
+        "黑板",
+        "板材"
+      ]
     },
     {
       "id": "三年级上册-68D2",
@@ -47,7 +70,12 @@
       "semester": "上",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 22
+      "unitOrder": 22,
+      "groups": [
+        "棒球",
+        "棒棒",
+        "棒糖"
+      ]
     },
     {
       "id": "三年级上册-66B4",
@@ -56,7 +84,13 @@
       "semester": "上",
       "unit": 8,
       "unitLabel": "课文 8",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "暴雨",
+        "暴风",
+        "暴晒",
+        "暴躁"
+      ]
     },
     {
       "id": "三年级上册-5907",
@@ -65,7 +99,13 @@
       "semester": "上",
       "unit": 8,
       "unitLabel": "课文 8",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "准备",
+        "备课",
+        "备用",
+        "备好"
+      ]
     },
     {
       "id": "三年级上册-6EE8",
@@ -74,7 +114,13 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "海滨",
+        "湖滨",
+        "江滨",
+        "滨水"
+      ]
     },
     {
       "id": "三年级上册-6355",
@@ -83,7 +129,13 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "捕捉",
+        "捕鱼",
+        "捕获",
+        "捕食"
+      ]
     },
     {
       "id": "三年级上册-5E03",
@@ -92,7 +144,13 @@
       "semester": "上",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "布匹",
+        "布条",
+        "布告",
+        "布衣"
+      ]
     },
     {
       "id": "三年级上册-90E8",
@@ -101,7 +159,13 @@
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "部分",
+        "部门",
+        "部位",
+        "部首"
+      ]
     },
     {
       "id": "三年级上册-6750",
@@ -110,7 +174,13 @@
       "semester": "上",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "材料",
+        "木材",
+        "教材",
+        "人才"
+      ]
     },
     {
       "id": "三年级上册-8E29",
@@ -119,7 +189,12 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "踩到",
+        "踩踏",
+        "踩坏"
+      ]
     },
     {
       "id": "三年级上册-82CD",
@@ -128,7 +203,13 @@
       "semester": "上",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "苍白",
+        "苍老",
+        "苍天",
+        "苍翠"
+      ]
     },
     {
       "id": "三年级上册-5BDF",
@@ -137,7 +218,13 @@
       "semester": "上",
       "unit": 15,
       "unitLabel": "课文 15",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "观察",
+        "察觉",
+        "察看",
+        "考察"
+      ]
     },
     {
       "id": "三年级上册-5DEE",
@@ -146,7 +233,13 @@
       "semester": "上",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "差别",
+        "差距",
+        "差错",
+        "差劲"
+      ]
     },
     {
       "id": "三年级上册-671D",
@@ -155,7 +248,13 @@
       "semester": "上",
       "unit": 15,
       "unitLabel": "课文 15",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "朝向",
+        "朝阳",
+        "朝代",
+        "朝前"
+      ]
     },
     {
       "id": "三年级上册-6301",
@@ -164,7 +263,13 @@
       "semester": "上",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "持有",
+        "持续",
+        "持家",
+        "持重"
+      ]
     },
     {
       "id": "三年级上册-9F7F",
@@ -173,7 +278,13 @@
       "semester": "上",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "牙齿",
+        "齿轮",
+        "齿龈",
+        "锯齿"
+      ]
     },
     {
       "id": "三年级上册-5145",
@@ -182,7 +293,13 @@
       "semester": "上",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "充满",
+        "充足",
+        "充电",
+        "充气"
+      ]
     },
     {
       "id": "三年级上册-62BD",
@@ -191,7 +308,13 @@
       "semester": "上",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "抽出",
+        "抽签",
+        "抽空",
+        "抽水"
+      ]
     },
     {
       "id": "三年级上册-7785",
@@ -200,7 +323,13 @@
       "semester": "上",
       "unit": 23,
       "unitLabel": "语文园地",
-      "unitOrder": 23
+      "unitOrder": 23,
+      "groups": [
+        "瞅见",
+        "瞅着",
+        "瞅瞅",
+        "瞅一眼"
+      ]
     },
     {
       "id": "三年级上册-9664",
@@ -209,7 +338,12 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "除了",
+        "除去",
+        "除法"
+      ]
     },
     {
       "id": "三年级上册-695A",
@@ -218,7 +352,12 @@
       "semester": "上",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "楚国",
+        "楚楚",
+        "痛楚"
+      ]
     },
     {
       "id": "三年级上册-523A",
@@ -227,7 +366,13 @@
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "刺伤",
+        "刺眼",
+        "刺骨",
+        "刺猬"
+      ]
     },
     {
       "id": "三年级上册-5306",
@@ -236,7 +381,13 @@
       "semester": "上",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 22
+      "unitOrder": 22,
+      "groups": [
+        "匆忙",
+        "匆匆",
+        "匆促",
+        "急匆匆"
+      ]
     },
     {
       "id": "三年级上册-7C97",
@@ -245,7 +396,13 @@
       "semester": "上",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "粗壮",
+        "粗心",
+        "粗细",
+        "粗糙"
+      ]
     },
     {
       "id": "三年级上册-7FE0",
@@ -254,7 +411,13 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "翠绿",
+        "翠鸟",
+        "翠竹",
+        "翡翠"
+      ]
     },
     {
       "id": "三年级上册-9519",
@@ -263,7 +426,13 @@
       "semester": "上",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "错误",
+        "错过",
+        "错题",
+        "错字"
+      ]
     },
     {
       "id": "三年级上册-642D",
@@ -272,7 +441,13 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "搭起",
+        "搭车",
+        "搭桥",
+        "搭话"
+      ]
     },
     {
       "id": "三年级上册-5446",
@@ -281,7 +456,13 @@
       "semester": "上",
       "unit": 23,
       "unitLabel": "语文园地",
-      "unitOrder": 23
+      "unitOrder": 23,
+      "groups": [
+        "发呆",
+        "呆住",
+        "呆板",
+        "呆子"
+      ]
     },
     {
       "id": "三年级上册-5355",
@@ -290,7 +471,13 @@
       "semester": "上",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "单独",
+        "简单",
+        "单位",
+        "单数"
+      ]
     },
     {
       "id": "三年级上册-6DE1",
@@ -299,7 +486,12 @@
       "semester": "上",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "淡色",
+        "淡薄",
+        "淡淡"
+      ]
     },
     {
       "id": "三年级上册-6321",
@@ -308,7 +500,12 @@
       "semester": "上",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "挡路",
+        "挡风",
+        "挡雨"
+      ]
     },
     {
       "id": "三年级上册-767B",
@@ -317,7 +514,13 @@
       "semester": "上",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "登上",
+        "登高",
+        "登记",
+        "登台"
+      ]
     },
     {
       "id": "三年级上册-7B49",
@@ -326,7 +529,13 @@
       "semester": "上",
       "unit": 8,
       "unitLabel": "课文 8",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "等待",
+        "等等",
+        "等级",
+        "等到"
+      ]
     },
     {
       "id": "三年级上册-77AA",
@@ -335,7 +544,13 @@
       "semester": "上",
       "unit": 23,
       "unitLabel": "语文园地",
-      "unitOrder": 23
+      "unitOrder": 23,
+      "groups": [
+        "瞪眼",
+        "瞪大",
+        "瞪着",
+        "瞪视"
+      ]
     },
     {
       "id": "三年级上册-7B1B",
@@ -344,7 +559,12 @@
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "长笛",
+        "竹笛",
+        "笛声"
+      ]
     },
     {
       "id": "三年级上册-5E95",
@@ -353,7 +573,13 @@
       "semester": "上",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "底部",
+        "到底",
+        "底片",
+        "底细"
+      ]
     },
     {
       "id": "三年级上册-9493",
@@ -362,7 +588,13 @@
       "semester": "上",
       "unit": 15,
       "unitLabel": "课文 15",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "钓鱼",
+        "钓竿",
+        "垂钓",
+        "钓到"
+      ]
     },
     {
       "id": "三年级上册-8DCC",
@@ -371,7 +603,13 @@
       "semester": "上",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "跌倒",
+        "跌落",
+        "跌价",
+        "跌跤"
+      ]
     },
     {
       "id": "三年级上册-8BFB",
@@ -380,7 +618,13 @@
       "semester": "上",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "读书",
+        "阅读",
+        "朗读",
+        "读懂"
+      ]
     },
     {
       "id": "三年级上册-7779",
@@ -389,7 +633,13 @@
       "semester": "上",
       "unit": 23,
       "unitLabel": "语文园地",
-      "unitOrder": 23
+      "unitOrder": 23,
+      "groups": [
+        "目睹",
+        "睹物",
+        "睹见",
+        "睹面"
+      ]
     },
     {
       "id": "三年级上册-5EA6",
@@ -398,7 +648,13 @@
       "semester": "上",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "度过",
+        "温度",
+        "程度",
+        "度日"
+      ]
     },
     {
       "id": "三年级上册-65AD",
@@ -407,7 +663,13 @@
       "semester": "上",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "断开",
+        "判断",
+        "断线",
+        "断掉"
+      ]
     },
     {
       "id": "三年级上册-593A",
@@ -416,7 +678,13 @@
       "semester": "上",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 22
+      "unitOrder": 22,
+      "groups": [
+        "夺取",
+        "夺走",
+        "夺目",
+        "夺魁"
+      ]
     },
     {
       "id": "三年级上册-4E4F",
@@ -425,7 +693,13 @@
       "semester": "上",
       "unit": 10,
       "unitLabel": "语文园地",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "缺乏",
+        "疲乏",
+        "乏味",
+        "困乏"
+      ]
     },
     {
       "id": "三年级上册-7F5A",
@@ -434,7 +708,13 @@
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "惩罚",
+        "罚球",
+        "罚款",
+        "罚站"
+      ]
     },
     {
       "id": "三年级上册-5E06",
@@ -443,7 +723,13 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "帆船",
+        "扬帆",
+        "帆布",
+        "风帆"
+      ]
     },
     {
       "id": "三年级上册-8FD4",
@@ -452,7 +738,13 @@
       "semester": "上",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "返回",
+        "往返",
+        "返程",
+        "返航"
+      ]
     },
     {
       "id": "三年级上册-594B",
@@ -461,7 +753,13 @@
       "semester": "上",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "奋斗",
+        "奋力",
+        "奋起",
+        "奋勇"
+      ]
     },
     {
       "id": "三年级上册-67AB",
@@ -470,7 +768,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "枫叶",
+        "枫树",
+        "枫林",
+        "红枫"
+      ]
     },
     {
       "id": "三年级上册-5C01",
@@ -479,7 +783,12 @@
       "semester": "上",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "信封",
+        "封口",
+        "封条"
+      ]
     },
     {
       "id": "三年级上册-611F",
@@ -488,7 +797,13 @@
       "semester": "上",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "感觉",
+        "感受",
+        "感动",
+        "感谢"
+      ]
     },
     {
       "id": "三年级上册-521A",
@@ -497,7 +812,13 @@
       "semester": "上",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "刚才",
+        "刚刚",
+        "刚强",
+        "刚正"
+      ]
     },
     {
       "id": "三年级上册-9601",
@@ -506,7 +827,12 @@
       "semester": "上",
       "unit": 7,
       "unitLabel": "语文园地",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "阁楼",
+        "高阁",
+        "楼阁"
+      ]
     },
     {
       "id": "三年级上册-8DDF",
@@ -515,7 +841,13 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "跟着",
+        "跟从",
+        "跟班",
+        "跟来"
+      ]
     },
     {
       "id": "三年级上册-529F",
@@ -524,7 +856,13 @@
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "功夫",
+        "功劳",
+        "功课",
+        "成功"
+      ]
     },
     {
       "id": "三年级上册-5BAB",
@@ -533,7 +871,13 @@
       "semester": "上",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "宫殿",
+        "皇宫",
+        "故宫",
+        "宫廷"
+      ]
     },
     {
       "id": "三年级上册-52FE",
@@ -542,7 +886,13 @@
       "semester": "上",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "勾画",
+        "勾选",
+        "勾出",
+        "勾搭"
+      ]
     },
     {
       "id": "三年级上册-5B64",
@@ -551,7 +901,13 @@
       "semester": "上",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "孤独",
+        "孤单",
+        "孤儿",
+        "孤立"
+      ]
     },
     {
       "id": "三年级上册-522E",
@@ -560,7 +916,13 @@
       "semester": "上",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "刮风",
+        "刮掉",
+        "刮开",
+        "刮伤"
+      ]
     },
     {
       "id": "三年级上册-7BA1",
@@ -569,7 +931,12 @@
       "semester": "上",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "管理",
+        "管道",
+        "管用"
+      ]
     },
     {
       "id": "三年级上册-89C4",
@@ -578,7 +945,13 @@
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "规则",
+        "规定",
+        "规矩",
+        "规律"
+      ]
     },
     {
       "id": "三年级上册-5BD2",
@@ -587,7 +960,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "寒冷",
+        "寒冬",
+        "寒流",
+        "寒意"
+      ]
     },
     {
       "id": "三年级上册-6052",
@@ -596,7 +975,13 @@
       "semester": "上",
       "unit": 7,
       "unitLabel": "语文园地",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "恒星",
+        "永恒",
+        "恒定",
+        "恒心"
+      ]
     },
     {
       "id": "三年级上册-8F70",
@@ -605,7 +990,13 @@
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "轰隆",
+        "轰炸",
+        "轰动",
+        "轰鸣"
+      ]
     },
     {
       "id": "三年级上册-539A",
@@ -614,7 +1005,13 @@
       "semester": "上",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "厚薄",
+        "厚实",
+        "厚度",
+        "厚道"
+      ]
     },
     {
       "id": "三年级上册-547C",
@@ -623,7 +1020,13 @@
       "semester": "上",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "呼吸",
+        "呼喊",
+        "呼唤",
+        "招呼"
+      ]
     },
     {
       "id": "三年级上册-846B",
@@ -632,7 +1035,13 @@
       "semester": "上",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "葫芦",
+        "葫芦娃",
+        "糖葫芦",
+        "西葫芦"
+      ]
     },
     {
       "id": "三年级上册-4E92",
@@ -641,7 +1050,13 @@
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "互相",
+        "互助",
+        "互帮",
+        "互利"
+      ]
     },
     {
       "id": "三年级上册-5212",
@@ -650,7 +1065,13 @@
       "semester": "上",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "划船",
+        "划分",
+        "划破",
+        "划掉"
+      ]
     },
     {
       "id": "三年级上册-9EC4",
@@ -659,7 +1080,13 @@
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "黄色",
+        "金黄",
+        "黄昏",
+        "黄河"
+      ]
     },
     {
       "id": "三年级上册-7070",
@@ -668,7 +1095,13 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "灰色",
+        "灰尘",
+        "灰心",
+        "灰暗"
+      ]
     },
     {
       "id": "三年级上册-6C47",
@@ -677,7 +1110,13 @@
       "semester": "上",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "汇合",
+        "汇集",
+        "汇款",
+        "汇入"
+      ]
     },
     {
       "id": "三年级上册-51FB",
@@ -686,7 +1125,13 @@
       "semester": "上",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "打击",
+        "攻击",
+        "击中",
+        "击打"
+      ]
     },
     {
       "id": "三年级上册-53CA",
@@ -695,7 +1140,13 @@
       "semester": "上",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "及时",
+        "及格",
+        "及早",
+        "以及"
+      ]
     },
     {
       "id": "三年级上册-6025",
@@ -704,7 +1155,13 @@
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "急忙",
+        "着急",
+        "急性",
+        "急事"
+      ]
     },
     {
       "id": "三年级上册-6324",
@@ -713,7 +1170,13 @@
       "semester": "上",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "拥挤",
+        "挤满",
+        "挤进",
+        "挤占"
+      ]
     },
     {
       "id": "三年级上册-9CAB",
@@ -722,7 +1185,13 @@
       "semester": "上",
       "unit": 19,
       "unitLabel": "语文园地",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "鲫鱼",
+        "鲫",
+        "鲫科",
+        "鲫"
+      ]
     },
     {
       "id": "三年级上册-7686",
@@ -731,7 +1200,13 @@
       "semester": "上",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "皆是",
+        "皆大",
+        "皆可",
+        "皆无"
+      ]
     },
     {
       "id": "三年级上册-6D01",
@@ -740,7 +1215,12 @@
       "semester": "上",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "洁白",
+        "整洁",
+        "洁净"
+      ]
     },
     {
       "id": "三年级上册-4ECB",
@@ -749,7 +1229,13 @@
       "semester": "上",
       "unit": 10,
       "unitLabel": "语文园地",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "介绍",
+        "中介",
+        "介意",
+        "介入"
+      ]
     },
     {
       "id": "三年级上册-4EC5",
@@ -758,7 +1244,13 @@
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "仅仅",
+        "仅有",
+        "仅限",
+        "仅此"
+      ]
     },
     {
       "id": "三年级上册-52B2",
@@ -767,7 +1259,13 @@
       "semester": "上",
       "unit": 15,
       "unitLabel": "课文 15",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "使劲",
+        "劲头",
+        "用劲",
+        "有劲"
+      ]
     },
     {
       "id": "三年级上册-6676",
@@ -776,7 +1274,13 @@
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "水晶",
+        "晶莹",
+        "结晶",
+        "晶体"
+      ]
     },
     {
       "id": "三年级上册-775B",
@@ -785,7 +1289,13 @@
       "semester": "上",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "眼睛",
+        "定睛",
+        "目不转睛",
+        "点睛"
+      ]
     },
     {
       "id": "三年级上册-666F",
@@ -794,7 +1304,13 @@
       "semester": "上",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "景色",
+        "风景",
+        "景象",
+        "景致"
+      ]
     },
     {
       "id": "三年级上册-5F84",
@@ -803,7 +1319,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "路径",
+        "直径",
+        "径直",
+        "小径"
+      ]
     },
     {
       "id": "三年级上册-9759",
@@ -812,7 +1334,13 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "安静",
+        "平静",
+        "静悄悄",
+        "静止"
+      ]
     },
     {
       "id": "三年级上册-6551",
@@ -821,7 +1349,13 @@
       "semester": "上",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "救命",
+        "救援",
+        "救助",
+        "救火"
+      ]
     },
     {
       "id": "三年级上册-83CA",
@@ -830,7 +1364,13 @@
       "semester": "上",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "菊花",
+        "秋菊",
+        "菊展",
+        "菊香"
+      ]
     },
     {
       "id": "三年级上册-5377",
@@ -839,7 +1379,12 @@
       "semester": "上",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "卷起",
+        "卷发",
+        "卷尺"
+      ]
     },
     {
       "id": "三年级上册-5747",
@@ -848,7 +1393,13 @@
       "semester": "上",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "平均",
+        "均匀",
+        "均等",
+        "均分"
+      ]
     },
     {
       "id": "三年级上册-8003",
@@ -857,7 +1408,13 @@
       "semester": "上",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "考试",
+        "考虑",
+        "考察",
+        "考卷"
+      ]
     },
     {
       "id": "三年级上册-58F3",
@@ -866,7 +1423,13 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "贝壳",
+        "蛋壳",
+        "外壳",
+        "硬壳"
+      ]
     },
     {
       "id": "三年级上册-80AF",
@@ -875,7 +1438,13 @@
       "semester": "上",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "肯定",
+        "肯干",
+        "不肯",
+        "首肯"
+      ]
     },
     {
       "id": "三年级上册-67AF",
@@ -884,7 +1453,13 @@
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "枯萎",
+        "枯黄",
+        "枯树",
+        "枯干"
+      ]
     },
     {
       "id": "三年级上册-72C2",
@@ -893,7 +1468,13 @@
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "狂风",
+        "狂热",
+        "狂欢",
+        "狂喜"
+      ]
     },
     {
       "id": "三年级上册-7736",
@@ -902,7 +1483,13 @@
       "semester": "上",
       "unit": 23,
       "unitLabel": "语文园地",
-      "unitOrder": 23
+      "unitOrder": 23,
+      "groups": [
+        "眼眶",
+        "热泪盈眶",
+        "眶里",
+        "眶外"
+      ]
     },
     {
       "id": "三年级上册-6606",
@@ -911,7 +1498,13 @@
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "昆虫",
+        "昆明",
+        "昆仑",
+        "昆曲"
+      ]
     },
     {
       "id": "三年级上册-84DD",
@@ -920,7 +1513,13 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "蓝色",
+        "蓝天",
+        "蓝蓝",
+        "蓝莓"
+      ]
     },
     {
       "id": "三年级上册-6717",
@@ -929,7 +1528,13 @@
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "朗读",
+        "明朗",
+        "开朗",
+        "晴朗"
+      ]
     },
     {
       "id": "三年级上册-5398",
@@ -938,7 +1543,13 @@
       "semester": "上",
       "unit": 7,
       "unitLabel": "语文园地",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "厘米",
+        "厘清",
+        "厘定",
+        "毫厘"
+      ]
     },
     {
       "id": "三年级上册-68A8",
@@ -947,7 +1558,12 @@
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "梨树",
+        "梨园",
+        "梨核"
+      ]
     },
     {
       "id": "三年级上册-9CA4",
@@ -956,7 +1572,13 @@
       "semester": "上",
       "unit": 19,
       "unitLabel": "语文园地",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "鲤鱼",
+        "锦鲤",
+        "鲤跃",
+        "鲤科"
+      ]
     },
     {
       "id": "三年级上册-601C",
@@ -965,7 +1587,13 @@
       "semester": "上",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "可怜",
+        "怜悯",
+        "怜爱",
+        "怜惜"
+      ]
     },
     {
       "id": "三年级上册-8138",
@@ -974,7 +1602,13 @@
       "semester": "上",
       "unit": 15,
       "unitLabel": "课文 15",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "脸色",
+        "脸面",
+        "脸红",
+        "脸盆"
+      ]
     },
     {
       "id": "三年级上册-51C9",
@@ -983,7 +1617,13 @@
       "semester": "上",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "凉快",
+        "凉风",
+        "凉爽",
+        "凉意"
+      ]
     },
     {
       "id": "三年级上册-6599",
@@ -992,7 +1632,13 @@
       "semester": "上",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "材料",
+        "料到",
+        "料想",
+        "料理"
+      ]
     },
     {
       "id": "三年级上册-5217",
@@ -1001,7 +1647,13 @@
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "排列",
+        "列出",
+        "列队",
+        "列车"
+      ]
     },
     {
       "id": "三年级上册-51CC",
@@ -1010,7 +1662,13 @@
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "凌乱",
+        "凌晨",
+        "凌空",
+        "凌云"
+      ]
     },
     {
       "id": "三年级上册-53E6",
@@ -1019,7 +1677,13 @@
       "semester": "上",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "另外",
+        "另行",
+        "另类",
+        "另选"
+      ]
     },
     {
       "id": "三年级上册-7559",
@@ -1028,7 +1692,13 @@
       "semester": "上",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "留下",
+        "留神",
+        "留级",
+        "留步"
+      ]
     },
     {
       "id": "三年级上册-62E2",
@@ -1037,7 +1707,12 @@
       "semester": "上",
       "unit": 15,
       "unitLabel": "课文 15",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "拢起",
+        "拢来",
+        "拢共"
+      ]
     },
     {
       "id": "三年级上册-82A6",
@@ -1046,7 +1721,13 @@
       "semester": "上",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "葫芦",
+        "芦苇",
+        "芦花",
+        "芦笛"
+      ]
     },
     {
       "id": "三年级上册-9646",
@@ -1055,7 +1736,13 @@
       "semester": "上",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 22
+      "unitOrder": 22,
+      "groups": [
+        "陆地",
+        "大陆",
+        "陆路",
+        "陆军"
+      ]
     },
     {
       "id": "三年级上册-9E7F",
@@ -1064,7 +1751,13 @@
       "semester": "上",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "小鹿",
+        "鹿角",
+        "鹿群",
+        "鹿皮"
+      ]
     },
     {
       "id": "三年级上册-65C5",
@@ -1073,7 +1766,13 @@
       "semester": "上",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "旅行",
+        "旅游",
+        "旅途",
+        "旅客"
+      ]
     },
     {
       "id": "三年级上册-4E71",
@@ -1082,7 +1781,13 @@
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "凌乱",
+        "混乱",
+        "乱跑",
+        "乱动"
+      ]
     },
     {
       "id": "三年级上册-87BA",
@@ -1091,7 +1796,13 @@
       "semester": "上",
       "unit": 19,
       "unitLabel": "语文园地",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "螺丝",
+        "螺号",
+        "螺蛳",
+        "螺旋"
+      ]
     },
     {
       "id": "三年级上册-843D",
@@ -1100,7 +1811,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "落下",
+        "落叶",
+        "落后",
+        "落水"
+      ]
     },
     {
       "id": "三年级上册-8302",
@@ -1109,7 +1826,13 @@
       "semester": "上",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "茂盛",
+        "茂密",
+        "茂林",
+        "茂草"
+      ]
     },
     {
       "id": "三年级上册-5192",
@@ -1118,7 +1841,13 @@
       "semester": "上",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "冒泡",
+        "冒烟",
+        "冒火",
+        "冒失"
+      ]
     },
     {
       "id": "三年级上册-679A",
@@ -1127,7 +1856,13 @@
       "semester": "上",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "一枚",
+        "枚举",
+        "枚数",
+        "几枚"
+      ]
     },
     {
       "id": "三年级上册-840C",
@@ -1136,7 +1871,13 @@
       "semester": "上",
       "unit": 7,
       "unitLabel": "语文园地",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "萌芽",
+        "萌发",
+        "萌生",
+        "萌动"
+      ]
     },
     {
       "id": "三年级上册-79D8",
@@ -1145,7 +1886,13 @@
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "秘密",
+        "秘方",
+        "秘闻",
+        "秘事"
+      ]
     },
     {
       "id": "三年级上册-5BC6",
@@ -1154,7 +1901,13 @@
       "semester": "上",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "秘密",
+        "密切",
+        "密集",
+        "密林"
+      ]
     },
     {
       "id": "三年级上册-79D2",
@@ -1163,7 +1916,13 @@
       "semester": "上",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 22
+      "unitOrder": 22,
+      "groups": [
+        "秒表",
+        "秒针",
+        "秒杀",
+        "秒数"
+      ]
     },
     {
       "id": "三年级上册-5999",
@@ -1172,7 +1931,13 @@
       "semester": "上",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "奇妙",
+        "妙计",
+        "妙用",
+        "妙处"
+      ]
     },
     {
       "id": "三年级上册-9E23",
@@ -1181,7 +1946,13 @@
       "semester": "上",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "鸣叫",
+        "鸣响",
+        "鸣笛",
+        "鸣声"
+      ]
     },
     {
       "id": "三年级上册-547D",
@@ -1190,7 +1961,13 @@
       "semester": "上",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "救命",
+        "生命",
+        "命令",
+        "命运"
+      ]
     },
     {
       "id": "三年级上册-62B9",
@@ -1199,7 +1976,13 @@
       "semester": "上",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "抹掉",
+        "抹去",
+        "抹布",
+        "抹黑"
+      ]
     },
     {
       "id": "三年级上册-95F9",
@@ -1208,7 +1991,13 @@
       "semester": "上",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "热闹",
+        "吵闹",
+        "闹钟",
+        "闹事"
+      ]
     },
     {
       "id": "三年级上册-5FF5",
@@ -1217,7 +2006,13 @@
       "semester": "上",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "想念",
+        "念头",
+        "念书",
+        "念经"
+      ]
     },
     {
       "id": "三年级上册-52AA",
@@ -1226,7 +2021,13 @@
       "semester": "上",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "努力",
+        "努嘴",
+        "努劲",
+        "努目"
+      ]
     },
     {
       "id": "三年级上册-6012",
@@ -1235,7 +2036,12 @@
       "semester": "上",
       "unit": 23,
       "unitLabel": "语文园地",
-      "unitOrder": 23
+      "unitOrder": 23,
+      "groups": [
+        "怒气",
+        "怒视",
+        "愤怒"
+      ]
     },
     {
       "id": "三年级上册-54E6",
@@ -1244,7 +2050,13 @@
       "semester": "上",
       "unit": 8,
       "unitLabel": "课文 8",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "哦哦",
+        "哦呀",
+        "哦哟",
+        "哦"
+      ]
     },
     {
       "id": "三年级上册-722C",
@@ -1253,7 +2065,13 @@
       "semester": "上",
       "unit": 8,
       "unitLabel": "课文 8",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "爬行",
+        "爬山",
+        "爬树",
+        "爬高"
+      ]
     },
     {
       "id": "三年级上册-76D8",
@@ -1262,7 +2080,12 @@
       "semester": "上",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 22
+      "unitOrder": 22,
+      "groups": [
+        "盘算",
+        "盘问",
+        "盘绕"
+      ]
     },
     {
       "id": "三年级上册-8783",
@@ -1271,7 +2094,13 @@
       "semester": "上",
       "unit": 19,
       "unitLabel": "语文园地",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "螃蟹",
+        "螃蜞",
+        "螃蠏",
+        "螃"
+      ]
     },
     {
       "id": "三年级上册-57F9",
@@ -1280,7 +2109,13 @@
       "semester": "上",
       "unit": 7,
       "unitLabel": "语文园地",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "培养",
+        "培育",
+        "培土",
+        "栽培"
+      ]
     },
     {
       "id": "三年级上册-78B0",
@@ -1289,7 +2124,13 @@
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "碰到",
+        "碰见",
+        "碰撞",
+        "碰巧"
+      ]
     },
     {
       "id": "三年级上册-62AB",
@@ -1298,7 +2139,13 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "披上",
+        "披风",
+        "披肩",
+        "披挂"
+      ]
     },
     {
       "id": "三年级上册-98D8",
@@ -1307,7 +2154,13 @@
       "semester": "上",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "飘扬",
+        "飘动",
+        "飘落",
+        "飘雪"
+      ]
     },
     {
       "id": "三年级上册-7968",
@@ -1316,7 +2169,12 @@
       "semester": "上",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "邮票",
+        "门票",
+        "车票"
+      ]
     },
     {
       "id": "三年级上册-6F02",
@@ -1325,7 +2183,13 @@
       "semester": "上",
       "unit": 8,
       "unitLabel": "课文 8",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "漂亮",
+        "漂流",
+        "漂浮",
+        "漂白"
+      ]
     },
     {
       "id": "三年级上册-9891",
@@ -1334,7 +2198,13 @@
       "semester": "上",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "频繁",
+        "频率",
+        "频道",
+        "频频"
+      ]
     },
     {
       "id": "三年级上册-5761",
@@ -1343,7 +2213,13 @@
       "semester": "上",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "山坡",
+        "土坡",
+        "斜坡",
+        "上坡"
+      ]
     },
     {
       "id": "三年级上册-84B2",
@@ -1352,7 +2228,13 @@
       "semester": "上",
       "unit": 15,
       "unitLabel": "课文 15",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "蒲扇",
+        "蒲草",
+        "蒲团",
+        "蒲公英"
+      ]
     },
     {
       "id": "三年级上册-666E",
@@ -1361,7 +2243,13 @@
       "semester": "上",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "普通",
+        "普及",
+        "普遍",
+        "普照"
+      ]
     },
     {
       "id": "三年级上册-5F03",
@@ -1370,7 +2258,13 @@
       "semester": "上",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "放弃",
+        "抛弃",
+        "弃权",
+        "弃置"
+      ]
     },
     {
       "id": "三年级上册-5668",
@@ -1379,7 +2273,13 @@
       "semester": "上",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "器具",
+        "器皿",
+        "乐器",
+        "机器"
+      ]
     },
     {
       "id": "三年级上册-6D45",
@@ -1388,7 +2288,13 @@
       "semester": "上",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "浅色",
+        "浅显",
+        "浅薄",
+        "浅滩"
+      ]
     },
     {
       "id": "三年级上册-6B20",
@@ -1397,7 +2303,13 @@
       "semester": "上",
       "unit": 15,
       "unitLabel": "课文 15",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "欠债",
+        "欠款",
+        "欠条",
+        "欠账"
+      ]
     },
     {
       "id": "三年级上册-6084",
@@ -1406,7 +2318,13 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "悄悄",
+        "悄声",
+        "悄然",
+        "静悄悄"
+      ]
     },
     {
       "id": "三年级上册-4EB2",
@@ -1415,7 +2333,13 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "亲人",
+        "亲自",
+        "亲切",
+        "亲爱"
+      ]
     },
     {
       "id": "三年级上册-7434",
@@ -1424,7 +2348,13 @@
       "semester": "上",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "钢琴",
+        "琴声",
+        "琴键",
+        "弹琴"
+      ]
     },
     {
       "id": "三年级上册-7403",
@@ -1433,7 +2363,13 @@
       "semester": "上",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "足球",
+        "篮球",
+        "地球",
+        "星球"
+      ]
     },
     {
       "id": "三年级上册-53D6",
@@ -1442,7 +2378,13 @@
       "semester": "上",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 22
+      "unitOrder": 22,
+      "groups": [
+        "取得",
+        "取出",
+        "取走",
+        "取来"
+      ]
     },
     {
       "id": "三年级上册-70ED",
@@ -1451,7 +2393,13 @@
       "semester": "上",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "热闹",
+        "热情",
+        "热爱",
+        "热水"
+      ]
     },
     {
       "id": "三年级上册-8363",
@@ -1460,7 +2408,13 @@
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "光荣",
+        "荣誉",
+        "荣华",
+        "荣辱"
+      ]
     },
     {
       "id": "三年级上册-67D4",
@@ -1469,7 +2423,13 @@
       "semester": "上",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "柔软",
+        "柔和",
+        "柔美",
+        "柔顺"
+      ]
     },
     {
       "id": "三年级上册-8F6F",
@@ -1478,7 +2438,13 @@
       "semester": "上",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "柔软",
+        "软和",
+        "软糖",
+        "软绵绵"
+      ]
     },
     {
       "id": "三年级上册-6DA6",
@@ -1487,7 +2453,13 @@
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "湿润",
+        "滋润",
+        "润滑",
+        "润泽"
+      ]
     },
     {
       "id": "三年级上册-9CA8",
@@ -1496,7 +2468,13 @@
       "semester": "上",
       "unit": 19,
       "unitLabel": "语文园地",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "鲨鱼",
+        "鲨鳍",
+        "鲨皮",
+        "鲨"
+      ]
     },
     {
       "id": "三年级上册-6652",
@@ -1505,7 +2483,13 @@
       "semester": "上",
       "unit": 8,
       "unitLabel": "课文 8",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "晒干",
+        "晒晒",
+        "晒太阳",
+        "晒黑"
+      ]
     },
     {
       "id": "三年级上册-4F24",
@@ -1514,7 +2498,13 @@
       "semester": "上",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 22
+      "unitOrder": 22,
+      "groups": [
+        "受伤",
+        "伤害",
+        "伤口",
+        "伤心"
+      ]
     },
     {
       "id": "三年级上册-7ECD",
@@ -1523,7 +2513,13 @@
       "semester": "上",
       "unit": 10,
       "unitLabel": "语文园地",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "介绍",
+        "绍兴",
+        "绍述",
+        "绍介"
+      ]
     },
     {
       "id": "三年级上册-7533",
@@ -1532,7 +2528,13 @@
       "semester": "上",
       "unit": 10,
       "unitLabel": "语文园地",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "申请",
+        "申明",
+        "申诉",
+        "申报"
+      ]
     },
     {
       "id": "三年级上册-6DF1",
@@ -1541,7 +2543,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "深浅",
+        "深入",
+        "深刻",
+        "深海"
+      ]
     },
     {
       "id": "三年级上册-5723",
@@ -1550,7 +2558,13 @@
       "semester": "上",
       "unit": 7,
       "unitLabel": "语文园地",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "神圣",
+        "圣人",
+        "圣诞",
+        "圣洁"
+      ]
     },
     {
       "id": "三年级上册-76DB",
@@ -1559,7 +2573,13 @@
       "semester": "上",
       "unit": 15,
       "unitLabel": "课文 15",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "盛大",
+        "盛况",
+        "盛装",
+        "盛情"
+      ]
     },
     {
       "id": "三年级上册-6E7F",
@@ -1568,7 +2588,13 @@
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "湿润",
+        "潮湿",
+        "湿度",
+        "湿气"
+      ]
     },
     {
       "id": "三年级上册-4F7F",
@@ -1577,7 +2603,13 @@
       "semester": "上",
       "unit": 15,
       "unitLabel": "课文 15",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "使用",
+        "使唤",
+        "使节",
+        "使劲"
+      ]
     },
     {
       "id": "三年级上册-5F0F",
@@ -1586,7 +2618,13 @@
       "semester": "上",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "方式",
+        "公式",
+        "样式",
+        "正式"
+      ]
     },
     {
       "id": "三年级上册-8BD5",
@@ -1595,7 +2633,13 @@
       "semester": "上",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "试验",
+        "试试",
+        "试穿",
+        "试吃"
+      ]
     },
     {
       "id": "三年级上册-800D",
@@ -1604,7 +2648,13 @@
       "semester": "上",
       "unit": 15,
       "unitLabel": "课文 15",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "玩耍",
+        "耍弄",
+        "耍赖",
+        "耍滑"
+      ]
     },
     {
       "id": "三年级上册-971C",
@@ -1613,7 +2663,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "霜降",
+        "霜冻",
+        "白霜",
+        "霜花"
+      ]
     },
     {
       "id": "三年级上册-723D",
@@ -1622,7 +2678,12 @@
       "semester": "上",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "凉爽",
+        "爽快",
+        "爽朗"
+      ]
     },
     {
       "id": "三年级上册-53F8",
@@ -1631,7 +2692,13 @@
       "semester": "上",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "司机",
+        "司令",
+        "司法",
+        "司仪"
+      ]
     },
     {
       "id": "三年级上册-901F",
@@ -1640,7 +2707,13 @@
       "semester": "上",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 22
+      "unitOrder": 22,
+      "groups": [
+        "速度",
+        "快速",
+        "迅速",
+        "速成"
+      ]
     },
     {
       "id": "三年级上册-6001",
@@ -1649,7 +2722,13 @@
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "态度",
+        "状态",
+        "形态",
+        "神态"
+      ]
     },
     {
       "id": "三年级上册-575B",
@@ -1658,7 +2737,12 @@
       "semester": "上",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "花坛",
+        "天坛",
+        "祭坛"
+      ]
     },
     {
       "id": "三年级上册-5858",
@@ -1667,7 +2751,13 @@
       "semester": "上",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "池塘",
+        "水塘",
+        "塘边",
+        "塘里"
+      ]
     },
     {
       "id": "三年级上册-6311",
@@ -1676,7 +2766,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "挑选",
+        "挑水",
+        "挑担",
+        "挑食"
+      ]
     },
     {
       "id": "三年级上册-5EAD",
@@ -1685,7 +2781,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "家庭",
+        "庭院",
+        "法庭",
+        "庭园"
+      ]
     },
     {
       "id": "三年级上册-505C",
@@ -1694,7 +2796,12 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "停下",
+        "停止",
+        "停车"
+      ]
     },
     {
       "id": "三年级上册-900F",
@@ -1703,7 +2810,13 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "透明",
+        "透过",
+        "透气",
+        "透亮"
+      ]
     },
     {
       "id": "三年级上册-9000",
@@ -1712,7 +2825,13 @@
       "semester": "上",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "退后",
+        "退步",
+        "退让",
+        "退学"
+      ]
     },
     {
       "id": "三年级上册-541E",
@@ -1721,7 +2840,13 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "吞下",
+        "吞没",
+        "吞食",
+        "吞掉"
+      ]
     },
     {
       "id": "三年级上册-59A5",
@@ -1730,7 +2855,13 @@
       "semester": "上",
       "unit": 7,
       "unitLabel": "语文园地",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "妥当",
+        "妥协",
+        "妥善",
+        "妥帖"
+      ]
     },
     {
       "id": "三年级上册-6316",
@@ -1739,7 +2870,13 @@
       "semester": "上",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "挖土",
+        "挖掘",
+        "挖坑",
+        "挖出"
+      ]
     },
     {
       "id": "三年级上册-671B",
@@ -1748,7 +2885,12 @@
       "semester": "上",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "希望",
+        "望见",
+        "望月"
+      ]
     },
     {
       "id": "三年级上册-5A01",
@@ -1757,7 +2899,13 @@
       "semester": "上",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "威风",
+        "威力",
+        "威严",
+        "威武"
+      ]
     },
     {
       "id": "三年级上册-5C3E",
@@ -1766,7 +2914,13 @@
       "semester": "上",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "尾巴",
+        "末尾",
+        "尾随",
+        "尾气"
+      ]
     },
     {
       "id": "三年级上册-672A",
@@ -1775,7 +2929,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "未来",
+        "未知",
+        "未必",
+        "未然"
+      ]
     },
     {
       "id": "三年级上册-80C3",
@@ -1784,7 +2944,13 @@
       "semester": "上",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "胃口",
+        "胃病",
+        "胃痛",
+        "胃肠"
+      ]
     },
     {
       "id": "三年级上册-5C4B",
@@ -1793,7 +2959,12 @@
       "semester": "上",
       "unit": 8,
       "unitLabel": "课文 8",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "房屋",
+        "屋顶",
+        "屋檐"
+      ]
     },
     {
       "id": "三年级上册-559C",
@@ -1802,7 +2973,13 @@
       "semester": "上",
       "unit": 15,
       "unitLabel": "课文 15",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "喜欢",
+        "喜爱",
+        "喜事",
+        "喜气"
+      ]
     },
     {
       "id": "三年级上册-867E",
@@ -1811,7 +2988,12 @@
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "虾米",
+        "虾仁",
+        "虾皮"
+      ]
     },
     {
       "id": "三年级上册-663E",
@@ -1820,7 +3002,13 @@
       "semester": "上",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "显示",
+        "显现",
+        "明显",
+        "显眼"
+      ]
     },
     {
       "id": "三年级上册-76F8",
@@ -1829,7 +3017,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "互相",
+        "相信",
+        "相对",
+        "相同"
+      ]
     },
     {
       "id": "三年级上册-659C",
@@ -1838,7 +3032,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "倾斜",
+        "斜线",
+        "斜阳",
+        "斜坡"
+      ]
     },
     {
       "id": "三年级上册-87F9",
@@ -1847,7 +3047,13 @@
       "semester": "上",
       "unit": 19,
       "unitLabel": "语文园地",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "螃蟹",
+        "蟹黄",
+        "蟹肉",
+        "蟹壳"
+      ]
     },
     {
       "id": "三年级上册-674F",
@@ -1856,7 +3062,12 @@
       "semester": "上",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "杏花",
+        "杏仁",
+        "杏树"
+      ]
     },
     {
       "id": "三年级上册-5E8F",
@@ -1865,7 +3076,13 @@
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "顺序",
+        "序言",
+        "序曲",
+        "序数"
+      ]
     },
     {
       "id": "三年级上册-8840",
@@ -1874,7 +3091,13 @@
       "semester": "上",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 22
+      "unitOrder": 22,
+      "groups": [
+        "血液",
+        "血型",
+        "血统",
+        "血汗"
+      ]
     },
     {
       "id": "三年级上册-8FC5",
@@ -1883,7 +3106,13 @@
       "semester": "上",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 22
+      "unitOrder": 22,
+      "groups": [
+        "迅速",
+        "迅猛",
+        "迅疾",
+        "迅雷"
+      ]
     },
     {
       "id": "三年级上册-4E9A",
@@ -1892,7 +3121,13 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "亚洲",
+        "亚军",
+        "亚热带",
+        "亚健康"
+      ]
     },
     {
       "id": "三年级上册-4E25",
@@ -1901,7 +3136,13 @@
       "semester": "上",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "严格",
+        "严肃",
+        "严厉",
+        "严实"
+      ]
     },
     {
       "id": "三年级上册-5CA9",
@@ -1910,7 +3151,13 @@
       "semester": "上",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "岩石",
+        "岩层",
+        "岩洞",
+        "岩壁"
+      ]
     },
     {
       "id": "三年级上册-626C",
@@ -1919,7 +3166,12 @@
       "semester": "上",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "飘扬",
+        "扬帆",
+        "表扬"
+      ]
     },
     {
       "id": "三年级上册-6447",
@@ -1928,7 +3180,13 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "摇动",
+        "摇摆",
+        "摇手",
+        "摇头"
+      ]
     },
     {
       "id": "三年级上册-54AC",
@@ -1937,7 +3195,12 @@
       "semester": "上",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "咬断",
+        "咬紧",
+        "咬人"
+      ]
     },
     {
       "id": "三年级上册-836F",
@@ -1946,7 +3209,13 @@
       "semester": "上",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "药物",
+        "药品",
+        "药片",
+        "药水"
+      ]
     },
     {
       "id": "三年级上册-533B",
@@ -1955,7 +3224,13 @@
       "semester": "上",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 22
+      "unitOrder": 22,
+      "groups": [
+        "医生",
+        "医院",
+        "医疗",
+        "医治"
+      ]
     },
     {
       "id": "三年级上册-5B9C",
@@ -1964,7 +3239,13 @@
       "semester": "上",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "适宜",
+        "便宜",
+        "宜人",
+        "宜于"
+      ]
     },
     {
       "id": "三年级上册-4EA6",
@@ -1973,7 +3254,13 @@
       "semester": "上",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "亦是",
+        "亦或",
+        "亦如",
+        "亦非"
+      ]
     },
     {
       "id": "三年级上册-996E",
@@ -1982,7 +3269,13 @@
       "semester": "上",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "饮水",
+        "饮料",
+        "饮食",
+        "饮用"
+      ]
     },
     {
       "id": "三年级上册-5370",
@@ -1991,7 +3284,13 @@
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "印刷",
+        "印象",
+        "印章",
+        "印迹"
+      ]
     },
     {
       "id": "三年级上册-82F1",
@@ -2000,7 +3299,13 @@
       "semester": "上",
       "unit": 15,
       "unitLabel": "课文 15",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "英雄",
+        "英语",
+        "英明",
+        "英俊"
+      ]
     },
     {
       "id": "三年级上册-4F18",
@@ -2009,7 +3314,13 @@
       "semester": "上",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "优秀",
+        "优美",
+        "优点",
+        "优势"
+      ]
     },
     {
       "id": "三年级上册-90AE",
@@ -2018,7 +3329,13 @@
       "semester": "上",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "邮票",
+        "邮局",
+        "邮寄",
+        "邮箱"
+      ]
     },
     {
       "id": "三年级上册-6CB9",
@@ -2027,7 +3344,13 @@
       "semester": "上",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "石油",
+        "油条",
+        "油灯",
+        "油滑"
+      ]
     },
     {
       "id": "三年级上册-6E14",
@@ -2036,7 +3359,13 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "渔民",
+        "渔业",
+        "渔网",
+        "渔夫"
+      ]
     },
     {
       "id": "三年级上册-7FBD",
@@ -2045,7 +3374,13 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "羽毛",
+        "羽翼",
+        "羽扇",
+        "羽化"
+      ]
     },
     {
       "id": "三年级上册-6B32",
@@ -2054,7 +3389,13 @@
       "semester": "上",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "欲望",
+        "欲求",
+        "欲念",
+        "欲火"
+      ]
     },
     {
       "id": "三年级上册-9662",
@@ -2063,7 +3404,12 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "医院",
+        "院校",
+        "院落"
+      ]
     },
     {
       "id": "三年级上册-5219",
@@ -2072,7 +3418,13 @@
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "规则",
+        "法则",
+        "原则",
+        "准则"
+      ]
     },
     {
       "id": "三年级上册-7728",
@@ -2081,7 +3433,13 @@
       "semester": "上",
       "unit": 23,
       "unitLabel": "语文园地",
-      "unitOrder": 23
+      "unitOrder": 23,
+      "groups": [
+        "眨眼",
+        "眨巴",
+        "眨动",
+        "眨眨"
+      ]
     },
     {
       "id": "三年级上册-7C98",
@@ -2090,7 +3448,12 @@
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "粘贴",
+        "粘连",
+        "粘性"
+      ]
     },
     {
       "id": "三年级上册-5C55",
@@ -2099,7 +3462,13 @@
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "展开",
+        "展览",
+        "展示",
+        "展翅"
+      ]
     },
     {
       "id": "三年级上册-5360",
@@ -2108,7 +3477,13 @@
       "semester": "上",
       "unit": 10,
       "unitLabel": "语文园地",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "占据",
+        "占领",
+        "占有",
+        "占位"
+      ]
     },
     {
       "id": "三年级上册-62DB",
@@ -2117,7 +3492,13 @@
       "semester": "上",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "招呼",
+        "招手",
+        "招聘",
+        "招生"
+      ]
     },
     {
       "id": "三年级上册-4E89",
@@ -2126,7 +3507,13 @@
       "semester": "上",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "争取",
+        "争论",
+        "争夺",
+        "争吵"
+      ]
     },
     {
       "id": "三年级上册-7741",
@@ -2135,7 +3522,13 @@
       "semester": "上",
       "unit": 23,
       "unitLabel": "语文园地",
-      "unitOrder": 23
+      "unitOrder": 23,
+      "groups": [
+        "睁开",
+        "睁眼",
+        "睁大",
+        "睁着"
+      ]
     },
     {
       "id": "三年级上册-65E8",
@@ -2144,7 +3537,12 @@
       "semester": "上",
       "unit": 10,
       "unitLabel": "语文园地",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "宗旨",
+        "旨意",
+        "主旨"
+      ]
     },
     {
       "id": "三年级上册-81F3",
@@ -2153,7 +3551,13 @@
       "semester": "上",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "至少",
+        "至于",
+        "至今",
+        "至此"
+      ]
     },
     {
       "id": "三年级上册-8F74",
@@ -2162,7 +3566,13 @@
       "semester": "上",
       "unit": 7,
       "unitLabel": "语文园地",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "车轴",
+        "轴心",
+        "轴线",
+        "轴承"
+      ]
     },
     {
       "id": "三年级上册-73E0",
@@ -2171,7 +3581,12 @@
       "semester": "上",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "珍珠",
+        "水珠",
+        "珠宝"
+      ]
     },
     {
       "id": "三年级上册-58EE",
@@ -2180,7 +3595,13 @@
       "semester": "上",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "粗壮",
+        "强壮",
+        "壮丽",
+        "壮大"
+      ]
     },
     {
       "id": "三年级上册-51C6",
@@ -2189,7 +3610,13 @@
       "semester": "上",
       "unit": 8,
       "unitLabel": "课文 8",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "准备",
+        "准确",
+        "准时",
+        "准许"
+      ]
     },
     {
       "id": "三年级上册-6349",
@@ -2198,7 +3625,12 @@
       "semester": "上",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "捉到",
+        "捉拿",
+        "捉弄"
+      ]
     },
     {
       "id": "三年级上册-59FF",
@@ -2207,7 +3639,13 @@
       "semester": "上",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "姿态",
+        "姿势",
+        "姿色",
+        "姿容"
+      ]
     },
     {
       "id": "三年级上册-5B97",
@@ -2216,7 +3654,13 @@
       "semester": "上",
       "unit": 10,
       "unitLabel": "语文园地",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "宗教",
+        "宗旨",
+        "宗族",
+        "祖宗"
+      ]
     },
     {
       "id": "三年级上册-68D5",
@@ -2225,7 +3669,13 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "棕色",
+        "棕榈",
+        "棕熊",
+        "棕毛"
+      ]
     },
     {
       "id": "三年级上册-594F",
@@ -2234,7 +3684,13 @@
       "semester": "上",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "演奏",
+        "奏乐",
+        "奏响",
+        "奏章"
+      ]
     },
     {
       "id": "三年级上册-7956",
@@ -2243,7 +3699,13 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "祖国",
+        "祖先",
+        "祖父",
+        "祖母"
+      ]
     },
     {
       "id": "三年级上册-94BB",
@@ -2252,7 +3714,13 @@
       "semester": "上",
       "unit": 8,
       "unitLabel": "课文 8",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "钻研",
+        "钻石",
+        "钻孔",
+        "钻入"
+      ]
     }
   ]
 }

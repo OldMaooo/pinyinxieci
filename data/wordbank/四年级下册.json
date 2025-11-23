@@ -11,7 +11,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "扒开",
+        "扒拉",
+        "扒皮",
+        "扒手"
+      ]
     },
     {
       "id": "四年级下册-9738",
@@ -20,7 +26,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "霸道",
+        "霸权",
+        "霸占",
+        "霸王"
+      ]
     },
     {
       "id": "四年级下册-5427",
@@ -29,7 +41,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "酒吧",
+        "吧台",
+        "网吧",
+        "茶吧"
+      ]
     },
     {
       "id": "四年级下册-7ED1",
@@ -38,7 +56,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "绑住",
+        "绑紧",
+        "绑架",
+        "绑绳"
+      ]
     },
     {
       "id": "四年级下册-6BD9",
@@ -47,7 +71,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "击毙",
+        "毙命",
+        "枪毙",
+        "毙敌"
+      ]
     },
     {
       "id": "四年级下册-8759",
@@ -56,7 +86,12 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "蝙蝠",
+        "蝙翼",
+        "蝙飞"
+      ]
     },
     {
       "id": "四年级下册-5265",
@@ -65,7 +100,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "剥皮",
+        "剥开",
+        "剥落",
+        "剥夺"
+      ]
     },
     {
       "id": "四年级下册-535C",
@@ -74,7 +115,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "占卜",
+        "卜卦",
+        "卜算",
+        "卜问"
+      ]
     },
     {
       "id": "四年级下册-53C9",
@@ -83,7 +130,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "课文 10",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "叉子",
+        "叉开",
+        "叉腰",
+        "叉手"
+      ]
     },
     {
       "id": "四年级下册-62C6",
@@ -92,7 +145,13 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "拆开",
+        "拆除",
+        "拆散",
+        "拆解"
+      ]
     },
     {
       "id": "四年级下册-8D64",
@@ -101,7 +160,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "赤色",
+        "赤脚",
+        "赤诚",
+        "赤子"
+      ]
     },
     {
       "id": "四年级下册-9504",
@@ -110,7 +175,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "锄头",
+        "锄草",
+        "锄地",
+        "锄奸"
+      ]
     },
     {
       "id": "四年级下册-7C07",
@@ -119,7 +190,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "簇拥",
+        "簇新",
+        "簇生",
+        "花簇"
+      ]
     },
     {
       "id": "四年级下册-6BBF",
@@ -128,7 +205,13 @@
       "semester": "下",
       "unit": 28,
       "unitLabel": "课文 28",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "宫殿",
+        "殿堂",
+        "殿下",
+        "殿试"
+      ]
     },
     {
       "id": "四年级下册-8EB2",
@@ -137,7 +220,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "课文 9",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "躲藏",
+        "躲开",
+        "躲避",
+        "躲闪"
+      ]
     },
     {
       "id": "四年级下册-7E41",
@@ -146,7 +235,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "课文 9",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "繁华",
+        "繁忙",
+        "繁茂",
+        "繁重"
+      ]
     },
     {
       "id": "四年级下册-8303",
@@ -155,7 +250,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "范围",
+        "范例",
+        "模范",
+        "规范"
+      ]
     },
     {
       "id": "四年级下册-8760",
@@ -164,7 +265,12 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "蝙蝠",
+        "蝠鲼",
+        "蝠翼"
+      ]
     },
     {
       "id": "四年级下册-629A",
@@ -173,7 +279,13 @@
       "semester": "下",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "抚摸",
+        "抚慰",
+        "抚育",
+        "安抚"
+      ]
     },
     {
       "id": "四年级下册-8150",
@@ -182,7 +294,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "腐败",
+        "腐烂",
+        "腐蚀",
+        "腐朽"
+      ]
     },
     {
       "id": "四年级下册-8986",
@@ -191,7 +309,13 @@
       "semester": "下",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "覆盖",
+        "覆灭",
+        "覆没",
+        "覆辙"
+      ]
     },
     {
       "id": "四年级下册-88F9",
@@ -200,7 +324,13 @@
       "semester": "下",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "包裹",
+        "裹住",
+        "裹紧",
+        "裹挟"
+      ]
     },
     {
       "id": "四年级下册-6325",
@@ -209,7 +339,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "课文 10",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "挥手",
+        "挥舞",
+        "挥动",
+        "挥霍"
+      ]
     },
     {
       "id": "四年级下册-79EF",
@@ -218,7 +354,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "积木",
+        "积累",
+        "积雪",
+        "积分"
+      ]
     },
     {
       "id": "四年级下册-85C9",
@@ -227,7 +369,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "狼藉",
+        "藉口",
+        "藉由",
+        "藉此"
+      ]
     },
     {
       "id": "四年级下册-6324",
@@ -236,7 +384,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "课文 10",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "拥挤",
+        "挤满",
+        "挤进",
+        "挤占"
+      ]
     },
     {
       "id": "四年级下册-988A",
@@ -245,7 +399,13 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "脸颊",
+        "面颊",
+        "双颊",
+        "颊骨"
+      ]
     },
     {
       "id": "四年级下册-52AB",
@@ -254,7 +414,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "抢劫",
+        "劫持",
+        "劫难",
+        "劫数"
+      ]
     },
     {
       "id": "四年级下册-7AED",
@@ -263,7 +429,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "竭力",
+        "竭尽",
+        "竭诚",
+        "枯竭"
+      ]
     },
     {
       "id": "四年级下册-4EC5",
@@ -272,7 +444,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "仅仅",
+        "仅有",
+        "仅限",
+        "仅此"
+      ]
     },
     {
       "id": "四年级下册-664B",
@@ -281,7 +459,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "晋级",
+        "晋升",
+        "晋见",
+        "晋朝"
+      ]
     },
     {
       "id": "四年级下册-9CB8",
@@ -290,7 +474,13 @@
       "semester": "下",
       "unit": 28,
       "unitLabel": "课文 28",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "鲸鱼",
+        "鲸吞",
+        "鲸鲨",
+        "巨鲸"
+      ]
     },
     {
       "id": "四年级下册-7CE0",
@@ -299,7 +489,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "米糠",
+        "糠秕",
+        "糠皮",
+        "糟糠"
+      ]
     },
     {
       "id": "四年级下册-6346",
@@ -308,7 +504,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "捆住",
+        "捆扎",
+        "捆绑",
+        "捆起"
+      ]
     },
     {
       "id": "四年级下册-6269",
@@ -317,7 +519,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "扩大",
+        "扩展",
+        "扩充",
+        "扩建"
+      ]
     },
     {
       "id": "四年级下册-70C2",
@@ -326,7 +534,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "烂掉",
+        "烂泥",
+        "烂熟",
+        "烂漫"
+      ]
     },
     {
       "id": "四年级下册-59E5",
@@ -335,7 +549,12 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "姥姥",
+        "姥爷",
+        "姥娘"
+      ]
     },
     {
       "id": "四年级下册-7BF1",
@@ -344,7 +563,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "篱笆",
+        "篱墙",
+        "篱落",
+        "竹篱"
+      ]
     },
     {
       "id": "四年级下册-6402",
@@ -353,7 +578,13 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "搂住",
+        "搂抱",
+        "搂着",
+        "搂紧"
+      ]
     },
     {
       "id": "四年级下册-7F15",
@@ -362,7 +593,13 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "一缕",
+        "缕缕",
+        "缕析",
+        "丝缕"
+      ]
     },
     {
       "id": "四年级下册-841D",
@@ -371,7 +608,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "课文 9",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "萝卜",
+        "萝筐",
+        "萝蔓",
+        "藤萝"
+      ]
     },
     {
       "id": "四年级下册-57CB",
@@ -380,7 +623,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "埋下",
+        "埋没",
+        "埋藏",
+        "埋葬"
+      ]
     },
     {
       "id": "四年级下册-6F2B",
@@ -389,7 +638,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "课文 9",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "漫游",
+        "漫长",
+        "漫山",
+        "漫谈"
+      ]
     },
     {
       "id": "四年级下册-706D",
@@ -398,7 +653,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "课文 9",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "灭火",
+        "灭绝",
+        "灭亡",
+        "熄灭"
+      ]
     },
     {
       "id": "四年级下册-626D",
@@ -407,7 +668,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "扭动",
+        "扭转",
+        "扭捏",
+        "扭伤"
+      ]
     },
     {
       "id": "四年级下册-52AA",
@@ -416,7 +683,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "努力",
+        "努嘴",
+        "努劲",
+        "努目"
+      ]
     },
     {
       "id": "四年级下册-6E43",
@@ -425,7 +698,11 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "澎湃",
+        "湃湃"
+      ]
     },
     {
       "id": "四年级下册-6F8E",
@@ -434,7 +711,12 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "澎湃",
+        "澎湖",
+        "澎澎"
+      ]
     },
     {
       "id": "四年级下册-74F6",
@@ -443,7 +725,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "课文 10",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "瓶子",
+        "花瓶",
+        "瓶盖",
+        "瓶口"
+      ]
     },
     {
       "id": "四年级下册-6F06",
@@ -452,7 +740,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "油漆",
+        "漆黑",
+        "漆器",
+        "漆树"
+      ]
     },
     {
       "id": "四年级下册-7948",
@@ -461,7 +755,13 @@
       "semester": "下",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "祈求",
+        "祈祷",
+        "祈愿",
+        "祈福"
+      ]
     },
     {
       "id": "四年级下册-780C",
@@ -470,7 +770,13 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "砌墙",
+        "砌砖",
+        "砌石",
+        "堆砌"
+      ]
     },
     {
       "id": "四年级下册-6070",
@@ -479,7 +785,13 @@
       "semester": "下",
       "unit": 28,
       "unitLabel": "课文 28",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "恰好",
+        "恰巧",
+        "恰当",
+        "恰似"
+      ]
     },
     {
       "id": "四年级下册-9510",
@@ -488,7 +800,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "锐利",
+        "锐气",
+        "锐意",
+        "锐减"
+      ]
     },
     {
       "id": "四年级下册-585E",
@@ -497,7 +815,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "塞住",
+        "塞满",
+        "塞车",
+        "塞子"
+      ]
     },
     {
       "id": "四年级下册-5239",
@@ -506,7 +830,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "刹那",
+        "刹车",
+        "刹住",
+        "刹时"
+      ]
     },
     {
       "id": "四年级下册-8680",
@@ -515,7 +845,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "腐蚀",
+        "蚀刻",
+        "蚀本",
+        "蚀骨"
+      ]
     },
     {
       "id": "四年级下册-77E2",
@@ -524,7 +860,13 @@
       "semester": "下",
       "unit": 28,
       "unitLabel": "课文 28",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "矢志",
+        "矢口",
+        "矢石",
+        "箭矢"
+      ]
     },
     {
       "id": "四年级下册-758F",
@@ -533,7 +875,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "疏远",
+        "疏漏",
+        "疏离",
+        "疏浚"
+      ]
     },
     {
       "id": "四年级下册-6813",
@@ -542,7 +890,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "栓子",
+        "栓住",
+        "栓塞",
+        "栓紧"
+      ]
     },
     {
       "id": "四年级下册-70C1",
@@ -551,7 +905,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "闪烁",
+        "烁烁",
+        "烁亮",
+        "烁金"
+      ]
     },
     {
       "id": "四年级下册-7855",
@@ -560,7 +920,13 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "硕大",
+        "硕果",
+        "硕士",
+        "硕鼠"
+      ]
     },
     {
       "id": "四年级下册-6EE9",
@@ -569,7 +935,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "沙滩",
+        "海滩",
+        "河滩",
+        "滩涂"
+      ]
     },
     {
       "id": "四年级下册-6D9B",
@@ -578,7 +950,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "波涛",
+        "涛声",
+        "海涛",
+        "浪涛"
+      ]
     },
     {
       "id": "四年级下册-85E4",
@@ -587,7 +965,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "课文 9",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "藤蔓",
+        "藤条",
+        "藤椅",
+        "藤架"
+      ]
     },
     {
       "id": "四年级下册-66FF",
@@ -596,7 +980,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "代替",
+        "替换",
+        "替身",
+        "替班"
+      ]
     },
     {
       "id": "四年级下册-81C0",
@@ -605,7 +995,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "臀部",
+        "臀围",
+        "臀尖",
+        "臀肉"
+      ]
     },
     {
       "id": "四年级下册-54C7",
@@ -614,7 +1010,12 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "哇哇",
+        "哇啦",
+        "哇塞"
+      ]
     },
     {
       "id": "四年级下册-873F",
@@ -623,7 +1024,12 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "蜿蜒",
+        "蜿转",
+        "蜿蜿"
+      ]
     },
     {
       "id": "四年级下册-6170",
@@ -632,7 +1038,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "安慰",
+        "慰问",
+        "慰藉",
+        "慰劳"
+      ]
     },
     {
       "id": "四年级下册-545C",
@@ -641,7 +1053,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "呜咽",
+        "呜呼",
+        "呜呜",
+        "呜叫"
+      ]
     },
     {
       "id": "四年级下册-819D",
@@ -650,7 +1068,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "课文 9",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "膝盖",
+        "膝下",
+        "膝行",
+        "双膝"
+      ]
     },
     {
       "id": "四年级下册-9576",
@@ -659,7 +1083,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "镶嵌",
+        "镶边",
+        "镶牙",
+        "镶金"
+      ]
     },
     {
       "id": "四年级下册-5578",
@@ -668,7 +1098,13 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "呼啸",
+        "长啸",
+        "啸叫",
+        "啸声"
+      ]
     },
     {
       "id": "四年级下册-5F90",
@@ -677,7 +1113,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "徐徐",
+        "徐缓",
+        "徐行",
+        "徐来"
+      ]
     },
     {
       "id": "四年级下册-7D6E",
@@ -686,7 +1128,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "棉絮",
+        "絮叨",
+        "絮语",
+        "柳絮"
+      ]
     },
     {
       "id": "四年级下册-6DF9",
@@ -695,7 +1143,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "淹没",
+        "淹死",
+        "淹水",
+        "淹留"
+      ]
     },
     {
       "id": "四年级下册-8712",
@@ -704,7 +1158,12 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "蜿蜒",
+        "蜒蚰",
+        "蜒蜒"
+      ]
     },
     {
       "id": "四年级下册-9E70",
@@ -713,7 +1172,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "老鹰",
+        "雄鹰",
+        "鹰眼",
+        "鹰爪"
+      ]
     },
     {
       "id": "四年级下册-5141",
@@ -722,7 +1187,13 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "允许",
+        "允诺",
+        "允准",
+        "应允"
+      ]
     },
     {
       "id": "四年级下册-6742",
@@ -731,7 +1202,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "杂乱",
+        "杂音",
+        "杂事",
+        "杂货"
+      ]
     },
     {
       "id": "四年级下册-5567",
@@ -740,7 +1217,11 @@
       "semester": "下",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "啧啧",
+        "啧声"
+      ]
     },
     {
       "id": "四年级下册-624E",
@@ -749,7 +1230,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "扎住",
+        "扎紧",
+        "扎针",
+        "扎手"
+      ]
     },
     {
       "id": "四年级下册-5E10",
@@ -758,7 +1245,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "帐篷",
+        "帐子",
+        "帐幕",
+        "蚊帐"
+      ]
     },
     {
       "id": "四年级下册-6D59",
@@ -767,7 +1260,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "浙江",
+        "浙商",
+        "浙菜",
+        "浙大"
+      ]
     },
     {
       "id": "四年级下册-6323",
@@ -776,7 +1275,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "挣扎",
+        "挣钱",
+        "挣脱",
+        "挣开"
+      ]
     },
     {
       "id": "四年级下册-8102",
@@ -785,7 +1290,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "脂肪",
+        "油脂",
+        "脂粉",
+        "脂膏"
+      ]
     },
     {
       "id": "四年级下册-7D2B",
@@ -794,7 +1305,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "紫色",
+        "紫红",
+        "紫菜",
+        "紫花"
+      ]
     }
   ]
 }

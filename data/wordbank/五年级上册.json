@@ -11,7 +11,13 @@
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "矮小",
+        "矮人",
+        "矮墙",
+        "矮树"
+      ]
     },
     {
       "id": "五年级上册-75A4",
@@ -20,7 +26,13 @@
       "semester": "上",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "伤疤",
+        "疤痕",
+        "疤瘌",
+        "疤脸"
+      ]
     },
     {
       "id": "五年级上册-6273",
@@ -29,7 +41,13 @@
       "semester": "上",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "扳手",
+        "扳倒",
+        "扳回",
+        "扳机"
+      ]
     },
     {
       "id": "五年级上册-7B56",
@@ -38,7 +56,13 @@
       "semester": "上",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "策略",
+        "策划",
+        "策动",
+        "策马"
+      ]
     },
     {
       "id": "五年级上册-96CF",
@@ -47,7 +71,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "雏鸟",
+        "雏鸡",
+        "雏形",
+        "雏燕"
+      ]
     },
     {
       "id": "五年级上册-5429",
@@ -56,7 +86,11 @@
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "吩咐",
+        "吩示"
+      ]
     },
     {
       "id": "五年级上册-88B1",
@@ -65,7 +99,12 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "包袱",
+        "袱子",
+        "袱包"
+      ]
     },
     {
       "id": "五年级上册-5085",
@@ -74,7 +113,12 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "师傅",
+        "傅说",
+        "傅粉"
+      ]
     },
     {
       "id": "五年级上册-67DC",
@@ -83,7 +127,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "柜子",
+        "柜台",
+        "衣柜",
+        "书柜"
+      ]
     },
     {
       "id": "五年级上册-676D",
@@ -92,7 +142,13 @@
       "semester": "上",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "杭州",
+        "杭城",
+        "杭帮",
+        "杭菜"
+      ]
     },
     {
       "id": "五年级上册-5589",
@@ -101,7 +157,13 @@
       "semester": "上",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "喉咙",
+        "喉头",
+        "喉舌",
+        "咽喉"
+      ]
     },
     {
       "id": "五年级上册-552C",
@@ -110,7 +172,12 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "吓唬",
+        "唬人",
+        "唬住"
+      ]
     },
     {
       "id": "五年级上册-76D1",
@@ -119,7 +186,13 @@
       "semester": "上",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "监督",
+        "监视",
+        "监管",
+        "监考"
+      ]
     },
     {
       "id": "五年级上册-7751",
@@ -128,7 +201,12 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "眼睑",
+        "睑裂",
+        "睑缘"
+      ]
     },
     {
       "id": "五年级上册-8350",
@@ -137,7 +215,13 @@
       "semester": "上",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "推荐",
+        "荐举",
+        "荐书",
+        "荐引"
+      ]
     },
     {
       "id": "五年级上册-54A7",
@@ -146,7 +230,12 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "咧嘴",
+        "咧开",
+        "咧着"
+      ]
     },
     {
       "id": "五年级上册-69B4",
@@ -155,7 +244,13 @@
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "石榴",
+        "榴莲",
+        "榴弹",
+        "榴花"
+      ]
     },
     {
       "id": "五年级上册-5499",
@@ -164,7 +259,11 @@
       "semester": "上",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "喉咙",
+        "咙咙"
+      ]
     },
     {
       "id": "五年级上册-7BA9",
@@ -173,7 +272,12 @@
       "semester": "上",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "箩筐",
+        "箩篓",
+        "箩筐"
+      ]
     },
     {
       "id": "五年级上册-8513",
@@ -182,7 +286,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "蔓延",
+        "蔓草",
+        "蔓生",
+        "枝蔓"
+      ]
     },
     {
       "id": "五年级上册-7784",
@@ -191,7 +301,13 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "瞄准",
+        "瞄着",
+        "瞄向",
+        "瞄射"
+      ]
     },
     {
       "id": "五年级上册-7738",
@@ -200,7 +316,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "眼眸",
+        "眸子",
+        "明眸",
+        "回眸"
+      ]
     },
     {
       "id": "五年级上册-4EA9",
@@ -209,7 +331,13 @@
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "一亩",
+        "亩产",
+        "亩地",
+        "亩数"
+      ]
     },
     {
       "id": "五年级上册-6320",
@@ -218,7 +346,13 @@
       "semester": "上",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "挠头",
+        "挠痒",
+        "挠破",
+        "抓挠"
+      ]
     },
     {
       "id": "五年级上册-8DB4",
@@ -227,7 +361,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "趴下",
+        "趴着",
+        "趴倒",
+        "趴窝"
+      ]
     },
     {
       "id": "五年级上册-966A",
@@ -236,7 +376,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "陪伴",
+        "陪同",
+        "陪护",
+        "陪读"
+      ]
     },
     {
       "id": "五年级上册-816E",
@@ -245,7 +391,13 @@
       "semester": "上",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "腮帮",
+        "腮腺",
+        "腮红",
+        "两腮"
+      ]
     },
     {
       "id": "五年级上册-5723",
@@ -254,7 +406,13 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "神圣",
+        "圣人",
+        "圣诞",
+        "圣洁"
+      ]
     },
     {
       "id": "五年级上册-6495",
@@ -263,7 +421,13 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "撕开",
+        "撕破",
+        "撕碎",
+        "撕扯"
+      ]
     },
     {
       "id": "五年级上册-8086",
@@ -272,7 +436,13 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "放肆",
+        "肆意",
+        "肆行",
+        "肆无忌惮"
+      ]
     },
     {
       "id": "五年级上册-5243",
@@ -281,7 +451,13 @@
       "semester": "上",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "剃头",
+        "剃须",
+        "剃刀",
+        "剃发"
+      ]
     },
     {
       "id": "五年级上册-8155",
@@ -290,7 +466,13 @@
       "semester": "上",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "手腕",
+        "腕力",
+        "腕表",
+        "腕带"
+      ]
     },
     {
       "id": "五年级上册-6845",
@@ -299,7 +481,13 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "桅杆",
+        "桅顶",
+        "船桅",
+        "桅灯"
+      ]
     },
     {
       "id": "五年级上册-6089",
@@ -308,7 +496,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "熟悉",
+        "悉知",
+        "悉心",
+        "获悉"
+      ]
     },
     {
       "id": "五年级上册-9985",
@@ -317,7 +511,13 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "馅料",
+        "肉馅",
+        "菜馅",
+        "馅饼"
+      ]
     },
     {
       "id": "五年级上册-4EAB",
@@ -326,7 +526,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "享受",
+        "享用",
+        "享福",
+        "享乐"
+      ]
     },
     {
       "id": "五年级上册-54DF",
@@ -335,7 +541,12 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "哟呵",
+        "哟喂",
+        "哎哟"
+      ]
     },
     {
       "id": "五年级上册-5E7D",
@@ -344,7 +555,13 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "幽静",
+        "幽深",
+        "幽暗",
+        "幽香"
+      ]
     },
     {
       "id": "五年级上册-5482",
@@ -353,7 +570,12 @@
       "semester": "上",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "咂嘴",
+        "咂舌",
+        "咂摸"
+      ]
     },
     {
       "id": "五年级上册-8BC8",
@@ -362,7 +584,13 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "欺诈",
+        "诈骗",
+        "诈唬",
+        "诈降"
+      ]
     },
     {
       "id": "五年级上册-69A8",
@@ -371,7 +599,13 @@
       "semester": "上",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "榨取",
+        "榨干",
+        "榨油",
+        "榨汁"
+      ]
     },
     {
       "id": "五年级上册-8638",
@@ -380,7 +614,13 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "蘸水",
+        "蘸墨",
+        "蘸酱",
+        "蘸料"
+      ]
     },
     {
       "id": "五年级上册-6014",
@@ -389,7 +629,12 @@
       "semester": "上",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "怔住",
+        "怔怔",
+        "发怔"
+      ]
     },
     {
       "id": "五年级上册-4F84",
@@ -398,7 +643,13 @@
       "semester": "上",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "侄子",
+        "侄女",
+        "侄儿",
+        "侄孙"
+      ]
     },
     {
       "id": "五年级上册-9F87",
@@ -407,7 +658,12 @@
       "semester": "上",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "龇牙",
+        "龇着",
+        "龇牙咧嘴"
+      ]
     }
   ]
 }

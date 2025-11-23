@@ -11,7 +11,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "课文 10",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "阿姨",
+        "阿哥",
+        "阿婆",
+        "阿谁"
+      ]
     },
     {
       "id": "三年级下册-54CE",
@@ -20,7 +26,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "课文 7",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "哎呀",
+        "哎呦",
+        "哎哎",
+        "哎哟"
+      ]
     },
     {
       "id": "三年级下册-50B2",
@@ -29,7 +41,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "骄傲",
+        "傲慢",
+        "傲骨",
+        "傲气"
+      ]
     },
     {
       "id": "三年级下册-74E3",
@@ -38,7 +56,12 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "花瓣",
+        "蒜瓣",
+        "豆瓣"
+      ]
     },
     {
       "id": "三年级下册-4FDD",
@@ -47,7 +70,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "课文 10",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "保护",
+        "保安",
+        "保健",
+        "保温"
+      ]
     },
     {
       "id": "三年级下册-62B1",
@@ -56,7 +85,12 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "拥抱",
+        "抱头",
+        "抱怨"
+      ]
     },
     {
       "id": "三年级下册-500D",
@@ -65,7 +99,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "加倍",
+        "翻倍",
+        "倍增",
+        "背倍"
+      ]
     },
     {
       "id": "三年级下册-5FC5",
@@ -74,7 +114,13 @@
       "semester": "下",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "必须",
+        "必然",
+        "必备",
+        "必定"
+      ]
     },
     {
       "id": "三年级下册-8FA8",
@@ -83,7 +129,13 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "辨认",
+        "辨别",
+        "辨析",
+        "分辨"
+      ]
     },
     {
       "id": "三年级下册-8868",
@@ -92,7 +144,11 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "秒表",
+        "表扬"
+      ]
     },
     {
       "id": "三年级下册-51B0",
@@ -101,7 +157,13 @@
       "semester": "下",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "冰雪",
+        "冰箱",
+        "冰块",
+        "冰川"
+      ]
     },
     {
       "id": "三年级下册-62E8",
@@ -110,7 +172,13 @@
       "semester": "下",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "拨打",
+        "拨动",
+        "拨号",
+        "拨款"
+      ]
     },
     {
       "id": "三年级下册-53C2",
@@ -119,7 +187,13 @@
       "semester": "下",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "参加",
+        "参观",
+        "参考",
+        "参谋"
+      ]
     },
     {
       "id": "三年级下册-707F",
@@ -128,7 +202,13 @@
       "semester": "下",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "灿烂",
+        "灿然",
+        "灿光",
+        "光灿"
+      ]
     },
     {
       "id": "三年级下册-67E5",
@@ -137,7 +217,13 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "检查",
+        "查找",
+        "排查",
+        "查明"
+      ]
     },
     {
       "id": "三年级下册-5DEE",
@@ -146,7 +232,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "差别",
+        "差距",
+        "差错",
+        "差劲"
+      ]
     },
     {
       "id": "三年级下册-80A0",
@@ -155,7 +247,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "肠胃",
+        "肠道",
+        "小肠",
+        "大肠"
+      ]
     },
     {
       "id": "三年级下册-626F",
@@ -164,7 +262,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "扯开",
+        "扯布",
+        "扯铃",
+        "胡扯"
+      ]
     },
     {
       "id": "三年级下册-5C18",
@@ -173,7 +277,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "灰尘",
+        "尘土",
+        "尘埃",
+        "风尘"
+      ]
     },
     {
       "id": "三年级下册-886C",
@@ -182,7 +292,13 @@
       "semester": "下",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "衬衫",
+        "衬衣",
+        "衬布",
+        "衬托"
+      ]
     },
     {
       "id": "三年级下册-5448",
@@ -191,7 +307,13 @@
       "semester": "下",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "呈现",
+        "呈报",
+        "呈递",
+        "呈上"
+      ]
     },
     {
       "id": "三年级下册-4E58",
@@ -200,7 +322,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "乘客",
+        "乘车",
+        "乘法",
+        "乘机"
+      ]
     },
     {
       "id": "三年级下册-5D07",
@@ -209,7 +337,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "崇拜",
+        "崇高",
+        "崇敬",
+        "崇山"
+      ]
     },
     {
       "id": "三年级下册-4EC7",
@@ -218,7 +352,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "仇人",
+        "仇恨",
+        "复仇",
+        "世仇"
+      ]
     },
     {
       "id": "三年级下册-89E6",
@@ -227,7 +367,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "接触",
+        "触摸",
+        "触电",
+        "触角"
+      ]
     },
     {
       "id": "三年级下册-4E32",
@@ -236,7 +382,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "串门",
+        "串烧",
+        "串串",
+        "串联"
+      ]
     },
     {
       "id": "三年级下册-521B",
@@ -245,7 +397,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "创造",
+        "创意",
+        "创业",
+        "创伤"
+      ]
     },
     {
       "id": "三年级下册-51D1",
@@ -254,7 +412,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "凑近",
+        "凑合",
+        "凑数",
+        "凑巧"
+      ]
     },
     {
       "id": "三年级下册-5B58",
@@ -263,7 +427,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "课文 10",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "存在",
+        "存钱",
+        "存放",
+        "存档"
+      ]
     },
     {
       "id": "三年级下册-4EE3",
@@ -272,7 +442,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "时代",
+        "代替",
+        "代表",
+        "代价"
+      ]
     },
     {
       "id": "三年级下册-5F85",
@@ -281,7 +457,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "等待",
+        "待客",
+        "待遇",
+        "待命"
+      ]
     },
     {
       "id": "三年级下册-80C6",
@@ -290,7 +472,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "胆量",
+        "胆怯",
+        "胆小",
+        "胆汁"
+      ]
     },
     {
       "id": "三年级下册-8E48",
@@ -299,7 +487,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "舞蹈",
+        "蹈海",
+        "蹈火",
+        "蹈袭"
+      ]
     },
     {
       "id": "三年级下册-680B",
@@ -308,7 +502,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "栋梁",
+        "楼栋",
+        "栋数",
+        "栋宇"
+      ]
     },
     {
       "id": "三年级下册-72EC",
@@ -317,7 +517,11 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "课文 9",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "孤独",
+        "单独"
+      ]
     },
     {
       "id": "三年级下册-593A",
@@ -326,7 +530,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "夺取",
+        "夺走",
+        "夺目",
+        "夺魁"
+      ]
     },
     {
       "id": "三年级下册-5C14",
@@ -335,7 +545,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "尔后",
+        "尔等",
+        "尔雅",
+        "尔曹"
+      ]
     },
     {
       "id": "三年级下册-70E6",
@@ -344,7 +560,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "烦恼",
+        "烦躁",
+        "烦累",
+        "烦心"
+      ]
     },
     {
       "id": "三年级下册-6CDB",
@@ -353,7 +575,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "泛舟",
+        "泛起",
+        "泛黄",
+        "泛滥"
+      ]
     },
     {
       "id": "三年级下册-82B3",
@@ -362,7 +590,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "芬芳",
+        "芳香",
+        "芳草",
+        "芳名"
+      ]
     },
     {
       "id": "三年级下册-4EFF",
@@ -371,7 +605,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "仿佛",
+        "模仿",
+        "仿制",
+        "仿造"
+      ]
     },
     {
       "id": "三年级下册-82AC",
@@ -380,7 +620,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "芬芳",
+        "芬香",
+        "芬兰",
+        "芬草"
+      ]
     },
     {
       "id": "三年级下册-8702",
@@ -389,7 +635,13 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "蜜蜂",
+        "蜂蜜",
+        "蜂巢",
+        "蜂群"
+      ]
     },
     {
       "id": "三年级下册-4F5B",
@@ -398,7 +650,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "佛像",
+        "佛寺",
+        "佛经",
+        "佛门"
+      ]
     },
     {
       "id": "三年级下册-62C2",
@@ -407,7 +665,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "拂尘",
+        "拂晓",
+        "拂动",
+        "拂去"
+      ]
     },
     {
       "id": "三年级下册-7B26",
@@ -416,7 +680,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "课文 9",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "符号",
+        "符合",
+        "符咒",
+        "符纸"
+      ]
     },
     {
       "id": "三年级下册-4ED8",
@@ -425,7 +695,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "付出",
+        "付钱",
+        "付费",
+        "支付"
+      ]
     },
     {
       "id": "三年级下册-8D1F",
@@ -434,7 +710,13 @@
       "semester": "下",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "负担",
+        "负责",
+        "负心",
+        "负数"
+      ]
     },
     {
       "id": "三年级下册-7AFF",
@@ -443,7 +725,11 @@
       "semester": "下",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "竹竿",
+        "钓竿"
+      ]
     },
     {
       "id": "三年级下册-8015",
@@ -452,7 +738,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "耕田",
+        "耕作",
+        "耕地",
+        "农耕"
+      ]
     },
     {
       "id": "三年级下册-653B",
@@ -461,7 +753,13 @@
       "semester": "下",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "攻击",
+        "攻打",
+        "攻克",
+        "攻读"
+      ]
     },
     {
       "id": "三年级下册-83C7",
@@ -470,7 +768,12 @@
       "semester": "下",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "蘑菇",
+        "香菇",
+        "金针菇"
+      ]
     },
     {
       "id": "三年级下册-5B98",
@@ -479,7 +782,13 @@
       "semester": "下",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "官员",
+        "官府",
+        "官职",
+        "官兵"
+      ]
     },
     {
       "id": "三年级下册-9B3C",
@@ -488,7 +797,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "鬼怪",
+        "鬼脸",
+        "鬼屋",
+        "鬼影"
+      ]
     },
     {
       "id": "三年级下册-4F55",
@@ -497,7 +812,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "课文 9",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "何时",
+        "为何",
+        "如何",
+        "何处"
+      ]
     },
     {
       "id": "三年级下册-75D5",
@@ -506,7 +827,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "伤痕",
+        "指痕",
+        "痕迹",
+        "印痕"
+      ]
     },
     {
       "id": "三年级下册-72D0",
@@ -515,7 +842,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "狐狸",
+        "狐尾",
+        "狐皮",
+        "狐疑"
+      ]
     },
     {
       "id": "三年级下册-846B",
@@ -524,7 +857,13 @@
       "semester": "下",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "葫芦",
+        "葫芦娃",
+        "糖葫芦",
+        "西葫芦"
+      ]
     },
     {
       "id": "三年级下册-5E7B",
@@ -533,7 +872,13 @@
       "semester": "下",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "幻想",
+        "幻影",
+        "幻灯",
+        "幻境"
+      ]
     },
     {
       "id": "三年级下册-60E0",
@@ -542,7 +887,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "惠民",
+        "优惠",
+        "惠风",
+        "仁惠"
+      ]
     },
     {
       "id": "三年级下册-6167",
@@ -551,7 +902,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "智慧",
+        "慧眼",
+        "慧心",
+        "慧根"
+      ]
     },
     {
       "id": "三年级下册-9B42",
@@ -560,7 +917,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "课文 9",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "灵魂",
+        "魂魄",
+        "魂梦",
+        "心魂"
+      ]
     },
     {
       "id": "三年级下册-8D27",
@@ -569,7 +932,13 @@
       "semester": "下",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "货物",
+        "货车",
+        "货柜",
+        "货币"
+      ]
     },
     {
       "id": "三年级下册-96C6",
@@ -578,7 +947,11 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "汇集",
+        "密集"
+      ]
     },
     {
       "id": "三年级下册-8BA1",
@@ -587,7 +960,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "计算",
+        "计划",
+        "计策",
+        "计时"
+      ]
     },
     {
       "id": "三年级下册-7EE7",
@@ -596,7 +975,12 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "继续",
+        "继承",
+        "继任"
+      ]
     },
     {
       "id": "三年级下册-5939",
@@ -605,7 +989,11 @@
       "semester": "下",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "文件夹",
+        "夹层"
+      ]
     },
     {
       "id": "三年级下册-4F73",
@@ -614,7 +1002,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "课文 9",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "佳人",
+        "佳作",
+        "佳节",
+        "佳话"
+      ]
     },
     {
       "id": "三年级下册-4EF7",
@@ -623,7 +1017,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "价格",
+        "价位",
+        "价钱",
+        "市价"
+      ]
     },
     {
       "id": "三年级下册-67B6",
@@ -632,7 +1032,13 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "书架",
+        "桥架",
+        "骨架",
+        "脚架"
+      ]
     },
     {
       "id": "三年级下册-51CF",
@@ -641,7 +1047,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "减少",
+        "减肥",
+        "减速",
+        "减轻"
+      ]
     },
     {
       "id": "三年级下册-68C0",
@@ -650,7 +1062,13 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "检查",
+        "检验",
+        "检阅",
+        "检索"
+      ]
     },
     {
       "id": "三年级下册-4EF6",
@@ -659,7 +1077,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "文件",
+        "事件",
+        "零件",
+        "信件"
+      ]
     },
     {
       "id": "三年级下册-5EFA",
@@ -668,7 +1092,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "建设",
+        "建立",
+        "建筑",
+        "建造"
+      ]
     },
     {
       "id": "三年级下册-5251",
@@ -677,7 +1107,13 @@
       "semester": "下",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "宝剑",
+        "剑术",
+        "剑客",
+        "长剑"
+      ]
     },
     {
       "id": "三年级下册-5320",
@@ -686,7 +1122,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "工匠",
+        "巧匠",
+        "雕匠",
+        "匠心"
+      ]
     },
     {
       "id": "三年级下册-5A07",
@@ -695,7 +1137,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "娇嫩",
+        "娇小",
+        "娇艳",
+        "娇贵"
+      ]
     },
     {
       "id": "三年级下册-9A84",
@@ -704,7 +1152,12 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "骄傲",
+        "骄阳",
+        "骄气"
+      ]
     },
     {
       "id": "三年级下册-80F6",
@@ -713,7 +1166,13 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "胶水",
+        "胶带",
+        "胶片",
+        "橡胶"
+      ]
     },
     {
       "id": "三年级下册-63A5",
@@ -722,7 +1181,12 @@
       "semester": "下",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "接力",
+        "接待",
+        "接送"
+      ]
     },
     {
       "id": "三年级下册-754C",
@@ -731,7 +1195,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "课文 10",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "世界",
+        "境界",
+        "界线",
+        "边界"
+      ]
     },
     {
       "id": "三年级下册-501F",
@@ -740,7 +1210,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "课文 9",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "借书",
+        "借口",
+        "借用",
+        "借钱"
+      ]
     },
     {
       "id": "三年级下册-9888",
@@ -749,7 +1225,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "脖颈",
+        "颈项",
+        "颈椎",
+        "颈圈"
+      ]
     },
     {
       "id": "三年级下册-9152",
@@ -758,7 +1240,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "课文 9",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "酒杯",
+        "酒馆",
+        "酒香",
+        "酒席"
+      ]
     },
     {
       "id": "三年级下册-4E3E",
@@ -767,7 +1255,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "举手",
+        "举例",
+        "举办",
+        "举重"
+      ]
     },
     {
       "id": "三年级下册-805A",
@@ -776,7 +1270,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "聚会",
+        "聚集",
+        "聚餐",
+        "聚光"
+      ]
     },
     {
       "id": "三年级下册-5377",
@@ -785,7 +1285,12 @@
       "semester": "下",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "卷起",
+        "卷发",
+        "卷尺"
+      ]
     },
     {
       "id": "三年级下册-5026",
@@ -794,7 +1299,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "疲倦",
+        "倦怠",
+        "倦容",
+        "困倦"
+      ]
     },
     {
       "id": "三年级下册-514B",
@@ -803,7 +1314,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "克服",
+        "克制",
+        "克扣",
+        "克星"
+      ]
     },
     {
       "id": "三年级下册-5938",
@@ -812,7 +1329,13 @@
       "semester": "下",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "夸奖",
+        "夸口",
+        "夸张",
+        "夸耀"
+      ]
     },
     {
       "id": "三年级下册-8DE8",
@@ -821,7 +1344,13 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "跨越",
+        "跨步",
+        "跨国",
+        "跨栏"
+      ]
     },
     {
       "id": "三年级下册-6606",
@@ -830,7 +1359,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "昆虫",
+        "昆明",
+        "昆仑",
+        "昆曲"
+      ]
     },
     {
       "id": "三年级下册-62EC",
@@ -839,7 +1374,13 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "包括",
+        "括号",
+        "概括",
+        "总括"
+      ]
     },
     {
       "id": "三年级下册-72FC",
@@ -848,7 +1389,13 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "灰狼",
+        "狼群",
+        "狼牙",
+        "母狼"
+      ]
     },
     {
       "id": "三年级下册-6D6A",
@@ -857,7 +1404,13 @@
       "semester": "下",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "海浪",
+        "浪花",
+        "浪漫",
+        "浪潮"
+      ]
     },
     {
       "id": "三年级下册-635E",
@@ -866,7 +1419,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "课文 10",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "捞鱼",
+        "捞起",
+        "捞面",
+        "捞钱"
+      ]
     },
     {
       "id": "三年级下册-72F8",
@@ -875,7 +1434,12 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "狸猫",
+        "狸皮",
+        "狸奴"
+      ]
     },
     {
       "id": "三年级下册-5386",
@@ -884,7 +1448,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "历史",
+        "经历",
+        "历程",
+        "历险"
+      ]
     },
     {
       "id": "三年级下册-5389",
@@ -893,7 +1463,13 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "厉害",
+        "严厉",
+        "厉声",
+        "厉色"
+      ]
     },
     {
       "id": "三年级下册-88C2",
@@ -902,7 +1478,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "裂开",
+        "裂缝",
+        "裂纹",
+        "分裂"
+      ]
     },
     {
       "id": "三年级下册-94C3",
@@ -911,7 +1493,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "铃声",
+        "门铃",
+        "风铃",
+        "铜铃"
+      ]
     },
     {
       "id": "三年级下册-96F6",
@@ -920,7 +1508,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "零点",
+        "零花",
+        "零件",
+        "零食"
+      ]
     },
     {
       "id": "三年级下册-6F0F",
@@ -929,7 +1523,13 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "漏水",
+        "漏雨",
+        "漏掉",
+        "漏电"
+      ]
     },
     {
       "id": "三年级下册-82A6",
@@ -938,7 +1538,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "葫芦",
+        "芦苇",
+        "芦花",
+        "芦笛"
+      ]
     },
     {
       "id": "三年级下册-5F55",
@@ -947,7 +1553,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "课文 10",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "记录",
+        "录音",
+        "录取",
+        "录制"
+      ]
     },
     {
       "id": "三年级下册-9E7F",
@@ -956,7 +1568,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "课文 7",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "小鹿",
+        "鹿角",
+        "鹿群",
+        "鹿皮"
+      ]
     },
     {
       "id": "三年级下册-9A74",
@@ -965,7 +1583,12 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "毛驴",
+        "骑驴",
+        "驴友"
+      ]
     },
     {
       "id": "三年级下册-63A0",
@@ -974,7 +1597,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "掠夺",
+        "掠影",
+        "掠过",
+        "掠取"
+      ]
     },
     {
       "id": "三年级下册-8F6E",
@@ -983,7 +1612,13 @@
       "semester": "下",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "车轮",
+        "轮船",
+        "轮流",
+        "轮廓"
+      ]
     },
     {
       "id": "三年级下册-9A82",
@@ -992,7 +1627,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "骂人",
+        "痛骂",
+        "咒骂",
+        "责骂"
+      ]
     },
     {
       "id": "三年级下册-8292",
@@ -1001,7 +1642,13 @@
       "semester": "下",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "芒果",
+        "芒草",
+        "芒种",
+        "芒刺"
+      ]
     },
     {
       "id": "三年级下册-6885",
@@ -1010,7 +1657,12 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "梅花",
+        "梅雨",
+        "腊梅"
+      ]
     },
     {
       "id": "三年级下册-7164",
@@ -1019,7 +1671,13 @@
       "semester": "下",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "煤炭",
+        "煤矿",
+        "煤油",
+        "煤气"
+      ]
     },
     {
       "id": "三年级下册-731B",
@@ -1028,7 +1686,13 @@
       "semester": "下",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "猛烈",
+        "猛兽",
+        "猛增",
+        "猛击"
+      ]
     },
     {
       "id": "三年级下册-79D8",
@@ -1037,7 +1701,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "秘密",
+        "秘方",
+        "秘闻",
+        "秘事"
+      ]
     },
     {
       "id": "三年级下册-5BC6",
@@ -1046,7 +1716,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "秘密",
+        "密切",
+        "密集",
+        "密林"
+      ]
     },
     {
       "id": "三年级下册-871C",
@@ -1055,7 +1731,13 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "蜂蜜",
+        "蜜糖",
+        "蜜罐",
+        "蜜语"
+      ]
     },
     {
       "id": "三年级下册-79D2",
@@ -1064,7 +1746,13 @@
       "semester": "下",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "秒表",
+        "秒针",
+        "秒杀",
+        "秒数"
+      ]
     },
     {
       "id": "三年级下册-5E99",
@@ -1073,7 +1761,13 @@
       "semester": "下",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "寺庙",
+        "庙会",
+        "庙堂",
+        "庙宇"
+      ]
     },
     {
       "id": "三年级下册-6A21",
@@ -1082,7 +1776,13 @@
       "semester": "下",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "模样",
+        "模型",
+        "模仿",
+        "模式"
+      ]
     },
     {
       "id": "三年级下册-8611",
@@ -1091,7 +1791,13 @@
       "semester": "下",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "蘑菇",
+        "蘑菇汤",
+        "蘑菇云",
+        "蘑菇酱"
+      ]
     },
     {
       "id": "三年级下册-964C",
@@ -1100,7 +1806,13 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "陌生",
+        "田陌",
+        "陌路",
+        "陌客"
+      ]
     },
     {
       "id": "三年级下册-83AB",
@@ -1109,7 +1821,13 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "莫非",
+        "莫名",
+        "莫大",
+        "莫须有"
+      ]
     },
     {
       "id": "三年级下册-58A8",
@@ -1118,7 +1836,13 @@
       "semester": "下",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "墨水",
+        "墨汁",
+        "墨迹",
+        "墨镜"
+      ]
     },
     {
       "id": "三年级下册-7267",
@@ -1127,7 +1851,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "课文 9",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "牧羊",
+        "牧牛",
+        "牧场",
+        "牧歌"
+      ]
     },
     {
       "id": "三年级下册-5185",
@@ -1136,7 +1866,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "内部",
+        "内心",
+        "内衣",
+        "内线"
+      ]
     },
     {
       "id": "三年级下册-5B81",
@@ -1145,7 +1881,13 @@
       "semester": "下",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "宁静",
+        "宁愿",
+        "安宁",
+        "宁夏"
+      ]
     },
     {
       "id": "三年级下册-61E6",
@@ -1154,7 +1896,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "懦弱",
+        "懦夫",
+        "懦怯",
+        "懦性"
+      ]
     },
     {
       "id": "三年级下册-6B27",
@@ -1163,7 +1911,12 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "课文 10",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "欧洲",
+        "欧美",
+        "欧式"
+      ]
     },
     {
       "id": "三年级下册-5076",
@@ -1172,7 +1925,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "偶然",
+        "偶像",
+        "偶遇",
+        "配偶"
+      ]
     },
     {
       "id": "三年级下册-80D6",
@@ -1181,7 +1940,12 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "肥胖",
+        "胖乎乎",
+        "胖脸"
+      ]
     },
     {
       "id": "三年级下册-6CE1",
@@ -1190,7 +1954,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "泡泡",
+        "泡沫",
+        "泡茶",
+        "泡澡"
+      ]
     },
     {
       "id": "三年级下册-914D",
@@ -1199,7 +1969,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "课文 7",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "配合",
+        "分配",
+        "配方",
+        "配对"
+      ]
     },
     {
       "id": "三年级下册-84EC",
@@ -1208,7 +1984,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "蓬松",
+        "蓬莱",
+        "蓬草",
+        "蓬门"
+      ]
     },
     {
       "id": "三年级下册-6367",
@@ -1217,7 +1999,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "捧起",
+        "捧场",
+        "捧杯",
+        "捧脸"
+      ]
     },
     {
       "id": "三年级下册-504F",
@@ -1226,7 +2014,13 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "偏心",
+        "偏向",
+        "偏远",
+        "偏爱"
+      ]
     },
     {
       "id": "三年级下册-7BC7",
@@ -1235,7 +2029,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "篇章",
+        "短篇",
+        "长篇",
+        "诗篇"
+      ]
     },
     {
       "id": "三年级下册-666E",
@@ -1244,7 +2044,13 @@
       "semester": "下",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "普通",
+        "普及",
+        "普遍",
+        "普照"
+      ]
     },
     {
       "id": "三年级下册-5176",
@@ -1253,7 +2059,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "其他",
+        "其中",
+        "其实",
+        "其次"
+      ]
     },
     {
       "id": "三年级下册-9A91",
@@ -1262,7 +2074,13 @@
       "semester": "下",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "骑马",
+        "骑车",
+        "骑兵",
+        "骑行"
+      ]
     },
     {
       "id": "三年级下册-8C26",
@@ -1271,7 +2089,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "谦虚",
+        "谦逊",
+        "谦和",
+        "谦词"
+      ]
     },
     {
       "id": "三年级下册-5F3A",
@@ -1280,7 +2104,11 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "强壮",
+        "刚强"
+      ]
     },
     {
       "id": "三年级下册-5DE7",
@@ -1289,7 +2117,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "巧合",
+        "巧妙",
+        "巧手",
+        "巧思"
+      ]
     },
     {
       "id": "三年级下册-4E14",
@@ -1298,7 +2132,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "并且",
+        "而且",
+        "且慢",
+        "且说"
+      ]
     },
     {
       "id": "三年级下册-786E",
@@ -1307,7 +2147,11 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "正确",
+        "准确"
+      ]
     },
     {
       "id": "三年级下册-67D3",
@@ -1316,7 +2160,13 @@
       "semester": "下",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "染色",
+        "感染",
+        "染料",
+        "染坊"
+      ]
     },
     {
       "id": "三年级下册-878D",
@@ -1325,7 +2175,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "融合",
+        "融化",
+        "金融",
+        "融洽"
+      ]
     },
     {
       "id": "三年级下册-6DA6",
@@ -1334,7 +2190,13 @@
       "semester": "下",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "湿润",
+        "滋润",
+        "润滑",
+        "润泽"
+      ]
     },
     {
       "id": "三年级下册-82E5",
@@ -1343,7 +2205,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "如果",
+        "若是",
+        "若干",
+        "若无"
+      ]
     },
     {
       "id": "三年级下册-5F31",
@@ -1352,7 +2220,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "软弱",
+        "弱点",
+        "弱小",
+        "弱者"
+      ]
     },
     {
       "id": "三年级下册-886B",
@@ -1361,7 +2235,13 @@
       "semester": "下",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "衬衫",
+        "汗衫",
+        "外衫",
+        "衣衫"
+      ]
     },
     {
       "id": "三年级下册-8D4F",
@@ -1370,7 +2250,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "课文 7",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "赏花",
+        "欣赏",
+        "赏月",
+        "奖赏"
+      ]
     },
     {
       "id": "三年级下册-8BBE",
@@ -1379,7 +2265,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "设计",
+        "设想",
+        "设立",
+        "设置"
+      ]
     },
     {
       "id": "三年级下册-793E",
@@ -1388,7 +2280,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "课文 10",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "社会",
+        "社团",
+        "社员",
+        "社区"
+      ]
     },
     {
       "id": "三年级下册-7701",
@@ -1397,7 +2295,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "省份",
+        "省城",
+        "省心",
+        "节省"
+      ]
     },
     {
       "id": "三年级下册-5269",
@@ -1406,7 +2310,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "剩余",
+        "剩下",
+        "残剩",
+        "剩饭"
+      ]
     },
     {
       "id": "三年级下册-72EE",
@@ -1415,7 +2325,12 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "课文 7",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "雄狮",
+        "石狮",
+        "狮吼"
+      ]
     },
     {
       "id": "三年级下册-53F2",
@@ -1424,7 +2339,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "历史",
+        "史料",
+        "史书",
+        "史诗"
+      ]
     },
     {
       "id": "三年级下册-4E16",
@@ -1433,7 +2354,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "课文 10",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "世界",
+        "世间",
+        "世代",
+        "世事"
+      ]
     },
     {
       "id": "三年级下册-793A",
@@ -1442,7 +2369,12 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "告示",
+        "显示",
+        "展示"
+      ]
     },
     {
       "id": "三年级下册-5F0F",
@@ -1451,7 +2383,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "方式",
+        "公式",
+        "样式",
+        "正式"
+      ]
     },
     {
       "id": "三年级下册-52BF",
@@ -1460,7 +2398,11 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "姿势",
+        "优势"
+      ]
     },
     {
       "id": "三年级下册-91CA",
@@ -1469,7 +2411,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "解释",
+        "释义",
+        "释怀",
+        "释然"
+      ]
     },
     {
       "id": "三年级下册-5B88",
@@ -1478,7 +2426,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "守护",
+        "守卫",
+        "守门",
+        "守则"
+      ]
     },
     {
       "id": "三年级下册-5BFF",
@@ -1487,7 +2441,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "寿命",
+        "寿桃",
+        "寿星",
+        "寿衣"
+      ]
     },
     {
       "id": "三年级下册-723D",
@@ -1496,7 +2456,12 @@
       "semester": "下",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "凉爽",
+        "爽快",
+        "爽朗"
+      ]
     },
     {
       "id": "三年级下册-5B8B",
@@ -1505,7 +2470,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "宋朝",
+        "宋词",
+        "宋人",
+        "宋体"
+      ]
     },
     {
       "id": "三年级下册-82CF",
@@ -1514,7 +2485,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "苏醒",
+        "苏州",
+        "苏打",
+        "江苏"
+      ]
     },
     {
       "id": "三年级下册-901F",
@@ -1523,7 +2500,13 @@
       "semester": "下",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "速度",
+        "快速",
+        "迅速",
+        "速成"
+      ]
     },
     {
       "id": "三年级下册-7B97",
@@ -1532,7 +2515,13 @@
       "semester": "下",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "计算",
+        "算式",
+        "算盘",
+        "算数"
+      ]
     },
     {
       "id": "三年级下册-867D",
@@ -1541,7 +2530,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 15
+      "unitOrder": 15,
+      "groups": [
+        "虽然",
+        "虽有",
+        "虽小",
+        "虽则"
+      ]
     },
     {
       "id": "三年级下册-968F",
@@ -1550,7 +2545,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "随便",
+        "随手",
+        "随行",
+        "随想"
+      ]
     },
     {
       "id": "三年级下册-788E",
@@ -1559,7 +2560,13 @@
       "semester": "下",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "破碎",
+        "碎片",
+        "打碎",
+        "碎花"
+      ]
     },
     {
       "id": "三年级下册-62AC",
@@ -1568,7 +2575,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "抬头",
+        "抬高",
+        "抬手",
+        "抬价"
+      ]
     },
     {
       "id": "三年级下册-53F9",
@@ -1577,7 +2590,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "课文 7",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "感叹",
+        "叹气",
+        "叹息",
+        "长叹"
+      ]
     },
     {
       "id": "三年级下册-5858",
@@ -1586,7 +2605,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "课文 7",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "池塘",
+        "水塘",
+        "塘边",
+        "塘里"
+      ]
     },
     {
       "id": "三年级下册-6DCC",
@@ -1595,7 +2620,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "流淌",
+        "淌水",
+        "淌汗",
+        "淌泪"
+      ]
     },
     {
       "id": "三年级下册-817E",
@@ -1604,7 +2635,13 @@
       "semester": "下",
       "unit": 18,
       "unitLabel": "课文 18",
-      "unitOrder": 14
+      "unitOrder": 14,
+      "groups": [
+        "腾空",
+        "奔腾",
+        "跳腾",
+        "翻腾"
+      ]
     },
     {
       "id": "三年级下册-68AF",
@@ -1613,7 +2650,12 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "阶梯",
+        "云梯",
+        "天梯"
+      ]
     },
     {
       "id": "三年级下册-63D0",
@@ -1622,7 +2664,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "提出",
+        "提问",
+        "提包",
+        "提琴"
+      ]
     },
     {
       "id": "三年级下册-94C1",
@@ -1631,7 +2679,13 @@
       "semester": "下",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "铁锤",
+        "铁轨",
+        "铁门",
+        "生铁"
+      ]
     },
     {
       "id": "三年级下册-900F",
@@ -1640,7 +2694,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "透明",
+        "透过",
+        "透气",
+        "透亮"
+      ]
     },
     {
       "id": "三年级下册-9014",
@@ -1649,7 +2709,13 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "旅途",
+        "途中",
+        "途径",
+        "前途"
+      ]
     },
     {
       "id": "三年级下册-63A8",
@@ -1658,7 +2724,13 @@
       "semester": "下",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "推动",
+        "推开",
+        "推荐",
+        "推测"
+      ]
     },
     {
       "id": "三年级下册-817F",
@@ -1667,7 +2739,13 @@
       "semester": "下",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "腿脚",
+        "大腿",
+        "腿肚",
+        "腿骨"
+      ]
     },
     {
       "id": "三年级下册-9000",
@@ -1676,7 +2754,13 @@
       "semester": "下",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "退后",
+        "退步",
+        "退让",
+        "退学"
+      ]
     },
     {
       "id": "三年级下册-7897",
@@ -1685,7 +2769,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "碗筷",
+        "饭碗",
+        "碗口",
+        "瓷碗"
+      ]
     },
     {
       "id": "三年级下册-6C6A",
@@ -1694,7 +2784,13 @@
       "semester": "下",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "汪洋",
+        "汪汪",
+        "汪国",
+        "汪姓"
+      ]
     },
     {
       "id": "三年级下册-5A01",
@@ -1703,7 +2799,13 @@
       "semester": "下",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "威风",
+        "威力",
+        "威严",
+        "威武"
+      ]
     },
     {
       "id": "三年级下册-4F1F",
@@ -1712,7 +2814,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "课文 10",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "伟大",
+        "伟人",
+        "伟业",
+        "伟岸"
+      ]
     },
     {
       "id": "三年级下册-5582",
@@ -1721,7 +2829,13 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "喂奶",
+        "喂鱼",
+        "喂猪",
+        "喂养"
+      ]
     },
     {
       "id": "三年级下册-6B66",
@@ -1730,7 +2844,13 @@
       "semester": "下",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "武术",
+        "武器",
+        "武士",
+        "武力"
+      ]
     },
     {
       "id": "三年级下册-52A1",
@@ -1739,7 +2859,13 @@
       "semester": "下",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "业务",
+        "公务",
+        "务实",
+        "务农"
+      ]
     },
     {
       "id": "三年级下册-8BEF",
@@ -1748,7 +2874,13 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "错误",
+        "误会",
+        "误解",
+        "误事"
+      ]
     },
     {
       "id": "三年级下册-5E0C",
@@ -1757,7 +2889,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "希望",
+        "希冀",
+        "希求",
+        "希图"
+      ]
     },
     {
       "id": "三年级下册-6EAA",
@@ -1766,7 +2904,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "溪水",
+        "山溪",
+        "溪谷",
+        "溪流"
+      ]
     },
     {
       "id": "三年级下册-7EA4",
@@ -1775,7 +2919,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "纤维",
+        "纤细",
+        "纤尘",
+        "纤手"
+      ]
     },
     {
       "id": "三年级下册-95F2",
@@ -1784,7 +2934,12 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "闲聊",
+        "闲暇",
+        "闲散"
+      ]
     },
     {
       "id": "三年级下册-53BF",
@@ -1793,7 +2948,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "县城",
+        "县官",
+        "县志",
+        "县境"
+      ]
     },
     {
       "id": "三年级下册-7FD4",
@@ -1802,7 +2963,13 @@
       "semester": "下",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "翱翔",
+        "翔龙",
+        "翔鸟",
+        "翔空"
+      ]
     },
     {
       "id": "三年级下册-6B23",
@@ -1811,7 +2978,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "课文 7",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "欣赏",
+        "欣喜",
+        "欣慰",
+        "欣然"
+      ]
     },
     {
       "id": "三年级下册-5F62",
@@ -1820,7 +2993,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "形状",
+        "形象",
+        "形式",
+        "形成"
+      ]
     },
     {
       "id": "三年级下册-578B",
@@ -1829,7 +3008,13 @@
       "semester": "下",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "类型",
+        "模型",
+        "造型",
+        "典型"
+      ]
     },
     {
       "id": "三年级下册-9192",
@@ -1838,7 +3023,12 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "醒来",
+        "醒酒",
+        "警醒"
+      ]
     },
     {
       "id": "三年级下册-6027",
@@ -1847,7 +3037,11 @@
       "semester": "下",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "粘性",
+        "急性"
+      ]
     },
     {
       "id": "三年级下册-51F6",
@@ -1856,7 +3050,13 @@
       "semester": "下",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "凶猛",
+        "凶恶",
+        "凶器",
+        "凶兆"
+      ]
     },
     {
       "id": "三年级下册-5144",
@@ -1865,7 +3065,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "课文 9",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "兄弟",
+        "兄长",
+        "兄妹",
+        "兄嫂"
+      ]
     },
     {
       "id": "三年级下册-4FEE",
@@ -1874,7 +3080,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "修理",
+        "修正",
+        "修建",
+        "修行"
+      ]
     },
     {
       "id": "三年级下册-865A",
@@ -1883,7 +3095,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "虚心",
+        "虚实",
+        "虚伪",
+        "虚空"
+      ]
     },
     {
       "id": "三年级下册-7EEA",
@@ -1892,7 +3110,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "头绪",
+        "情绪",
+        "绪论",
+        "绪言"
+      ]
     },
     {
       "id": "三年级下册-7EED",
@@ -1901,7 +3125,11 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "继续",
+        "持续"
+      ]
     },
     {
       "id": "三年级下册-8FC5",
@@ -1910,7 +3138,13 @@
       "semester": "下",
       "unit": 23,
       "unitLabel": "课文 23",
-      "unitOrder": 18
+      "unitOrder": 18,
+      "groups": [
+        "迅速",
+        "迅猛",
+        "迅疾",
+        "迅雷"
+      ]
     },
     {
       "id": "三年级下册-82BD",
@@ -1919,7 +3153,12 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "枝芽",
+        "嫩芽",
+        "花芽"
+      ]
     },
     {
       "id": "三年级下册-8BB6",
@@ -1928,7 +3167,13 @@
       "semester": "下",
       "unit": 6,
       "unitLabel": "课文 6",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "惊讶",
+        "讶异",
+        "讶色",
+        "讶语"
+      ]
     },
     {
       "id": "三年级下册-9A8C",
@@ -1937,7 +3182,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "课文 10",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "验收",
+        "验血",
+        "体验",
+        "检验"
+      ]
     },
     {
       "id": "三年级下册-71D5",
@@ -1946,7 +3197,12 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "燕京",
+        "燕尾",
+        "燕麦"
+      ]
     },
     {
       "id": "三年级下册-9E2F",
@@ -1955,7 +3211,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "鸳鸯",
+        "鸯池",
+        "鸯侣",
+        "鸯梦"
+      ]
     },
     {
       "id": "三年级下册-4EF0",
@@ -1964,7 +3226,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "仰望",
+        "仰头",
+        "信仰",
+        "仰起"
+      ]
     },
     {
       "id": "三年级下册-8170",
@@ -1973,7 +3241,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "腰带",
+        "腰身",
+        "腰椎",
+        "腰包"
+      ]
     },
     {
       "id": "三年级下册-827A",
@@ -1982,7 +3256,13 @@
       "semester": "下",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "艺术",
+        "艺人",
+        "技艺",
+        "文艺"
+      ]
     },
     {
       "id": "三年级下册-5F02",
@@ -1991,7 +3271,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "课文 9",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "异乡",
+        "异样",
+        "异族",
+        "异想"
+      ]
     },
     {
       "id": "三年级下册-5A74",
@@ -2000,7 +3286,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "婴儿",
+        "婴孩",
+        "婴幼",
+        "婴装"
+      ]
     },
     {
       "id": "三年级下册-6620",
@@ -2009,7 +3301,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "课文 7",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "映照",
+        "映射",
+        "倒映",
+        "上映"
+      ]
     },
     {
       "id": "三年级下册-60A0",
@@ -2018,7 +3316,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "悠闲",
+        "悠悠",
+        "悠然",
+        "悠远"
+      ]
     },
     {
       "id": "三年级下册-8BF1",
@@ -2027,7 +3331,13 @@
       "semester": "下",
       "unit": 22,
       "unitLabel": "课文 22",
-      "unitOrder": 17
+      "unitOrder": 17,
+      "groups": [
+        "诱惑",
+        "诱导",
+        "诱人",
+        "诱骗"
+      ]
     },
     {
       "id": "三年级下册-5B87",
@@ -2036,7 +3346,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "宇宙",
+        "宇航",
+        "宇量",
+        "屋宇"
+      ]
     },
     {
       "id": "三年级下册-6B32",
@@ -2045,7 +3361,13 @@
       "semester": "下",
       "unit": 9,
       "unitLabel": "课文 9",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "欲望",
+        "欲求",
+        "欲念",
+        "欲火"
+      ]
     },
     {
       "id": "三年级下册-9E33",
@@ -2054,7 +3376,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "鸳鸯",
+        "鸳侣",
+        "鸳帐",
+        "鸳梦"
+      ]
     },
     {
       "id": "三年级下册-7EA6",
@@ -2063,7 +3391,13 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "课文 10",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "约定",
+        "预约",
+        "约束",
+        "约会"
+      ]
     },
     {
       "id": "三年级下册-8D8A",
@@ -2072,7 +3406,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "越过",
+        "越南",
+        "越野",
+        "越发"
+      ]
     },
     {
       "id": "三年级下册-5300",
@@ -2081,7 +3421,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "课文 7",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "均匀",
+        "匀称",
+        "匀速",
+        "匀实"
+      ]
     },
     {
       "id": "三年级下册-7682",
@@ -2090,7 +3436,13 @@
       "semester": "下",
       "unit": 20,
       "unitLabel": "课文 20",
-      "unitOrder": 16
+      "unitOrder": 16,
+      "groups": [
+        "香皂",
+        "黑皂",
+        "皂角",
+        "皂白"
+      ]
     },
     {
       "id": "三年级下册-8D23",
@@ -2099,7 +3451,13 @@
       "semester": "下",
       "unit": 25,
       "unitLabel": "课文 25",
-      "unitOrder": 20
+      "unitOrder": 20,
+      "groups": [
+        "责任",
+        "负责",
+        "责备",
+        "职责"
+      ]
     },
     {
       "id": "三年级下册-8D3C",
@@ -2108,7 +3466,13 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "小贼",
+        "盗贼",
+        "海贼",
+        "贼船"
+      ]
     },
     {
       "id": "三年级下册-6CBE",
@@ -2117,7 +3481,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "沾染",
+        "沾湿",
+        "沾水",
+        "沾花"
+      ]
     },
     {
       "id": "三年级下册-7C98",
@@ -2126,7 +3496,12 @@
       "semester": "下",
       "unit": 27,
       "unitLabel": "课文 27",
-      "unitOrder": 21
+      "unitOrder": 21,
+      "groups": [
+        "粘贴",
+        "粘连",
+        "粘性"
+      ]
     },
     {
       "id": "三年级下册-80C0",
@@ -2135,7 +3510,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "膨胀",
+        "胀大",
+        "胀痛",
+        "腹胀"
+      ]
     },
     {
       "id": "三年级下册-8D75",
@@ -2144,7 +3525,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "赵国",
+        "赵王",
+        "赵氏",
+        "赵家"
+      ]
     },
     {
       "id": "三年级下册-9547",
@@ -2153,7 +3540,13 @@
       "semester": "下",
       "unit": 24,
       "unitLabel": "课文 24",
-      "unitOrder": 19
+      "unitOrder": 19,
+      "groups": [
+        "镇上",
+        "镇长",
+        "小镇",
+        "镇压"
+      ]
     },
     {
       "id": "三年级下册-6B62",
@@ -2162,7 +3555,12 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "阻止",
+        "静止",
+        "停止"
+      ]
     },
     {
       "id": "三年级下册-81F4",
@@ -2171,7 +3569,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "课文 7",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "致意",
+        "致力",
+        "致辞",
+        "致命"
+      ]
     },
     {
       "id": "三年级下册-667A",
@@ -2180,7 +3584,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "智慧",
+        "智力",
+        "智勇",
+        "智者"
+      ]
     },
     {
       "id": "三年级下册-6D32",
@@ -2189,7 +3599,11 @@
       "semester": "下",
       "unit": 10,
       "unitLabel": "课文 10",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "欧洲",
+        "亚洲"
+      ]
     },
     {
       "id": "三年级下册-5B99",
@@ -2198,7 +3612,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 12
+      "unitOrder": 12,
+      "groups": [
+        "宇宙",
+        "宙间",
+        "宙纪",
+        "宙宇"
+      ]
     },
     {
       "id": "三年级下册-682A",
@@ -2207,7 +3627,13 @@
       "semester": "下",
       "unit": 5,
       "unitLabel": "课文 5",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "树株",
+        "一株",
+        "株连",
+        "株距"
+      ]
     },
     {
       "id": "三年级下册-72B6",
@@ -2216,7 +3642,11 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 13
+      "unitOrder": 13,
+      "groups": [
+        "告状",
+        "状态"
+      ]
     },
     {
       "id": "三年级下册-8FFD",
@@ -2225,7 +3655,13 @@
       "semester": "下",
       "unit": 7,
       "unitLabel": "课文 7",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "追赶",
+        "追求",
+        "追踪",
+        "追问"
+      ]
     },
     {
       "id": "三年级下册-59FF",
@@ -2234,7 +3670,13 @@
       "semester": "下",
       "unit": 3,
       "unitLabel": "课文 3",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "姿态",
+        "姿势",
+        "姿色",
+        "姿容"
+      ]
     },
     {
       "id": "三年级下册-963B",
@@ -2243,7 +3685,13 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "阻止",
+        "阻挡",
+        "阻力",
+        "阻碍"
+      ]
     },
     {
       "id": "三年级下册-7EC4",
@@ -2252,7 +3700,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "组织",
+        "小组",
+        "组成",
+        "组合"
+      ]
     }
   ]
 }

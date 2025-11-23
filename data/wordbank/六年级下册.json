@@ -11,7 +11,13 @@
       "semester": "下",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "钉耙",
+        "耙子",
+        "耙地",
+        "耙田"
+      ]
     },
     {
       "id": "六年级下册-62CC",
@@ -20,7 +26,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "拌和",
+        "拌嘴",
+        "搅拌",
+        "拌面"
+      ]
     },
     {
       "id": "六年级下册-82DE",
@@ -29,7 +41,13 @@
       "semester": "下",
       "unit": 16,
       "unitLabel": "课文 16",
-      "unitOrder": 8
+      "unitOrder": 8,
+      "groups": [
+        "花苞",
+        "苞米",
+        "苞谷",
+        "含苞"
+      ]
     },
     {
       "id": "六年级下册-5351",
@@ -38,7 +56,13 @@
       "semester": "下",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "卑微",
+        "卑劣",
+        "卑贱",
+        "卑下"
+      ]
     },
     {
       "id": "六年级下册-72C8",
@@ -47,7 +71,11 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "狼狈",
+        "狼狈为奸"
+      ]
     },
     {
       "id": "六年级下册-640F",
@@ -56,7 +84,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "搏斗",
+        "搏击",
+        "搏杀",
+        "拼搏"
+      ]
     },
     {
       "id": "六年级下册-918B",
@@ -65,7 +99,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "食醋",
+        "醋意",
+        "醋坛",
+        "醋瓶"
+      ]
     },
     {
       "id": "六年级下册-94DB",
@@ -74,7 +114,12 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "铃铛",
+        "铛铛",
+        "铛响"
+      ]
     },
     {
       "id": "六年级下册-62B5",
@@ -83,7 +128,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "抵抗",
+        "抵挡",
+        "抵住",
+        "抵达"
+      ]
     },
     {
       "id": "六年级下册-9F0E",
@@ -92,7 +143,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "鼎立",
+        "鼎盛",
+        "鼎力",
+        "三足鼎"
+      ]
     },
     {
       "id": "六年级下册-561F",
@@ -101,7 +158,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "嘟囔",
+        "嘟嘴",
+        "嘟哝",
+        "嘟嘟"
+      ]
     },
     {
       "id": "六年级下册-7779",
@@ -110,7 +173,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "目睹",
+        "睹物",
+        "睹见",
+        "睹面"
+      ]
     },
     {
       "id": "六年级下册-6CDB",
@@ -119,7 +188,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "泛舟",
+        "泛起",
+        "泛黄",
+        "泛滥"
+      ]
     },
     {
       "id": "六年级下册-95FA",
@@ -128,7 +203,13 @@
       "semester": "下",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "闺房",
+        "闺女",
+        "闺秀",
+        "深闺"
+      ]
     },
     {
       "id": "六年级下册-8748",
@@ -137,7 +218,12 @@
       "semester": "下",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "蝈蝈",
+        "蝈儿",
+        "蝈虫"
+      ]
     },
     {
       "id": "六年级下册-822A",
@@ -146,7 +232,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "航行",
+        "航空",
+        "航海",
+        "航程"
+      ]
     },
     {
       "id": "六年级下册-6BEB",
@@ -155,7 +247,13 @@
       "semester": "下",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "毫米",
+        "毫毛",
+        "毫厘",
+        "丝毫"
+      ]
     },
     {
       "id": "六年级下册-9E3F",
@@ -164,7 +262,13 @@
       "semester": "下",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "鸿雁",
+        "鸿毛",
+        "鸿图",
+        "鸿运"
+      ]
     },
     {
       "id": "六年级下册-7B80",
@@ -173,7 +277,13 @@
       "semester": "下",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "简单",
+        "简要",
+        "简洁",
+        "简朴"
+      ]
     },
     {
       "id": "六年级下册-997A",
@@ -182,7 +292,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "饺子",
+        "水饺",
+        "蒸饺",
+        "煎饺"
+      ]
     },
     {
       "id": "六年级下册-7A9F",
@@ -191,7 +307,13 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "石窟",
+        "窟窿",
+        "窟穴",
+        "洞窟"
+      ]
     },
     {
       "id": "六年级下册-6EE5",
@@ -200,7 +322,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "滥用",
+        "滥竽",
+        "滥交",
+        "泛滥"
+      ]
     },
     {
       "id": "六年级下册-72FC",
@@ -209,7 +337,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "灰狼",
+        "狼群",
+        "狼牙",
+        "母狼"
+      ]
     },
     {
       "id": "六年级下册-5792",
@@ -218,7 +352,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "堡垒",
+        "垒球",
+        "垒墙",
+        "垒起"
+      ]
     },
     {
       "id": "六年级下册-6817",
@@ -227,7 +367,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "栗子",
+        "板栗",
+        "栗色",
+        "栗树"
+      ]
     },
     {
       "id": "六年级下册-7ABF",
@@ -236,7 +382,11 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "窟窿",
+        "窿窿"
+      ]
     },
     {
       "id": "六年级下册-739B",
@@ -245,7 +395,12 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "玛瑙",
+        "玛雅",
+        "玛钢"
+      ]
     },
     {
       "id": "六年级下册-94ED",
@@ -254,7 +409,13 @@
       "semester": "下",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "铭记",
+        "铭文",
+        "铭刻",
+        "铭牌"
+      ]
     },
     {
       "id": "六年级下册-9B54",
@@ -263,7 +424,13 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "魔鬼",
+        "魔法",
+        "魔咒",
+        "魔爪"
+      ]
     },
     {
       "id": "六年级下册-6CAB",
@@ -272,7 +439,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "泡沫",
+        "沫子",
+        "唾沫",
+        "白沫"
+      ]
     },
     {
       "id": "六年级下册-56D4",
@@ -281,7 +454,12 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "嘟囔",
+        "囔囔",
+        "囔着"
+      ]
     },
     {
       "id": "六年级下册-7459",
@@ -290,7 +468,11 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "玛瑙",
+        "瑙石"
+      ]
     },
     {
       "id": "六年级下册-817B",
@@ -299,7 +481,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "腻烦",
+        "腻味",
+        "腻歪",
+        "油腻"
+      ]
     },
     {
       "id": "六年级下册-7554",
@@ -308,7 +496,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "河畔",
+        "湖畔",
+        "田畔",
+        "江畔"
+      ]
     },
     {
       "id": "六年级下册-7BC7",
@@ -317,7 +511,13 @@
       "semester": "下",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "篇章",
+        "短篇",
+        "长篇",
+        "诗篇"
+      ]
     },
     {
       "id": "六年级下册-779F",
@@ -326,7 +526,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "瞟见",
+        "瞟着",
+        "瞟一眼",
+        "瞟向"
+      ]
     },
     {
       "id": "六年级下册-835E",
@@ -335,7 +541,12 @@
       "semester": "下",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "荞麦",
+        "荞面",
+        "荞花"
+      ]
     },
     {
       "id": "六年级下册-98A7",
@@ -344,7 +555,12 @@
       "semester": "下",
       "unit": 14,
       "unitLabel": "课文 14",
-      "unitOrder": 7
+      "unitOrder": 7,
+      "groups": [
+        "颧骨",
+        "颧部",
+        "高颧"
+      ]
     },
     {
       "id": "六年级下册-71C3",
@@ -353,7 +569,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "燃烧",
+        "燃起",
+        "燃料",
+        "燃放"
+      ]
     },
     {
       "id": "六年级下册-878D",
@@ -362,7 +584,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "融合",
+        "融化",
+        "金融",
+        "融洽"
+      ]
     },
     {
       "id": "六年级下册-970E",
@@ -371,7 +599,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "霎时",
+        "霎那",
+        "霎间",
+        "一霎"
+      ]
     },
     {
       "id": "六年级下册-9882",
@@ -380,7 +614,13 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "歌颂",
+        "颂扬",
+        "颂词",
+        "颂歌"
+      ]
     },
     {
       "id": "六年级下册-849C",
@@ -389,7 +629,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "大蒜",
+        "蒜头",
+        "蒜苗",
+        "蒜瓣"
+      ]
     },
     {
       "id": "六年级下册-85B9",
@@ -398,7 +644,12 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "蒜薹",
+        "薹草",
+        "薹花"
+      ]
     },
     {
       "id": "六年级下册-6CF0",
@@ -407,7 +658,13 @@
       "semester": "下",
       "unit": 12,
       "unitLabel": "课文 12",
-      "unitOrder": 5
+      "unitOrder": 5,
+      "groups": [
+        "泰山",
+        "泰然",
+        "泰安",
+        "泰斗"
+      ]
     },
     {
       "id": "六年级下册-644A",
@@ -416,7 +673,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "摊开",
+        "摊子",
+        "摊牌",
+        "摊贩"
+      ]
     },
     {
       "id": "六年级下册-8E5A",
@@ -425,7 +688,13 @@
       "semester": "下",
       "unit": 21,
       "unitLabel": "课文 21",
-      "unitOrder": 11
+      "unitOrder": 11,
+      "groups": [
+        "蹚水",
+        "蹚河",
+        "蹚过",
+        "蹚路"
+      ]
     },
     {
       "id": "六年级下册-819B",
@@ -434,7 +703,13 @@
       "semester": "下",
       "unit": 13,
       "unitLabel": "课文 13",
-      "unitOrder": 6
+      "unitOrder": 6,
+      "groups": [
+        "胸膛",
+        "枪膛",
+        "炉膛",
+        "膛线"
+      ]
     },
     {
       "id": "六年级下册-553E",
@@ -443,7 +718,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "唾沫",
+        "唾弃",
+        "唾骂",
+        "唾手"
+      ]
     },
     {
       "id": "六年级下册-5DEB",
@@ -452,7 +733,13 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "巫师",
+        "巫婆",
+        "巫术",
+        "巫山"
+      ]
     },
     {
       "id": "六年级下册-5BB5",
@@ -461,7 +748,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "夜宵",
+        "宵夜",
+        "元宵",
+        "通宵"
+      ]
     },
     {
       "id": "六年级下册-8165",
@@ -470,7 +763,13 @@
       "semester": "下",
       "unit": 17,
       "unitLabel": "课文 17",
-      "unitOrder": 9
+      "unitOrder": 9,
+      "groups": [
+        "腥味",
+        "腥气",
+        "腥臭",
+        "血腥"
+      ]
     },
     {
       "id": "六年级下册-626C",
@@ -479,7 +778,12 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "飘扬",
+        "扬帆",
+        "表扬"
+      ]
     },
     {
       "id": "六年级下册-5996",
@@ -488,7 +792,13 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "妖怪",
+        "妖艳",
+        "妖娆",
+        "妖气"
+      ]
     },
     {
       "id": "六年级下册-51B6",
@@ -497,7 +807,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "冶炼",
+        "冶金",
+        "冶铁",
+        "冶铜"
+      ]
     },
     {
       "id": "六年级下册-6291",
@@ -506,7 +822,13 @@
       "semester": "下",
       "unit": 4,
       "unitLabel": "课文 4",
-      "unitOrder": 3
+      "unitOrder": 3,
+      "groups": [
+        "抑制",
+        "压抑",
+        "抑止",
+        "抑扬"
+      ]
     },
     {
       "id": "六年级下册-5B87",
@@ -515,7 +837,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "宇宙",
+        "宇航",
+        "宇量",
+        "屋宇"
+      ]
     },
     {
       "id": "六年级下册-7728",
@@ -524,7 +852,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "眨眼",
+        "眨巴",
+        "眨动",
+        "眨眨"
+      ]
     },
     {
       "id": "六年级下册-80C0",
@@ -533,7 +867,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "膨胀",
+        "胀大",
+        "胀痛",
+        "腹胀"
+      ]
     },
     {
       "id": "六年级下册-7B5D",
@@ -542,7 +882,13 @@
       "semester": "下",
       "unit": 1,
       "unitLabel": "课文 1",
-      "unitOrder": 1
+      "unitOrder": 1,
+      "groups": [
+        "风筝",
+        "古筝",
+        "筝曲",
+        "筝音"
+      ]
     },
     {
       "id": "六年级下册-631A",
@@ -551,7 +897,13 @@
       "semester": "下",
       "unit": 11,
       "unitLabel": "课文 11",
-      "unitOrder": 4
+      "unitOrder": 4,
+      "groups": [
+        "真挚",
+        "挚友",
+        "挚爱",
+        "诚挚"
+      ]
     },
     {
       "id": "六年级下册-80BF",
@@ -560,7 +912,13 @@
       "semester": "下",
       "unit": 2,
       "unitLabel": "课文 2",
-      "unitOrder": 2
+      "unitOrder": 2,
+      "groups": [
+        "肿胀",
+        "肿瘤",
+        "肿大",
+        "水肿"
+      ]
     },
     {
       "id": "六年级下册-8D44",
@@ -569,7 +927,13 @@
       "semester": "下",
       "unit": 19,
       "unitLabel": "课文 19",
-      "unitOrder": 10
+      "unitOrder": 10,
+      "groups": [
+        "资源",
+        "资金",
+        "资格",
+        "资助"
+      ]
     }
   ]
 }

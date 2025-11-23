@@ -14,15 +14,21 @@ const Statistics = {
         const logs = (Storage.getPracticeLogsFiltered && Storage.getPracticeLogsFiltered()) || Storage.getPracticeLogs();
         const errorWords = Storage.getErrorWordsFiltered();
         
-        // 总词数
-        document.getElementById('stat-total-words').textContent = wordBank.length;
+        // 总词数（如果元素存在才更新）
+        const statTotalWords = document.getElementById('stat-total-words');
+        if (statTotalWords) {
+            statTotalWords.textContent = wordBank.length;
+        }
         
         // 已练习（统计练习记录中的唯一词数）
         const practicedWordIds = new Set();
         logs.forEach(log => {
             log.errorWords?.forEach(id => practicedWordIds.add(id));
         });
-        document.getElementById('stat-practiced').textContent = practicedWordIds.size;
+        const statPracticed = document.getElementById('stat-practiced');
+        if (statPracticed) {
+            statPracticed.textContent = practicedWordIds.size;
+        }
         
         // 正确率
         let totalCorrect = 0;
@@ -33,10 +39,16 @@ const Statistics = {
         });
         const accuracy = totalQuestions > 0 ? 
             Math.round((totalCorrect / totalQuestions) * 100) : 0;
-        document.getElementById('stat-accuracy').textContent = `${accuracy}%`;
+        const statAccuracy = document.getElementById('stat-accuracy');
+        if (statAccuracy) {
+            statAccuracy.textContent = `${accuracy}%`;
+        }
         
         // 错题数
-        document.getElementById('stat-error-words').textContent = errorWords.length;
+        const statErrorWords = document.getElementById('stat-error-words');
+        if (statErrorWords) {
+            statErrorWords.textContent = errorWords.length;
+        }
     },
     
     /**
