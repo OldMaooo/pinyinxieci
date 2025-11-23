@@ -186,6 +186,7 @@ const PracticeRange = {
                 
                 // 计算每个字的状态和完成率
                 let masteredCount = 0;
+                const isWordbankContext = options.context === 'wordbank';
                 const wordTags = words.map(w => {
                     const isError = errorWordIds.has(w.id);
                     const hasCorrect = wordCorrectCount.get(w.id) > 0;
@@ -203,7 +204,11 @@ const PracticeRange = {
                     }
                     // 否则保持默认灰色（未测试）
                     
-                    return `<span class="word-tag ${tagClass}">${w.word}</span>`;
+                    // 在wordbank上下文中，添加data-word-id和点击样式
+                    const clickableClass = isWordbankContext ? 'word-tag-clickable' : '';
+                    const dataAttr = isWordbankContext ? `data-word-id="${w.id}"` : '';
+                    
+                    return `<span class="word-tag ${tagClass} ${clickableClass}" ${dataAttr} title="${isWordbankContext ? '点击设置掌握状态' : ''}">${w.word}</span>`;
                 }).join('');
                 
                 // 计算完成率并生成饼图

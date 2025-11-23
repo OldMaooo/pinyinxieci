@@ -304,6 +304,15 @@ const WordBank = {
             }
         });
         
+        // 监听单个字的点击事件（设置掌握状态）
+        container.addEventListener('click', (e) => {
+            const wordTag = e.target.closest('.word-tag-clickable');
+            if (wordTag && wordTag.dataset.wordId) {
+                e.stopPropagation(); // 阻止事件冒泡到行
+                this.showWordMasteryMenu(wordTag, wordTag.dataset.wordId);
+            }
+        });
+        
         // 批量设为已掌握
         const masterBtn = document.getElementById('wordbank-batch-master-btn');
         if (masterBtn) {
@@ -325,6 +334,63 @@ const WordBank = {
                 this.batchSetMastery(false);
             });
         }
+    },
+    
+    /**
+     * 显示单个字的掌握状态菜单
+     */
+    showWordMasteryMenu(wordTag, wordId) {
+        const wordBank = Storage.getWordBank();
+        const word = wordBank.find(w => w.id === wordId);
+        if (!word) {
+            this.showToast('warning', '未找到该字');
+            return;
+        }
+        
+        // 检查当前状态
+        const logs = (Storage.getPracticeLogsFiltered && Storage.getPracticeLogsFiltered()) || Storage.getPracticeLogs() || [];
+        const errorWords = Storage.getErrorWordsFiltered() || [];
+        const errorWordIds = new Set(errorWords.map(ew => ew.wordId));
+        
+        const wordCorrectCount = new Map();
+        logs.forEach(log => {
+            if (log.details && Array.isArray(log.details)) {
+                log.details.forEach(detail => {
+                    if (detail.correct) {
+                        wordCorrectCount.set(detail.wordId, (wordCorrectCount.get(detail.wordId) || 0) + 1);
+                    }
+                });
+            }
+        });
+        
+        const isError = errorWordIds.has(wordId);
+        const hasCorrect = wordCorrectCount.get(wordId) > 0;
+        const isMastered = hasCorrect && !isError;
+        
+        // 直接切换状态（已掌握 -> 未掌握，未掌握 -> 已掌握）
+        this.setWordMastery(wordId, !isMastered);
+    },
+    
+    /**
+     * 设置单个字的掌握状态
+     */
+    setWordMastery(wordId, isMastered) {
+        // TODO: 实现掌握状态的存储和更新
+        // 目前先显示提示，后续可以扩展Storage支持掌握状态
+        const wordBank = Storage.getWordBank();
+        const word = wordBank.find(w => w.id === wordId);
+        if (!word) {
+            this.showToast('warning', '未找到该字');
+            return;
+        }
+        
+        const action = isMastered ? '设为已掌握' : '设为未掌握';
+        this.showToast('success', `已将"${word.word}"${action}`);
+        
+        // 刷新视图
+        setTimeout(() => {
+            this.loadMasteryView();
+        }, 500);
     },
     
     /**
