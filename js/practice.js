@@ -234,7 +234,8 @@ const Practice = {
         }
         
         // 随机选择或限制数量
-        if (!forcedMode && wordCount !== 'all') {
+        // 注意：任务模式下不应该应用wordCount限制，应该使用所有题目
+        if (!currentTaskId && !forcedMode && wordCount !== 'all') {
             words = this.shuffleArray(words).slice(0, wordCount);
         }
         if (forcedMode) {
