@@ -607,17 +607,28 @@ const TaskListUI = {
     
     /**
      * 渲染待排期任务（Inbox）
+     * @param {Array} tasks - 所有任务
+     * @param {string} viewType - 视图类型 'calendar' | 'cards'
      */
-    renderInboxTasks(tasks) {
-        const inboxList = document.getElementById('task-inbox-list');
-        if (!inboxList) return;
+    renderInboxTasks(tasks, viewType = 'calendar') {
+        const inboxListId = viewType === 'cards' ? 'task-inbox-list-cards' : 'task-inbox-list-calendar';
+        const inboxAreaId = viewType === 'cards' ? 'task-inbox-area-cards' : 'task-inbox-area-calendar';
+        
+        const inboxList = document.getElementById(inboxListId);
+        const inboxArea = document.getElementById(inboxAreaId);
+        
+        if (!inboxList || !inboxArea) return;
         
         const unscheduledTasks = tasks.filter(t => !t.scheduledDate);
         
+        // 如果没有待排期任务，隐藏整个区域
         if (unscheduledTasks.length === 0) {
-            inboxList.innerHTML = '<div class="text-center text-muted py-3 small">暂无待排期任务</div>';
+            inboxArea.style.display = 'none';
             return;
         }
+        
+        // 显示区域
+        inboxArea.style.display = '';
         
         let html = '';
         unscheduledTasks.forEach(task => {
@@ -631,6 +642,170 @@ const TaskListUI = {
         });
         
         inboxList.innerHTML = html;
+    },
+    
+    /**
+     * 渲染卡片视图
+     */
+    renderCardsView() {
+        const calendarContainer = document.getElementById('task-calendar-container');
+        const cardsContainer = document.getElementById('task-cards-container');
+        if (!cardsContainer) return;
+        
+        // 隐藏日历容器，显示卡片容器
+        if (calendarContainer) calendarContainer.classList.add('d-none');
+        cardsContainer.classList.remove('d-none');
+        
+        const tasks = TaskList.getAllTasksWithAutoReview(30);
+        
+        // 渲染卡片
+        this.renderCards(cardsContainer, tasks);
+        
+        // 渲染待排期任务
+        this.renderInboxTasks(tasks, 'cards');
+        
+        // 绑定拖拽事件
+        this.bindDragEvents();
+    },
+    
+    /**
+     * 渲染卡片列表
+     */
+    renderCards(container, tasks) {
+        const cardsArea = container.querySelector('#task-cards-area');
+        if (!cardsArea) return;
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        // 分离已排期和未排期的任务
+        const scheduledTasks = tasks.filter(t => t.scheduledDate).sort((a, b) => {
+            const dateA = new Date(a.scheduledDate + 'T00:00:00');
+            const dateB = new Date(b.scheduledDate + 'T00:00:00');
+            return dateA - dateB;
+        });
+        
+        if (scheduledTasks.length === 0) {
+            cardsArea.innerHTML = `
+                <div class="text-center text-muted py-5">
+                    <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                    <p class="mt-3">暂无已排期任务</p>
+                </div>
+            `;
+            return;
+        }
+        
+        let html = '<div class="task-cards-grid">';
+        
+        scheduledTasks.forEach(task => {
+            const taskDate = new Date(task.scheduledDate + 'T00:00:00');
+            const relativeTime = this.getRelativeTimeLabel(taskDate, today);
+            
+            html += `
+                <div class="task-card-item" data-task-id="${task.id}" data-date="${task.scheduledDate}">
+                    <div class="task-card-header">
+                        <span class="task-card-time-label">${relativeTime}</span>
+                        <span class="task-card-date">${taskDate.toLocaleDateString('zh-CN', { month: 'long', day: 'numeric' })}</span>
+                    </div>
+                    <div class="task-card-body">
+                        ${this.renderTaskCardForCardsView(task)}
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+        cardsArea.innerHTML = html;
+        
+        // 绑定任务卡片事件
+        this.bindTaskCardEvents();
+    },
+    
+    /**
+     * 获取相对时间标签
+     */
+    getRelativeTimeLabel(date, today) {
+        const diffDays = Math.floor((date - today) / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 0) {
+            return '今天';
+        } else if (diffDays === 1) {
+            return '明天';
+        } else if (diffDays === -1) {
+            return '昨天';
+        } else if (diffDays > 1 && diffDays <= 7) {
+            return `${diffDays}天后`;
+        } else if (diffDays < -1 && diffDays >= -7) {
+            return `${Math.abs(diffDays)}天前`;
+        } else if (diffDays > 7 && diffDays <= 30) {
+            const weeks = Math.floor(diffDays / 7);
+            return `${weeks}周后`;
+        } else if (diffDays > 30) {
+            const months = Math.floor(diffDays / 30);
+            return `${months}个月后`;
+        } else if (diffDays < -7 && diffDays >= -30) {
+            const weeks = Math.floor(Math.abs(diffDays) / 7);
+            return `${weeks}周前`;
+        } else {
+            const months = Math.floor(Math.abs(diffDays) / 30);
+            return `${months}个月前`;
+        }
+    },
+    
+    /**
+     * 渲染卡片视图中的任务卡片
+     */
+    renderTaskCardForCardsView(task) {
+        const progress = task.progress || { total: 0, completed: 0, correct: 0 };
+        const progressPercent = progress.total > 0 ? Math.round((progress.completed / progress.total) * 100) : 0;
+        const statusBadge = this.getStatusBadge(task.status);
+        const typeIcon = task.type === TaskList.TYPE.REVIEW ? 'bi-arrow-repeat' : 'bi-pencil-square';
+        const typeClass = task.type === TaskList.TYPE.REVIEW ? 'review-task' : 'practice-task';
+        
+        return `
+            <div class="card task-card ${typeClass}" style="cursor: pointer;" title="点击查看任务详情">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div class="flex-grow-1">
+                            <h6 class="card-title mb-1">
+                                <i class="bi ${typeIcon}"></i> ${this.escapeHtml(task.name)}
+                            </h6>
+                            <span class="badge ${statusBadge.class}">${statusBadge.text}</span>
+                        </div>
+                        <button class="btn btn-sm btn-outline-danger task-delete-btn" data-task-id="${task.id}" title="删除">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                    <div class="mt-2">
+                        <div class="d-flex justify-content-between small text-muted mb-1">
+                            <span>进度: ${progress.completed}/${progress.total}</span>
+                            <span>${progressPercent}%</span>
+                        </div>
+                        <div class="progress" style="height: 6px;">
+                            <div class="progress-bar" role="progressbar" style="width: ${progressPercent}%" 
+                                 aria-valuenow="${progressPercent}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="mt-3 d-flex gap-2">
+                        ${task.status === TaskList.STATUS.PENDING || task.status === TaskList.STATUS.PAUSED ? `
+                            <button class="btn btn-sm btn-primary flex-grow-1 task-start-btn" data-task-id="${task.id}">
+                                <i class="bi bi-play-fill"></i> ${task.status === TaskList.STATUS.PAUSED ? '继续' : '开始'}
+                            </button>
+                        ` : ''}
+                        ${task.status === TaskList.STATUS.IN_PROGRESS ? `
+                            <button class="btn btn-sm btn-primary flex-grow-1 task-continue-btn" data-task-id="${task.id}">
+                                <i class="bi bi-play-fill"></i> 继续
+                            </button>
+                        ` : ''}
+                        ${task.status === TaskList.STATUS.COMPLETED ? `
+                            <button class="btn btn-sm btn-outline-primary flex-grow-1 task-restart-btn" data-task-id="${task.id}">
+                                <i class="bi bi-arrow-clockwise"></i> 重新开始
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
     },
     
     /**
