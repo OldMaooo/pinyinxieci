@@ -5,7 +5,12 @@
 
 const TaskListUI = {
     /**
-     * 当前显示模式（合并/拆分）
+     * 当前视图类型（日历/卡片）
+     */
+    currentViewType: 'calendar', // 'calendar' | 'cards'
+    
+    /**
+     * 当前显示模式（合并/拆分）- 仅用于日历视图
      */
     currentDisplayMode: 'merged', // 'merged' | 'split'
     
@@ -29,11 +34,22 @@ const TaskListUI = {
             });
         }
         
-        // 显示模式切换（合并/拆分）
+        // 视图类型切换（日历/卡片）
+        document.querySelectorAll('input[name="task-view-type"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                this.currentViewType = e.target.value;
+                this.updateViewTypeUI();
+                this.load();
+            });
+        });
+        
+        // 显示模式切换（合并/拆分）- 仅用于日历视图
         document.querySelectorAll('input[name="task-display-mode"]').forEach(radio => {
             radio.addEventListener('change', (e) => {
                 this.currentDisplayMode = e.target.value;
-                this.load();
+                if (this.currentViewType === 'calendar') {
+                    this.load();
+                }
             });
         });
         
@@ -57,14 +73,32 @@ const TaskListUI = {
     },
     
     /**
-     * 加载任务清单（只使用日历视图）
+     * 更新视图类型UI（显示/隐藏相关控件）
+     */
+    updateViewTypeUI() {
+        const displayModeGroup = document.querySelector('.task-display-mode-group');
+        if (displayModeGroup) {
+            if (this.currentViewType === 'calendar') {
+                displayModeGroup.style.display = '';
+            } else {
+                displayModeGroup.style.display = 'none';
+            }
+        }
+    },
+    
+    /**
+     * 加载任务清单（根据当前视图类型）
      */
     load() {
         // 确保自动生成复习任务
         TaskList.getAllTasksWithAutoReview(30);
         
-        // 只渲染日历视图
-        this.renderCalendarView();
+        // 根据视图类型渲染
+        if (this.currentViewType === 'cards') {
+            this.renderCardsView();
+        } else {
+            this.renderCalendarView();
+        }
     },
     
     /**
@@ -327,12 +361,14 @@ const TaskListUI = {
      */
     renderCalendarView() {
         const calendarContainer = document.getElementById('task-calendar-container');
+        const cardsContainer = document.getElementById('task-cards-container');
         if (!calendarContainer) {
             console.error('[TaskListUI] task-calendar-container not found');
             return;
         }
         
-        // 确保日历容器可见
+        // 隐藏卡片容器，显示日历容器
+        if (cardsContainer) cardsContainer.classList.add('d-none');
         calendarContainer.classList.remove('d-none');
         
         const tasks = TaskList.getAllTasksWithAutoReview(30); // 生成30天的任务
@@ -341,7 +377,7 @@ const TaskListUI = {
         this.renderCalendar(calendarContainer, tasks);
         
         // 渲染待排期任务
-        this.renderInboxTasks(tasks);
+        this.renderInboxTasks(tasks, 'calendar');
         
         // 绑定拖拽事件
         this.bindDragEvents();

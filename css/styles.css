@@ -963,6 +963,53 @@
     opacity: 0.5;
 }
 
+/* 卡片视图样式 */
+.task-cards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.task-card-item {
+    flex: 0 0 calc(33.333% - 1rem);
+    min-width: 280px;
+    max-width: 400px;
+}
+
+.task-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--bs-border-color);
+}
+
+.task-card-time-label {
+    font-weight: 600;
+    color: var(--bs-primary);
+    font-size: 0.9rem;
+}
+
+.task-card-date {
+    font-size: 0.85rem;
+    color: var(--bs-secondary);
+}
+
+@media (max-width: 1200px) {
+    .task-card-item {
+        flex: 0 0 calc(50% - 1rem);
+    }
+}
+
+@media (max-width: 768px) {
+    .task-card-item {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
 /* 调试面板样式 */
 .debug-panel {
     position: fixed;
