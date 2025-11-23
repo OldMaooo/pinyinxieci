@@ -981,8 +981,8 @@
 
 .task-card-item {
     flex: 0 0 calc(33.333% - 1rem);
-    min-width: 300px;
-    max-width: 400px;
+    min-width: 350px;
+    max-width: 500px;
     transition: transform 0.2s, box-shadow 0.2s;
     background-color: var(--bs-body-bg);
     border-radius: 0.5rem;
@@ -1030,15 +1030,18 @@
     width: 100%;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1400px) {
     .task-card-item {
         flex: 0 0 calc(50% - 1rem);
+        min-width: 350px;
+        max-width: 500px;
     }
 }
 
 @media (max-width: 768px) {
     .task-card-item {
         flex: 0 0 100%;
+        min-width: 100%;
         max-width: 100%;
     }
 }
