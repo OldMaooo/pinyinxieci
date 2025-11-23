@@ -436,24 +436,13 @@
                     <div class="d-flex gap-2 align-items-center">
                         <!-- 视图切换（日历/卡片） -->
                         <div class="btn-group" role="group">
-                            <input type="radio" class="btn-check" name="task-view-type" id="task-view-calendar" value="calendar" checked>
+                            <input type="radio" class="btn-check" name="task-view-type" id="task-view-calendar" value="calendar">
                             <label class="btn btn-sm btn-outline-primary" for="task-view-calendar">
                                 <i class="bi bi-calendar-month"></i> 日历视图
                             </label>
-                            <input type="radio" class="btn-check" name="task-view-type" id="task-view-cards" value="cards">
+                            <input type="radio" class="btn-check" name="task-view-type" id="task-view-cards" value="cards" checked>
                             <label class="btn btn-sm btn-outline-primary" for="task-view-cards">
                                 <i class="bi bi-card-list"></i> 卡片视图
-                            </label>
-                        </div>
-                        <!-- 显示模式切换（合并/拆分）- 仅在日历视图时显示 -->
-                        <div class="btn-group task-display-mode-group" role="group">
-                            <input type="radio" class="btn-check" name="task-display-mode" id="task-display-merged" value="merged" checked>
-                            <label class="btn btn-sm btn-outline-secondary" for="task-display-merged">
-                                <i class="bi bi-layers"></i> 合并模式
-                            </label>
-                            <input type="radio" class="btn-check" name="task-display-mode" id="task-display-split" value="split">
-                            <label class="btn btn-sm btn-outline-secondary" for="task-display-split">
-                                <i class="bi bi-list-ul"></i> 拆分模式
                             </label>
                         </div>
                         <button class="btn btn-sm btn-outline-danger" id="task-list-clear-all-btn">
@@ -463,7 +452,7 @@
                 </div>
                 <div class="card-body">
                     <!-- 日历视图容器 -->
-                    <div id="task-calendar-container" class="task-list-view">
+                    <div id="task-calendar-container" class="task-list-view d-none">
                         <div class="d-flex gap-3" style="height: calc(100vh - 200px);">
                             <!-- 日历区域 -->
                             <div class="flex-grow-1" id="task-calendar-area">
@@ -484,7 +473,7 @@
                         </div>
                     </div>
                     <!-- 卡片视图容器 -->
-                    <div id="task-cards-container" class="task-list-view d-none">
+                    <div id="task-cards-container" class="task-list-view">
                         <div class="d-flex gap-3" style="min-height: calc(100vh - 200px);">
                             <!-- 卡片区域 -->
                             <div class="flex-grow-1" id="task-cards-area">

@@ -7,12 +7,7 @@ const TaskListUI = {
     /**
      * 当前视图类型（日历/卡片）
      */
-    currentViewType: 'calendar', // 'calendar' | 'cards'
-    
-    /**
-     * 当前显示模式（合并/拆分）- 仅用于日历视图
-     */
-    currentDisplayMode: 'merged', // 'merged' | 'split'
+    currentViewType: 'cards', // 'calendar' | 'cards'
     
     /**
      * 初始化
@@ -43,15 +38,7 @@ const TaskListUI = {
             });
         });
         
-        // 显示模式切换（合并/拆分）- 仅用于日历视图
-        document.querySelectorAll('input[name="task-display-mode"]').forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                this.currentDisplayMode = e.target.value;
-                if (this.currentViewType === 'calendar') {
-                    this.load();
-                }
-            });
-        });
+        // 显示模式切换（合并/拆分）- 已移除
         
         // 任务拆分弹窗相关事件
         const splitModal = document.getElementById('task-split-modal');
@@ -76,14 +63,7 @@ const TaskListUI = {
      * 更新视图类型UI（显示/隐藏相关控件）
      */
     updateViewTypeUI() {
-        const displayModeGroup = document.querySelector('.task-display-mode-group');
-        if (displayModeGroup) {
-            if (this.currentViewType === 'calendar') {
-                displayModeGroup.style.display = '';
-            } else {
-                displayModeGroup.style.display = 'none';
-            }
-        }
+        // 已移除显示模式切换，无需更新
     },
     
     /**
@@ -233,25 +213,10 @@ const TaskListUI = {
                     <div class="calendar-day-tasks">
             `;
             
-            // 根据显示模式渲染任务卡片
-            if (this.currentDisplayMode === 'merged') {
-                // 合并模式：一天只显示一张卡片（如果有多个任务，合并显示）
-                const allTasks = [...dateTasks.practice, ...dateTasks.review];
-                if (allTasks.length > 0) {
-                    html += this.renderCalendarTaskCardMerged(dateTasks.practice, dateTasks.review);
-                }
-            } else {
-                // 拆分模式：分别显示练习任务和复习任务
-                if (dateTasks.practice.length > 0) {
-                    dateTasks.practice.forEach(task => {
-                        html += this.renderCalendarTaskCard(task, true); // true表示可拖拽
-                    });
-                }
-                if (dateTasks.review.length > 0) {
-                    dateTasks.review.forEach(task => {
-                        html += this.renderCalendarTaskCard(task, false); // false表示不可拖拽
-                    });
-                }
+            // 默认使用合并模式：一天只显示一张卡片（如果有多个任务，合并显示）
+            const allTasks = [...dateTasks.practice, ...dateTasks.review];
+            if (allTasks.length > 0) {
+                html += this.renderCalendarTaskCardMerged(dateTasks.practice, dateTasks.review);
             }
             
             html += `
