@@ -215,13 +215,11 @@ const ErrorBook = {
                 return `
                     <div class="col">
                         <div class="card h-100 shadow-sm position-relative">
+                            ${toggleHtml}
                             <div class="card-body p-2 position-relative">
-                                <!-- 蓝色复选框在前面（z-index更高，用于批量选择） -->
                                 <div class="position-absolute top-0 end-0 me-2 mt-1" style="z-index: 10;">
                                     <input type="checkbox" class="form-check-input error-select" data-id="${id}">
                                 </div>
-                                <!-- 红色叉叉复选框在后面（可点击切换对错） -->
-                                ${toggleHtml}
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="d-flex align-items-start gap-2">
                                         <div>
