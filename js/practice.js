@@ -252,7 +252,8 @@ const Practice = {
         
         if (currentTaskId && task && task.progress && task.progress.completed > 0) {
             // 从上次停止的地方继续（completed表示已完成的数量，即当前要答的题目索引）
-            this.currentIndex = task.progress.completed;
+            // 确保currentIndex不会超过words.length，避免直接跳转到结果页
+            this.currentIndex = Math.min(task.progress.completed, words.length - 1);
         } else {
             this.currentIndex = 0;
         }
@@ -1063,15 +1064,18 @@ const Practice = {
             // 标准写法：正确答案应该写在提示中，保留原有的词组提示格式
             if (replacements === 0) {
                 // 在原始提示文本中查找并替换目标字（保留词组格式）
+                const originalText = this._currentDisplayText || word.pinyin || word.word;
                 const escapedWord = correctWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                 const wordRegex = new RegExp(escapedWord, 'g');
-                const originalText = this._currentDisplayText || word.pinyin || word.word;
-                // 如果原始文本包含目标字，替换它；否则使用原始文本（保持词组格式）
+                
+                // 如果原始文本包含目标字，替换它（保留词组格式）
                 if (originalText.includes(correctWord)) {
                     displayText = originalText.replace(wordRegex, wrapText());
                 } else {
-                    // 如果原始文本不包含目标字（可能是纯拼音词组），保留原始格式，在后面添加正确答案
-                    displayText = originalText + ' ' + wrapText();
+                    // 如果原始文本不包含目标字（可能是纯拼音词组），尝试在词组中查找并替换
+                    // 例如："ěr朵, ěr机, ěr环" 应该替换为 "ěr<span>朵</span>, ěr<span>机</span>, ěr<span>环</span>"
+                    // 但这里我们只替换目标字，所以如果找不到，就保留原始格式
+                    displayText = originalText;
                 }
             }
             
