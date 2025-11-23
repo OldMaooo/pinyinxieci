@@ -350,7 +350,9 @@ const Main = {
                         // 显示拆分弹窗
                         const wordIds = selectedWords.map(w => w.id);
                         const selectedUnits = this.getSelectedUnitsForTaskName();
-                        const taskName = TaskList.generateTaskName(selectedUnits);
+                        console.log('[Main] 选中的单元:', selectedUnits);
+                        const taskName = typeof TaskList !== 'undefined' ? TaskList.generateTaskName(selectedUnits) : '未命名任务';
+                        console.log('[Main] 生成的任务名称:', taskName);
                         
                         if (typeof TaskListUI !== 'undefined') {
                             TaskListUI.showSplitModal(wordIds, taskName);
@@ -519,14 +521,33 @@ const Main = {
         container.querySelectorAll('.unit-checkbox:checked').forEach(cb => {
             const semester = cb.dataset.semester;
             const unit = cb.dataset.unit;
-            const unitLabel = cb.parentElement?.textContent?.trim() || unit;
+            
+            // 获取单元标签（从表格行中获取，需要去掉checkbox）
+            const row = cb.closest('tr.unit-row');
+            let unitLabel = '';
+            if (row) {
+                const firstTd = row.querySelector('td:first-child');
+                if (firstTd) {
+                    // 克隆节点，移除checkbox，然后获取文本
+                    const clone = firstTd.cloneNode(true);
+                    const checkboxInClone = clone.querySelector('.unit-checkbox');
+                    if (checkboxInClone) {
+                        checkboxInClone.remove();
+                    }
+                    unitLabel = clone.textContent?.trim() || '';
+                }
+            }
+            if (!unitLabel) {
+                unitLabel = unit;
+            }
             
             // 解析学期信息（如"一年级上册"）
-            const semesterMatch = semester.match(/(\d+)年级([上下])册/);
+            // 匹配：一年级上册、二年级下册等
+            const semesterMatch = semester.match(/([一二三四五六])年级([上下])册/);
             if (semesterMatch) {
                 selectedUnits.push({
-                    grade: semesterMatch[1],
-                    semester: semesterMatch[2] === '上' ? '上' : '下',
+                    grade: semesterMatch[1], // 一、二、三...
+                    semester: semesterMatch[2], // 上、下
                     unit: unit,
                     unitLabel: unitLabel
                 });

@@ -343,8 +343,11 @@ const Practice = {
         const task = TaskList.getTask(this.currentTaskId);
         if (!task) return;
         
-        // completed应该是已答题的数量（currentIndex表示当前要答的题目索引）
-        const completed = this.currentIndex;
+        // completed应该是已答题的数量
+        // currentIndex表示当前要答的题目索引，所以已完成的数量就是currentIndex
+        // 但如果已经答过题，应该用details的长度（更准确）
+        const detailsCount = (this.practiceLog.details || []).length;
+        const completed = detailsCount > 0 ? detailsCount : this.currentIndex;
         const correct = this.practiceLog.correctCount || 0;
         const errors = this.practiceLog.errorWords || [];
         
@@ -811,11 +814,6 @@ const Practice = {
             // 持续草稿保存
             this.saveAutosaveDraft();
             
-            // 更新任务进度（如果有任务）
-            if (this.currentTaskId && typeof TaskList !== 'undefined') {
-                this.updateTaskProgress(false);
-            }
-            
             // 恢复按钮状态
             this.isSubmitting = false;
             submitBtn.disabled = false;
@@ -832,6 +830,12 @@ const Practice = {
                     });
                 }
                 this.currentIndex++;
+                
+                // 更新任务进度（如果有任务，在索引更新后）
+                if (this.currentTaskId && typeof TaskList !== 'undefined') {
+                    this.updateTaskProgress(false);
+                }
+                
                 this.showNextWord();
             });
         this._currentWordStartTime = null;
@@ -1140,6 +1144,10 @@ const Practice = {
      */
     end() {
         if (confirm('确定要结束练习吗？')) {
+            // 如果有任务ID，先更新任务进度（中断状态）
+            if (this.currentTaskId && typeof TaskList !== 'undefined') {
+                this.updateTaskProgress(true); // true表示中断
+            }
             this.finish({ partial: true });
         }
     },

@@ -63,10 +63,10 @@
 }
 /* 右侧列：正常840px，可以压缩，最小500px，被挤压到500px后上下排列 */
 .practice-range-col {
-    flex: 0 1 840px !important;
+    flex: 0 0 840px !important; /* 改为flex: 0 0，不允许收缩，固定宽度 */
     min-width: 500px !important;
     max-width: 840px !important;
-    width: auto !important;
+    width: 840px !important; /* 固定宽度，收起时也不变 */
 }
 
 /* 当屏幕宽度不足以容纳左侧300px + 右侧500px + gap时，上下排列 */
@@ -83,6 +83,16 @@
         width: 100% !important;
         order: 2 !important; /* 确保练习范围在下方 */
     }
+}
+
+/* 确保练习范围模块宽度固定，收起时也不变 */
+#home .practice-range-col .card {
+    width: 100% !important;
+    min-width: 0 !important;
+}
+#home .practice-range-col .practice-range-accordion {
+    width: 100% !important;
+    min-width: 0 !important;
     #home .col-auto[style*="width: 300px"] {
         width: 100% !important;
         flex: 0 0 auto !important; /* 移除flex-basis，让元素自然排列 */

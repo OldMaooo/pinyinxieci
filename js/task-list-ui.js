@@ -297,6 +297,7 @@ const TaskListUI = {
      * 显示任务拆分弹窗
      */
     showSplitModal(wordIds, taskName) {
+        console.log('[TaskListUI] showSplitModal called with:', { wordIdsCount: wordIds.length, taskName });
         const modal = new bootstrap.Modal(document.getElementById('task-split-modal'));
         const totalInput = document.getElementById('task-split-total');
         const perTaskInput = document.getElementById('task-split-per-task');
@@ -305,10 +306,14 @@ const TaskListUI = {
         
         if (totalInput) totalInput.value = wordIds.length;
         if (perTaskInput) perTaskInput.value = 50;
-        if (nameInput) nameInput.value = taskName;
+        if (nameInput) {
+            nameInput.value = taskName || '未命名任务';
+            console.log('[TaskListUI] taskName set to:', taskName);
+        }
         
-        // 存储当前拆分数据
-        this._splitData = { wordIds, taskName };
+        // 存储当前拆分数据（确保taskName不为空）
+        this._splitData = { wordIds, taskName: taskName || '未命名任务' };
+        console.log('[TaskListUI] _splitData:', this._splitData);
         
         this.updateSplitPreview();
         modal.show();

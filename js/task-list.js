@@ -221,15 +221,21 @@ const TaskList = {
             const units = bySemester[semester];
             
             // 提取单元编号并排序
-            const unitNumbers = units.map(u => {
-                // 从unitLabel或unit中提取数字
-                const match = (u.unitLabel || u.unit || '').match(/(\d+)/);
-                return match ? parseInt(match[1]) : 0;
-            }).filter(n => n > 0).sort((a, b) => a - b);
-            
-            if (unitNumbers.length === 0) {
-                return `${semester}_${units.length}个单元`;
-            }
+            // 优先从unit中提取（格式如"语文园地一__1"或"识字 2__2"），如果没有则从unitLabel提取
+            const unitNumbers = units.map((u, index) => {
+                // 先从unit中提取（格式：xxx__数字）
+                let match = (u.unit || '').match(/__(\d+)$/);
+                if (match) {
+                    return parseInt(match[1]);
+                }
+                // 从unitLabel中提取数字
+                match = (u.unitLabel || '').match(/(\d+)/);
+                if (match) {
+                    return parseInt(match[1]);
+                }
+                // 如果都没有数字，使用索引+1作为编号
+                return index + 1;
+            }).sort((a, b) => a - b);
             
             if (unitNumbers.length === 1) {
                 return `${semester}_${unitNumbers[0]}单元`;
