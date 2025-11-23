@@ -326,12 +326,13 @@ const TaskListUI = {
      * 渲染日历视图
      */
     renderCalendarView() {
-        const container = document.getElementById('task-list-container');
         const calendarContainer = document.getElementById('task-calendar-container');
-        if (!container || !calendarContainer) return;
+        if (!calendarContainer) {
+            console.error('[TaskListUI] task-calendar-container not found');
+            return;
+        }
         
-        // 隐藏列表容器，显示日历容器
-        container.parentElement.classList.add('d-none');
+        // 确保日历容器可见
         calendarContainer.classList.remove('d-none');
         
         const tasks = TaskList.getAllTasksWithAutoReview(30); // 生成30天的任务
