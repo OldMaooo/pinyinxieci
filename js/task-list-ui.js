@@ -978,43 +978,100 @@ const TaskListUI = {
         const task = TaskList.getTask(taskId);
         if (!task) return;
         
-        // 创建日期输入
-        const today = new Date().toISOString().split('T')[0];
-        const currentDate = task.scheduledDate || today;
-        
-        const selectedDate = prompt('请选择日期（格式：YYYY-MM-DD）\n留空则取消排期：', currentDate);
-        
-        if (selectedDate === null) {
-            return; // 用户取消
+        // 只有练习任务可以排期
+        if (task.type !== TaskList.TYPE.PRACTICE) {
+            if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                WordBank.showToast('warning', '复习任务不能排期');
+            }
+            return;
         }
         
-        if (selectedDate === '') {
-            // 取消排期
+        // 创建或获取模态框
+        const modalId = 'date-picker-modal';
+        let modalEl = document.getElementById(modalId);
+        if (!modalEl) {
+            modalEl = document.createElement('div');
+            modalEl.id = modalId;
+            modalEl.className = 'modal fade';
+            modalEl.innerHTML = `
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">选择日期</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="date-picker-input" class="form-label">选择日期：</label>
+                                <input type="date" class="form-control" id="date-picker-input">
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-secondary flex-grow-1" id="date-picker-cancel-btn">取消排期</button>
+                                <button type="button" class="btn btn-primary flex-grow-1" id="date-picker-confirm-btn">确认</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modalEl);
+        }
+        
+        const inputEl = document.getElementById('date-picker-input');
+        const confirmBtn = document.getElementById('date-picker-confirm-btn');
+        const cancelBtn = document.getElementById('date-picker-cancel-btn');
+        
+        // 设置当前日期
+        const today = new Date().toISOString().split('T')[0];
+        const currentDate = task.scheduledDate || today;
+        inputEl.value = currentDate;
+        
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+        
+        // 移除旧的事件监听器（通过克隆节点）
+        const newConfirmBtn = confirmBtn.cloneNode(true);
+        const newCancelBtn = cancelBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+        cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+        
+        // 确认按钮
+        newConfirmBtn.addEventListener('click', () => {
+            const selectedDate = inputEl.value;
+            if (selectedDate) {
+                TaskList.updateTask(taskId, {
+                    scheduledDate: selectedDate
+                });
+                if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                    WordBank.showToast('success', '已设置排期日期');
+                }
+            }
+            modal.hide();
+            this.load();
+        });
+        
+        // 取消排期按钮
+        newCancelBtn.addEventListener('click', () => {
             TaskList.updateTask(taskId, {
                 scheduledDate: null
             });
             if (typeof WordBank !== 'undefined' && WordBank.showToast) {
                 WordBank.showToast('success', '已取消排期');
             }
-        } else {
-            // 验证日期格式
-            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-            if (!dateRegex.test(selectedDate)) {
-                alert('日期格式不正确，请使用 YYYY-MM-DD 格式');
-                return;
-            }
-            
-            // 设置排期
-            TaskList.updateTask(taskId, {
-                scheduledDate: selectedDate
-            });
-            if (typeof WordBank !== 'undefined' && WordBank.showToast) {
-                WordBank.showToast('success', '已设置排期日期');
-            }
-        }
+            modal.hide();
+            this.load();
+        });
         
-        // 重新渲染
-        this.load();
+        // Enter键确认
+        inputEl.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                newConfirmBtn.click();
+            }
+        });
+        
+        // 模态框关闭时聚焦输入框
+        modalEl.addEventListener('shown.bs.modal', () => {
+            inputEl.focus();
+        });
     },
     
     /**
