@@ -128,14 +128,26 @@ const PracticeRange = {
             // 计算学期的完成率（所有单元的字）
             let semesterMasteredCount = 0;
             let semesterTotalCount = 0;
+            const isWordbankContext = options.context === 'wordbank';
+            const wordMastery = isWordbankContext && typeof Storage !== 'undefined' && Storage.getWordMastery 
+                ? Storage.getWordMastery() 
+                : {};
+            
             units.forEach(unitKey => {
                 const words = grouped[semesterKey][unitKey];
                 if (Array.isArray(words) && words.length > 0) {
                     semesterTotalCount += words.length;
                     words.forEach(w => {
-                        const isError = errorWordIds.has(w.id);
-                        const hasCorrect = wordCorrectCount.get(w.id) > 0;
-                        const isMastered = hasCorrect && !isError;
+                        let isMastered = false;
+                        if (isWordbankContext && wordMastery[w.id]) {
+                            // 在wordbank上下文中，优先使用手动设置的状态
+                            isMastered = wordMastery[w.id] === 'mastered';
+                        } else {
+                            // 非wordbank上下文，使用自动判断
+                            const isError = errorWordIds.has(w.id);
+                            const hasCorrect = wordCorrectCount.get(w.id) > 0;
+                            isMastered = hasCorrect && !isError;
+                        }
                         if (isMastered) semesterMasteredCount++;
                     });
                 }
