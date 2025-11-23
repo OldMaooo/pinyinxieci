@@ -216,15 +216,11 @@ const ErrorBook = {
                         <div class="card h-100 shadow-sm position-relative">
                             ${toggleHtml}
                             <div class="card-body p-2 position-relative">
-                                <div class="position-absolute top-0 start-0 ms-2 mt-1">
-                                    <input type="checkbox" class="form-check-input error-select" data-id="${id}">
-                                </div>
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div class="d-flex align-items-start gap-2" style="margin-left: 1.5rem;">
-                                        <div>
-                                            <div class="text-muted small mt-1" title="${groupsText}">${groupsText}</div>
-                                        </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="position-relative" style="flex-shrink: 0;">
+                                        <input type="checkbox" class="form-check-input error-select" data-id="${id}" style="margin: 0;">
                                     </div>
+                                    <div class="text-muted small" title="${groupsText}" style="line-height: 1.5;">${groupsText}</div>
                                 </div>
                                 <div class="d-flex gap-2 align-items-center mt-2">
                                     <div class="word-box">${latestSnapshot ? `<img class="snapshot-invert" src="${latestSnapshot}" alt="手写" style="max-width: 90%; max-height: 90%; object-fit: contain;">` : '<span class="text-muted small">无快照</span>'}</div>
@@ -297,22 +293,20 @@ const ErrorBook = {
             <div class="col">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body p-2 position-relative">
-                        <div class="position-absolute top-0 start-0 ms-2 mt-1">
-                            <input type="checkbox" class="form-check-input error-select" data-id="${w.id}">
-                        </div>
-                        <div class="position-absolute top-0 end-0 me-2 mt-1">
-                            <div class="result-toggle ${isWrong ? 'active' : ''}" 
-                                 data-log-id="${log.id}" 
-                                 data-word-id="${w.id}" 
-                                 data-item-idx="${idx}" 
-                                 data-is-wrong="${isWrong}">
-                                <span class="result-toggle-icon">${isWrong ? '✕' : ''}</span>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="position-relative" style="flex-shrink: 0;">
+                                    <input type="checkbox" class="form-check-input error-select" data-id="${w.id}" style="margin: 0;">
+                                </div>
+                                <div class="text-muted small" title="${groupsText}" style="line-height: 1.5;">${groupsText}</div>
                             </div>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div class="d-flex align-items-start gap-2" style="margin-left: 1.5rem;">
-                                <div>
-                                    <div class="text-muted small mt-1" title="${groupsText}">${groupsText}</div>
+                            <div class="position-relative" style="flex-shrink: 0;">
+                                <div class="result-toggle ${isWrong ? 'active' : ''}" 
+                                     data-log-id="${log.id}" 
+                                     data-word-id="${w.id}" 
+                                     data-item-idx="${idx}" 
+                                     data-is-wrong="${isWrong}">
+                                    <span class="result-toggle-icon">${isWrong ? '✕' : ''}</span>
                                 </div>
                             </div>
                         </div>
