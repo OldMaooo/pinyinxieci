@@ -200,9 +200,8 @@ const WordBank = {
         
         const bsToast = new bootstrap.Toast(toast);
         bsToast.show();
-    }
-};
-
+    },
+    
     /**
      * 更新数据统计显示
      */
