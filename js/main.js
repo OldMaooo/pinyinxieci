@@ -214,7 +214,11 @@ const Main = {
             ErrorBook.load();
         } else if (pageId === 'tasklist') {
             if (typeof TaskListUI !== 'undefined') {
-                TaskListUI.render();
+                if (TaskListUI.load) {
+                    TaskListUI.load();
+                } else if (TaskListUI.render) {
+                    TaskListUI.render();
+                }
             }
         } else if (pageId === 'wordbank') {
             if (typeof WordBank !== 'undefined') {
