@@ -461,9 +461,37 @@ const Practice = {
      * 显示下一题
      */
     async showNextWord() {
+        // 检查是否还有题目未答
+        // 如果有任务，需要检查任务进度，确保不会因为currentIndex等于words.length就结束
         if (this.currentIndex >= this.currentWords.length) {
-            this.finish();
-            return;
+            // 如果有任务，检查任务是否真的完成了
+            if (this.currentTaskId && typeof TaskList !== 'undefined') {
+                const task = TaskList.getTask(this.currentTaskId);
+                if (task && task.progress) {
+                    const completed = this._initialCompletedCount + (this.practiceLog.details?.length || 0);
+                    // 只有当真正完成所有题目时才结束
+                    if (completed >= task.progress.total) {
+                        this.finish();
+                        return;
+                    } else {
+                        // 任务未完成，但currentIndex已经超出，说明有问题
+                        console.error('[Practice.showNextWord] currentIndex超出范围，但任务未完成', {
+                            currentIndex: this.currentIndex,
+                            wordsLength: this.currentWords.length,
+                            completed: completed,
+                            total: task.progress.total
+                        });
+                        // 重置currentIndex到最后一个有效索引
+                        this.currentIndex = this.currentWords.length - 1;
+                    }
+                } else {
+                    this.finish();
+                    return;
+                }
+            } else {
+                this.finish();
+                return;
+            }
         }
         
         const word = this.currentWords[this.currentIndex];
