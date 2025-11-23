@@ -1081,22 +1081,39 @@ const Practice = {
             // 正确答案用绿色加粗，错误答案用红色加粗，但默认显示用黑色加粗
             const wrapText = () => `<span class="${color} fw-bold">${correctWord}</span>`;
             
+            // 调试信息
+            console.log('[Practice.showFeedback] 调试信息:', {
+                isCorrect,
+                correctWord,
+                wordPinyin,
+                displayText: displayText.substring(0, 50),
+                currentDisplayText: this._currentDisplayText?.substring(0, 50)
+            });
+            
             if (wordPinyin && wordPinyin.trim()) {
                 const escaped = wordPinyin.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                 const regex = new RegExp(`\\b${escaped}\\b`, 'gi');
+                const beforeReplace = displayText;
                 displayText = displayText.replace(regex, () => {
                     replacements++;
                     return wrapText();
                 });
+                if (beforeReplace !== displayText) {
+                    console.log('[Practice.showFeedback] 通过拼音匹配替换成功');
+                }
             }
             
             if (replacements === 0) {
                 const escapedWord = correctWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                 const wordRegex = new RegExp(escapedWord, 'g');
+                const beforeReplace = displayText;
                 displayText = displayText.replace(wordRegex, () => {
                     replacements++;
                     return wrapText();
                 });
+                if (beforeReplace !== displayText) {
+                    console.log('[Practice.showFeedback] 通过汉字匹配替换成功');
+                }
             }
             
             // 如果仍然没有替换（找不到拼音或汉字），保留原始提示文本，并在其中替换目标字
@@ -1107,21 +1124,30 @@ const Practice = {
                 const escapedWord = correctWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                 const wordRegex = new RegExp(escapedWord, 'g');
                 
+                console.log('[Practice.showFeedback] 没有找到匹配，使用原始文本:', {
+                    originalText: originalText?.substring(0, 50),
+                    correctWord,
+                    includes: originalText?.includes(correctWord)
+                });
+                
                 // 如果原始文本包含目标字，替换它（保留词组格式）
-                if (originalText.includes(correctWord)) {
+                if (originalText && originalText.includes(correctWord)) {
                     displayText = originalText.replace(wordRegex, wrapText());
+                    console.log('[Practice.showFeedback] 在原始文本中替换目标字');
                 } else {
                     // 如果原始文本不包含目标字（可能是纯拼音词组），保留原始格式并添加正确答案
                     // 例如："xī方, xī边, 东xī" 应该显示为 "xī方, xī边, 东xī 西"（西字为红色加粗）
                     // 或者 "rì出, rì落, rì记" 应该显示为 "rì出, rì落, rì记 日"（日字为红色加粗）
                     // 或者 "tā们, tā的, tā人" 应该显示为 "tā们, tā的, tā人 他"（他字为红色加粗）
                     // 确保添加正确答案，即使原始文本是纯拼音
-                    displayText = originalText + ' ' + wrapText();
+                    displayText = (originalText || '') + ' ' + wrapText();
+                    console.log('[Practice.showFeedback] 添加正确答案到原始文本后');
                 }
             }
             
             // 确保整个显示文本使用黑色加粗样式（拼音和中文保持一致）
             // 注意：displayText已经包含了HTML（wrapText返回的是HTML），所以直接使用innerHTML
+            console.log('[Practice.showFeedback] 最终displayText:', displayText.substring(0, 100));
             pinyinDisplay.innerHTML = icon + `<span style="${defaultStyle}">${displayText}</span>`;
         }
         
