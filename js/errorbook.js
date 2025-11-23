@@ -208,7 +208,7 @@ const ErrorBook = {
                              data-word-id="${w.id}"
                              data-item-idx="${d._idx}"
                              data-is-wrong="${(!d.correct).toString()}"
-                             style="pointer-events: auto; cursor: pointer;">
+                             style="pointer-events: auto; cursor: pointer; position: relative;">
                             <span class="result-toggle-icon">${d.correct ? '' : '✕'}</span>
                         </div>
                     </div>` : '';
@@ -300,18 +300,12 @@ const ErrorBook = {
             <div class="col">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body p-2 position-relative">
-                        <!-- 蓝色复选框在前面（z-index更高，用于批量选择） -->
-                        <div class="position-absolute top-0 end-0 me-2 mt-1" style="z-index: 10;">
-                            <input type="checkbox" class="form-check-input error-select" data-id="${w.id}">
-                        </div>
-                        <!-- 红色叉叉复选框在后面（可点击切换对错） -->
-                        <div class="position-absolute top-0 end-0 me-2 mt-1" style="z-index: 5; pointer-events: auto;">
+                        <div class="position-absolute top-0 end-0 me-2 mt-1">
                             <div class="result-toggle ${isWrong ? 'active' : ''}" 
                                  data-log-id="${log.id}" 
                                  data-word-id="${w.id}" 
                                  data-item-idx="${idx}" 
-                                 data-is-wrong="${isWrong}"
-                                 style="pointer-events: auto; cursor: pointer;">
+                                 data-is-wrong="${isWrong}">
                                 <span class="result-toggle-icon">${isWrong ? '✕' : ''}</span>
                             </div>
                         </div>

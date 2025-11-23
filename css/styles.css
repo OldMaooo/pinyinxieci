@@ -214,7 +214,7 @@
     flex-shrink: 0 !important;
 }
 
-/* 结果页复选框也减小，但保持原有交互形式，只统一位置 */
+/* 结果页复选框样式恢复为原始版本，只统一位置 */
 #results .error-select {
     width: 0.75rem !important;
     height: 0.75rem !important;
@@ -222,7 +222,6 @@
     min-height: 0.75rem !important;
     max-width: 0.75rem !important;
     max-height: 0.75rem !important;
-    /* 只统一位置，不改变交互形式 */
     margin-top: 0.25rem !important;
     flex-shrink: 0 !important;
 }
