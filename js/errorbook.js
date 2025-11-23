@@ -207,12 +207,13 @@ const ErrorBook = {
                     <div class="col">
                         <div class="card h-100 shadow-sm position-relative">
                             ${toggleHtml}
-                            <div class="card-body p-2">
+                            <div class="card-body p-2 position-relative">
+                                <div class="position-absolute top-0 end-0 me-2 mt-1">
+                                    <input type="checkbox" class="form-check-input error-select" data-id="${id}">
+                                </div>
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="d-flex align-items-start gap-2">
-                                        <input type="checkbox" class="form-check-input mt-2 error-select" data-id="${id}">
                                         <div>
-                                            <div class="fw-bold" style="font-size: 1.5rem; line-height: 1;">${w.word}</div>
                                             <div class="text-muted small mt-1" title="${groupsText}">${groupsText}</div>
                                         </div>
                                     </div>
@@ -220,7 +221,7 @@ const ErrorBook = {
                                 <div class="d-flex gap-2 align-items-center mt-2">
                                     <div class="word-box">${latestSnapshot ? `<img class="snapshot-invert" src="${latestSnapshot}" alt="手写" style="max-width: 90%; max-height: 90%; object-fit: contain;">` : '<span class="text-muted small">无快照</span>'}</div>
                                     <div class="word-box standard-dark-box text-center">
-                                        <div class="standard-dark-text" style="font-size: 3rem; line-height: 1; font-family: var(--kaiti-font-family, 'KaiTi', 'STKaiti', 'BiauKai', serif);">${w.word}</div>
+                                        <div class="standard-dark-text" style="font-size: 3.8rem; line-height: 1; font-family: var(--kaiti-font-family, 'KaiTi','楷体',serif);">${w.word}</div>
                                     </div>
                                 </div>
                             </div>

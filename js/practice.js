@@ -1112,7 +1112,8 @@ const Practice = {
                     displayText = originalText.replace(wordRegex, wrapText());
                 } else {
                     // 如果原始文本不包含目标字（可能是纯拼音词组），保留原始格式并添加正确答案
-                    // 例如："xī方, xī边, 东xī" 应该显示为 "xī方, xī边, 东<span class="text-danger fw-bold">西</span>"
+                    // 例如："xī方, xī边, 东xī" 应该显示为 "xī方, xī边, 东xī 西"（西字为红色加粗）
+                    // 或者 "rì出, rì落, rì记" 应该显示为 "rì出, rì落, rì记 日"（日字为红色加粗）
                     displayText = originalText + ' ' + wrapText();
                 }
             }

@@ -189,12 +189,22 @@
     width: 0.75rem !important;
     height: 0.75rem !important;
     margin-top: 0.25rem !important;
+    flex-shrink: 0 !important;
 }
 
 /* 错题页红色叉图标尺寸减小 */
 .error-word-info .bi-x-circle-fill,
 .errorbook .bi-x-circle-fill {
     font-size: 0.5rem !important;
+}
+
+/* 确保错题页复选框样式生效 */
+#errorbook .error-select,
+#errorbook .error-round-select {
+    width: 0.75rem !important;
+    height: 0.75rem !important;
+    min-width: 0.75rem !important;
+    min-height: 0.75rem !important;
 }
 .practice-range-accordion .accordion-header .accordion-button {
     cursor: pointer;
