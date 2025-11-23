@@ -49,6 +49,11 @@ const Main = {
             if (typeof ErrorBook !== 'undefined') {
                 ErrorBook.load();
             }
+            
+            // 初始化任务清单UI
+            if (typeof TaskListUI !== 'undefined') {
+                TaskListUI.init();
+            }
         } catch (error) {
             console.error('初始化失败:', error);
             // 显示错误提示
@@ -204,9 +209,13 @@ const Main = {
             window.location.hash = pageId;
         }
         
-        // 特殊处理：如果显示错题本或题库管理，刷新数据
+        // 特殊处理：如果显示错题本、任务清单或题库管理，刷新数据
         if (pageId === 'errorbook') {
             ErrorBook.load();
+        } else if (pageId === 'tasklist') {
+            if (typeof TaskListUI !== 'undefined') {
+                TaskListUI.render();
+            }
         } else if (pageId === 'wordbank') {
             WordBank.loadWordBank();
         }
@@ -321,16 +330,45 @@ const Main = {
                     Storage.saveSettings(settings);
                 }
                 if (timeInput) timeInput.value = isFinite(time) && time > 0 ? String(time) : '30';
+                // 获取选中的题目
+                let selectedWords = [];
+                if (typeof PracticeRange !== 'undefined' && PracticeRange.getSelectedWords) {
+                    selectedWords = PracticeRange.getSelectedWords('practice-range-container-home');
+                }
+                
+                if (selectedWords.length === 0) {
+                    alert('请先选择练习范围！\n\n在"练习范围"区域勾选要练习的单元。');
+                    return;
+                }
+                
+                // 获取拆分阈值（默认50，可从设置中读取）
+                const splitThreshold = 50;
+                
+                // 如果题目数量超过阈值，询问是否拆分
+                if (selectedWords.length > splitThreshold) {
+                    if (confirm(`已选择 ${selectedWords.length} 题，是否拆分任务？\n\n点击"确定"拆分任务，点击"取消"直接开始练习。`)) {
+                        // 显示拆分弹窗
+                        const wordIds = selectedWords.map(w => w.id);
+                        const selectedUnits = this.getSelectedUnitsForTaskName();
+                        const taskName = TaskList.generateTaskName(selectedUnits);
+                        
+                        if (typeof TaskListUI !== 'undefined') {
+                            TaskListUI.showSplitModal(wordIds, taskName);
+                        }
+                        return;
+                    }
+                }
+                
                 // 直接开始练习，跳过练习范围选择页面
                 // 先同步范围选择（在后台进行）
-                    if (typeof PracticeRange !== 'undefined' && PracticeRange.syncSelection) {
-                        PracticeRange.syncSelection('practice-range-container-home', 'practice-range-container');
-                    }
+                if (typeof PracticeRange !== 'undefined' && PracticeRange.syncSelection) {
+                    PracticeRange.syncSelection('practice-range-container-home', 'practice-range-container');
+                }
                 // 直接开始练习
-                    if (typeof Practice !== 'undefined') {
+                if (typeof Practice !== 'undefined') {
                     this.showPage('practice');
-                        Practice.start();
-                    }
+                    Practice.start();
+                }
             });
         }
 
@@ -468,6 +506,34 @@ const Main = {
     showResults(logId) {
         Statistics.showResults(logId);
         this.showPage('results');
+    },
+    
+    /**
+     * 获取选中的单元信息（用于生成任务名称）
+     */
+    getSelectedUnitsForTaskName() {
+        const container = document.getElementById('practice-range-container-home');
+        if (!container) return [];
+        
+        const selectedUnits = [];
+        container.querySelectorAll('.unit-checkbox:checked').forEach(cb => {
+            const semester = cb.dataset.semester;
+            const unit = cb.dataset.unit;
+            const unitLabel = cb.parentElement?.textContent?.trim() || unit;
+            
+            // 解析学期信息（如"一年级上册"）
+            const semesterMatch = semester.match(/(\d+)年级([上下])册/);
+            if (semesterMatch) {
+                selectedUnits.push({
+                    grade: semesterMatch[1],
+                    semester: semesterMatch[2] === '上' ? '上' : '下',
+                    unit: unit,
+                    unitLabel: unitLabel
+                });
+            }
+        });
+        
+        return selectedUnits;
     }
 };
 
