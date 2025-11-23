@@ -216,12 +216,12 @@ const ErrorBook = {
                     <div class="col">
                         <div class="card h-100 shadow-sm position-relative">
                             <div class="card-body p-2 position-relative">
-                                <!-- 红色叉叉复选框（可点击切换对错） -->
-                                ${toggleHtml}
                                 <!-- 蓝色复选框在前面（z-index更高，用于批量选择） -->
                                 <div class="position-absolute top-0 end-0 me-2 mt-1" style="z-index: 10;">
                                     <input type="checkbox" class="form-check-input error-select" data-id="${id}">
                                 </div>
+                                <!-- 红色叉叉复选框在后面（可点击切换对错） -->
+                                ${toggleHtml}
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="d-flex align-items-start gap-2">
                                         <div>
@@ -300,7 +300,11 @@ const ErrorBook = {
             <div class="col">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body p-2 position-relative">
-                        <!-- 红色叉叉复选框（可点击切换对错） -->
+                        <!-- 蓝色复选框在前面（z-index更高，用于批量选择） -->
+                        <div class="position-absolute top-0 end-0 me-2 mt-1" style="z-index: 10;">
+                            <input type="checkbox" class="form-check-input error-select" data-id="${w.id}">
+                        </div>
+                        <!-- 红色叉叉复选框在后面（可点击切换对错） -->
                         <div class="position-absolute top-0 end-0 me-2 mt-1" style="z-index: 5; pointer-events: auto;">
                             <div class="result-toggle ${isWrong ? 'active' : ''}" 
                                  data-log-id="${log.id}" 
@@ -310,10 +314,6 @@ const ErrorBook = {
                                  style="pointer-events: auto; cursor: pointer;">
                                 <span class="result-toggle-icon">${isWrong ? '✕' : ''}</span>
                             </div>
-                        </div>
-                        <!-- 蓝色复选框在前面（z-index更高，用于批量选择） -->
-                        <div class="position-absolute top-0 end-0 me-2 mt-1" style="z-index: 10;">
-                            <input type="checkbox" class="form-check-input error-select" data-id="${w.id}">
                         </div>
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="d-flex align-items-start gap-2">
