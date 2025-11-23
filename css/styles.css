@@ -968,9 +968,19 @@
     margin-bottom: 1rem;
 }
 
+.task-inbox-item .card {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
 .task-inbox-list {
     display: flex;
     flex-direction: column;
+    width: 100%;
+}
+
+.task-schedule-date-btn {
+    position: relative;
 }
 
 .task-inbox-item.dragging {
