@@ -523,7 +523,8 @@ const Practice = {
         
         // 使用textContent确保正确显示（清除之前的图标和HTML）
         // 出题时显示透明占位符，保持布局稳定（与判定时的图标同宽）
-        pinyinDisplay.innerHTML = '<span style="opacity: 0; font-size: 1.2em; margin-right: 0.5rem;">✓</span>' + displayText;
+        // 默认使用黑色加粗样式
+        pinyinDisplay.innerHTML = '<span style="opacity: 0; font-size: 1.2em; margin-right: 0.5rem;">✓</span><span style="color: #212529; font-weight: 600;">' + displayText + '</span>';
         console.log('[Practice] 显示题目:', JSON.stringify({
             word: word.word,
             pinyin: word.pinyin || '(空)',
