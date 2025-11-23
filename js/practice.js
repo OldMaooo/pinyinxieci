@@ -1059,8 +1059,11 @@ const Practice = {
                 });
             }
             
+            // 如果仍然没有替换（找不到拼音或汉字），直接在提示中显示正确答案
+            // 标准写法：正确答案应该写在提示中，而不是追加在后面
             if (replacements === 0) {
-                displayText = `${displayText} ${wrapText()}`;
+                // 将正确答案直接显示在提示文本中，而不是追加在后面
+                displayText = wrapText();
             }
             
             // 确保整个显示文本使用黑色加粗样式（拼音和中文保持一致）
