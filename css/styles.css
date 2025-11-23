@@ -209,8 +209,7 @@
     min-height: 0.75rem !important;
     max-width: 0.75rem !important;
     max-height: 0.75rem !important;
-    /* 确保checked状态不会改变位置 */
-    position: relative !important;
+    /* 不强制position，让父元素的absolute生效 */
     margin: 0.25rem !important;
     flex-shrink: 0 !important;
 }
