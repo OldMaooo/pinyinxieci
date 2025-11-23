@@ -187,28 +187,51 @@ const PracticeRange = {
                 // 计算每个字的状态和完成率
                 let masteredCount = 0;
                 const isWordbankContext = options.context === 'wordbank';
+                
+                // 在wordbank上下文中，获取手动设置的掌握状态
+                const wordMastery = isWordbankContext && typeof Storage !== 'undefined' && Storage.getWordMastery 
+                    ? Storage.getWordMastery() 
+                    : {};
+                
                 const wordTags = words.map(w => {
-                    const isError = errorWordIds.has(w.id);
-                    const hasCorrect = wordCorrectCount.get(w.id) > 0;
-                    // 已掌握：有正确记录且无错误
-                    const isMastered = hasCorrect && !isError;
-                    if (isMastered) masteredCount++;
-                    
-                    // 确定tag样式（优先级：已掌握 > 有错误 > 未测试）
                     let tagClass = 'word-tag-default';
-                    if (isMastered) {
-                        tagClass = 'word-tag-mastered';
-                    } else if (isError) {
-                        // 测试过且有错误
-                        tagClass = 'word-tag-error';
+                    let isMastered = false;
+                    
+                    if (isWordbankContext && wordMastery[w.id]) {
+                        // 在wordbank上下文中，优先使用手动设置的状态
+                        const manualStatus = wordMastery[w.id];
+                        if (manualStatus === 'mastered') {
+                            tagClass = 'word-tag-mastered';
+                            isMastered = true;
+                        } else if (manualStatus === 'error') {
+                            tagClass = 'word-tag-error';
+                        } else {
+                            tagClass = 'word-tag-default';
+                        }
+                    } else {
+                        // 非wordbank上下文，或没有手动设置，使用自动判断
+                        const isError = errorWordIds.has(w.id);
+                        const hasCorrect = wordCorrectCount.get(w.id) > 0;
+                        // 已掌握：有正确记录且无错误
+                        isMastered = hasCorrect && !isError;
+                        
+                        if (isMastered) {
+                            tagClass = 'word-tag-mastered';
+                        } else if (isError) {
+                            // 测试过且有错误
+                            tagClass = 'word-tag-error';
+                        } else {
+                            tagClass = 'word-tag-default';
+                        }
                     }
-                    // 否则保持默认灰色（未测试）
+                    
+                    if (isMastered) masteredCount++;
                     
                     // 在wordbank上下文中，添加data-word-id和点击样式
                     const clickableClass = isWordbankContext ? 'word-tag-clickable' : '';
                     const dataAttr = isWordbankContext ? `data-word-id="${w.id}"` : '';
                     
-                    return `<span class="word-tag ${tagClass} ${clickableClass}" ${dataAttr} title="${isWordbankContext ? '点击设置掌握状态' : ''}">${w.word}</span>`;
+                    return `<span class="word-tag ${tagClass} ${clickableClass}" ${dataAttr} title="${isWordbankContext ? '点击切换掌握状态（默认→错题→已掌握）' : ''}">${w.word}</span>`;
                 }).join('');
                 
                 // 计算完成率并生成饼图

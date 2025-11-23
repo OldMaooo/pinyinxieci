@@ -13,7 +13,8 @@ const Storage = {
         ERROR_WORDS_DEBUG: 'error_words_debug',
         SETTINGS: 'practice_settings',
         PRACTICE_AUTOSAVE: 'practice_autosave',
-        BUILTIN_VERSION: 'builtin_wordbank_version'
+        BUILTIN_VERSION: 'builtin_wordbank_version',
+        WORD_MASTERY: 'word_mastery_status' // 字的掌握状态：'default' | 'error' | 'mastered'
     },
 
     isDebugMode() {
@@ -60,6 +61,50 @@ const Storage = {
                 recognitionThreshold: 0.85
             });
         }
+        if (!localStorage.getItem(this.KEYS.WORD_MASTERY)) {
+            this.saveWordMastery({});
+        }
+    },
+    
+    /**
+     * 获取字的掌握状态
+     */
+    getWordMastery() {
+        const data = localStorage.getItem(this.KEYS.WORD_MASTERY);
+        return data ? JSON.parse(data) : {};
+    },
+    
+    /**
+     * 保存字的掌握状态
+     */
+    saveWordMastery(masteryStatus) {
+        localStorage.setItem(this.KEYS.WORD_MASTERY, JSON.stringify(masteryStatus || {}));
+    },
+    
+    /**
+     * 获取单个字的掌握状态
+     * @param {string} wordId - 字的ID
+     * @returns {string} 'default' | 'error' | 'mastered'
+     */
+    getWordMasteryStatus(wordId) {
+        const mastery = this.getWordMastery();
+        return mastery[wordId] || 'default';
+    },
+    
+    /**
+     * 设置单个字的掌握状态
+     * @param {string} wordId - 字的ID
+     * @param {string} status - 'default' | 'error' | 'mastered'
+     */
+    setWordMasteryStatus(wordId, status) {
+        const mastery = this.getWordMastery();
+        if (status === 'default') {
+            // 删除该记录，使用默认值
+            delete mastery[wordId];
+        } else {
+            mastery[wordId] = status;
+        }
+        this.saveWordMastery(mastery);
     },
 
     /**

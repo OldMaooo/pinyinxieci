@@ -347,50 +347,46 @@ const WordBank = {
             return;
         }
         
-        // 检查当前状态
-        const logs = (Storage.getPracticeLogsFiltered && Storage.getPracticeLogsFiltered()) || Storage.getPracticeLogs() || [];
-        const errorWords = Storage.getErrorWordsFiltered() || [];
-        const errorWordIds = new Set(errorWords.map(ew => ew.wordId));
+        // 获取当前状态
+        const currentStatus = Storage.getWordMasteryStatus(wordId);
         
-        const wordCorrectCount = new Map();
-        logs.forEach(log => {
-            if (log.details && Array.isArray(log.details)) {
-                log.details.forEach(detail => {
-                    if (detail.correct) {
-                        wordCorrectCount.set(detail.wordId, (wordCorrectCount.get(detail.wordId) || 0) + 1);
-                    }
-                });
-            }
-        });
+        // 三态循环：默认 → 错题 → 已掌握 → 默认
+        let nextStatus;
+        let actionText;
+        if (currentStatus === 'default') {
+            nextStatus = 'error';
+            actionText = '设为错题';
+        } else if (currentStatus === 'error') {
+            nextStatus = 'mastered';
+            actionText = '设为已掌握';
+        } else { // mastered
+            nextStatus = 'default';
+            actionText = '设为默认';
+        }
         
-        const isError = errorWordIds.has(wordId);
-        const hasCorrect = wordCorrectCount.get(wordId) > 0;
-        const isMastered = hasCorrect && !isError;
+        // 设置新状态
+        Storage.setWordMasteryStatus(wordId, nextStatus);
+        this.showToast('success', `已将"${word.word}"${actionText}`);
         
-        // 直接切换状态（已掌握 -> 未掌握，未掌握 -> 已掌握）
-        this.setWordMastery(wordId, !isMastered);
+        // 立即更新标签颜色，无需等待刷新
+        this.updateWordTagColor(wordTag, nextStatus);
     },
     
     /**
-     * 设置单个字的掌握状态
+     * 更新单个字标签的颜色
      */
-    setWordMastery(wordId, isMastered) {
-        // TODO: 实现掌握状态的存储和更新
-        // 目前先显示提示，后续可以扩展Storage支持掌握状态
-        const wordBank = Storage.getWordBank();
-        const word = wordBank.find(w => w.id === wordId);
-        if (!word) {
-            this.showToast('warning', '未找到该字');
-            return;
+    updateWordTagColor(wordTag, status) {
+        // 移除所有状态类
+        wordTag.classList.remove('word-tag-default', 'word-tag-error', 'word-tag-mastered');
+        
+        // 添加新状态类
+        if (status === 'error') {
+            wordTag.classList.add('word-tag-error');
+        } else if (status === 'mastered') {
+            wordTag.classList.add('word-tag-mastered');
+        } else {
+            wordTag.classList.add('word-tag-default');
         }
-        
-        const action = isMastered ? '设为已掌握' : '设为未掌握';
-        this.showToast('success', `已将"${word.word}"${action}`);
-        
-        // 刷新视图
-        setTimeout(() => {
-            this.loadMasteryView();
-        }, 500);
     },
     
     /**
