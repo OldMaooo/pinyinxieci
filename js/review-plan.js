@@ -176,17 +176,20 @@ const ReviewPlan = {
         
         if (isLastStage) {
             if (passed) {
-                // 最后一个阶段通过了，标记为已掌握
+                // 最后一个阶段通过了（写对），标记为已掌握
                 updatedPlan.mastered = true;
             } else {
-                // 最后一个阶段未通过，重新计入下一个复习周期
+                // 最后一个周期仍没有掌握，将重新计入下个复习周期
+                // 掌握，是指在最后一个周期，写对的字
                 updatedPlan.currentCycle += 1;
                 updatedPlan.currentStage = 1;
                 
-                // 重新计算复习时间点（基于当前时间）
+                // 重新计算复习时间点（基于当前时间，开始新的周期）
                 const newFirstMarkedAt = new Date().toISOString();
                 updatedPlan.stages = this.calculateReviewSchedule(newFirstMarkedAt);
                 updatedPlan.firstMarkedAt = newFirstMarkedAt;
+                
+                console.log(`[ReviewPlan] 字"${plan.word}"最后一个周期未掌握，开始第${updatedPlan.currentCycle}个复习周期`);
             }
         }
         

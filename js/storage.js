@@ -261,7 +261,7 @@ const Storage = {
             errorWord.errorCount += 1;
             if (snapshotData) {
                 errorWord.handwritingSnapshots = errorWord.handwritingSnapshots || [];
-            errorWord.handwritingSnapshots.push(snapshotData);
+                errorWord.handwritingSnapshots.push(snapshotData);
             }
         } else {
             // 创建新错题记录
@@ -269,6 +269,7 @@ const Storage = {
                 wordId: wordId,
                 word: word,
                 pinyin: pinyin,
+                markedAt: new Date().toISOString(), // 用于复习计划
                 firstErrorDate: new Date().toISOString(),
                 lastErrorDate: new Date().toISOString(),
                 errorCount: 1,
