@@ -600,12 +600,41 @@ const TaskListUI = {
      * 绑定拖拽事件
      */
     bindDragEvents() {
-        // 任务卡片拖拽
-        document.querySelectorAll('.calendar-task-card, .task-inbox-item').forEach(item => {
+        // 待排期任务拖拽
+        document.querySelectorAll('.task-inbox-item').forEach(item => {
             item.addEventListener('dragstart', (e) => {
                 e.dataTransfer.effectAllowed = 'move';
-                e.dataTransfer.setData('text/plain', item.getAttribute('data-task-id'));
+                const taskId = item.getAttribute('data-task-id');
+                e.dataTransfer.setData('text/plain', taskId);
+                e.dataTransfer.setData('source', 'inbox');
                 item.classList.add('dragging');
+            });
+            
+            item.addEventListener('dragend', (e) => {
+                item.classList.remove('dragging');
+            });
+        });
+        
+        // 日历中的任务卡片拖拽（只有练习任务可拖拽）
+        document.querySelectorAll('.calendar-task-card[draggable="true"]').forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                // 检查是否是合并模式的任务卡片
+                const taskIds = item.getAttribute('data-task-ids');
+                const hasPractice = item.getAttribute('data-has-practice') === 'true';
+                const taskType = item.getAttribute('data-task-type');
+                
+                // 只有练习任务或包含练习任务的合并卡片才能拖拽
+                if (taskType === TaskList.TYPE.PRACTICE || (taskIds && hasPractice)) {
+                    e.dataTransfer.effectAllowed = 'move';
+                    const taskId = item.getAttribute('data-task-id') || (taskIds ? taskIds.split(',')[0] : null);
+                    e.dataTransfer.setData('text/plain', taskId);
+                    e.dataTransfer.setData('source', 'calendar');
+                    e.dataTransfer.setData('task-ids', taskIds || taskId);
+                    item.classList.add('dragging');
+                } else {
+                    // 复习任务不可拖拽
+                    e.preventDefault();
+                }
             });
             
             item.addEventListener('dragend', (e) => {
@@ -630,10 +659,29 @@ const TaskListUI = {
                 day.classList.remove('drag-over');
                 
                 const taskId = e.dataTransfer.getData('text/plain');
+                const source = e.dataTransfer.getData('source');
+                const taskIds = e.dataTransfer.getData('task-ids');
                 const targetDate = day.getAttribute('data-date');
                 
                 if (taskId && targetDate) {
-                    this.scheduleTask(taskId, targetDate);
+                    // 如果是合并模式的任务卡片，需要处理多个任务ID
+                    if (taskIds && taskIds.includes(',')) {
+                        const ids = taskIds.split(',');
+                        // 只移动练习任务
+                        ids.forEach(id => {
+                            const task = TaskList.getTask(id);
+                            if (task && task.type === TaskList.TYPE.PRACTICE) {
+                                this.scheduleTask(id, targetDate);
+                            }
+                        });
+                    } else {
+                        this.scheduleTask(taskId, targetDate);
+                    }
+                    
+                    // 重新渲染日历
+                    setTimeout(() => {
+                        this.load();
+                    }, 100);
                 }
             });
         });
