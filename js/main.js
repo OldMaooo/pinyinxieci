@@ -217,11 +217,16 @@ const Main = {
                 TaskListUI.render();
             }
         } else if (pageId === 'wordbank') {
-            if (typeof WordBank !== 'undefined' && WordBank.loadWordBank) {
-                WordBank.loadWordBank();
-            }
-            if (typeof WordBank !== 'undefined' && WordBank.loadMasteryView) {
-                WordBank.loadMasteryView();
+            if (typeof WordBank !== 'undefined') {
+                if (WordBank.loadWordBank) {
+                    WordBank.loadWordBank();
+                }
+                // 延迟加载掌握状态视图，确保DOM已准备好
+                setTimeout(() => {
+                    if (WordBank.loadMasteryView) {
+                        WordBank.loadMasteryView();
+                    }
+                }, 100);
             }
         }
     },

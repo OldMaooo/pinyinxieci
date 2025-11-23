@@ -11,6 +11,14 @@ const WordBank = {
         const tbody = document.getElementById('wordbank-table-body');
         console.log('[WordBank] loadWordBank 调用，当前字数:', wordBank?.length || 0);
         
+        // 如果表格元素不存在（已移除），跳过
+        if (!tbody) {
+            console.log('[WordBank] loadWordBank: wordbank-table-body 不存在，跳过加载');
+            // 更新统计即可
+            this.updateDataStats();
+            return;
+        }
+        
         if (!wordBank || wordBank.length === 0) {
             tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">暂无数据，请先导入题库</td></tr>';
             return;
@@ -193,8 +201,14 @@ const WordBank = {
      */
     showToast(type, message) {
         const toast = document.getElementById('toast');
+        if (!toast) {
+            console.warn('[WordBank.showToast] toast元素不存在');
+            return;
+        }
         const toastBody = document.getElementById('toast-body');
-        toastBody.textContent = message;
+        if (toastBody) {
+            toastBody.textContent = message;
+        }
         toast.classList.remove('bg-success', 'bg-danger', 'bg-info');
         toast.classList.add(`bg-${type}`);
         
