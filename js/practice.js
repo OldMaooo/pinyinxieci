@@ -634,6 +634,11 @@ const Practice = {
                 await this.recordError(word, null);
                 this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null, displayText: this._currentDisplayText });
                 this.showFeedback(false, word, '时间到');
+                
+                // 更新任务进度（如果有任务）
+                if (this.currentTaskId && typeof TaskList !== 'undefined') {
+                    this.updateTaskProgress(false);
+                }
             }
         } else {
             // 纸质模式：不记录错题/详情
@@ -1039,6 +1044,11 @@ const Practice = {
             this.practiceLog.totalTime += wordTime;
             this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null, displayText: this._currentDisplayText });
             this._currentWordStartTime = null;
+            
+            // 更新任务进度（如果有任务）
+            if (this.currentTaskId && typeof TaskList !== 'undefined') {
+                this.updateTaskProgress(false);
+            }
             
             // 保存当前题目到历史
             if (this.currentIndex < this.currentWords.length) {
