@@ -209,10 +209,13 @@ const WordBank = {
         if (toastBody) {
             toastBody.textContent = message;
         }
-        toast.classList.remove('bg-success', 'bg-danger', 'bg-info');
-        toast.classList.add(`bg-${type}`);
+        // 使用默认的toast样式，不添加背景色类
+        toast.classList.remove('bg-success', 'bg-danger', 'bg-info', 'bg-warning');
         
-        const bsToast = new bootstrap.Toast(toast);
+        const bsToast = new bootstrap.Toast(toast, {
+            autohide: true,
+            delay: 2000
+        });
         bsToast.show();
     },
     
