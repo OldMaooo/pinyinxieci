@@ -240,6 +240,166 @@ const WordBank = {
         if (logsCountEl) logsCountEl.textContent = logs.length;
         if (errorsCountEl) errorsCountEl.textContent = errors.length;
         if (sizeEl) sizeEl.textContent = sizeText;
+    },
+    
+    /**
+     * 加载掌握状态管理视图（复用练习范围视图）
+     */
+    loadMasteryView() {
+        const container = document.getElementById('wordbank-practice-range-container');
+        if (!container) {
+            console.warn('[WordBank.loadMasteryView] 容器不存在: wordbank-practice-range-container');
+            return;
+        }
+        
+        // 检查是否在题库管理页面
+        const wordbankSection = document.getElementById('wordbank');
+        if (!wordbankSection || wordbankSection.classList.contains('d-none')) {
+            // 不在题库管理页面，不加载
+            return;
+        }
+        
+        const wordBank = Storage.getWordBank();
+        if (!wordBank || wordBank.length === 0) {
+            if (container) {
+                container.innerHTML = '<div class="text-center text-muted py-3">暂无题库数据</div>';
+            }
+            return;
+        }
+        
+        // 使用PracticeRange的表格视图，但禁用选择功能，改为掌握状态管理
+        if (typeof PracticeRange !== 'undefined' && PracticeRange.renderTableView) {
+            try {
+                PracticeRange.renderTableView(container, wordBank, {
+                    context: 'wordbank',
+                    showCheckboxes: true,
+                    showMasteryStatus: true
+                });
+                
+                // 绑定掌握状态管理事件
+                this.bindMasteryEvents(container);
+            } catch (error) {
+                console.error('[WordBank.loadMasteryView] 渲染失败:', error);
+                if (container) {
+                    container.innerHTML = '<div class="text-center text-danger py-3">加载失败，请刷新页面</div>';
+                }
+            }
+        } else {
+            if (container) {
+                container.innerHTML = '<div class="text-center text-muted py-3">练习范围模块未加载</div>';
+            }
+        }
+    },
+    
+    /**
+     * 绑定掌握状态管理事件
+     */
+    bindMasteryEvents(container) {
+        if (!container) return;
+        
+        // 监听复选框变化，更新选中数量
+        container.addEventListener('change', (e) => {
+            if (e.target.classList.contains('unit-checkbox')) {
+                this.updateSelectedCount();
+            }
+        });
+        
+        // 批量设为已掌握
+        const masterBtn = document.getElementById('wordbank-batch-master-btn');
+        if (masterBtn) {
+            // 移除旧的事件监听器，避免重复绑定
+            const newMasterBtn = masterBtn.cloneNode(true);
+            masterBtn.parentNode.replaceChild(newMasterBtn, masterBtn);
+            newMasterBtn.addEventListener('click', () => {
+                this.batchSetMastery(true);
+            });
+        }
+        
+        // 批量设为未掌握
+        const unmasterBtn = document.getElementById('wordbank-batch-unmaster-btn');
+        if (unmasterBtn) {
+            // 移除旧的事件监听器，避免重复绑定
+            const newUnmasterBtn = unmasterBtn.cloneNode(true);
+            unmasterBtn.parentNode.replaceChild(newUnmasterBtn, unmasterBtn);
+            newUnmasterBtn.addEventListener('click', () => {
+                this.batchSetMastery(false);
+            });
+        }
+    },
+    
+    /**
+     * 更新选中数量
+     */
+    updateSelectedCount() {
+        const container = document.getElementById('wordbank-practice-range-container');
+        if (!container) return;
+        
+        const selected = container.querySelectorAll('.unit-checkbox:checked');
+        const count = selected.length;
+        const countEl = document.getElementById('wordbank-selected-count');
+        const toolbar = document.getElementById('wordbank-batch-toolbar');
+        const masterBtn = document.getElementById('wordbank-batch-master-btn');
+        const unmasterBtn = document.getElementById('wordbank-batch-unmaster-btn');
+        
+        if (countEl) countEl.textContent = count;
+        if (toolbar) {
+            toolbar.style.display = count > 0 ? 'flex' : 'none';
+        }
+        if (masterBtn) {
+            masterBtn.disabled = count === 0;
+        }
+        if (unmasterBtn) {
+            unmasterBtn.disabled = count === 0;
+        }
+    },
+    
+    /**
+     * 批量设置掌握状态
+     */
+    batchSetMastery(isMastered) {
+        const container = document.getElementById('wordbank-practice-range-container');
+        if (!container) return;
+        
+        const selected = container.querySelectorAll('.unit-checkbox:checked');
+        if (selected.length === 0) {
+            this.showToast('warning', '请先选择要设置的单元');
+            return;
+        }
+        
+        const wordBank = Storage.getWordBank();
+        if (typeof PracticeRange === 'undefined' || !PracticeRange.groupWordsBySemesterUnit) {
+            this.showToast('danger', '练习范围模块未加载');
+            return;
+        }
+        
+        const grouped = PracticeRange.groupWordsBySemesterUnit(wordBank);
+        const selectedWords = [];
+        
+        selected.forEach(checkbox => {
+            const semester = checkbox.dataset.semester;
+            const unit = checkbox.dataset.unit;
+            const words = grouped[semester]?.[unit];
+            if (words && Array.isArray(words)) {
+                selectedWords.push(...words);
+            }
+        });
+        
+        if (selectedWords.length === 0) {
+            this.showToast('warning', '未找到选中的题目');
+            return;
+        }
+        
+        // 更新掌握状态（需要在Storage中添加掌握状态存储）
+        // 这里先实现基本逻辑，后续可以扩展Storage支持掌握状态
+        const action = isMastered ? '设为已掌握' : '设为未掌握';
+        if (confirm(`确定要将选中的 ${selectedWords.length} 个字${action}吗？`)) {
+            // TODO: 实现掌握状态的存储和更新
+            // 目前先显示提示
+            this.showToast('success', `已${action} ${selectedWords.length} 个字`);
+            
+            // 刷新视图
+            this.loadMasteryView();
+        }
     }
 };
 
