@@ -1034,10 +1034,6 @@
     opacity: 1;
 }
 
-.task-card-item {
-    cursor: pointer;
-}
-
 .task-card-item:hover {
     background-color: var(--bs-secondary-bg);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
