@@ -407,46 +407,56 @@ const TaskListUI = {
             return;
         }
         
-        // 按日期分组任务
-        const tasksByDate = {};
-        scheduledTasks.forEach(task => {
-            const dateStr = task.scheduledDate;
-            if (!tasksByDate[dateStr]) {
-                tasksByDate[dateStr] = [];
-            }
-            tasksByDate[dateStr].push(task);
-        });
+        // 分离今天的任务和未来的任务
+        const todayTasks = [];
+        const futureTasks = [];
         
-        // 按日期排序
-        const sortedDates = Object.keys(tasksByDate).sort();
+        scheduledTasks.forEach(task => {
+            const taskDate = new Date(task.scheduledDate + 'T00:00:00');
+            if (taskDate.getTime() === today.getTime()) {
+                todayTasks.push(task);
+            } else {
+                futureTasks.push(task);
+            }
+        });
         
         let html = '<div class="task-cards-grid">';
         
-        sortedDates.forEach(dateStr => {
-            const dateTasks = tasksByDate[dateStr];
-            const taskDate = new Date(dateStr + 'T00:00:00');
-            const isToday = taskDate.getTime() === today.getTime();
-            
-            // 如果是今天，显示一个标题
-            if (isToday) {
-                html += `
-                    <div class="task-cards-date-header">
-                        <h6 class="mb-2 text-primary">
-                            <i class="bi bi-calendar-check"></i> 今天
-                        </h6>
-                    </div>
-                `;
-            }
-            
-            // 渲染该日期的所有任务卡片
-            dateTasks.forEach(task => {
+        // 今天任务区域
+        if (todayTasks.length > 0) {
+            html += `
+                <div class="task-cards-section-header">
+                    <h5 class="mb-3 text-primary">
+                        <i class="bi bi-calendar-check"></i> 今天
+                    </h5>
+                </div>
+            `;
+            todayTasks.forEach(task => {
                 html += `
                     <div class="task-card-item" data-task-id="${task.id}" data-date="${task.scheduledDate}">
                         ${this.renderTaskCardForCardsView(task, true)}
                     </div>
                 `;
             });
-        });
+        }
+        
+        // 未来任务区域
+        if (futureTasks.length > 0) {
+            html += `
+                <div class="task-cards-section-header">
+                    <h5 class="mb-3 text-primary">
+                        <i class="bi bi-calendar-event"></i> 未来任务
+                    </h5>
+                </div>
+            `;
+            futureTasks.forEach(task => {
+                html += `
+                    <div class="task-card-item" data-task-id="${task.id}" data-date="${task.scheduledDate}">
+                        ${this.renderTaskCardForCardsView(task, true)}
+                    </div>
+                `;
+            });
+        }
         
         html += '</div>';
         cardsArea.innerHTML = html;
