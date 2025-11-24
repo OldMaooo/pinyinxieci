@@ -960,6 +960,11 @@
     width: 100%;
     max-width: 350px;
     margin-bottom: 1rem;
+    cursor: pointer;
+}
+
+.task-inbox-item:hover .card {
+    background-color: var(--bs-secondary-bg);
 }
 
 .task-inbox-item .card {
@@ -1008,12 +1013,13 @@
 }
 
 .task-card-item {
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: background-color 0.2s, box-shadow 0.2s;
     background-color: var(--bs-body-bg);
     border-radius: 0.5rem;
     padding: 1rem;
     border: 1px solid var(--bs-border-color);
     box-sizing: border-box;
+    cursor: pointer;
 }
 
 .task-card-item .task-delete-btn,
