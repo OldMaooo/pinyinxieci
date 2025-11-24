@@ -470,6 +470,22 @@ const TaskListUI = {
         
         // 绑定任务卡片事件
         this.bindTaskCardEvents();
+        
+        // 绑定卡片视图中的任务卡片点击事件
+        document.querySelectorAll('.task-card-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                // 如果点击的是按钮或输入框，不触发卡片点击
+                if (e.target.closest('button') || 
+                    e.target.closest('input') ||
+                    e.target.closest('.task-schedule-date-input')) {
+                    return;
+                }
+                const taskId = item.getAttribute('data-task-id');
+                if (taskId) {
+                    this.showTaskDetail(taskId);
+                }
+            });
+        });
     },
     
     /**
