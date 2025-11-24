@@ -351,6 +351,9 @@ const TaskListUI = {
         });
         
         inboxList.innerHTML = html;
+        
+        // 绑定待排期卡片的事件（包括日期选择按钮）
+        this.bindTaskCardEvents();
     },
     
     /**
