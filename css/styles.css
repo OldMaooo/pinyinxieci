@@ -1020,6 +1020,7 @@
 .task-inbox-item .task-delete-btn {
     opacity: 0;
     transition: opacity 0.2s;
+    top: -4px !important;
 }
 
 .task-card-item:hover .task-delete-btn,
