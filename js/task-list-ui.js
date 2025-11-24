@@ -854,12 +854,11 @@ const TaskListUI = {
                     ${inInbox ? `
                     <div class="mb-2 d-flex align-items-center gap-2">
                         <label class="small text-muted mb-0" style="min-width: 70px;">复习日期：</label>
-                        <button class="btn btn-sm btn-outline-secondary task-schedule-date-btn flex-grow-1" 
-                                data-task-id="${task.id}" 
-                                style="text-align: left;"
-                                title="点击选择日期">
-                            <i class="bi bi-calendar-event"></i> ${this.escapeHtml(dateDisplay)}
-                        </button>
+                        <input type="date" 
+                               class="form-control form-control-sm task-schedule-date-input" 
+                               data-task-id="${task.id}" 
+                               value="${task.scheduledDate || ''}"
+                               title="选择日期">
                     </div>
                     ` : ''}
                     <div class="mt-2">
@@ -963,12 +962,33 @@ const TaskListUI = {
             });
         });
         
-        // 日期选择按钮（待排期区域）
-        document.querySelectorAll('.task-schedule-date-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+        // 日期选择输入框（待排期区域）
+        document.querySelectorAll('.task-schedule-date-input').forEach(input => {
+            input.addEventListener('change', (e) => {
                 e.stopPropagation();
-                const taskId = btn.getAttribute('data-task-id');
-                this.showDatePicker(taskId);
+                const taskId = input.getAttribute('data-task-id');
+                const selectedDate = input.value;
+                
+                if (selectedDate) {
+                    TaskList.updateTask(taskId, {
+                        scheduledDate: selectedDate
+                    });
+                    if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                        WordBank.showToast('success', '已设置排期日期');
+                    }
+                } else {
+                    TaskList.updateTask(taskId, {
+                        scheduledDate: null
+                    });
+                    if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                        WordBank.showToast('success', '已取消排期');
+                    }
+                }
+                
+                // 重新渲染
+                setTimeout(() => {
+                    this.load();
+                }, 100);
             });
         });
     },
