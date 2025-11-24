@@ -566,17 +566,19 @@ const TaskListUI = {
                     <i class="bi bi-trash"></i>
                 </button>
             </div>
-            ${canSchedule ? `
             <div class="mb-2 d-flex align-items-center gap-2">
                 <label class="small text-muted mb-0" style="min-width: 70px;">复习日期：</label>
+                ${canSchedule ? `
                 <button class="btn btn-sm btn-outline-secondary task-schedule-date-btn flex-grow-1" 
                         data-task-id="${task.id}" 
                         style="text-align: left;"
                         title="点击选择日期">
                     <i class="bi bi-calendar-event"></i> ${this.escapeHtml(dateDisplay)}
                 </button>
+                ` : `
+                <span class="small text-muted">${this.escapeHtml(dateDisplay)}</span>
+                `}
             </div>
-            ` : ''}
             <div class="mt-2">
                 <div class="d-flex justify-content-between small text-muted mb-1">
                     <span>进度: ${progress.completed}/${progress.total}</span>
@@ -889,11 +891,15 @@ const TaskListUI = {
                     ${inInbox ? `
                     <div class="mb-2 d-flex align-items-center gap-2">
                         <label class="small text-muted mb-0" style="min-width: 70px;">复习日期：</label>
+                        ${task.type === TaskList.TYPE.PRACTICE ? `
                         <input type="date" 
                                class="form-control form-control-sm task-schedule-date-input" 
                                data-task-id="${task.id}" 
                                value="${task.scheduledDate || ''}"
                                title="选择日期">
+                        ` : `
+                        <span class="small text-muted">${this.escapeHtml(dateDisplay)}</span>
+                        `}
                     </div>
                     ` : ''}
                     <div class="mt-2">
