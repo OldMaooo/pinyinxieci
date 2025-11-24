@@ -532,13 +532,14 @@ const TaskListUI = {
         
         return `
             ${cardWrapper}
-            <div class="d-flex justify-content-between align-items-start mb-2">
-                <div class="flex-grow-1">
-                    <h6 class="card-title mb-1">
-                        <i class="bi ${typeIcon}"></i> ${this.escapeHtml(task.name)}
-                    </h6>
-                </div>
-                <button class="btn btn-sm btn-outline-danger task-delete-btn" data-task-id="${task.id}" title="删除">
+            <div class="position-relative mb-2">
+                <h6 class="card-title mb-1">
+                    <i class="bi ${typeIcon}"></i> ${this.escapeHtml(task.name)}
+                </h6>
+                <button class="btn btn-sm btn-outline-danger task-delete-btn position-absolute top-0 end-0" 
+                        data-task-id="${task.id}" 
+                        title="删除"
+                        style="z-index: 10;">
                     <i class="bi bi-trash"></i>
                 </button>
             </div>
