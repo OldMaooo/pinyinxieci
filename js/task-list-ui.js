@@ -407,13 +407,14 @@ const TaskListUI = {
             return;
         }
         
-        // 分离今天的任务和未来的任务
+        // 分离今天的任务和未来的任务（过期任务也算到今日任务中）
         const todayTasks = [];
         const futureTasks = [];
         
         scheduledTasks.forEach(task => {
             const taskDate = new Date(task.scheduledDate + 'T00:00:00');
-            if (taskDate.getTime() === today.getTime()) {
+            // 今天或今天之前的任务都算到今日任务中
+            if (taskDate.getTime() <= today.getTime()) {
                 todayTasks.push(task);
             } else {
                 futureTasks.push(task);
