@@ -1016,12 +1016,14 @@
     box-sizing: border-box;
 }
 
-.task-card-item .task-delete-btn {
+.task-card-item .task-delete-btn,
+.task-inbox-item .task-delete-btn {
     opacity: 0;
     transition: opacity 0.2s;
 }
 
-.task-card-item:hover .task-delete-btn {
+.task-card-item:hover .task-delete-btn,
+.task-inbox-item:hover .task-delete-btn {
     opacity: 1;
 }
 
