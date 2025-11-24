@@ -98,11 +98,14 @@ const TaskListUI = {
         
         const tasks = TaskList.getAllTasksWithAutoReview(30); // 生成30天的任务
         
+        // 过滤掉已完成的任务
+        const activeTasks = tasks.filter(t => t.status !== TaskList.STATUS.COMPLETED);
+        
         // 渲染日历
-        this.renderCalendar(calendarContainer, tasks);
+        this.renderCalendar(calendarContainer, activeTasks);
         
         // 渲染待排期任务
-        this.renderInboxTasks(tasks, 'calendar');
+        this.renderInboxTasks(activeTasks, 'calendar');
         
         // 绑定拖拽事件
         this.bindDragEvents();
@@ -367,11 +370,14 @@ const TaskListUI = {
         
         const tasks = TaskList.getAllTasksWithAutoReview(30);
         
+        // 过滤掉已完成的任务
+        const activeTasks = tasks.filter(t => t.status !== TaskList.STATUS.COMPLETED);
+        
         // 渲染卡片
-        this.renderCards(cardsContainer, tasks);
+        this.renderCards(cardsContainer, activeTasks);
         
         // 渲染待排期任务
-        this.renderInboxTasks(tasks, 'cards');
+        this.renderInboxTasks(activeTasks, 'cards');
         
         // 绑定所有事件（包括待排期卡片的日期选择按钮）
         this.bindTaskCardEvents();
