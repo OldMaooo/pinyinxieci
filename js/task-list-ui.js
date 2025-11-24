@@ -914,8 +914,11 @@ const TaskListUI = {
         // 任务卡片点击事件（查看详情）
         document.querySelectorAll('.task-card').forEach(card => {
             card.addEventListener('click', (e) => {
-                // 如果点击的是按钮，不触发卡片点击
-                if (e.target.closest('button') || e.target.closest('a')) {
+                // 如果点击的是按钮、链接或输入框，不触发卡片点击
+                if (e.target.closest('button') || 
+                    e.target.closest('a') || 
+                    e.target.closest('input') ||
+                    e.target.closest('.task-schedule-date-input')) {
                     return;
                 }
                 const taskId = card.getAttribute('data-task-id');
@@ -964,6 +967,15 @@ const TaskListUI = {
         
         // 日期选择输入框（待排期区域）
         document.querySelectorAll('.task-schedule-date-input').forEach(input => {
+            // 阻止点击事件冒泡，避免触发任务详情弹窗
+            input.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+            
+            input.addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+            });
+            
             input.addEventListener('change', (e) => {
                 e.stopPropagation();
                 const taskId = input.getAttribute('data-task-id');
