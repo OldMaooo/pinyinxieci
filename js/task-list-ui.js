@@ -1128,6 +1128,97 @@ const TaskListUI = {
     },
     
     /**
+     * 显示已完成任务
+     */
+    showCompletedTasks() {
+        const tasks = TaskList.getAllTasks();
+        const completedTasks = tasks.filter(t => t.status === TaskList.STATUS.COMPLETED);
+        
+        if (completedTasks.length === 0) {
+            if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                WordBank.showToast('info', '暂无已完成任务');
+            }
+            return;
+        }
+        
+        // 使用任务详情弹窗显示已完成任务列表
+        const modal = new bootstrap.Modal(document.getElementById('task-detail-modal'));
+        const modalEl = document.getElementById('task-detail-modal');
+        const titleEl = document.getElementById('task-detail-title');
+        const contentEl = document.getElementById('task-detail-content');
+        
+        if (titleEl) {
+            titleEl.textContent = `已完成任务 (${completedTasks.length})`;
+        }
+        
+        if (contentEl) {
+            let html = '<div class="list-group">';
+            completedTasks.forEach(task => {
+                const progress = task.progress || { total: 0, completed: 0, correct: 0 };
+                const progressPercent = progress.total > 0 ? Math.round((progress.completed / progress.total) * 100) : 0;
+                const typeIcon = task.type === TaskList.TYPE.REVIEW ? 'bi-arrow-repeat' : 'bi-pencil-square';
+                
+                html += `
+                    <div class="list-group-item list-group-item-action" style="cursor: pointer;" data-task-id="${task.id}">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">
+                                    <i class="bi ${typeIcon}"></i> ${this.escapeHtml(task.name)}
+                                </h6>
+                                <div class="small text-muted">
+                                    <div>进度: ${progress.completed}/${progress.total} (${progressPercent}%)</div>
+                                    <div>正确: ${progress.correct} | 错误: ${progress.errors.length}</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary task-restart-btn" data-task-id="${task.id}">
+                                <i class="bi bi-arrow-clockwise"></i> 重新开始
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            contentEl.innerHTML = html;
+            
+            // 绑定重新开始按钮
+            contentEl.querySelectorAll('.task-restart-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const taskId = btn.getAttribute('data-task-id');
+                    if (confirm('确定要重新开始这个任务吗？进度将被重置。')) {
+                        TaskList.updateTask(taskId, {
+                            status: TaskList.STATUS.PENDING,
+                            progress: {
+                                total: TaskList.getTask(taskId).wordIds.length,
+                                completed: 0,
+                                correct: 0,
+                                errors: []
+                            }
+                        });
+                        modal.hide();
+                        this.load();
+                        if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                            WordBank.showToast('success', '任务已重置，可以重新开始');
+                        }
+                    }
+                });
+            });
+            
+            // 绑定列表项点击事件（查看详情）
+            contentEl.querySelectorAll('.list-group-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    if (e.target.closest('button')) return;
+                    const taskId = item.getAttribute('data-task-id');
+                    modal.hide();
+                    this.showTaskDetail(taskId);
+                });
+            });
+        }
+        
+        modal.show();
+    },
+    
+    /**
      * 显示任务详情
      */
     showTaskDetail(taskId) {
