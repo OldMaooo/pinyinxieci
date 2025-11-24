@@ -390,8 +390,8 @@ const TaskListUI = {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         
-        // 分离已排期和未排期的任务
-        const scheduledTasks = tasks.filter(t => t.scheduledDate).sort((a, b) => {
+        // 分离已排期和未排期的任务（排除已完成的任务）
+        const scheduledTasks = tasks.filter(t => t.scheduledDate && t.status !== TaskList.STATUS.COMPLETED).sort((a, b) => {
             const dateA = new Date(a.scheduledDate + 'T00:00:00');
             const dateB = new Date(b.scheduledDate + 'T00:00:00');
             return dateA - dateB;
@@ -567,17 +567,17 @@ const TaskListUI = {
             </div>
             <div class="mt-3 d-flex gap-2">
                 ${task.status === TaskList.STATUS.PENDING || task.status === TaskList.STATUS.PAUSED ? `
-                    <button class="btn btn-sm btn-primary flex-grow-1 task-start-btn" data-task-id="${task.id}">
+                    <button class="btn btn-sm btn-primary task-start-btn" data-task-id="${task.id}">
                         <i class="bi bi-play-fill"></i> ${task.status === TaskList.STATUS.PAUSED ? '继续' : '开始'}
                     </button>
                 ` : ''}
                 ${task.status === TaskList.STATUS.IN_PROGRESS ? `
-                    <button class="btn btn-sm btn-primary flex-grow-1 task-continue-btn" data-task-id="${task.id}">
+                    <button class="btn btn-sm btn-primary task-continue-btn" data-task-id="${task.id}">
                         <i class="bi bi-play-fill"></i> 继续
                     </button>
                 ` : ''}
                 ${task.status === TaskList.STATUS.COMPLETED ? `
-                    <button class="btn btn-sm btn-outline-primary flex-grow-1 task-restart-btn" data-task-id="${task.id}">
+                    <button class="btn btn-sm btn-outline-primary task-restart-btn" data-task-id="${task.id}">
                         <i class="bi bi-arrow-clockwise"></i> 重新开始
                     </button>
                 ` : ''}
@@ -886,17 +886,17 @@ const TaskListUI = {
                     </div>
                         <div class="mt-3 d-flex gap-2">
                             ${task.status === TaskList.STATUS.PENDING || task.status === TaskList.STATUS.PAUSED ? `
-                                <button class="btn btn-sm btn-primary flex-grow-1 task-start-btn" data-task-id="${task.id}">
+                                <button class="btn btn-sm btn-primary task-start-btn" data-task-id="${task.id}">
                                     <i class="bi bi-play-fill"></i> ${task.status === TaskList.STATUS.PAUSED ? '继续' : '开始'}
                                 </button>
                             ` : ''}
                             ${task.status === TaskList.STATUS.IN_PROGRESS ? `
-                                <button class="btn btn-sm btn-primary flex-grow-1 task-continue-btn" data-task-id="${task.id}">
+                                <button class="btn btn-sm btn-primary task-continue-btn" data-task-id="${task.id}">
                                     <i class="bi bi-play-fill"></i> 继续
                                 </button>
                             ` : ''}
                             ${task.status === TaskList.STATUS.COMPLETED ? `
-                                <button class="btn btn-sm btn-outline-primary flex-grow-1 task-restart-btn" data-task-id="${task.id}">
+                                <button class="btn btn-sm btn-outline-primary task-restart-btn" data-task-id="${task.id}">
                                     <i class="bi bi-arrow-clockwise"></i> 重新开始
                                 </button>
                             ` : ''}
