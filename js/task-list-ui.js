@@ -544,8 +544,10 @@ const TaskListUI = {
                 : taskDate.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }))
             : '待排期';
         
-        // 只有练习任务可以排期
+        // 只有练习任务可以修改日期
         const canSchedule = task.type === TaskList.TYPE.PRACTICE;
+        // 根据任务类型显示不同的标签
+        const dateLabel = task.type === TaskList.TYPE.REVIEW ? '复习日期：' : '练习日期：';
         
         // 进度条颜色：100%为绿色，其他为默认蓝色
         const progressBarClass = progressPercent === 100 ? 'bg-success' : '';
@@ -567,14 +569,13 @@ const TaskListUI = {
                 </button>
             </div>
             <div class="mb-2 d-flex align-items-center gap-2">
-                <label class="small text-muted mb-0" style="min-width: 70px;">复习日期：</label>
+                <label class="small text-muted mb-0" style="min-width: 70px;">${dateLabel}</label>
                 ${canSchedule ? `
-                <button class="btn btn-sm btn-outline-secondary task-schedule-date-btn flex-grow-1" 
-                        data-task-id="${task.id}" 
-                        style="text-align: left;"
-                        title="点击选择日期">
-                    <i class="bi bi-calendar-event"></i> ${this.escapeHtml(dateDisplay)}
-                </button>
+                <input type="date" 
+                       class="form-control form-control-sm task-schedule-date-input" 
+                       data-task-id="${task.id}" 
+                       value="${task.scheduledDate || ''}"
+                       title="选择日期">
                 ` : `
                 <span class="small text-muted">${this.escapeHtml(dateDisplay)}</span>
                 `}
@@ -890,7 +891,7 @@ const TaskListUI = {
                     </div>
                     ${inInbox ? `
                     <div class="mb-2 d-flex align-items-center gap-2">
-                        <label class="small text-muted mb-0" style="min-width: 70px;">复习日期：</label>
+                        <label class="small text-muted mb-0" style="min-width: 70px;">${task.type === TaskList.TYPE.REVIEW ? '复习日期：' : '练习日期：'}</label>
                         ${task.type === TaskList.TYPE.PRACTICE ? `
                         <input type="date" 
                                class="form-control form-control-sm task-schedule-date-input" 
@@ -1006,7 +1007,7 @@ const TaskListUI = {
             });
         });
         
-        // 日期选择输入框（待排期区域）
+        // 日期选择输入框（卡片视图和待排期区域）
         document.querySelectorAll('.task-schedule-date-input').forEach(input => {
             // 阻止点击事件冒泡，避免触发任务详情弹窗
             input.addEventListener('click', (e) => {
@@ -1509,18 +1510,53 @@ const TaskListUI = {
             });
         }
         
-        // 跳转到练习页面并开始
+        // 设置任务ID到localStorage，让Practice模块知道这是从任务清单开始的
+        localStorage.setItem('current_task_id', taskId);
+        
+        // 授权进入练习页面
+        if (typeof Practice !== 'undefined' && Practice.allowPracticePageOnce) {
+            Practice.allowPracticePageOnce();
+        }
+        
+        // 直接调用Main.showPage，它会处理授权检查和页面切换
+        // Main.showPage已经改进了逻辑，可以处理hashchange重复触发的情况
         if (typeof Main !== 'undefined') {
             Main.showPage('practice');
         }
         
-        // 设置任务ID到localStorage，让Practice模块知道这是从任务清单开始的
-        localStorage.setItem('current_task_id', taskId);
-        
-        // 触发开始练习
-        if (typeof Practice !== 'undefined') {
-            Practice.start({ taskId: taskId });
-        }
+        // 等待页面切换完成后再开始练习
+        // 使用轮询检查practice页面是否已显示，确保DOM元素已准备好
+        let checkCount = 0;
+        const maxChecks = 40; // 最多检查2秒（40 * 50ms）
+        const checkAndStart = () => {
+            checkCount++;
+            const practicePage = document.getElementById('practice');
+            const practiceArea = document.getElementById('practice-area');
+            console.log(`[TaskListUI.startTask] 检查页面就绪 (${checkCount}/${maxChecks}):`, {
+                practicePageExists: !!practicePage,
+                practicePageVisible: practicePage ? !practicePage.classList.contains('d-none') : false,
+                practiceAreaExists: !!practiceArea
+            });
+            
+            if (practicePage && !practicePage.classList.contains('d-none') && practiceArea) {
+                // 页面已显示，开始练习
+                console.log('[TaskListUI.startTask] 页面已就绪，开始练习');
+                if (typeof Practice !== 'undefined') {
+                    Practice.start({ taskId: taskId });
+                } else {
+                    console.error('[TaskListUI.startTask] Practice 模块未定义');
+                }
+            } else if (checkCount < maxChecks) {
+                // 页面还未显示，继续等待
+                setTimeout(checkAndStart, 50);
+            } else {
+                // 超时，显示错误
+                console.error('[TaskListUI.startTask] 页面就绪检查超时');
+                alert('页面加载超时，请刷新页面重试');
+            }
+        };
+        // 初始延迟，确保Main.showPage执行完成
+        setTimeout(checkAndStart, 100);
     },
     
     /**

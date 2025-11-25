@@ -407,6 +407,9 @@ const ErrorBook = {
      */
     practiceWord(wordId) {
         // TODO: 跳转到练习页面，只练习这个字
+        if (typeof Practice !== 'undefined' && Practice.allowPracticePageOnce) {
+            Practice.allowPracticePageOnce();
+        }
         if (typeof Main !== 'undefined') {
             Main.showPage('practice');
             // 可以扩展Practice模块支持单个字练习
@@ -603,6 +606,9 @@ const ErrorBook = {
         this.pendingPracticeWordIds = [];
 
         setTimeout(() => {
+            if (typeof Practice !== 'undefined' && Practice.allowPracticePageOnce) {
+                Practice.allowPracticePageOnce();
+            }
             if (typeof Main !== 'undefined' && Main.showPage) {
                 Main.showPage('practice');
             }

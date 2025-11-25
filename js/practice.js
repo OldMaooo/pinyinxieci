@@ -68,6 +68,15 @@ const Practice = {
     isSubmitting: false, // 是否正在提交中
     _currentWordStartTime: null, // 当前题目开始计时点
     _pendingDirectStart: false, // 是否来自首页/错题本的直接启动
+    _allowPracticePageOnce: false, // 是否允许在未激活时进入练习页面一次
+    allowPracticePageOnce() {
+        this._allowPracticePageOnce = true;
+    },
+    consumePracticePageAllowance() {
+        const allowed = this._allowPracticePageOnce;
+        this._allowPracticePageOnce = false;
+        return allowed;
+    },
     consecutiveBlockCount: 0, // 连续被拦截的次数，用于容错机制
     _nextWordTimer: null,
     clearPendingNextWordTimer() {
@@ -128,7 +137,8 @@ const Practice = {
         if (isNaN(wordCount)) {
             wordCount = countSelect ? (countSelect.value === 'all' ? 'all' : parseInt(countSelect.value)) : 'all';
         }
-        const timeLimit = parseInt(document.getElementById('time-limit-input').value);
+        const timeLimitInput = document.getElementById('time-limit-input');
+        const timeLimit = timeLimitInput ? parseInt(timeLimitInput.value) : 30; // 默认30秒
         const modeHome = document.getElementById('practice-mode-select-home');
         this.mode = (modeHome && modeHome.value) || 'normal';
         
@@ -263,7 +273,7 @@ const Practice = {
                 this.currentIndex = Math.min(task.progress.completed, words.length - 1);
             }
         } else {
-            this.currentIndex = 0;
+        this.currentIndex = 0;
         }
         
         this.history = []; // 重置历史记录
@@ -472,8 +482,8 @@ const Practice = {
                     const completed = this._initialCompletedCount + (this.practiceLog.details?.length || 0);
                     // 只有当真正完成所有题目时才结束
                     if (completed >= task.progress.total) {
-                        this.finish();
-                        return;
+            this.finish();
+            return;
                     } else {
                         // 任务未完成，但currentIndex已经超出，说明有问题
                         console.error('[Practice.showNextWord] currentIndex超出范围，但任务未完成', {
@@ -569,8 +579,8 @@ const Practice = {
         
         // 使用textContent确保正确显示（清除之前的图标和HTML）
         // 出题时显示透明占位符，保持布局稳定（与判定时的图标同宽）
-        // 默认使用黑色加粗样式
-        pinyinDisplay.innerHTML = '<span style="opacity: 0; font-size: 1.2em; margin-right: 0.5rem;">✓</span><span style="color: #212529; font-weight: 600;">' + displayText + '</span>';
+        // 使用主题颜色，支持深色模式
+        pinyinDisplay.innerHTML = '<span style="opacity: 0; font-size: 1.2em; margin-right: 0.5rem;">✓</span><span style="color: var(--bs-body-color); font-weight: 600;">' + displayText + '</span>';
         console.log('[Practice] 显示题目:', JSON.stringify({
             word: word.word,
             pinyin: word.pinyin || '(空)',
@@ -1066,9 +1076,9 @@ const Practice = {
             const icon = isCorrect 
                 ? '<i class="bi bi-check-circle-fill text-success me-2" style="font-size: 1.2em;"></i>' 
                 : '<i class="bi bi-x-circle-fill text-danger me-2" style="font-size: 1.2em;"></i>';
-            // 默认使用黑色，加粗，拼音和中文粗细保持一致
+            // 使用主题颜色，支持深色模式，加粗，拼音和中文粗细保持一致
             const color = isCorrect ? 'text-success' : 'text-danger';
-            const defaultStyle = 'color: #212529; font-weight: 600;';
+            const defaultStyle = 'color: var(--bs-body-color); font-weight: 600;';
             
             let displayText = this._currentDisplayText || word.pinyin || word.word;
             const correctWord = word.word;
@@ -1102,7 +1112,7 @@ const Practice = {
                 });
                 if (beforeReplace !== displayText) {
                     console.log('[Practice.showFeedback] 通过拼音匹配替换成功');
-                } else {
+        } else {
                     // 如果单词边界匹配失败，尝试不使用边界限制（更宽松的匹配）
                     const regex2 = new RegExp(escaped, 'gi');
                     const beforeReplace2 = displayText;

@@ -164,6 +164,38 @@ const Main = {
      * 显示指定页面
      */
     showPage(pageId) {
+        if (pageId === 'practice') {
+            let allowPractice = false;
+            if (typeof Practice !== 'undefined') {
+                if (Practice.isActive) {
+                    console.log('[Main.showPage] 允许进入练习页：Practice.isActive = true');
+                    allowPractice = true;
+                } else if (Practice.consumePracticePageAllowance && Practice.consumePracticePageAllowance()) {
+                    console.log('[Main.showPage] 允许进入练习页：消耗授权成功');
+                    allowPractice = true;
+                } else {
+                    // 如果授权已被消耗，但当前hash是'practice'且页面已显示
+                    // 说明这是由Main.showPage设置hash导致的hashchange重复触发
+                    // 允许进入，避免重复切换导致的重定向
+                    const currentHash = window.location.hash.substring(1);
+                    const currentVisible = document.querySelector('.page-section.active');
+                    console.log('[Main.showPage] 授权已消耗，检查fallback条件:', {
+                        currentHash,
+                        currentVisibleId: currentVisible?.id,
+                        matches: currentHash === 'practice' && currentVisible && currentVisible.id === 'practice'
+                    });
+                    if (currentHash === 'practice' && currentVisible && currentVisible.id === 'practice') {
+                        console.log('[Main.showPage] 允许进入练习页：fallback条件满足');
+                        allowPractice = true;
+                    }
+                }
+            }
+            if (!allowPractice) {
+                console.warn('[Main.showPage] 拒绝进入练习页，重定向到首页');
+                window.location.hash = 'home';
+                pageId = 'home';
+            }
+        }
         // 如果离开练习页，保存未完成练习
         const currentVisible = document.querySelector('.page-section.active');
         if (currentVisible && currentVisible.id === 'practice' && pageId !== 'practice') {
@@ -386,6 +418,9 @@ const Main = {
                 }
                 // 直接开始练习
                 if (typeof Practice !== 'undefined') {
+                    if (Practice.allowPracticePageOnce) {
+                        Practice.allowPracticePageOnce();
+                    }
                     this.showPage('practice');
                     Practice.start();
                 }
@@ -427,8 +462,11 @@ const Main = {
                         if (typeof PracticeRange !== 'undefined' && PracticeRange.setErrorWordsFromLog) {
                             PracticeRange.setErrorWordsFromLog(log.errorWords);
                         }
+                        if (typeof Practice !== 'undefined' && Practice.allowPracticePageOnce) {
+                            Practice.allowPracticePageOnce();
+                        }
                         // 切换到练习页面并开始练习
-                this.showPage('practice');
+                        this.showPage('practice');
                         if (typeof Practice !== 'undefined') {
                             Practice.start();
                         }
@@ -443,7 +481,8 @@ const Main = {
         
         if (practiceAgainBtn) {
             practiceAgainBtn.addEventListener('click', () => {
-                this.showPage('practice');
+                window.location.hash = 'home';
+                this.showPage('home');
             });
         }
     },
