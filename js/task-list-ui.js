@@ -1723,6 +1723,16 @@ const TaskListUI = {
         this.render();
         this.updateBadge();
         
+        // 拆分完成后自动跳转到任务清单，方便用户立即看到新任务
+        try {
+            if (typeof Main !== 'undefined') {
+                window.location.hash = 'tasklist';
+                Main.showPage('tasklist');
+            }
+        } catch (e) {
+            console.error('[TaskListUI.confirmSplitTask] 跳转任务清单失败:', e);
+        }
+        
         // 清除临时数据
         this._splitData = null;
     },
