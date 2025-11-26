@@ -67,7 +67,7 @@ const PracticeRange = {
         // 否则显示比例饼图
         if (percentage === 0) {
             return `<div class="completion-pie"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="${grayColor}"/></svg></div>`;
-        }
+            }
         
         // 计算弧的路径（从顶部开始，顺时针）
         const angle = percentage * 360;
@@ -159,7 +159,7 @@ const PracticeRange = {
                     <h2 class="accordion-header" id="${headingId}">
                         <div class="d-flex align-items-center w-100 practice-semester-header" style="padding: 0;">
                             <div class="semester-checkbox-wrapper" style="flex-shrink: 0; padding: 0.5rem 0.5rem 0.5rem 0.75rem; cursor: default; display: flex; align-items: center;">
-                                <input type="checkbox" class="form-check-input semester-checkbox"
+                <input type="checkbox" class="form-check-input semester-checkbox" 
                                        data-semester="${semesterKey}"
                                        style="margin: 0; cursor: pointer; width: 0.6em; height: 0.6em; vertical-align: middle;">
                             </div>
@@ -257,13 +257,13 @@ const PracticeRange = {
                 html += `</tr>`;
             });
             
-            html += `
+                html += `
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                </div>
-            `;
+                    </div>
+                `;
         });
         
         html += '</div></div></div>';
@@ -303,14 +303,14 @@ const PracticeRange = {
                                 <input type="checkbox" class="form-check-input semester-checkbox"
                                        data-semester="${semesterKey}"
                                        style="margin: 0; cursor: pointer; width: 0.6em; height: 0.6em; vertical-align: middle;">
-                            </div>
+                    </div>
                             <button class="accordion-button practice-semester-btn ${isFirst ? '' : 'collapsed'}" type="button"
                                     data-collapse-target="#${collapseId}"
                                     aria-expanded="${isFirst}" aria-controls="${collapseId}"
                                     style="flex: 1; border: none; padding: 0.5rem 0.75rem; text-align: left; cursor: pointer;">
                                 <span>${semesterKey}</span>
                             </button>
-                        </div>
+                </div>
                     </h2>
                     <div id="${collapseId}"
                          class="accordion-collapse collapse ${isFirst ? 'show' : ''}"
@@ -403,7 +403,7 @@ const PracticeRange = {
                 selectAllCheckbox.checked = allCheckboxes.length > 0 && checkedCount === allCheckboxes.length;
                 selectAllCheckbox.indeterminate = checkedCount > 0 && checkedCount < allCheckboxes.length;
             };
-            
+        
             // 初始状态
             setTimeout(updateSelectAllState, 100);
             
@@ -514,7 +514,7 @@ const PracticeRange = {
                         bsCollapse.show();
                         btn.setAttribute('aria-expanded', 'true');
                         btn.classList.remove('collapsed');
-                    }
+                        }
                 } else {
                     // Fallback: 手动切换类
                     if (isExpanded) {

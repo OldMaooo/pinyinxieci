@@ -207,7 +207,7 @@ const WordBank = {
         }
         const toastBody = document.getElementById('toast-body');
         if (toastBody) {
-            toastBody.textContent = message;
+        toastBody.textContent = message;
         }
         // 使用默认的toast样式，不添加背景色类
         toast.classList.remove('bg-success', 'bg-danger', 'bg-info', 'bg-warning');
@@ -218,7 +218,7 @@ const WordBank = {
         });
         bsToast.show();
     },
-    
+
     /**
      * 更新数据统计显示
      */

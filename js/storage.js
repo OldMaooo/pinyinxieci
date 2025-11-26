@@ -160,7 +160,7 @@ const Storage = {
         const filtered = plans.filter(p => p.wordId !== wordId);
         this.saveAllReviewPlans(filtered);
     },
-    
+
     /**
      * 题库管理
      */
@@ -316,7 +316,7 @@ const Storage = {
             }
             if (snapshotData) {
                 errorWord.handwritingSnapshots = errorWord.handwritingSnapshots || [];
-                errorWord.handwritingSnapshots.push(snapshotData);
+            errorWord.handwritingSnapshots.push(snapshotData);
             }
         } else {
             // 创建新错题记录

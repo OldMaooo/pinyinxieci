@@ -396,14 +396,15 @@ const TaskListUI = {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         
-        // 分离已排期和未排期的任务（排除已完成的任务）
+        // 分离任务（排除已完成的任务）
         const scheduledTasks = tasks.filter(t => t.scheduledDate && t.status !== TaskList.STATUS.COMPLETED).sort((a, b) => {
             const dateA = new Date(a.scheduledDate + 'T00:00:00');
             const dateB = new Date(b.scheduledDate + 'T00:00:00');
             return dateA - dateB;
         });
+        const unscheduledTasks = tasks.filter(t => !t.scheduledDate && t.status !== TaskList.STATUS.COMPLETED);
         
-        if (scheduledTasks.length === 0) {
+        if (scheduledTasks.length === 0 && unscheduledTasks.length === 0) {
             cardsArea.innerHTML = `
                 <div class="text-center text-muted py-5">
                     <i class="bi bi-inbox" style="font-size: 3rem;"></i>
@@ -459,6 +460,24 @@ const TaskListUI = {
             futureTasks.forEach(task => {
                 html += `
                     <div class="task-card-item" data-task-id="${task.id}" data-date="${task.scheduledDate}">
+                        ${this.renderTaskCardForCardsView(task, true)}
+                    </div>
+                `;
+            });
+        }
+        
+        // 待排期任务区域
+        if (unscheduledTasks.length > 0) {
+            html += `
+                <div class="task-cards-section-header">
+                    <h5 class="mb-3 text-primary">
+                        <i class="bi bi-inbox"></i> 待排期任务
+                    </h5>
+                </div>
+            `;
+            unscheduledTasks.forEach(task => {
+                html += `
+                    <div class="task-card-item" data-task-id="${task.id}">
                         ${this.renderTaskCardForCardsView(task, true)}
                     </div>
                 `;

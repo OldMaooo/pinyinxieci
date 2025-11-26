@@ -299,7 +299,7 @@ const ErrorBook = {
                                     <input type="checkbox" class="form-check-input error-select" data-id="${w.id}" style="margin: 0;">
                                 </div>
                                 <div class="text-muted small" title="${groupsText}" style="line-height: 1.5; margin-top: -2px;">${groupsText}</div>
-                            </div>
+                        </div>
                             <div class="position-relative" style="flex-shrink: 0; margin-top: -4px;">
                                 <div class="result-toggle ${isWrong ? 'active' : ''}" 
                                      data-log-id="${log.id}" 
