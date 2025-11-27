@@ -70,15 +70,23 @@ const TaskListUI = {
      * 加载任务清单（根据当前视图类型）
      */
     load() {
+        console.log('[TaskListUI.load] ===== 开始加载任务清单 =====');
+        console.log('[TaskListUI.load] 当前视图类型:', this.currentViewType);
+        
         // 确保自动生成复习任务
-        TaskList.getAllTasksWithAutoReview(30);
+        const allTasks = TaskList.getAllTasksWithAutoReview(30);
+        console.log('[TaskListUI.load] 获取所有任务（含自动生成）:', allTasks.length);
         
         // 根据视图类型渲染
         if (this.currentViewType === 'cards') {
+            console.log('[TaskListUI.load] 渲染卡片视图...');
             this.renderCardsView();
         } else {
+            console.log('[TaskListUI.load] 渲染日历视图...');
             this.renderCalendarView();
         }
+        
+        console.log('[TaskListUI.load] ===== 加载任务清单完成 =====');
     },
     
     /**
@@ -360,30 +368,46 @@ const TaskListUI = {
      * 渲染卡片视图
      */
     renderCardsView() {
+        console.log('[TaskListUI.renderCardsView] ===== 开始渲染卡片视图 =====');
         const calendarContainer = document.getElementById('task-calendar-container');
         const cardsContainer = document.getElementById('task-cards-container');
-        if (!cardsContainer) return;
+        
+        if (!cardsContainer) {
+            console.error('[TaskListUI.renderCardsView] ❌ task-cards-container 不存在');
+            return;
+        }
+        console.log('[TaskListUI.renderCardsView] 容器元素找到');
         
         // 隐藏日历容器，显示卡片容器
         if (calendarContainer) calendarContainer.classList.add('d-none');
         cardsContainer.classList.remove('d-none');
         
         const tasks = TaskList.getAllTasksWithAutoReview(30);
+        console.log('[TaskListUI.renderCardsView] 获取所有任务:', tasks.length);
         
         // 过滤掉已完成的任务
         const activeTasks = tasks.filter(t => t.status !== TaskList.STATUS.COMPLETED);
+        console.log('[TaskListUI.renderCardsView] 活跃任务数:', activeTasks.length);
+        console.log('[TaskListUI.renderCardsView] 任务列表:', activeTasks.map(t => ({ id: t.id, name: t.name, status: t.status, scheduledDate: t.scheduledDate })));
         
         // 渲染卡片
+        console.log('[TaskListUI.renderCardsView] 开始渲染卡片...');
         this.renderCards(cardsContainer, activeTasks);
+        console.log('[TaskListUI.renderCardsView] 卡片渲染完成');
         
         // 渲染待排期任务
+        console.log('[TaskListUI.renderCardsView] 开始渲染待排期任务...');
         this.renderInboxTasks(activeTasks, 'cards');
+        console.log('[TaskListUI.renderCardsView] 待排期任务渲染完成');
         
         // 绑定所有事件（包括待排期卡片的日期选择按钮）
+        console.log('[TaskListUI.renderCardsView] 绑定事件...');
         this.bindTaskCardEvents();
+        console.log('[TaskListUI.renderCardsView] 事件绑定完成');
         
         // 绑定拖拽事件
         this.bindDragEvents();
+        console.log('[TaskListUI.renderCardsView] ===== 渲染卡片视图完成 =====');
     },
     
     /**
@@ -1666,30 +1690,48 @@ const TaskListUI = {
      * 确认拆分任务
      */
     confirmSplitTask() {
-        if (!this._splitData) return;
+        console.log('[TaskListUI.confirmSplitTask] ===== 开始拆分任务 =====');
+        console.log('[TaskListUI.confirmSplitTask] _splitData:', this._splitData);
+        
+        if (!this._splitData) {
+            console.error('[TaskListUI.confirmSplitTask] ❌ _splitData 为空，无法拆分');
+            return;
+        }
         
         const perTaskInput = document.getElementById('task-split-per-task');
         const autoStartCheck = document.getElementById('task-split-auto-start');
         
-        if (!perTaskInput) return;
+        if (!perTaskInput) {
+            console.error('[TaskListUI.confirmSplitTask] ❌ 找不到 task-split-per-task 输入框');
+            return;
+        }
         
         const perTask = parseInt(perTaskInput.value) || 50;
         const autoStart = autoStartCheck ? autoStartCheck.checked : false;
+        console.log('[TaskListUI.confirmSplitTask] 拆分参数:', { perTask, autoStart });
         
         const { wordIds, taskName } = this._splitData;
+        console.log('[TaskListUI.confirmSplitTask] 拆分数据:', { wordIdsCount: wordIds.length, taskName });
         
         const tasks = TaskList.splitTask({
             wordIds,
             name: taskName,
             questionsPerTask: perTask
         });
+        console.log('[TaskListUI.confirmSplitTask] 拆分结果:', { taskCount: tasks.length, tasks: tasks.map(t => ({ name: t.name, wordCount: t.wordIds.length })) });
         
         let addedCount = 0;
         let duplicateCount = 0;
         let firstTaskId = null;
         
+        // 先检查当前任务列表
+        const beforeTasks = TaskList.getAllTasks();
+        console.log('[TaskListUI.confirmSplitTask] 拆分前任务总数:', beforeTasks.length);
+        
         tasks.forEach((task, index) => {
+            console.log(`[TaskListUI.confirmSplitTask] 正在添加任务 ${index + 1}/${tasks.length}:`, { name: task.name, wordCount: task.wordIds.length });
             const result = TaskList.addTask(task);
+            console.log(`[TaskListUI.confirmSplitTask] 添加结果 ${index + 1}:`, result);
             if (result.success) {
                 addedCount++;
                 if (index === 0) {
@@ -1697,44 +1739,56 @@ const TaskListUI = {
                 }
             } else {
                 duplicateCount++;
+                console.warn(`[TaskListUI.confirmSplitTask] ⚠️ 任务 ${index + 1} 添加失败:`, result.message);
             }
         });
         
+        // 验证任务是否真的保存了
+        const afterTasks = TaskList.getAllTasks();
+        console.log('[TaskListUI.confirmSplitTask] 拆分后任务总数:', afterTasks.length);
+        console.log('[TaskListUI.confirmSplitTask] 实际新增任务数:', afterTasks.length - beforeTasks.length);
+        console.log('[TaskListUI.confirmSplitTask] 统计结果:', { addedCount, duplicateCount, firstTaskId });
+        
         // 关闭弹窗
         const modal = bootstrap.Modal.getInstance(document.getElementById('task-split-modal'));
-        if (modal) modal.hide();
+        if (modal) {
+            modal.hide();
+            console.log('[TaskListUI.confirmSplitTask] 弹窗已关闭');
+        } else {
+            console.warn('[TaskListUI.confirmSplitTask] ⚠️ 找不到弹窗实例');
+        }
         
         // 显示结果
         let message = `成功添加 ${addedCount} 个任务`;
         if (duplicateCount > 0) {
             message += `，${duplicateCount} 个任务已存在`;
         }
-        
-        // 如果开启了自动开始，且第一个任务成功添加
-        if (autoStart && firstTaskId) {
-            setTimeout(() => {
-                this.startTask(firstTaskId);
-            }, 500);
-        }
-        
+        console.log('[TaskListUI.confirmSplitTask] 提示消息:', message);
         alert(message);
         
         // 刷新任务清单
+        console.log('[TaskListUI.confirmSplitTask] 开始刷新任务清单...');
         this.render();
         this.updateBadge();
+        console.log('[TaskListUI.confirmSplitTask] 任务清单刷新完成');
         
         // 拆分完成后自动跳转到任务清单，方便用户立即看到新任务
         try {
             if (typeof Main !== 'undefined') {
+                console.log('[TaskListUI.confirmSplitTask] 跳转到任务清单页...');
                 window.location.hash = 'tasklist';
                 Main.showPage('tasklist');
+                console.log('[TaskListUI.confirmSplitTask] 跳转完成');
+            } else {
+                console.error('[TaskListUI.confirmSplitTask] ❌ Main 未定义，无法跳转');
             }
         } catch (e) {
-            console.error('[TaskListUI.confirmSplitTask] 跳转任务清单失败:', e);
+            console.error('[TaskListUI.confirmSplitTask] ❌ 跳转任务清单失败:', e);
         }
         
         // 清除临时数据
         this._splitData = null;
+        console.log('[TaskListUI.confirmSplitTask] ===== 拆分任务完成 =====');
     },
     
     /**

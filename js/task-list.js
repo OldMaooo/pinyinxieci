@@ -38,11 +38,29 @@ const TaskList = {
      * 保存所有任务
      */
     saveAllTasks(tasks) {
+        console.log('[TaskList.saveAllTasks] ===== 开始保存任务列表 =====');
+        console.log('[TaskList.saveAllTasks] 任务数量:', tasks?.length || 0);
+        console.log('[TaskList.saveAllTasks] 存储键名:', this.KEY);
+        
         try {
-            localStorage.setItem(this.KEY, JSON.stringify(tasks || []));
-            return true;
+            const jsonString = JSON.stringify(tasks || []);
+            console.log('[TaskList.saveAllTasks] JSON 字符串长度:', jsonString.length);
+            localStorage.setItem(this.KEY, jsonString);
+            
+            // 验证保存是否成功
+            const verify = localStorage.getItem(this.KEY);
+            if (verify) {
+                const parsed = JSON.parse(verify);
+                console.log('[TaskList.saveAllTasks] ✅ 保存成功，验证通过，任务数量:', parsed.length);
+                console.log('[TaskList.saveAllTasks] ===== 保存任务列表完成 =====');
+                return true;
+            } else {
+                console.error('[TaskList.saveAllTasks] ❌ 保存失败，验证时 localStorage 为空');
+                return false;
+            }
         } catch (e) {
-            console.error('[TaskList] 保存任务列表失败:', e);
+            console.error('[TaskList.saveAllTasks] ❌ 保存任务列表失败:', e);
+            console.error('[TaskList.saveAllTasks] 错误详情:', { message: e.message, stack: e.stack });
             return false;
         }
     },
@@ -51,7 +69,11 @@ const TaskList = {
      * 添加任务
      */
     addTask(task) {
+        console.log('[TaskList.addTask] ===== 开始添加任务 =====');
+        console.log('[TaskList.addTask] 任务数据:', { name: task.name, wordIdsCount: task.wordIds?.length, id: task.id });
+        
         const tasks = this.getAllTasks();
+        console.log('[TaskList.addTask] 当前任务列表长度:', tasks.length);
         
         // 检查是否重复（比较题目ID列表）
         const isDuplicate = tasks.some(t => {
@@ -62,12 +84,14 @@ const TaskList = {
         });
         
         if (isDuplicate) {
+            console.warn('[TaskList.addTask] ⚠️ 任务重复，跳过添加');
             return { success: false, message: '任务已存在，无需重复添加' };
         }
         
         // 生成任务ID
         if (!task.id) {
             task.id = `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            console.log('[TaskList.addTask] 生成任务ID:', task.id);
         }
         
         // 设置默认值
@@ -85,9 +109,24 @@ const TaskList = {
             };
         }
         
-        tasks.push(task);
-        this.saveAllTasks(tasks);
+        console.log('[TaskList.addTask] 准备添加的任务:', { id: task.id, name: task.name, status: task.status, type: task.type, progress: task.progress });
         
+        tasks.push(task);
+        console.log('[TaskList.addTask] 任务已推入数组，新长度:', tasks.length);
+        
+        const saveResult = this.saveAllTasks(tasks);
+        console.log('[TaskList.addTask] 保存结果:', saveResult);
+        
+        // 验证保存是否成功
+        const verifyTasks = this.getAllTasks();
+        const found = verifyTasks.find(t => t.id === task.id);
+        if (found) {
+            console.log('[TaskList.addTask] ✅ 任务保存成功，验证通过');
+        } else {
+            console.error('[TaskList.addTask] ❌ 任务保存失败，验证时找不到任务');
+        }
+        
+        console.log('[TaskList.addTask] ===== 添加任务完成 =====');
         return { success: true, task: task };
     },
     

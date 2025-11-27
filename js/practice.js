@@ -983,32 +983,49 @@ const Practice = {
      * 绕过提交限制，允许随时跳过
      */
     async skipAnswer() {
+        console.log('[Practice.skipAnswer] ===== 点击不会按钮 =====');
+        console.log('[Practice.skipAnswer] 当前状态:', {
+            isSkipping: this.isSkipping,
+            currentIndex: this.currentIndex,
+            totalWords: this.currentWords.length,
+            isActive: this.isActive,
+            isSubmitting: this.isSubmitting,
+            mode: this.mode
+        });
+        
         // 防止重复点击：如果正在处理中，直接返回
         if (this.isSkipping) {
+            console.warn('[Practice.skipAnswer] ⚠️ 正在跳过中，忽略重复点击');
             return;
         }
         this.isSkipping = true;
+        console.log('[Practice.skipAnswer] 设置 isSkipping = true');
         
         const word = this.currentWords[this.currentIndex];
+        console.log('[Practice.skipAnswer] 当前题目:', { word: word.word, id: word.id });
         
         // 绕过提交限制：清除限制状态，允许跳过
         this.lastSubmitTime = 0;
         this.lastSubmitWordId = null;
         this.consecutiveBlockCount = 0;
         this.isSubmitting = false;
+        console.log('[Practice.skipAnswer] 已清除提交限制状态');
         
         const snapshot = this.mode === 'normal' && Handwriting.hasContent() ? Handwriting.getSnapshot() : null;
         const wordTime = this._currentWordStartTime ? (Date.now() - this._currentWordStartTime) / 1000 : 0;
+        console.log('[Practice.skipAnswer] 笔迹快照:', snapshot ? '有' : '无', '用时:', wordTime);
         
         // 停止计时
         if (this.timer) {
             clearInterval(this.timer);
+            console.log('[Practice.skipAnswer] 计时器已停止');
         }
         
         // 检查是否已存在该题目的记录，如果存在则移除旧的（防止重复）
         const existingIdx = this.practiceLog.details.findIndex(d => d.wordId === word.id);
         if (existingIdx >= 0) {
             const oldDetail = this.practiceLog.details[existingIdx];
+            console.log('[Practice.skipAnswer] 发现已存在的记录，移除:', existingIdx);
             // 如果旧记录是正确的，需要调整计数
             if (oldDetail.correct) {
                 this.practiceLog.correctCount = Math.max(0, this.practiceLog.correctCount - 1);
@@ -1023,28 +1040,36 @@ const Practice = {
         this.practiceLog.errorCount++;
         this.practiceLog.wordTimes.push(wordTime);
         this.practiceLog.totalTime += wordTime;
+        console.log('[Practice.skipAnswer] 已更新练习日志:', { errorCount: this.practiceLog.errorCount, totalTime: this.practiceLog.totalTime });
         
         // 如果有笔迹，保存快照
         if (snapshot) {
+            console.log('[Practice.skipAnswer] 保存错题记录（有快照）...');
             await this.recordError(word, snapshot);
             this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot, displayText: this._currentDisplayText });
         } else {
+            console.log('[Practice.skipAnswer] 保存错题记录（无快照）...');
             this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null, displayText: this._currentDisplayText });
         }
         
         // 显示反馈（错误）
+        console.log('[Practice.skipAnswer] 显示错误反馈...');
         this.showFeedback(false, word, '');
+        console.log('[Practice.skipAnswer] 反馈显示完成');
         
         // 持续草稿保存
         this.saveAutosaveDraft();
         
         // 更新任务进度（如果有任务，在答题后立即更新）
         if (this.currentTaskId && typeof TaskList !== 'undefined') {
+            console.log('[Practice.skipAnswer] 更新任务进度...');
             this.updateTaskProgress(false);
         }
         
         // 2秒后下一题
+        console.log('[Practice.skipAnswer] 安排2秒后跳转下一题...');
         this.scheduleNextWord(2000, () => {
+            console.log('[Practice.skipAnswer] 2秒后回调执行，准备跳转下一题');
             // 保存当前题目到历史
             if (this.currentIndex < this.currentWords.length) {
                 this.history.push({
@@ -1055,7 +1080,9 @@ const Practice = {
             }
             this.currentIndex++;
             this.isSkipping = false; // 重置跳过状态
+            console.log('[Practice.skipAnswer] 调用 showNextWord()...');
             this.showNextWord();
+            console.log('[Practice.skipAnswer] ===== 不会按钮处理完成 =====');
         });
         this._currentWordStartTime = null;
     },
@@ -1066,11 +1093,24 @@ const Practice = {
      * 错误：拼音提示替换为红色汉字，并在田字格中显示楷体红字
      */
     showFeedback(isCorrect, word, recognized) {
+        console.log('[Practice.showFeedback] ===== 显示反馈 =====');
+        console.log('[Practice.showFeedback] 参数:', { isCorrect, word: word.word, recognized });
+        
         const feedbackArea = document.getElementById('feedback-area');
         const pinyinDisplay = document.getElementById('pinyin-display');
         
+        console.log('[Practice.showFeedback] DOM 元素:', {
+            feedbackArea: !!feedbackArea,
+            pinyinDisplay: !!pinyinDisplay
+        });
+        
         // 清空反馈区域（不显示红框内容）
-        feedbackArea.innerHTML = '';
+        if (feedbackArea) {
+            feedbackArea.innerHTML = '';
+            console.log('[Practice.showFeedback] 反馈区域已清空');
+        } else {
+            console.error('[Practice.showFeedback] ❌ feedback-area 不存在');
+        }
         
         if (pinyinDisplay) {
             const icon = isCorrect 
@@ -1428,17 +1468,30 @@ const Practice = {
      * 跳转到下一题（手动）
      */
     showNextQuestion() {
+        console.log('[Practice.showNextQuestion] ===== 点击下一题按钮 =====');
+        console.log('[Practice.showNextQuestion] 当前状态:', {
+            currentIndex: this.currentIndex,
+            totalWords: this.currentWords.length,
+            isActive: this.isActive,
+            isSubmitting: this.isSubmitting,
+            mode: this.mode
+        });
+        
         if (this.currentIndex >= this.currentWords.length - 1) {
+            console.warn('[Practice.showNextQuestion] ⚠️ 已经是最后一题');
             alert('已经是最后一题了');
             return;
         }
+        
         this.lastSubmitTime = 0;
         this.lastSubmitWordId = null;
         this.consecutiveBlockCount = 0;
         this.isSubmitting = false;
+        console.log('[Practice.showNextQuestion] 已清除提交限制状态');
         
         // 如果当前有未提交的笔迹，自动提交并判断
         if (this.mode === 'normal' && typeof Handwriting !== 'undefined' && Handwriting.hasContent && Handwriting.hasContent()) {
+            console.log('[Practice.showNextQuestion] 检测到未提交笔迹，先自动提交');
             this.submitAnswer({ bypassCooldown: true });
             return;
         }
@@ -1447,20 +1500,26 @@ const Practice = {
         if (this.timer) {
             clearInterval(this.timer);
             this.timer = null;
+            console.log('[Practice.showNextQuestion] 计时器已停止');
         }
         
         // 保存当前题目到历史
         const word = this.currentWords[this.currentIndex];
+        console.log('[Practice.showNextQuestion] 当前题目:', { word: word.word, id: word.id });
         if (this.currentIndex < this.currentWords.length) {
             this.history.push({
                 word: word,
                 index: this.currentIndex,
                 snapshot: null
             });
+            console.log('[Practice.showNextQuestion] 已保存到历史');
         }
         
         this.currentIndex++;
+        console.log('[Practice.showNextQuestion] 索引已更新:', this.currentIndex);
+        console.log('[Practice.showNextQuestion] 调用 showNextWord()...');
         this.showNextWord();
+        console.log('[Practice.showNextQuestion] ===== 下一题完成 =====');
     },
     
     /**
@@ -1569,23 +1628,63 @@ const Practice = {
 
 // 绑定按钮事件
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('[Practice] ===== 绑定按钮事件 =====');
     const startBtn = document.getElementById('start-practice-btn');
     const submitBtn = document.getElementById('submit-answer-btn');
     const skipAnswerBtn = document.getElementById('skip-answer-btn');
     const clearBtn = document.getElementById('clear-canvas-btn');
     const skipBtn = document.getElementById('skip-question-btn');
+    const nextBtn = document.getElementById('next-question-btn');
     const endBtn = document.getElementById('end-practice-btn');
     
+    console.log('[Practice] 按钮元素检查:', {
+        startBtn: !!startBtn,
+        submitBtn: !!submitBtn,
+        skipAnswerBtn: !!skipAnswerBtn,
+        clearBtn: !!clearBtn,
+        skipBtn: !!skipBtn,
+        nextBtn: !!nextBtn,
+        endBtn: !!endBtn
+    });
+    
     if (startBtn) {
-        startBtn.addEventListener('click', () => Practice.start());
+        startBtn.addEventListener('click', () => {
+            console.log('[Practice] 开始练习按钮被点击');
+            Practice.start();
+        });
+        console.log('[Practice] ✅ 开始练习按钮已绑定');
+    } else {
+        console.error('[Practice] ❌ 找不到开始练习按钮');
     }
     
     if (submitBtn) {
-        submitBtn.addEventListener('click', () => Practice.submitAnswer());
+        submitBtn.addEventListener('click', () => {
+            console.log('[Practice] 提交按钮被点击');
+            Practice.submitAnswer();
+        });
+        console.log('[Practice] ✅ 提交按钮已绑定');
+    } else {
+        console.error('[Practice] ❌ 找不到提交按钮');
     }
     
     if (skipAnswerBtn) {
-        skipAnswerBtn.addEventListener('click', () => Practice.skipAnswer());
+        skipAnswerBtn.addEventListener('click', () => {
+            console.log('[Practice] 不会按钮被点击');
+            Practice.skipAnswer();
+        });
+        console.log('[Practice] ✅ 不会按钮已绑定');
+    } else {
+        console.error('[Practice] ❌ 找不到不会按钮');
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            console.log('[Practice] 下一题按钮被点击');
+            Practice.showNextQuestion();
+        });
+        console.log('[Practice] ✅ 下一题按钮已绑定');
+    } else {
+        console.error('[Practice] ❌ 找不到下一题按钮');
     }
     
     if (clearBtn) {
