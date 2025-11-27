@@ -1714,12 +1714,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (prevBtn) {
         prevBtn.addEventListener('click', () => Practice.showPreviousWord());
     }
-    
-    const nextBtn = document.getElementById('next-question-btn');
-    if (nextBtn) {
-        nextBtn.addEventListener('click', () => Practice.showNextQuestion());
-    }
-    
     const undoBtn = document.getElementById('undo-stroke-btn');
     if (undoBtn) {
         undoBtn.addEventListener('click', () => {
