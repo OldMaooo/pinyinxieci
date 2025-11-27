@@ -85,14 +85,12 @@ const InitData = {
                         source: 'builtin'
                     });
                     if (word.word && String(word.word).trim().length === 1) {
-                        singleWordMap[file] = singleWordMap[file] || [];
-                        singleWordMap[file].push(word.word);
-                        console.warn(`[InitData] ⚠️ 检测到单字词条 "${word.word}" 来自 ${file}`, {
-                            grade: word.grade,
-                            semester: word.semester,
-                            unit: word.unit,
-                            unitLabel: word.unitLabel
-                        });
+                        const entry = singleWordMap[file] || { count: 0, samples: [] };
+                        entry.count += 1;
+                        if (entry.samples.length < 5) {
+                            entry.samples.push(word.word);
+                        }
+                        singleWordMap[file] = entry;
                     }
                 });
             } catch (err) {
@@ -101,7 +99,14 @@ const InitData = {
         }
 
         if (Object.keys(singleWordMap).length) {
-            console.warn('[InitData] ⚠️ 单字词条统计:', singleWordMap);
+            const summary = {};
+            Object.keys(singleWordMap).forEach(file => {
+                summary[file] = {
+                    count: singleWordMap[file].count,
+                    samples: singleWordMap[file].samples
+                };
+            });
+            console.warn('[InitData] ⚠️ 单字词条统计（每个文件展示前5个示例）:', summary);
         }
 
         if (!collectedWords.length) {
