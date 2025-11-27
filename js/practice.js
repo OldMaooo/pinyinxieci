@@ -1626,6 +1626,11 @@ const Practice = {
     }
 };
 
+// 确保Practice在window上可访问（某些环境下可能需要）
+if (typeof window !== 'undefined') {
+    window.Practice = Practice;
+}
+
 // 绑定按钮事件
 document.addEventListener('DOMContentLoaded', () => {
     console.log('[Practice] ===== 绑定按钮事件 =====');

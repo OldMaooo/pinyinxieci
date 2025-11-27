@@ -4,6 +4,7 @@
  */
 
 const Main = {
+    _practiceScriptPromise: null,
     /**
      * 初始化
      */
@@ -361,7 +362,7 @@ const Main = {
         console.log('[Main.init] 首页开始按钮元素:', { exists: !!startHome, id: startHome?.id });
         
         if (startHome) {
-            startHome.addEventListener('click', (event) => {
+            startHome.addEventListener('click', async (event) => {
                 console.log('[Main.init] 首页开始按钮被点击');
                 event.preventDefault();
                 // 同步首页设置到练习页输入
@@ -448,6 +449,22 @@ const Main = {
                     PracticeRange.syncSelection('practice-range-container-home', 'practice-range-container');
                 }
                 // 直接开始练习
+                if (typeof Practice === 'undefined') {
+                    console.warn('[Main.init] Practice 模块未定义，尝试动态加载脚本...');
+                    try {
+                        const loaded = await this.ensurePracticeModule();
+                        if (!loaded) {
+                            alert('练习模块加载失败，请刷新页面后重试。');
+                            console.error('[Main.init] 动态加载 Practice 脚本后仍未定义');
+                            return;
+                        }
+                    } catch (loadErr) {
+                        alert('练习模块加载失败，请刷新页面后重试。');
+                        console.error('[Main.init] 动态加载 Practice 模块失败:', loadErr);
+                        return;
+                    }
+                }
+
                 if (typeof Practice !== 'undefined') {
                     console.log('[Main.init] Practice 模块存在，授权并开始练习...');
                     if (Practice.allowPracticePageOnce) {
@@ -460,7 +477,7 @@ const Main = {
                     Practice.start();
                     console.log('[Main.init] Practice.start() 调用完成');
                 } else {
-                    console.error('[Main.init] ❌ Practice 模块未定义，无法开始练习');
+                    console.error('[Main.init] ❌ Practice 模块仍未定义，无法开始练习');
                 }
             });
         }
@@ -652,6 +669,47 @@ const Main = {
         });
         
         return selectedUnits;
+    },
+
+    /**
+     * 动态确保 Practice 模块加载完成（用于缓存或脚本顺序问题）
+     */
+    async ensurePracticeModule() {
+        if (typeof Practice !== 'undefined') {
+            return true;
+        }
+        if (this._practiceScriptPromise) {
+            return this._practiceScriptPromise;
+        }
+        const version = typeof APP_VERSION !== 'undefined' ? APP_VERSION.version : 'latest';
+        console.warn('[Main.ensurePracticeModule] 尝试动态加载 Practice 脚本...');
+        const promise = new Promise((resolve, reject) => {
+            try {
+                const existing = document.querySelector('script[data-dynamic-practice]');
+                if (existing) {
+                    existing.remove();
+                }
+                const script = document.createElement('script');
+                script.src = `js/practice.js?v=${version}&reload=${Date.now()}`;
+                script.async = true;
+                script.dataset.dynamicPractice = '1';
+                script.onload = () => {
+                    console.log('[Main.ensurePracticeModule] Practice 脚本动态加载完成:', script.src);
+                    resolve(typeof Practice !== 'undefined');
+                };
+                script.onerror = (error) => {
+                    reject(error || new Error('Practice script failed to load'));
+                };
+                document.body.appendChild(script);
+            } catch (error) {
+                reject(error);
+            }
+        });
+        this._practiceScriptPromise = promise;
+        promise.finally(() => {
+            this._practiceScriptPromise = null;
+        });
+        return promise;
     }
 };
 
