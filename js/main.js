@@ -8,6 +8,7 @@ const Main = {
      * 初始化
      */
     init() {
+        console.log('[Main.init] ===== 开始初始化 =====');
         try {
             // 更新版本号显示
             if (typeof APP_VERSION !== 'undefined') {
@@ -15,7 +16,12 @@ const Main = {
                 if (versionEl) {
                     versionEl.textContent = `v${APP_VERSION.version}`;
                     versionEl.title = `版本 ${APP_VERSION.version}\n构建日期: ${APP_VERSION.buildDate}`;
+                    console.log('[Main.init] 版本号已更新:', APP_VERSION.version);
+                } else {
+                    console.warn('[Main.init] ⚠️ 找不到 app-version 元素');
                 }
+            } else {
+                console.warn('[Main.init] ⚠️ APP_VERSION 未定义');
             }
             
             // 确保Storage先初始化
@@ -55,7 +61,12 @@ const Main = {
                 TaskListUI.init();
             }
         } catch (error) {
-            console.error('初始化失败:', error);
+            console.error('[Main.init] ❌ 初始化失败:', error);
+            console.error('[Main.init] 错误详情:', {
+                message: error.message,
+                stack: error.stack,
+                name: error.name
+            });
             // 显示错误提示
             const errorDiv = document.createElement('div');
             errorDiv.className = 'alert alert-danger m-3';
@@ -345,9 +356,13 @@ const Main = {
         }
 
         // 首页开始按钮：使用首页设置直接开始练习
+        console.log('[Main.init] ===== 绑定首页开始按钮 =====');
         const startHome = document.getElementById('start-practice-btn-home');
+        console.log('[Main.init] 首页开始按钮元素:', { exists: !!startHome, id: startHome?.id });
+        
         if (startHome) {
             startHome.addEventListener('click', (event) => {
+                console.log('[Main.init] 首页开始按钮被点击');
                 event.preventDefault();
                 // 同步首页设置到练习页输入
                 const countHome = document.getElementById('word-count-input-home');
@@ -381,48 +396,71 @@ const Main = {
                 }
                 if (timeInput) timeInput.value = isFinite(time) && time > 0 ? String(time) : '30';
                 // 获取选中的题目
+                console.log('[Main.init] 开始获取选中的题目...');
                 let selectedWords = [];
                 if (typeof PracticeRange !== 'undefined' && PracticeRange.getSelectedWords) {
                     selectedWords = PracticeRange.getSelectedWords('practice-range-container-home');
+                    console.log('[Main.init] 获取到选中的题目数量:', selectedWords.length);
+                } else {
+                    console.error('[Main.init] ❌ PracticeRange 未定义或没有 getSelectedWords 方法');
                 }
                 
                 if (selectedWords.length === 0) {
+                    console.warn('[Main.init] ⚠️ 没有选中任何题目');
                     alert('请先选择练习范围！\n\n在"练习范围"区域勾选要练习的单元。');
                     return;
                 }
                 
                 // 获取拆分阈值（默认50，可从设置中读取）
                 const splitThreshold = 50;
+                console.log('[Main.init] 拆分阈值:', splitThreshold, '选中题目数:', selectedWords.length);
                 
                 // 如果题目数量超过阈值，询问是否拆分
                 if (selectedWords.length > splitThreshold) {
+                    console.log('[Main.init] 题目数量超过阈值，询问是否拆分...');
                     if (confirm(`已选择 ${selectedWords.length} 题，是否拆分任务？\n\n点击"确定"拆分任务，点击"取消"直接开始练习。`)) {
+                        console.log('[Main.init] 用户选择拆分任务');
                         // 显示拆分弹窗
                         const wordIds = selectedWords.map(w => w.id);
                         const selectedUnits = this.getSelectedUnitsForTaskName();
-                        console.log('[Main] 选中的单元:', selectedUnits);
+                        console.log('[Main.init] 选中的单元:', selectedUnits);
                         const taskName = typeof TaskList !== 'undefined' ? TaskList.generateTaskName(selectedUnits) : '未命名任务';
-                        console.log('[Main] 生成的任务名称:', taskName);
+                        console.log('[Main.init] 生成的任务名称:', taskName);
                         
                         if (typeof TaskListUI !== 'undefined') {
+                            console.log('[Main.init] 调用 TaskListUI.showSplitModal...');
                             TaskListUI.showSplitModal(wordIds, taskName);
+                            console.log('[Main.init] TaskListUI.showSplitModal 调用完成');
+                        } else {
+                            console.error('[Main.init] ❌ TaskListUI 未定义，无法显示拆分弹窗');
                         }
                         return;
+                    } else {
+                        console.log('[Main.init] 用户取消拆分，直接开始练习');
                     }
                 }
                 
                 // 直接开始练习，跳过练习范围选择页面
+                console.log('[Main.init] 准备直接开始练习...');
                 // 先同步范围选择（在后台进行）
                 if (typeof PracticeRange !== 'undefined' && PracticeRange.syncSelection) {
+                    console.log('[Main.init] 同步范围选择...');
                     PracticeRange.syncSelection('practice-range-container-home', 'practice-range-container');
                 }
                 // 直接开始练习
                 if (typeof Practice !== 'undefined') {
+                    console.log('[Main.init] Practice 模块存在，授权并开始练习...');
                     if (Practice.allowPracticePageOnce) {
                         Practice.allowPracticePageOnce();
+                        console.log('[Main.init] 练习页授权已授予');
                     }
+                    console.log('[Main.init] 切换到练习页...');
                     this.showPage('practice');
+                    console.log('[Main.init] 调用 Practice.start()...');
                     Practice.start();
+                    console.log('[Main.init] Practice.start() 调用完成');
+                } else {
+                    console.error('[Main.init] ❌ Practice 模块未定义，无法开始练习');
                 }
             });
         }
@@ -442,6 +480,8 @@ const Main = {
             }
             if (timeHomeEl && p.timeLimit !== undefined) timeHomeEl.value = p.timeLimit;
         }
+        
+        console.log('[Main.init] ===== 初始化完成 =====');
     },
     
     /**
