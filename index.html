@@ -10,11 +10,11 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <!-- 楷体字体 - 本地加载并缓存 -->
-    <script src="js/font-loader.js?v=1.3.51"></script>
+    <script src="js/font-loader.js?v=1.3.61"></script>
     <!-- pinyin-pro 拼音库 -->
     <script src="https://unpkg.com/pinyin-pro@3.14.0/dist/index.js"></script>
     <!-- 自定义样式 -->
-    <link rel="stylesheet" href="css/styles.css?v=1.3.51">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <!-- 导航栏 -->
@@ -22,7 +22,7 @@
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#home">
                 <i class="bi bi-pencil-square"></i> 看拼音写词
-                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.51</span>
+                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.61</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -63,6 +63,11 @@
                     <li class="nav-item ms-2">
                         <button class="btn btn-sm btn-outline-warning align-self-center" id="debug-toggle-btn">
                             <i class="bi bi-bug"></i> 调试
+                        </button>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <button class="btn btn-sm btn-outline-info align-self-center" id="diagnose-btn" title="诊断：检查当前状态和问题">
+                            <i class="bi bi-heart-pulse"></i> 诊断
                         </button>
                     </li>
                 </ul>
@@ -216,8 +221,8 @@
                     
                     <!-- 手写输入区 -->
                     <div class="mb-2 d-flex justify-content-center align-items-center flex-column">
-                        <!-- 反馈区域：显示简要文本提示 -->
-                        <div id="feedback-area" class="mb-1"></div>
+                        <!-- 反馈区域：已隐藏，不再显示红框内容 -->
+                        <div id="feedback-area" class="mb-1" style="display: none;"></div>
                         <div class="position-relative d-inline-block">
                             <button class="btn btn-outline-secondary position-absolute" id="prev-question-btn" style="left: -80px; top: 50%; transform: translateY(-50%);" title="上一题">
                                 <i class="bi bi-arrow-left"></i> 上一题
@@ -601,25 +606,25 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- 项目JS模块 -->
-    <script src="js/version.js?v=1.3.51"></script>
-    <script src="js/storage.js?v=1.3.51"></script>
-    <script src="js/config.js?v=1.3.51"></script>
-    <script src="js/debug.js?v=1.3.51"></script>
-    <script src="js/word-groups.js?v=1.3.51" onerror="console.error('[ERROR] word-groups.js加载失败！', this.src)"></script>
-    <script src="js/recognition.js?v=1.3.51"></script>
-    <script src="js/wordbank.js?v=1.3.51"></script>
-    <script src="js/export.js?v=1.3.51"></script>
-    <script src="js/review-plan.js?v=1.3.51"></script>
-    <script src="js/handwriting.js?v=1.3.51"></script>
-    <script src="js/practice.js?v=1.3.51"></script>
-    <script src="js/statistics.js?v=1.3.51"></script>
-    <script src="js/errorbook.js?v=1.3.51"></script>
-    <script src="js/init-data.js?v=1.3.51"></script>
-    <script src="js/practice-range.js?v=1.3.51"></script>
-    <script src="js/task-list.js?v=1.3.51"></script>
-    <script src="js/task-list-ui.js?v=1.3.51"></script>
-    <script src="js/review-plan-ui.js?v=1.3.51"></script>
-    <script src="js/main.js?v=1.3.51"></script>
+    <script src="js/version.js?v=1.3.61"></script>
+    <script src="js/storage.js?v=1.3.61"></script>
+    <script src="js/config.js?v=1.3.61"></script>
+    <script src="js/debug.js?v=1.3.61"></script>
+    <script src="js/word-groups.js?v=1.3.61" onerror="console.error('[ERROR] word-groups.js加载失败！', this.src)"></script>
+    <script src="js/recognition.js?v=1.3.61"></script>
+    <script src="js/wordbank.js?v=1.3.61"></script>
+    <script src="js/export.js?v=1.3.61"></script>
+    <script src="js/review-plan.js?v=1.3.61"></script>
+    <script src="js/handwriting.js?v=1.3.61"></script>
+    <script src="js/practice.js?v=1.3.61"></script>
+    <script src="js/statistics.js?v=1.3.61"></script>
+    <script src="js/errorbook.js?v=1.3.61"></script>
+    <script src="js/init-data.js?v=1.3.61"></script>
+    <script src="js/practice-range.js?v=1.3.61"></script>
+    <script src="js/task-list.js?v=1.3.61"></script>
+    <script src="js/task-list-ui.js?v=1.3.61"></script>
+    <script src="js/review-plan-ui.js?v=1.3.61"></script>
+    <script src="js/main.js?v=1.3.61"></script>
     <script>
         // 检查所有关键模块是否正确定义
         console.log('[Module Check]', {
@@ -755,5 +760,132 @@
         </div>
       </div>
     </div>
+
+    <!-- 诊断模态框 -->
+    <div class="modal fade" id="diagnosisModal" tabindex="-1" aria-labelledby="diagnosisModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="diagnosisModalLabel">诊断报告</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <pre id="diagnosis-output" style="white-space: pre-wrap; word-wrap: break-word; font-size: 0.85rem;"></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="copy-diagnosis-btn">复制到剪贴板</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 诊断功能脚本 -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const diagnoseBtn = document.getElementById('diagnose-btn');
+        const diagnosisOutput = document.getElementById('diagnosis-output');
+        const copyDiagnosisBtn = document.getElementById('copy-diagnosis-btn');
+
+        if (diagnoseBtn) {
+            diagnoseBtn.addEventListener('click', () => {
+                if (typeof Practice !== 'undefined' && Practice.diagnose) {
+                    const report = Practice.diagnose();
+                    let output = '=== 诊断报告 ===\n\n';
+                    output += `时间: ${report.timestamp}\n\n`;
+                    output += '--- 浏览器信息 ---\n';
+                    output += `User Agent: ${report.browser.userAgent}\n`;
+                    output += `平台: ${report.browser.platform}\n`;
+                    output += `是否iOS: ${report.browser.isIOS}\n`;
+                    output += `是否iPad: ${report.browser.isIPad}\n`;
+                    output += `触摸支持: ${report.browser.touchSupported}\n\n`;
+
+                    output += '--- 按钮状态 ---\n';
+                    Object.keys(report.buttons).forEach(id => {
+                        const btn = report.buttons[id];
+                        output += `\n${id}:\n`;
+                        output += `  存在: ${btn.exists}\n`;
+                        if (btn.exists) {
+                            output += `  禁用: ${btn.disabled}\n`;
+                            output += `  可见: ${btn.visible}\n`;
+                            output += `  z-index: ${btn.zIndex}\n`;
+                            output += `  position: ${btn.position}\n`;
+                            output += `  display: ${btn.display}\n`;
+                            output += `  pointer-events: ${btn.pointerEvents}\n`;
+                            output += `  touch-action: ${btn.touchAction}\n`;
+                        }
+                    });
+
+                    output += '\n--- 事件监听器 ---\n';
+                    Object.keys(report.eventListeners).forEach(id => {
+                        const listeners = report.eventListeners[id];
+                        output += `\n${id}:\n`;
+                        if (listeners.exists === false) {
+                            output += `  按钮不存在\n`;
+                        } else {
+                            output += `  onclick: ${listeners.hasOnClick}\n`;
+                            output += `  ontouchstart: ${listeners.hasTouchStart}\n`;
+                            output += `  ontouchend: ${listeners.hasTouchEnd}\n`;
+                            if (listeners.elementFromPoint) {
+                                output += `  元素遮挡检查:\n`;
+                                output += `    按钮中心点元素是按钮本身: ${listeners.elementFromPoint.isButton}\n`;
+                                output += `    中心点元素标签: ${listeners.elementFromPoint.elementTag}\n`;
+                                output += `    中心点元素ID: ${listeners.elementFromPoint.elementId || '(无)'}\n`;
+                            }
+                        }
+                    });
+
+                    output += '\n--- 练习状态 ---\n';
+                    Object.keys(report.practiceState).forEach(key => {
+                        output += `${key}: ${JSON.stringify(report.practiceState[key])}\n`;
+                    });
+
+                    output += '\n--- 手写状态 ---\n';
+                    Object.keys(report.handwriting).forEach(key => {
+                        output += `${key}: ${report.handwriting[key]}\n`;
+                    });
+
+                    diagnosisOutput.textContent = output;
+                    const diagnosisModal = new bootstrap.Modal(document.getElementById('diagnosisModal'));
+                    diagnosisModal.show();
+                } else {
+                    alert('Practice 模块未加载或诊断功能不可用。');
+                }
+            });
+        }
+
+        if (copyDiagnosisBtn) {
+            copyDiagnosisBtn.addEventListener('click', async () => {
+                const textToCopy = diagnosisOutput.textContent;
+                try {
+                    await navigator.clipboard.writeText(textToCopy);
+                    copyDiagnosisBtn.textContent = '已复制！';
+                    setTimeout(() => {
+                        copyDiagnosisBtn.textContent = '复制到剪贴板';
+                    }, 2000);
+                } catch (err) {
+                    console.error('复制失败:', err);
+                    // 降级方案：使用传统方法
+                    const textArea = document.createElement('textarea');
+                    textArea.value = textToCopy;
+                    textArea.style.position = 'fixed';
+                    textArea.style.opacity = '0';
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        copyDiagnosisBtn.textContent = '已复制！';
+                        setTimeout(() => {
+                            copyDiagnosisBtn.textContent = '复制到剪贴板';
+                        }, 2000);
+                    } catch (e) {
+                        alert('复制失败，请手动复制。');
+                    }
+                    document.body.removeChild(textArea);
+                }
+            });
+        }
+    });
+    </script>
 </body>
 </html>
