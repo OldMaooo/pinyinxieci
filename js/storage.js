@@ -119,8 +119,20 @@ const Storage = {
      */
     getAllReviewPlans() {
         const data = localStorage.getItem(this.KEYS.REVIEW_PLANS);
-        const plans = data ? JSON.parse(data) : {};
-        return Object.values(plans);
+        if (!data) return [];
+        try {
+            const plans = JSON.parse(data);
+            if (Array.isArray(plans)) {
+                return plans;
+            }
+            if (typeof plans === 'object' && plans !== null) {
+                return Object.values(plans);
+            }
+            return [];
+        } catch (e) {
+            console.warn('[Storage.getAllReviewPlans] 解析失败:', e);
+            return [];
+        }
     },
     
     saveAllReviewPlans(plans) {
@@ -451,7 +463,8 @@ const Storage = {
         if (merge) {
             // 合并模式：保留现有数据，合并新数据
             const existingWordBank = this.getWordBank();
-            const newWordBank = [...existingWordBank];
+            // 确保 existingWordBank 是数组
+            const newWordBank = Array.isArray(existingWordBank) ? [...existingWordBank] : [];
             
             // 合并题库（去重）
             if (data.wordBank && Array.isArray(data.wordBank)) {
@@ -675,23 +688,28 @@ const Storage = {
         const errorWordsFromMastery = [];
         if (data.wordMastery && typeof data.wordMastery === 'object') {
             const wordBank = this.getWordBank();
-            Object.entries(data.wordMastery).forEach(([wordId, status]) => {
-                if (status === 'error') {
-                    // 查找对应的字信息
-                    const word = wordBank.find(w => w.id === wordId);
-                    if (word) {
-                        errorWordsFromMastery.push({
-                            wordId: wordId,
-                            word: word.word,
-                            pinyin: word.pinyin || '',
-                            errorCount: 1,
-                            firstErrorDate: new Date().toISOString(),
-                            lastErrorDate: new Date().toISOString(),
-                            handwritingSnapshots: []
-                        });
+            // 确保 wordBank 是数组
+            if (Array.isArray(wordBank)) {
+                Object.entries(data.wordMastery).forEach(([wordId, status]) => {
+                    if (status === 'error') {
+                        // 查找对应的字信息
+                        const word = wordBank.find(w => w.id === wordId);
+                        if (word) {
+                            errorWordsFromMastery.push({
+                                wordId: wordId,
+                                word: word.word,
+                                pinyin: word.pinyin || '',
+                                errorCount: 1,
+                                firstErrorDate: new Date().toISOString(),
+                                lastErrorDate: new Date().toISOString(),
+                                handwritingSnapshots: []
+                            });
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                console.warn('[Storage.importSyncData] wordBank 不是数组，跳过从 wordMastery 提取错题');
+            }
         }
         
         // 导入错题（合并模式会去重）
@@ -748,12 +766,23 @@ const Storage = {
             if (merge) {
                 const existing = this.getAllReviewPlans();
                 const existingObj = {};
-                existing.forEach(p => { if (p.wordId) existingObj[p.wordId] = p; });
-                const newPlans = Array.isArray(data.reviewPlans) ? data.reviewPlans : Object.values(data.reviewPlans);
-                newPlans.forEach(p => { if (p.wordId) existingObj[p.wordId] = p; });
+                if (Array.isArray(existing)) {
+                    existing.forEach(p => { if (p.wordId) existingObj[p.wordId] = p; });
+                }
+                const newPlans = Array.isArray(data.reviewPlans) ? data.reviewPlans : (typeof data.reviewPlans === 'object' ? Object.values(data.reviewPlans) : []);
+                if (Array.isArray(newPlans)) {
+                    newPlans.forEach(p => { if (p.wordId) existingObj[p.wordId] = p; });
+                }
                 this.saveAllReviewPlans(existingObj);
             } else {
-                this.saveAllReviewPlans(data.reviewPlans);
+                // 替换模式：确保数据格式正确
+                if (Array.isArray(data.reviewPlans)) {
+                    this.saveAllReviewPlans(data.reviewPlans);
+                } else if (typeof data.reviewPlans === 'object') {
+                    this.saveAllReviewPlans(data.reviewPlans);
+                } else {
+                    console.warn('[Storage.importSyncData] reviewPlans 格式不正确，跳过导入');
+                }
             }
         }
         

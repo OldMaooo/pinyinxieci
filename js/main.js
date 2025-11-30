@@ -1941,6 +1941,13 @@ const Main = {
                 if (result.data) {
                     // 合并数据到本地
                     try {
+                        // 确保数据格式正确
+                        if (!result.data.version) {
+                            result.data.version = "1.1";
+                        }
+                        if (!result.data.type) {
+                            result.data.type = "sync";
+                        }
                         Storage.importSyncData(result.data, true);
                         statusEl.innerHTML = '<i class="bi bi-check-circle text-success"></i> 下载并合并成功';
                         
