@@ -89,6 +89,79 @@ const PracticeRange = {
             <path d="${pathData}" fill="#28a745"/>
         </svg></div>`;
     },
+    
+    /**
+     * 生成学期饼图（支持三种状态：绿、红、灰顺序）
+     */
+    generateSemesterPie(masteredCount, errorCount, totalCount) {
+        const isDarkMode = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+        const grayColor = isDarkMode ? '#495057' : '#ced4da';
+        
+        if (totalCount === 0) {
+            return `<div class="completion-pie"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="${grayColor}"/></svg></div>`;
+        }
+        
+        const radius = 9;
+        const centerX = 10;
+        const centerY = 10;
+        
+        // 计算比例
+        const masteredRatio = masteredCount / totalCount;
+        const errorRatio = errorCount / totalCount;
+        const defaultRatio = (totalCount - masteredCount - errorCount) / totalCount;
+        
+        // 如果全部是灰色（未练习）
+        if (masteredCount === 0 && errorCount === 0) {
+            return `<div class="completion-pie"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="${grayColor}"/></svg></div>`;
+        }
+        
+        // 如果全部掌握，显示绿色带勾
+        if (masteredCount === totalCount) {
+            return '<div class="completion-pie completion-pie-mastered"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#28a745"/><path d="M6 10 L9 13 L14 7" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>';
+        }
+        
+        // 生成路径：绿、红、灰顺序（从顶部开始，顺时针）
+        const startAngle = -90;
+        let currentAngle = startAngle;
+        
+        const paths = [];
+        
+        // 绿色（已掌握）
+        if (masteredRatio > 0) {
+            const angle = masteredRatio * 360;
+            const endAngle = currentAngle + angle;
+            const startRad = (currentAngle * Math.PI) / 180;
+            const endRad = (endAngle * Math.PI) / 180;
+            const x1 = centerX + radius * Math.cos(startRad);
+            const y1 = centerY + radius * Math.sin(startRad);
+            const x2 = centerX + radius * Math.cos(endRad);
+            const y2 = centerY + radius * Math.sin(endRad);
+            const largeArcFlag = angle > 180 ? 1 : 0;
+            paths.push(`<path d="M ${centerX} ${centerY} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z" fill="#28a745"/>`);
+            currentAngle = endAngle;
+        }
+        
+        // 红色（错题）
+        if (errorRatio > 0) {
+            const angle = errorRatio * 360;
+            const endAngle = currentAngle + angle;
+            const startRad = (currentAngle * Math.PI) / 180;
+            const endRad = (endAngle * Math.PI) / 180;
+            const x1 = centerX + radius * Math.cos(startRad);
+            const y1 = centerY + radius * Math.sin(startRad);
+            const x2 = centerX + radius * Math.cos(endRad);
+            const y2 = centerY + radius * Math.sin(endRad);
+            const largeArcFlag = angle > 180 ? 1 : 0;
+            paths.push(`<path d="M ${centerX} ${centerY} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z" fill="#dc3545"/>`);
+            currentAngle = endAngle;
+        }
+        
+        // 灰色（未练习）- 作为背景
+        return `<div class="completion-pie"><svg width="20" height="20" viewBox="0 0 20 20">
+            <circle cx="10" cy="10" r="9" fill="${grayColor}"/>
+            ${paths.join('')}
+        </svg></div>`;
+    },
 
     renderTableView(container, wordBank, options = {}) {
         const grouped = this.groupWordsBySemesterUnit(wordBank);
@@ -129,8 +202,9 @@ const PracticeRange = {
             // 默认全部收起，如果有选中的学期则展开
             const isExpanded = selectedSemesters.has(semesterKey);
             
-            // 计算学期的完成率（所有单元的字）
+            // 计算学期的完成率（所有单元的字）- 支持三种状态：已掌握（绿）、错题（红）、未练习（灰）
             let semesterMasteredCount = 0;
+            let semesterErrorCount = 0;
             let semesterTotalCount = 0;
             const isWordbankContext = options.context === 'wordbank';
             const wordMastery = isWordbankContext && typeof Storage !== 'undefined' && Storage.getWordMastery 
@@ -143,20 +217,24 @@ const PracticeRange = {
                     semesterTotalCount += words.length;
                     words.forEach(w => {
                         let isMastered = false;
+                        let isError = false;
                         if (isWordbankContext && wordMastery[w.id]) {
                             // 在wordbank上下文中，优先使用手动设置的状态
-                            isMastered = wordMastery[w.id] === 'mastered';
+                            const masteryStatus = wordMastery[w.id];
+                            isMastered = masteryStatus === 'mastered';
+                            isError = masteryStatus === 'error';
                         } else {
                             // 非wordbank上下文，使用自动判断
-                            const isError = errorWordIds.has(w.id);
+                            isError = errorWordIds.has(w.id);
                             const hasCorrect = wordCorrectCount.get(w.id) > 0;
                             isMastered = hasCorrect && !isError;
                         }
                         if (isMastered) semesterMasteredCount++;
+                        if (isError) semesterErrorCount++;
                     });
                 }
             });
-            const semesterPieHtml = this.generateCompletionPie(semesterMasteredCount, semesterTotalCount);
+            const semesterPieHtml = this.generateSemesterPie(semesterMasteredCount, semesterErrorCount, semesterTotalCount);
             
             html += `
                 <div class="accordion-item">
@@ -249,10 +327,13 @@ const PracticeRange = {
                     if (isMastered) masteredCount++;
                     
                     // 在wordbank上下文中，添加data-word-id和点击样式
-                    const clickableClass = isWordbankContext ? 'word-tag-clickable' : '';
-                    const dataAttr = isWordbankContext ? `data-word-id="${w.id}"` : '';
+                    // 在home上下文中，也添加点击功能（用于首页切换掌握状态）
+                    const isHomeContext = options.context === 'home';
+                    const clickableClass = (isWordbankContext || isHomeContext) ? 'word-tag-clickable' : '';
+                    const dataAttr = (isWordbankContext || isHomeContext) ? `data-word-id="${w.id}"` : '';
+                    const titleText = (isWordbankContext || isHomeContext) ? '点击切换掌握状态（默认→错题→已掌握）' : '';
                     
-                    return `<span class="word-tag ${tagClass} ${clickableClass}" ${dataAttr} title="${isWordbankContext ? '点击切换掌握状态（默认→错题→已掌握）' : ''}">${w.word}</span>`;
+                    return `<span class="word-tag ${tagClass} ${clickableClass}" ${dataAttr} title="${titleText}">${w.word}</span>`;
                 }).join('');
                 
                 // 计算完成率并生成饼图
@@ -475,6 +556,27 @@ const PracticeRange = {
                 this.updateSelectedCount(container, options);
             });
         });
+        
+        // 绑定单个字的点击事件（切换掌握状态）- 在home和wordbank上下文中
+        if (options.context === 'home' || options.context === 'wordbank') {
+            container.addEventListener('click', (e) => {
+                const wordTag = e.target.closest('.word-tag-clickable');
+                if (wordTag && wordTag.dataset.wordId) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    
+                    // 在home上下文中，使用WordBank的方法切换状态
+                    if (options.context === 'home' && typeof WordBank !== 'undefined' && WordBank.toggleWordMasteryStatus) {
+                        WordBank.toggleWordMasteryStatus(wordTag, wordTag.dataset.wordId);
+                        // 刷新视图以更新饼图
+                        if (typeof PracticeRange !== 'undefined' && PracticeRange.refresh) {
+                            PracticeRange.refresh();
+                        }
+                    }
+                    // 在wordbank上下文中，已经在bindMasteryEvents中处理
+                }
+            }, true); // 使用捕获阶段，确保在行点击事件之前处理
+        }
         
         container.querySelectorAll('.unit-row').forEach(row => {
             row.addEventListener('click', (e) => {

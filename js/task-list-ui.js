@@ -992,9 +992,15 @@ const TaskListUI = {
                     </div>
                         <div class="mt-3 d-flex gap-2">
                             ${task.status === TaskList.STATUS.PENDING || task.status === TaskList.STATUS.PAUSED ? `
-                                <button class="btn btn-sm btn-primary task-start-btn" data-task-id="${task.id}">
-                                    <i class="bi bi-play-fill"></i> ${task.status === TaskList.STATUS.PAUSED ? '继续' : '开始'}
-                                </button>
+                                ${this.isTaskReady(task) ? `
+                                    <button class="btn btn-sm btn-primary task-start-btn" data-task-id="${task.id}">
+                                        <i class="bi bi-play-fill"></i> ${task.status === TaskList.STATUS.PAUSED ? '继续' : '开始'}
+                                    </button>
+                                ` : `
+                                    <button class="btn btn-sm btn-secondary task-start-btn" data-task-id="${task.id}" disabled title="任务未到时间，无法开始">
+                                        <i class="bi bi-play-fill"></i> ${task.status === TaskList.STATUS.PAUSED ? '继续' : '开始'}
+                                    </button>
+                                `}
                             ` : ''}
                             ${task.status === TaskList.STATUS.IN_PROGRESS ? `
                                 <button class="btn btn-sm btn-primary task-continue-btn" data-task-id="${task.id}">
@@ -1024,6 +1030,25 @@ const TaskListUI = {
             [TaskList.STATUS.PAUSED]: { class: 'bg-warning', text: '已暂停' }
         };
         return badges[status] || badges[TaskList.STATUS.PENDING];
+    },
+    
+    /**
+     * 检查任务是否已到时间（包括复习任务和练习任务）
+     */
+    isTaskReady(task) {
+        // 如果没有scheduledDate，始终可用
+        if (!task.scheduledDate) {
+            return true;
+        }
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const scheduledDate = new Date(task.scheduledDate + 'T00:00:00');
+        scheduledDate.setHours(0, 0, 0, 0);
+        
+        // 如果任务日期在今天或之前，则可以开始
+        return scheduledDate <= today;
     },
     
     /**
@@ -1710,6 +1735,19 @@ const TaskListUI = {
         
         tasks.forEach((task, index) => {
             console.log(`[TaskListUI.confirmSplitTask] 正在添加任务 ${index + 1}/${tasks.length}:`, { name: task.name, wordCount: task.wordIds.length });
+            
+            // 确保progress.total与wordIds.length一致
+            if (task.progress) {
+                task.progress.total = task.wordIds.length;
+            } else {
+                task.progress = {
+                    total: task.wordIds.length,
+                    completed: 0,
+                    correct: 0,
+                    errors: []
+                };
+            }
+            
             const result = TaskList.addTask(task);
             console.log(`[TaskListUI.confirmSplitTask] 添加结果 ${index + 1}:`, result);
             if (result.success) {

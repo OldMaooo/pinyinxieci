@@ -397,7 +397,7 @@ const WordBank = {
     bindMasteryEvents(container) {
         if (!container) return;
         
-        // 监听复选框变化，更新选中数量
+        // 监听复选框变化，更新选中数量（不再禁用按钮）
         container.addEventListener('change', (e) => {
             if (e.target.classList.contains('unit-checkbox')) {
                 this.updateSelectedCount();
@@ -611,9 +611,89 @@ const WordBank = {
             
             this.showToast('success', `已${action} ${updated} 个字`);
             
-            // 刷新视图
+            // 刷新视图并更新饼图
             this.loadMasteryView();
+            
+            // 立即更新学期饼图（不等待重新渲染）
+            this.updateSemesterPies(container, status, selectedWords);
         }
+    },
+    
+    /**
+     * 更新学期饼图（批量设置后立即更新）
+     */
+    updateSemesterPies(container, status, selectedWords) {
+        if (!container || !selectedWords || selectedWords.length === 0) return;
+        
+        const wordBank = Storage.getWordBank();
+        const grouped = PracticeRange.groupWordsBySemesterUnit(wordBank);
+        const wordMastery = Storage.getWordMastery();
+        
+        // 按学期分组统计
+        const semesterStats = new Map();
+        
+        selectedWords.forEach(word => {
+            const gradeLabel = PracticeRange.formatGradeLabel(word.grade);
+            const semesterLabel = PracticeRange.formatSemesterLabel(word.semester);
+            const semesterKey = `${gradeLabel}${semesterLabel}`;
+            
+            if (!semesterStats.has(semesterKey)) {
+                semesterStats.set(semesterKey, { mastered: 0, error: 0, total: 0 });
+            }
+            
+            const stats = semesterStats.get(semesterKey);
+            stats.total++;
+            
+            const masteryStatus = wordMastery[word.id];
+            if (masteryStatus === 'mastered') {
+                stats.mastered++;
+            } else if (masteryStatus === 'error') {
+                stats.error++;
+            }
+        });
+        
+        // 更新每个学期的饼图
+        semesterStats.forEach((stats, semesterKey) => {
+            const semesterHeader = container.querySelector(`.semester-checkbox[data-semester="${semesterKey}"]`)?.closest('.practice-semester-header');
+            if (!semesterHeader) return;
+            
+            // 计算该学期的所有单元
+            const units = grouped[semesterKey];
+            if (!units) return;
+            
+            let totalMastered = 0;
+            let totalError = 0;
+            let totalCount = 0;
+            
+            Object.values(units).forEach(unitWords => {
+                if (Array.isArray(unitWords)) {
+                    unitWords.forEach(w => {
+                        totalCount++;
+                        const masteryStatus = wordMastery[w.id];
+                        if (masteryStatus === 'mastered') {
+                            totalMastered++;
+                        } else if (masteryStatus === 'error') {
+                            totalError++;
+                        }
+                    });
+                }
+            });
+            
+            // 生成新的饼图（绿、红、灰顺序）- 使用PracticeRange的方法
+            const pieHtml = PracticeRange.generateSemesterPie(totalMastered, totalError, totalCount);
+            
+            // 查找并更新饼图
+            const button = semesterHeader.querySelector('.practice-semester-btn');
+            if (button) {
+                const existingPie = button.querySelector('span[style*="margin-left"]');
+                if (existingPie) {
+                    existingPie.outerHTML = pieHtml;
+                } else {
+                    // 如果找不到，在按钮末尾添加
+                    button.insertAdjacentHTML('beforeend', pieHtml);
+                }
+            }
+        });
     }
 };
 

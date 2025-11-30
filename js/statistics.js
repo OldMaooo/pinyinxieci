@@ -124,43 +124,65 @@ const Statistics = {
         const total = log.totalWords || 0;
         const score = total > 0 ? Math.round((correct / total) * 100) : 0;
         
-        // 分数放在第一个，字体大
+        // 分数放在第一个，字体大，根据分数设置颜色
         const scoreEl = document.getElementById('result-accuracy');
         if (scoreEl) {
             scoreEl.textContent = `${score}分`;
             scoreEl.style.fontSize = '2rem';
             scoreEl.style.fontWeight = 'bold';
+            
+            // 根据分数设置颜色：80以下红色，80-89黄色，90以上绿色，100分彩色渐变
+            if (score === 100) {
+                scoreEl.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 50%, #0dcaf0 100%)';
+                scoreEl.style.webkitBackgroundClip = 'text';
+                scoreEl.style.webkitTextFillColor = 'transparent';
+                scoreEl.style.backgroundClip = 'text';
+            } else if (score >= 90) {
+                scoreEl.style.color = '#28a745'; // 绿色
+            } else if (score >= 80) {
+                scoreEl.style.color = '#ffc107'; // 黄色
+            } else {
+                scoreEl.style.color = '#dc3545'; // 红色
+            }
         }
         
-        // 其他统计：数字和label字体大小互换
+        // 其他统计：数字和label字体大小互换，深色模式下统计数字为白色
+        const isDarkMode = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+        const statColor = isDarkMode ? '#ffffff' : '';
+        
         const totalEl = document.getElementById('result-total');
         if (totalEl) {
             totalEl.textContent = total;
-            totalEl.style.fontSize = '1rem'; // 数字用1rem（原来是0.9rem）
+            totalEl.style.fontSize = '1rem';
+            if (statColor) totalEl.style.color = statColor;
         }
         
         const correctErrorEl = document.getElementById('result-correct-error');
         if (correctErrorEl) {
             correctErrorEl.textContent = `正确${correct}，错误${error}`;
             correctErrorEl.style.fontSize = '0.85rem';
+            if (statColor) correctErrorEl.style.color = statColor;
         }
         
         const totalTimeEl = document.getElementById('result-total-time');
         if (totalTimeEl) {
             totalTimeEl.textContent = `${Math.round(log.totalTime || 0)}秒`;
-            totalTimeEl.style.fontSize = '1rem'; // 数字用1rem（原来是0.9rem）
+            totalTimeEl.style.fontSize = '1rem';
+            if (statColor) totalTimeEl.style.color = statColor;
         }
         
         const avgTimeEl = document.getElementById('result-avg-time');
         if (avgTimeEl) {
             avgTimeEl.textContent = `${Math.round(log.averageTime || 0)}秒`;
-            avgTimeEl.style.fontSize = '1rem'; // 数字用1rem（原来是0.9rem）
+            avgTimeEl.style.fontSize = '1rem';
+            if (statColor) avgTimeEl.style.color = statColor;
         }
         
-        // label字体大小改为0.9rem（原来是1rem）
+        // label字体大小改为0.9rem（原来是1rem），深色模式下为白色
         const statTexts = document.querySelectorAll('.stat-text');
         statTexts.forEach(el => {
             el.style.fontSize = '0.9rem';
+            if (statColor) el.style.color = statColor;
         });
     },
     

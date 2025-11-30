@@ -10,7 +10,7 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <!-- 楷体字体 - 本地加载并缓存 -->
-    <script src="js/font-loader.js?v=1.3.78"></script>
+    <script src="js/font-loader.js?v=1.3.80"></script>
     <!-- pinyin-pro 拼音库 -->
     <script src="https://unpkg.com/pinyin-pro@3.14.0/dist/index.js"></script>
     <!-- 自定义样式 -->
@@ -22,7 +22,7 @@
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#home">
                 <i class="bi bi-pencil-square"></i> 看拼音写词
-                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.78</span>
+                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.80</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -183,12 +183,6 @@
                 <!-- 右栏：练习范围 -->
                 <div class="col practice-range-col">
                     <div class="card h-100 d-flex flex-column" style="position: relative;">
-                        <div class="card-header d-flex justify-content-between align-items-center" style="flex-shrink: 0;">
-                            <h5 class="mb-0"><i class="bi bi-layers"></i> 练习范围</h5>
-                            <button class="btn btn-sm btn-outline-primary" id="refresh-wordbank-btn" type="button" title="重新加载1-6年级默认题库">
-                                <i class="bi bi-arrow-repeat"></i> 刷新默认题库
-                            </button>
-                        </div>
                         <div class="card-body flex-grow-1 d-flex flex-column" style="min-height: 0; padding: 0; position: relative;">
                             <div id="practice-range-container-home" class="flex-grow-1" style="overflow-y: auto; min-height: 0;"></div>
                             <div class="border-top p-3 bg-body" style="position: sticky; bottom: 0; z-index: 10; flex-shrink: 0; margin-top: 0;">
@@ -550,7 +544,7 @@
                                 <div class="card-header">
                                     <h5 class="mb-0"><i class="bi bi-check-circle"></i> 设置掌握状态</h5>
                                 </div>
-                                <div class="card-body d-flex flex-column" style="flex: 1; min-height: 0; padding: 1rem;">
+                                <div class="card-body d-flex flex-column" style="flex: 1; min-height: 0; padding: 1rem; padding-bottom: 4rem;">
                                     <!-- 练习范围视图（复用） -->
                                     <div id="wordbank-practice-range-container" class="flex-grow-1" style="overflow-y: auto; min-height: 0;">
                                         <div class="text-center text-muted py-3">
@@ -558,17 +552,17 @@
                                         </div>
                                     </div>
                                     
-                                    <!-- 批量操作工具栏 -->
-                                    <div class="mt-3 d-flex gap-2 align-items-center flex-wrap" id="wordbank-batch-toolbar" style="flex-shrink: 0;">
+                                    <!-- 批量操作工具栏 - 固定置底 -->
+                                    <div class="d-flex gap-2 align-items-center flex-wrap" id="wordbank-batch-toolbar" style="position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--bs-body-bg); border-top: 1px solid var(--bs-border-color); padding: 0.75rem 1rem; z-index: 1050; box-shadow: 0 -2px 10px rgba(0,0,0,0.1);">
                                         <span class="text-muted">已选择 <strong id="wordbank-selected-count">0</strong> 个字</span>
                                         <div class="ms-auto d-flex gap-2 flex-wrap">
-                                            <button class="btn btn-sm btn-outline-primary" id="wordbank-batch-unpracticed-btn" disabled>
+                                            <button class="btn btn-sm btn-outline-primary" id="wordbank-batch-unpracticed-btn">
                                                 <i class="bi bi-circle"></i> 设为未练习
                                             </button>
-                                            <button class="btn btn-sm btn-success" id="wordbank-batch-master-btn" disabled>
+                                            <button class="btn btn-sm btn-success" id="wordbank-batch-master-btn">
                                                 <i class="bi bi-check-circle"></i> 设为已掌握
                                             </button>
-                                            <button class="btn btn-sm btn-danger" id="wordbank-batch-error-btn" disabled>
+                                            <button class="btn btn-sm btn-danger" id="wordbank-batch-error-btn">
                                                 <i class="bi bi-x-circle"></i> 设为错题
                                             </button>
                                         </div>
@@ -594,25 +588,25 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- 项目JS模块 -->
-    <script src="js/version.js?v=1.3.78"></script>
-    <script src="js/storage.js?v=1.3.78"></script>
-    <script src="js/config.js?v=1.3.78"></script>
-    <script src="js/debug.js?v=1.3.78"></script>
-    <script src="js/word-groups.js?v=1.3.78" onerror="console.error('[ERROR] word-groups.js加载失败！', this.src)"></script>
-    <script src="js/recognition.js?v=1.3.78"></script>
-    <script src="js/wordbank.js?v=1.3.78"></script>
-    <script src="js/export.js?v=1.3.78"></script>
-    <script src="js/review-plan.js?v=1.3.78"></script>
-    <script src="js/handwriting.js?v=1.3.78"></script>
-    <script src="js/practice.js?v=1.3.78"></script>
-    <script src="js/statistics.js?v=1.3.78"></script>
-    <script src="js/errorbook.js?v=1.3.78"></script>
-    <script src="js/init-data.js?v=1.3.78"></script>
-    <script src="js/practice-range.js?v=1.3.78"></script>
-    <script src="js/task-list.js?v=1.3.78"></script>
-    <script src="js/task-list-ui.js?v=1.3.78"></script>
-    <script src="js/review-plan-ui.js?v=1.3.78"></script>
-    <script src="js/main.js?v=1.3.78"></script>
+    <script src="js/version.js?v=1.3.80"></script>
+    <script src="js/storage.js?v=1.3.80"></script>
+    <script src="js/config.js?v=1.3.80"></script>
+    <script src="js/debug.js?v=1.3.80"></script>
+    <script src="js/word-groups.js?v=1.3.80" onerror="console.error('[ERROR] word-groups.js加载失败！', this.src)"></script>
+    <script src="js/recognition.js?v=1.3.80"></script>
+    <script src="js/wordbank.js?v=1.3.80"></script>
+    <script src="js/export.js?v=1.3.80"></script>
+    <script src="js/review-plan.js?v=1.3.80"></script>
+    <script src="js/handwriting.js?v=1.3.80"></script>
+    <script src="js/practice.js?v=1.3.80"></script>
+    <script src="js/statistics.js?v=1.3.80"></script>
+    <script src="js/errorbook.js?v=1.3.80"></script>
+    <script src="js/init-data.js?v=1.3.80"></script>
+    <script src="js/practice-range.js?v=1.3.80"></script>
+    <script src="js/task-list.js?v=1.3.80"></script>
+    <script src="js/task-list-ui.js?v=1.3.80"></script>
+    <script src="js/review-plan-ui.js?v=1.3.80"></script>
+    <script src="js/main.js?v=1.3.80"></script>
     <script>
         // 检查所有关键模块是否正确定义
         console.log('[Module Check]', {
