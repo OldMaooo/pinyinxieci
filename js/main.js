@@ -937,6 +937,9 @@ const Main = {
             };
         }
         
+        // 云端同步按钮
+        this.bindSupabaseSyncButtons();
+        
         // 导出按钮 - 显示导出选择弹框
         const exportSyncBtn = document.getElementById('home-export-sync-btn');
         if (exportSyncBtn) {
@@ -1666,6 +1669,337 @@ const Main = {
             this._practiceScriptPromise = null;
         });
         return promise;
+    },
+
+    /**
+     * 绑定 Supabase 同步按钮事件
+     */
+    bindSupabaseSyncButtons() {
+        // 检查配置状态并显示/隐藏配置界面
+        this.updateSupabaseConfigUI();
+        
+        // 配置切换按钮
+        const configToggleBtn = document.getElementById('supabase-config-toggle-btn');
+        const configSection = document.getElementById('supabase-config-section');
+        if (configToggleBtn && configSection) {
+            configToggleBtn.addEventListener('click', () => {
+                const isVisible = configSection.style.display !== 'none';
+                configSection.style.display = isVisible ? 'none' : 'block';
+            });
+        }
+        
+        // 保存配置按钮
+        const saveConfigBtn = document.getElementById('supabase-save-config-btn');
+        if (saveConfigBtn) {
+            saveConfigBtn.addEventListener('click', () => {
+                const urlInput = document.getElementById('supabase-url-input');
+                const keyInput = document.getElementById('supabase-key-input');
+                
+                if (!urlInput || !keyInput) return;
+                
+                const url = urlInput.value.trim();
+                const anonKey = keyInput.value.trim();
+                
+                if (!url || !anonKey) {
+                    if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                        WordBank.showToast('warning', '请填写完整的 Supabase 配置');
+                    }
+                    return;
+                }
+                
+                // 保存配置
+                Config.saveSupabase({ url, anonKey });
+                
+                // 更新UI
+                this.updateSupabaseConfigUI();
+                
+                // 隐藏配置界面
+                if (configSection) {
+                    configSection.style.display = 'none';
+                }
+                
+                if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                    WordBank.showToast('success', 'Supabase 配置已保存');
+                }
+            });
+        }
+        
+        // 同步按钮（智能合并）
+        const syncBtn = document.getElementById('home-sync-btn');
+        if (syncBtn) {
+            syncBtn.addEventListener('click', async () => {
+                await this.handleSync();
+            });
+        }
+
+        // 上传按钮
+        const uploadBtn = document.getElementById('home-upload-btn');
+        if (uploadBtn) {
+            uploadBtn.addEventListener('click', async () => {
+                await this.handleUpload();
+            });
+        }
+
+        // 下载按钮
+        const downloadBtn = document.getElementById('home-download-btn');
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', async () => {
+                await this.handleDownload();
+            });
+        }
+    },
+    
+    /**
+     * 更新 Supabase 配置UI状态
+     */
+    updateSupabaseConfigUI() {
+        const supabaseConfig = Config.getSupabase();
+        const configSection = document.getElementById('supabase-config-section');
+        const urlInput = document.getElementById('supabase-url-input');
+        const keyInput = document.getElementById('supabase-key-input');
+        
+        if (supabaseConfig && supabaseConfig.url && supabaseConfig.anonKey) {
+            // 已配置，隐藏配置界面
+            if (configSection) {
+                configSection.style.display = 'none';
+            }
+            // 填充输入框（用于编辑）
+            if (urlInput) urlInput.value = supabaseConfig.url;
+            if (keyInput) keyInput.value = supabaseConfig.anonKey;
+        } else {
+            // 未配置，显示配置界面
+            if (configSection) {
+                configSection.style.display = 'block';
+            }
+        }
+    },
+
+    /**
+     * 处理同步操作
+     */
+    async handleSync() {
+        const syncBtn = document.getElementById('home-sync-btn');
+        const statusEl = document.getElementById('home-sync-status');
+        const timeEl = document.getElementById('home-sync-time');
+        const timeValueEl = document.getElementById('home-sync-time-value');
+
+        if (!syncBtn || !statusEl) return;
+
+        // 检查配置（优先使用 localStorage 中的配置）
+        const supabaseConfig = Config.getSupabase();
+        if (!supabaseConfig || !supabaseConfig.url || !supabaseConfig.anonKey) {
+            statusEl.innerHTML = '<i class="bi bi-exclamation-triangle text-warning"></i> 请先在浏览器控制台配置 Supabase：<br><code style="font-size: 0.8em;">Config.saveSupabase({url: "你的URL", anonKey: "你的Key"})</code>';
+            return;
+        }
+
+        // 更新UI状态
+        syncBtn.disabled = true;
+        syncBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 同步中...';
+        statusEl.innerHTML = '<i class="bi bi-hourglass-split text-info"></i> 正在同步数据...';
+
+        try {
+            const result = await SupabaseSync.sync();
+            
+            if (result.success) {
+                statusEl.innerHTML = '<i class="bi bi-check-circle text-success"></i> 同步成功';
+                
+                // 更新最后同步时间
+                if (result.lastSyncTime) {
+                    const syncTime = new Date(result.lastSyncTime);
+                    const localTime = syncTime.toLocaleString('zh-CN', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    timeValueEl.textContent = localTime;
+                    timeEl.style.display = 'block';
+                }
+
+                // 刷新相关页面数据
+                if (typeof PracticeRange !== 'undefined') {
+                    PracticeRange.renderTableView('practice-range-container-home', {});
+                }
+                if (typeof TaskListUI !== 'undefined') {
+                    TaskListUI.load();
+                }
+                if (typeof ErrorBook !== 'undefined') {
+                    ErrorBook.load();
+                }
+
+                // 显示成功提示
+                if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                    WordBank.showToast('success', '数据同步成功');
+                }
+            } else {
+                statusEl.innerHTML = `<i class="bi bi-x-circle text-danger"></i> ${result.message || '同步失败'}`;
+                if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                    WordBank.showToast('danger', result.message || '同步失败');
+                }
+            }
+        } catch (error) {
+            console.error('[Main.handleSync] 同步异常:', error);
+            statusEl.innerHTML = `<i class="bi bi-x-circle text-danger"></i> 同步异常: ${error.message}`;
+            if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                WordBank.showToast('danger', `同步异常: ${error.message}`);
+            }
+        } finally {
+            syncBtn.disabled = false;
+            syncBtn.innerHTML = '<i class="bi bi-cloud-arrow-up-down"></i> 云端同步';
+        }
+    },
+
+    /**
+     * 处理上传操作
+     */
+    async handleUpload() {
+        const uploadBtn = document.getElementById('home-upload-btn');
+        const statusEl = document.getElementById('home-sync-status');
+        const timeEl = document.getElementById('home-sync-time');
+        const timeValueEl = document.getElementById('home-sync-time-value');
+
+        if (!uploadBtn || !statusEl) return;
+
+        // 检查配置（优先使用 localStorage 中的配置）
+        const supabaseConfig = Config.getSupabase();
+        if (!supabaseConfig || !supabaseConfig.url || !supabaseConfig.anonKey) {
+            statusEl.innerHTML = '<i class="bi bi-exclamation-triangle text-warning"></i> 请先在浏览器控制台配置 Supabase：<br><code style="font-size: 0.8em;">Config.saveSupabase({url: "你的URL", anonKey: "你的Key"})</code>';
+            return;
+        }
+
+        // 更新UI状态
+        uploadBtn.disabled = true;
+        statusEl.innerHTML = '<i class="bi bi-hourglass-split text-info"></i> 正在上传...';
+
+        try {
+            const result = await SupabaseSync.upload();
+            
+            if (result.success) {
+                statusEl.innerHTML = '<i class="bi bi-check-circle text-success"></i> 上传成功';
+                
+                // 更新最后同步时间
+                if (result.lastSyncTime) {
+                    const syncTime = new Date(result.lastSyncTime);
+                    const localTime = syncTime.toLocaleString('zh-CN', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    timeValueEl.textContent = localTime;
+                    timeEl.style.display = 'block';
+                }
+
+                if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                    WordBank.showToast('success', '数据上传成功');
+                }
+            } else {
+                statusEl.innerHTML = `<i class="bi bi-x-circle text-danger"></i> ${result.message || '上传失败'}`;
+                if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                    WordBank.showToast('danger', result.message || '上传失败');
+                }
+            }
+        } catch (error) {
+            console.error('[Main.handleUpload] 上传异常:', error);
+            statusEl.innerHTML = `<i class="bi bi-x-circle text-danger"></i> 上传异常: ${error.message}`;
+            if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                WordBank.showToast('danger', `上传异常: ${error.message}`);
+            }
+        } finally {
+            uploadBtn.disabled = false;
+        }
+    },
+
+    /**
+     * 处理下载操作
+     */
+    async handleDownload() {
+        const downloadBtn = document.getElementById('home-download-btn');
+        const statusEl = document.getElementById('home-sync-status');
+        const timeEl = document.getElementById('home-sync-time');
+        const timeValueEl = document.getElementById('home-sync-time-value');
+
+        if (!downloadBtn || !statusEl) return;
+
+        // 检查配置（优先使用 localStorage 中的配置）
+        const supabaseConfig = Config.getSupabase();
+        if (!supabaseConfig || !supabaseConfig.url || !supabaseConfig.anonKey) {
+            statusEl.innerHTML = '<i class="bi bi-exclamation-triangle text-warning"></i> 请先在浏览器控制台配置 Supabase：<br><code style="font-size: 0.8em;">Config.saveSupabase({url: "你的URL", anonKey: "你的Key"})</code>';
+            return;
+        }
+
+        // 更新UI状态
+        downloadBtn.disabled = true;
+        statusEl.innerHTML = '<i class="bi bi-hourglass-split text-info"></i> 正在下载...';
+
+        try {
+            const result = await SupabaseSync.download();
+            
+            if (result.success) {
+                if (result.data) {
+                    // 合并数据到本地
+                    try {
+                        Storage.importSyncData(result.data, true);
+                        statusEl.innerHTML = '<i class="bi bi-check-circle text-success"></i> 下载并合并成功';
+                        
+                        // 更新最后同步时间
+                        if (result.lastSyncTime) {
+                            const syncTime = new Date(result.lastSyncTime);
+                            const localTime = syncTime.toLocaleString('zh-CN', {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                            timeValueEl.textContent = localTime;
+                            timeEl.style.display = 'block';
+                        }
+
+                        // 刷新相关页面数据
+                        if (typeof PracticeRange !== 'undefined') {
+                            PracticeRange.renderTableView('practice-range-container-home', {});
+                        }
+                        if (typeof TaskListUI !== 'undefined') {
+                            TaskListUI.load();
+                        }
+                        if (typeof ErrorBook !== 'undefined') {
+                            ErrorBook.load();
+                        }
+
+                        if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                            WordBank.showToast('success', '数据下载并合并成功');
+                        }
+                    } catch (mergeError) {
+                        console.error('[Main.handleDownload] 合并数据失败:', mergeError);
+                        statusEl.innerHTML = `<i class="bi bi-exclamation-triangle text-warning"></i> 下载成功，但合并失败: ${mergeError.message}`;
+                        if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                            WordBank.showToast('warning', `下载成功，但合并失败: ${mergeError.message}`);
+                        }
+                    }
+                } else {
+                    statusEl.innerHTML = '<i class="bi bi-info-circle text-info"></i> 云端暂无数据';
+                    if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                        WordBank.showToast('info', '云端暂无数据');
+                    }
+                }
+            } else {
+                statusEl.innerHTML = `<i class="bi bi-x-circle text-danger"></i> ${result.message || '下载失败'}`;
+                if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                    WordBank.showToast('danger', result.message || '下载失败');
+                }
+            }
+        } catch (error) {
+            console.error('[Main.handleDownload] 下载异常:', error);
+            statusEl.innerHTML = `<i class="bi bi-x-circle text-danger"></i> 下载异常: ${error.message}`;
+            if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                WordBank.showToast('danger', `下载异常: ${error.message}`);
+            }
+        } finally {
+            downloadBtn.disabled = false;
+        }
     }
 };
 

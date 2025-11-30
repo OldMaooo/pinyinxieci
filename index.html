@@ -10,9 +10,11 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <!-- 楷体字体 - 本地加载并缓存 -->
-    <script src="js/font-loader.js?v=1.3.85"></script>
+    <script src="js/font-loader.js?v=1.3.86"></script>
     <!-- pinyin-pro 拼音库 -->
     <script src="https://unpkg.com/pinyin-pro@3.14.0/dist/index.js"></script>
+    <!-- Supabase 客户端库 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- 自定义样式 -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -22,7 +24,7 @@
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#home">
                 <i class="bi bi-pencil-square"></i> 看拼音写词
-                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.85</span>
+                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.86</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -192,6 +194,50 @@
                                 </button>
                             </div>
                             <div class="card-body collapse" id="home-import-export-collapse">
+                                <!-- 云端同步 -->
+                                <div class="mb-3">
+                                    <!-- Supabase 配置（如果未配置则显示） -->
+                                    <div id="supabase-config-section" class="mb-3 p-2 border rounded" style="display: none;">
+                                        <div class="small fw-bold mb-2">
+                                            <i class="bi bi-gear"></i> Supabase 配置
+                                        </div>
+                                        <div class="mb-2">
+                                            <label class="form-label small">项目 URL</label>
+                                            <input type="text" class="form-control form-control-sm" id="supabase-url-input" placeholder="https://xxxxx.supabase.co">
+                                        </div>
+                                        <div class="mb-2">
+                                            <label class="form-label small">匿名密钥 (anon key)</label>
+                                            <input type="password" class="form-control form-control-sm" id="supabase-key-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+                                        </div>
+                                        <button class="btn btn-sm btn-primary w-100" id="supabase-save-config-btn">
+                                            <i class="bi bi-check"></i> 保存配置
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="d-flex gap-2 mb-2">
+                                        <button class="btn btn-success flex-fill" id="home-sync-btn" title="同步数据到云端">
+                                            <i class="bi bi-cloud-arrow-up-down"></i> 云端同步
+                                        </button>
+                                        <button class="btn btn-outline-success" id="home-upload-btn" title="上传到云端">
+                                            <i class="bi bi-cloud-arrow-up"></i>
+                                        </button>
+                                        <button class="btn btn-outline-primary" id="home-download-btn" title="从云端下载">
+                                            <i class="bi bi-cloud-arrow-down"></i>
+                                        </button>
+                                        <button class="btn btn-outline-secondary" id="supabase-config-toggle-btn" title="配置 Supabase">
+                                            <i class="bi bi-gear"></i>
+                                        </button>
+                                    </div>
+                                    <div class="small text-muted" id="home-sync-status">
+                                        <i class="bi bi-info-circle"></i> 点击同步按钮开始
+                                    </div>
+                                    <div class="small text-muted mt-1" id="home-sync-time" style="display: none;">
+                                        最后同步: <span id="home-sync-time-value">-</span>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                
                                 <!-- 导入 -->
                                 <div class="mb-3">
                                     <button class="btn btn-primary w-100" id="home-import-btn">
@@ -645,9 +691,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- 项目JS模块 -->
-    <script src="js/version.js?v=1.3.81"></script>
-    <script src="js/storage.js?v=1.3.81"></script>
-    <script src="js/config.js?v=1.3.81"></script>
+    <script src="js/version.js?v=1.3.86"></script>
+    <script src="js/storage.js?v=1.3.86"></script>
+    <script src="js/config.js?v=1.3.86"></script>
+    <script src="js/supabase-sync.js?v=1.3.86"></script>
     <script src="js/debug.js?v=1.3.81"></script>
     <script src="js/word-groups.js?v=1.3.81" onerror="console.error('[ERROR] word-groups.js加载失败！', this.src)"></script>
     <script src="js/recognition.js?v=1.3.81"></script>
