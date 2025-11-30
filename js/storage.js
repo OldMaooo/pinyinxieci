@@ -659,12 +659,58 @@ const Storage = {
             }
         }
         
+        // 从wordMastery中提取标记为error的条目，构建errorWords数组
+        const errorWordsFromMastery = [];
+        if (data.wordMastery && typeof data.wordMastery === 'object') {
+            const wordBank = this.getWordBank();
+            Object.entries(data.wordMastery).forEach(([wordId, status]) => {
+                if (status === 'error') {
+                    // 查找对应的字信息
+                    const word = wordBank.find(w => w.id === wordId);
+                    if (word) {
+                        errorWordsFromMastery.push({
+                            wordId: wordId,
+                            word: word.word,
+                            pinyin: word.pinyin || '',
+                            errorCount: 1,
+                            firstErrorDate: new Date().toISOString(),
+                            lastErrorDate: new Date().toISOString(),
+                            handwritingSnapshots: []
+                        });
+                    }
+                }
+            });
+        }
+        
         // 导入错题（合并模式会去重）
+        const allErrorWords = [];
         if (data.errorWords && Array.isArray(data.errorWords)) {
+            allErrorWords.push(...data.errorWords);
+        }
+        // 合并从wordMastery中提取的错题
+        if (errorWordsFromMastery.length > 0) {
+            const errorMap = new Map(allErrorWords.map(error => [error.wordId, error]));
+            errorWordsFromMastery.forEach(error => {
+                const existing = errorMap.get(error.wordId);
+                if (existing) {
+                    // 如果已存在，保留原有数据（可能有快照等更多信息）
+                    // 只更新日期
+                    if (error.lastErrorDate && new Date(error.lastErrorDate) > new Date(existing.lastErrorDate)) {
+                        existing.lastErrorDate = error.lastErrorDate;
+                    }
+                } else {
+                    errorMap.set(error.wordId, error);
+                }
+            });
+            allErrorWords.length = 0;
+            allErrorWords.push(...Array.from(errorMap.values()));
+        }
+        
+        if (allErrorWords.length > 0) {
             if (merge) {
                 const existing = this.getErrorWords();
                 const errorMap = new Map(existing.map(error => [error.wordId, error]));
-                data.errorWords.forEach(error => {
+                allErrorWords.forEach(error => {
                     const existing = errorMap.get(error.wordId);
                     if (existing) {
                         // 合并：保留错误次数更大的
@@ -678,8 +724,11 @@ const Storage = {
                 });
                 this.saveErrorWords(Array.from(errorMap.values()));
             } else {
-                this.saveErrorWords(data.errorWords);
+                this.saveErrorWords(allErrorWords);
             }
+        } else if (!merge) {
+            // 替换模式且没有错题数据，清空错题列表
+            this.saveErrorWords([]);
         }
         
         // 导入复习计划

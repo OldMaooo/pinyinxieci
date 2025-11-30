@@ -1,0 +1,3173 @@
+{
+  "version": "1.1",
+  "type": "sync",
+  "exportDate": "2025-11-30T05:58:20.195Z",
+  "wordMastery": {
+    "builtin_922_球": "error",
+    "builtin_832_呼": "error",
+    "builtin_908_飘": "error",
+    "builtin_897_闹": "error",
+    "builtin_845_洁": "error",
+    "builtin_805_读": "error",
+    "builtin_976_扬": "error",
+    "builtin_830_轰": "error",
+    "builtin_811_罚": "error",
+    "builtin_906_碰": "error",
+    "builtin_967_斜": "error",
+    "builtin_852_径": "error",
+    "builtin_949_挑": "error",
+    "builtin_984_印": "error",
+    "builtin_765_案": "error",
+    "builtin_874_列": "error",
+    "builtin_993_则": "error",
+    "builtin_827_规": "error",
+    "builtin_875_凌": "error",
+    "builtin_872_凉": "error",
+    "builtin_966_相": "error",
+    "builtin_928_润": "error",
+    "builtin_841_急": "error",
+    "builtin_987_邮": "error",
+    "builtin_969_杏": "error",
+    "builtin_956_挖": "error",
+    "builtin_911_频": "error",
+    "builtin_888_枚": "error",
+    "builtin_842_挤": "error",
+    "builtin_999_争": "error",
+    "builtin_855_菊": "error"
+  },
+  "errorWords": [],
+  "reviewPlans": [
+    {
+      "id": "plan_1764464254039_zzz0d8irn",
+      "wordId": "builtin_0_八",
+      "word": "八",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T00:57:34.039Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T01:57:34.039Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T00:57:34.039Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T00:57:34.039Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T00:57:34.039Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T00:57:34.039Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T00:57:34.039Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T00:57:34.039Z",
+      "updatedAt": "2025-11-30T00:57:34.039Z"
+    },
+    {
+      "id": "plan_1764464257247_vsxoc6ah5",
+      "wordId": "builtin_40_六",
+      "word": "六",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T00:57:37.247Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T01:57:37.247Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T00:57:37.247Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T00:57:37.247Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T00:57:37.247Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T00:57:37.247Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T00:57:37.247Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T00:57:37.247Z",
+      "updatedAt": "2025-11-30T00:57:37.247Z"
+    },
+    {
+      "id": "plan_1764464289544_z73vbbsa0",
+      "wordId": "builtin_51_七",
+      "word": "七",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T00:58:09.544Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T01:58:09.544Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T00:58:09.544Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T00:58:09.544Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T00:58:09.544Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T00:58:09.544Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T00:58:09.544Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T00:58:09.544Z",
+      "updatedAt": "2025-11-30T00:58:09.544Z"
+    },
+    {
+      "id": "plan_1764464298592_j00rfut7v",
+      "wordId": "builtin_59_十",
+      "word": "十",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T00:58:18.592Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T01:58:18.592Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T00:58:18.592Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T00:58:18.592Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T00:58:18.592Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T00:58:18.592Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T00:58:18.592Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T00:58:18.592Z",
+      "updatedAt": "2025-11-30T00:58:18.592Z"
+    },
+    {
+      "id": "plan_1764464308870_g1frcgydd",
+      "wordId": "builtin_36_了",
+      "word": "了",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T00:58:28.869Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T01:58:28.869Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T00:58:28.869Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T00:58:28.869Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T00:58:28.869Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T00:58:28.869Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T00:58:28.869Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T00:58:28.870Z",
+      "updatedAt": "2025-11-30T00:58:28.870Z"
+    },
+    {
+      "id": "plan_1764464311493_n6zvlumsr",
+      "wordId": "builtin_53_人",
+      "word": "人",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T00:58:31.492Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T01:58:31.492Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T00:58:31.492Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T00:58:31.492Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T00:58:31.492Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T00:58:31.492Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T00:58:31.492Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T00:58:31.493Z",
+      "updatedAt": "2025-11-30T00:58:31.493Z"
+    },
+    {
+      "id": "plan_1764464928834_fm5pug7z6",
+      "wordId": "builtin_14_大",
+      "word": "大",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T01:08:48.833Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T02:08:48.833Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T01:08:48.833Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T01:08:48.833Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T01:08:48.833Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T01:08:48.833Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T01:08:48.833Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T01:08:48.834Z",
+      "updatedAt": "2025-11-30T01:08:48.834Z"
+    },
+    {
+      "id": "plan_1764466789379_9m0kq164g",
+      "wordId": "builtin_31_九",
+      "word": "九",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T01:39:49.379Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T02:39:49.379Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T01:39:49.379Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T01:39:49.379Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T01:39:49.379Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T01:39:49.379Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T01:39:49.379Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T01:39:49.379Z",
+      "updatedAt": "2025-11-30T01:39:49.379Z"
+    },
+    {
+      "id": "plan_1764466794877_mk0ayt2rf",
+      "wordId": "builtin_69_王",
+      "word": "王",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T01:39:54.877Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T02:39:54.877Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T01:39:54.877Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T01:39:54.877Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T01:39:54.877Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T01:39:54.877Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T01:39:54.877Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T01:39:54.877Z",
+      "updatedAt": "2025-11-30T01:39:54.877Z"
+    },
+    {
+      "id": "plan_1764466995428_978ohihb4",
+      "wordId": "builtin_98_子",
+      "word": "子",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T01:43:15.428Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T02:43:15.428Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T01:43:15.428Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T01:43:15.428Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T01:43:15.428Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T01:43:15.428Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T01:43:15.428Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T01:43:15.428Z",
+      "updatedAt": "2025-11-30T01:43:15.428Z"
+    },
+    {
+      "id": "plan_1764469395091_q0ovmmhnn",
+      "wordId": "builtin_28_火",
+      "word": "火",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:23:15.089Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:23:15.089Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:23:15.089Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:23:15.089Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:23:15.089Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:23:15.089Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:23:15.089Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:23:15.091Z",
+      "updatedAt": "2025-11-30T02:23:15.091Z"
+    },
+    {
+      "id": "plan_1764469395455_0siooslhk",
+      "wordId": "builtin_42_马",
+      "word": "马",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:23:15.455Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:23:15.455Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:23:15.455Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:23:15.455Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:23:15.455Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:23:15.455Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:23:15.455Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:23:15.455Z",
+      "updatedAt": "2025-11-30T02:23:15.456Z"
+    },
+    {
+      "id": "plan_1764469395673_i93ez9rsq",
+      "wordId": "builtin_52_去",
+      "word": "去",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:23:15.670Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:23:15.670Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:23:15.670Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:23:15.670Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:23:15.670Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:23:15.670Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:23:15.670Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:23:15.673Z",
+      "updatedAt": "2025-11-30T02:23:15.673Z"
+    },
+    {
+      "id": "plan_1764469395786_cmyeprpil",
+      "wordId": "builtin_54_日",
+      "word": "日",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:23:15.782Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:23:15.782Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:23:15.782Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:23:15.782Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:23:15.782Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:23:15.782Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:23:15.782Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:23:15.787Z",
+      "updatedAt": "2025-11-30T02:23:15.787Z"
+    },
+    {
+      "id": "plan_1764469395899_sgtv2saox",
+      "wordId": "builtin_57_上",
+      "word": "上",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:23:15.894Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:23:15.894Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:23:15.894Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:23:15.894Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:23:15.894Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:23:15.894Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:23:15.894Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:23:15.899Z",
+      "updatedAt": "2025-11-30T02:23:15.899Z"
+    },
+    {
+      "id": "plan_1764469396117_6bk9rz7l3",
+      "wordId": "builtin_64_四",
+      "word": "四",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:23:16.115Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:23:16.115Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:23:16.115Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:23:16.115Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:23:16.115Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:23:16.115Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:23:16.115Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:23:16.117Z",
+      "updatedAt": "2025-11-30T02:23:16.117Z"
+    },
+    {
+      "id": "plan_1764469396170_7lv8iql1w",
+      "wordId": "builtin_65_天",
+      "word": "天",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:23:16.169Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:23:16.169Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:23:16.169Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:23:16.169Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:23:16.169Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:23:16.169Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:23:16.169Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:23:16.170Z",
+      "updatedAt": "2025-11-30T02:23:16.170Z"
+    },
+    {
+      "id": "plan_1764469396383_o19ilh37l",
+      "wordId": "builtin_74_西",
+      "word": "西",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:23:16.382Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:23:16.382Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:23:16.382Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:23:16.382Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:23:16.382Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:23:16.382Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:23:16.382Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:23:16.383Z",
+      "updatedAt": "2025-11-30T02:23:16.383Z"
+    },
+    {
+      "id": "plan_1764469396651_4abz4cwhh",
+      "wordId": "builtin_83_一",
+      "word": "一",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:23:16.651Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:23:16.651Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:23:16.651Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:23:16.651Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:23:16.651Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:23:16.651Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:23:16.651Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:23:16.651Z",
+      "updatedAt": "2025-11-30T02:23:16.651Z"
+    },
+    {
+      "id": "plan_1764469396704_rf2qkim7h",
+      "wordId": "builtin_84_用",
+      "word": "用",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:23:16.703Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:23:16.703Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:23:16.703Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:23:16.703Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:23:16.703Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:23:16.703Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:23:16.703Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:23:16.704Z",
+      "updatedAt": "2025-11-30T02:23:16.704Z"
+    },
+    {
+      "id": "plan_1764470706211_t6t5i3fkk",
+      "wordId": "builtin_16_东",
+      "word": "东",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:06.211Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:06.211Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:06.211Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:06.211Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:06.211Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:06.211Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:06.211Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:06.211Z",
+      "updatedAt": "2025-11-30T02:45:06.211Z"
+    },
+    {
+      "id": "plan_1764470706263_9xrzbeefk",
+      "wordId": "builtin_18_儿",
+      "word": "儿",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:06.263Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:06.263Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:06.263Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:06.263Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:06.263Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:06.263Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:06.263Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:06.263Z",
+      "updatedAt": "2025-11-30T02:45:06.263Z"
+    },
+    {
+      "id": "plan_1764470706317_hgur0kmku",
+      "wordId": "builtin_19_耳",
+      "word": "耳",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:06.316Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:06.316Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:06.316Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:06.316Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:06.316Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:06.316Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:06.316Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:06.317Z",
+      "updatedAt": "2025-11-30T02:45:06.317Z"
+    },
+    {
+      "id": "plan_1764470706424_4nbba4er6",
+      "wordId": "builtin_22_个",
+      "word": "个",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:06.424Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:06.424Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:06.424Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:06.424Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:06.424Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:06.424Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:06.424Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:06.424Z",
+      "updatedAt": "2025-11-30T02:45:06.424Z"
+    },
+    {
+      "id": "plan_1764470706476_65pfc08wk",
+      "wordId": "builtin_25_关",
+      "word": "关",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:06.476Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:06.476Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:06.476Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:06.476Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:06.476Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:06.476Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:06.476Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:06.477Z",
+      "updatedAt": "2025-11-30T02:45:06.477Z"
+    },
+    {
+      "id": "plan_1764470706529_qqj1jlr1j",
+      "wordId": "builtin_26_禾",
+      "word": "禾",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:06.528Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:06.528Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:06.528Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:06.528Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:06.528Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:06.528Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:06.528Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:06.529Z",
+      "updatedAt": "2025-11-30T02:45:06.529Z"
+    },
+    {
+      "id": "plan_1764470706633_3glv925du",
+      "wordId": "builtin_29_几",
+      "word": "几",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:06.633Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:06.633Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:06.633Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:06.633Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:06.633Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:06.633Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:06.633Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:06.633Z",
+      "updatedAt": "2025-11-30T02:45:06.633Z"
+    },
+    {
+      "id": "plan_1764470706792_z4gos5vao",
+      "wordId": "builtin_33_可",
+      "word": "可",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:06.791Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:06.791Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:06.791Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:06.791Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:06.791Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:06.791Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:06.791Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:06.792Z",
+      "updatedAt": "2025-11-30T02:45:06.792Z"
+    },
+    {
+      "id": "plan_1764470707056_cafjzh1y2",
+      "wordId": "builtin_45_目",
+      "word": "目",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:07.055Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:07.055Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:07.055Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:07.055Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:07.055Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:07.055Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:07.055Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:07.056Z",
+      "updatedAt": "2025-11-30T02:45:07.056Z"
+    },
+    {
+      "id": "plan_1764470707109_lpl3ywgcb",
+      "wordId": "builtin_48_鸟",
+      "word": "鸟",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:07.108Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:07.108Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:07.108Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:07.108Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:07.108Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:07.108Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:07.108Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:07.109Z",
+      "updatedAt": "2025-11-30T02:45:07.109Z"
+    },
+    {
+      "id": "plan_1764470707162_krcinfqja",
+      "wordId": "builtin_50_女",
+      "word": "女",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:07.161Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:07.161Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:07.161Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:07.161Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:07.161Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:07.161Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:07.161Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:07.162Z",
+      "updatedAt": "2025-11-30T02:45:07.162Z"
+    },
+    {
+      "id": "plan_1764470707424_vu2suac08",
+      "wordId": "builtin_55_三",
+      "word": "三",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:07.424Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:07.424Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:07.424Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:07.424Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:07.424Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:07.424Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:07.424Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:07.424Z",
+      "updatedAt": "2025-11-30T02:45:07.424Z"
+    },
+    {
+      "id": "plan_1764470707639_lyttqdnsy",
+      "wordId": "builtin_61_是",
+      "word": "是",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:07.638Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:07.638Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:07.638Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:07.638Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:07.638Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:07.638Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:07.638Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:07.639Z",
+      "updatedAt": "2025-11-30T02:45:07.639Z"
+    },
+    {
+      "id": "plan_1764470707693_du6q02w9y",
+      "wordId": "builtin_62_手",
+      "word": "手",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:07.693Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:07.693Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:07.693Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:07.693Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:07.693Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:07.693Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:07.693Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:07.693Z",
+      "updatedAt": "2025-11-30T02:45:07.693Z"
+    },
+    {
+      "id": "plan_1764470707748_ycmpdvje4",
+      "wordId": "builtin_63_水",
+      "word": "水",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:07.747Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:07.747Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:07.747Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:07.747Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:07.747Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:07.747Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:07.747Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:07.748Z",
+      "updatedAt": "2025-11-30T02:45:07.748Z"
+    },
+    {
+      "id": "plan_1764470707912_a12njc0oq",
+      "wordId": "builtin_66_田",
+      "word": "田",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:07.911Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:07.911Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:07.911Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:07.911Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:07.911Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:07.911Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:07.911Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:07.913Z",
+      "updatedAt": "2025-11-30T02:45:07.913Z"
+    },
+    {
+      "id": "plan_1764470708336_5qwck14xt",
+      "wordId": "builtin_82_叶",
+      "word": "叶",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:08.336Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:08.336Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:08.336Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:08.336Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:08.336Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:08.336Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:08.336Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:08.336Z",
+      "updatedAt": "2025-11-30T02:45:08.336Z"
+    },
+    {
+      "id": "plan_1764470708550_ml6lddrgc",
+      "wordId": "builtin_90_云",
+      "word": "云",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:08.549Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:08.549Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:08.549Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:08.549Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:08.549Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:08.549Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:08.549Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:08.550Z",
+      "updatedAt": "2025-11-30T02:45:08.550Z"
+    },
+    {
+      "id": "plan_1764470708603_5qe87cvh4",
+      "wordId": "builtin_97_竹",
+      "word": "竹",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T02:45:08.603Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T03:45:08.603Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T02:45:08.603Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T02:45:08.603Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T02:45:08.603Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T02:45:08.603Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T02:45:08.603Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T02:45:08.603Z",
+      "updatedAt": "2025-11-30T02:45:08.603Z"
+    },
+    {
+      "id": "plan_1764478831758_ti3287kco",
+      "wordId": "builtin_34_口",
+      "word": "口",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T05:00:31.758Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T06:00:31.758Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T05:00:31.758Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T05:00:31.758Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T05:00:31.758Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T05:00:31.758Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T05:00:31.758Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T05:00:31.758Z",
+      "updatedAt": "2025-11-30T05:00:31.758Z"
+    },
+    {
+      "id": "plan_1764478832388_778y53p48",
+      "wordId": "builtin_73_午",
+      "word": "午",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T05:00:32.388Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T06:00:32.388Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T05:00:32.388Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T05:00:32.388Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T05:00:32.388Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T05:00:32.388Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T05:00:32.388Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T05:00:32.388Z",
+      "updatedAt": "2025-11-30T05:00:32.388Z"
+    },
+    {
+      "id": "plan_1764478832493_811etocym",
+      "wordId": "builtin_75_下",
+      "word": "下",
+      "pinyin": "",
+      "unit": "",
+      "firstMarkedAt": "2025-11-30T05:00:32.493Z",
+      "stages": [
+        {
+          "stage": 1,
+          "scheduledAt": "2025-11-30T06:00:32.493Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 2,
+          "scheduledAt": "2025-12-01T05:00:32.493Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 3,
+          "scheduledAt": "2025-12-03T05:00:32.493Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 4,
+          "scheduledAt": "2025-12-07T05:00:32.493Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 5,
+          "scheduledAt": "2025-12-14T05:00:32.493Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        },
+        {
+          "stage": 6,
+          "scheduledAt": "2025-12-30T05:00:32.493Z",
+          "completedAt": null,
+          "status": "pending",
+          "passed": false
+        }
+      ],
+      "currentStage": 1,
+      "currentCycle": 1,
+      "mastered": false,
+      "createdAt": "2025-11-30T05:00:32.493Z",
+      "updatedAt": "2025-11-30T05:00:32.493Z"
+    }
+  ],
+  "taskList": [
+    {
+      "name": "复习计划 - 今天",
+      "wordIds": [
+        "builtin_0_八",
+        "builtin_40_六",
+        "builtin_51_七",
+        "builtin_59_十",
+        "builtin_36_了",
+        "builtin_53_人"
+      ],
+      "type": "review",
+      "status": "paused",
+      "scheduledDate": "2025-11-30",
+      "createdAt": "2025-11-30T01:06:51.964Z",
+      "progress": {
+        "total": 6,
+        "completed": 0,
+        "correct": 0,
+        "errors": []
+      },
+      "id": "task_1764464811964_pkaq8k0j9",
+      "updatedAt": "2025-11-30T01:07:34.452Z"
+    },
+    {
+      "name": "1上_1-10单元（1/2）",
+      "wordIds": [
+        "builtin_0_八",
+        "builtin_40_六",
+        "builtin_51_七",
+        "builtin_59_十",
+        "builtin_14_大",
+        "builtin_36_了",
+        "builtin_53_人",
+        "builtin_98_子",
+        "builtin_20_二",
+        "builtin_55_三",
+        "builtin_57_上",
+        "builtin_83_一",
+        "builtin_31_九",
+        "builtin_69_王",
+        "builtin_16_东",
+        "builtin_33_可",
+        "builtin_74_西",
+        "builtin_82_叶",
+        "builtin_19_耳",
+        "builtin_34_口",
+        "builtin_45_目",
+        "builtin_62_手",
+        "builtin_73_午",
+        "builtin_75_下",
+        "builtin_29_几",
+        "builtin_42_马",
+        "builtin_79_牙",
+        "builtin_84_用",
+        "builtin_97_竹",
+        "builtin_26_禾",
+        "builtin_28_火",
+        "builtin_54_日",
+        "builtin_66_田",
+        "builtin_22_个",
+        "builtin_52_去",
+        "builtin_48_鸟",
+        "builtin_61_是",
+        "builtin_64_四",
+        "builtin_65_天",
+        "builtin_77_小",
+        "builtin_12_虫",
+        "builtin_56_山",
+        "builtin_63_水",
+        "builtin_88_雨",
+        "builtin_90_云",
+        "builtin_25_关",
+        "builtin_32_开",
+        "builtin_50_女",
+        "builtin_76_先",
+        "builtin_18_儿"
+      ],
+      "type": "practice",
+      "status": "completed",
+      "progress": {
+        "total": 50,
+        "completed": 50,
+        "correct": 18,
+        "errors": [
+          "builtin_14_大",
+          "builtin_14_大",
+          "builtin_14_大",
+          "builtin_16_东",
+          "builtin_18_儿",
+          "builtin_19_耳",
+          "builtin_22_个",
+          "builtin_25_关",
+          "builtin_26_禾",
+          "builtin_29_几",
+          "builtin_33_可",
+          "builtin_36_了",
+          "builtin_42_马",
+          "builtin_45_目",
+          "builtin_48_鸟",
+          "builtin_50_女",
+          "builtin_51_七",
+          "builtin_52_去",
+          "builtin_53_人",
+          "builtin_54_日",
+          "builtin_55_三",
+          "builtin_59_十",
+          "builtin_61_是",
+          "builtin_62_手",
+          "builtin_63_水",
+          "builtin_64_四",
+          "builtin_66_田",
+          "builtin_82_叶",
+          "builtin_83_一",
+          "builtin_84_用",
+          "builtin_90_云",
+          "builtin_97_竹",
+          "builtin_98_子"
+        ]
+      },
+      "id": "task_1764464863438_1f69oy5y7",
+      "createdAt": "2025-11-30T01:07:43.438Z",
+      "updatedAt": "2025-11-30T02:45:10.440Z"
+    },
+    {
+      "name": "1上_1-10单元（2/2）",
+      "wordIds": [
+        "builtin_30_见",
+        "builtin_37_里",
+        "builtin_67_头",
+        "builtin_89_月",
+        "builtin_38_力",
+        "builtin_44_木",
+        "builtin_46_男",
+        "builtin_68_土",
+        "builtin_78_心",
+        "builtin_10_厂",
+        "builtin_23_工",
+        "builtin_43_门",
+        "builtin_70_卫",
+        "builtin_71_我",
+        "builtin_87_右",
+        "builtin_91_在",
+        "builtin_99_左",
+        "builtin_6_本",
+        "builtin_8_不",
+        "builtin_11_尺",
+        "builtin_15_刀",
+        "builtin_58_少",
+        "builtin_2_爸",
+        "builtin_41_妈",
+        "builtin_9_才",
+        "builtin_27_和",
+        "builtin_81_也",
+        "builtin_86_又",
+        "builtin_21_风",
+        "builtin_39_立",
+        "builtin_72_五",
+        "builtin_94_正",
+        "builtin_96_中",
+        "builtin_3_白",
+        "builtin_49_牛",
+        "builtin_80_羊",
+        "builtin_93_爪",
+        "builtin_1_巴",
+        "builtin_7_比",
+        "builtin_24_公",
+        "builtin_92_长",
+        "builtin_4_办",
+        "builtin_13_出",
+        "builtin_17_多",
+        "builtin_60_石",
+        "builtin_95_只",
+        "builtin_5_半",
+        "builtin_35_来",
+        "builtin_47_你",
+        "builtin_85_有"
+      ],
+      "type": "practice",
+      "status": "pending",
+      "progress": {
+        "total": 50,
+        "completed": 0,
+        "correct": 0,
+        "errors": []
+      },
+      "id": "task_1764464863438_8d5xesd53",
+      "createdAt": "2025-11-30T01:07:43.438Z",
+      "updatedAt": "2025-11-30T01:07:43.438Z"
+    },
+    {
+      "name": "复习计划 - 明天",
+      "wordIds": [
+        "builtin_0_八",
+        "builtin_40_六",
+        "builtin_51_七",
+        "builtin_59_十",
+        "builtin_36_了",
+        "builtin_53_人",
+        "builtin_14_大"
+      ],
+      "type": "review",
+      "status": "pending",
+      "scheduledDate": "2025-12-01",
+      "createdAt": "2025-11-30T01:36:52.674Z",
+      "progress": {
+        "total": 7,
+        "completed": 0,
+        "correct": 0,
+        "errors": []
+      },
+      "id": "task_1764466612675_lj4ubctyy",
+      "updatedAt": "2025-11-30T01:36:52.675Z"
+    },
+    {
+      "name": "复习计划 - 2天后",
+      "wordIds": [
+        "builtin_0_八",
+        "builtin_40_六",
+        "builtin_51_七",
+        "builtin_59_十",
+        "builtin_36_了",
+        "builtin_53_人",
+        "builtin_14_大",
+        "builtin_31_九",
+        "builtin_69_王",
+        "builtin_98_子"
+      ],
+      "type": "review",
+      "status": "paused",
+      "scheduledDate": "2025-12-02",
+      "createdAt": "2025-11-30T01:47:59.564Z",
+      "progress": {
+        "total": 10,
+        "completed": 0,
+        "correct": 0,
+        "errors": []
+      },
+      "id": "task_1764467279564_lujwf5dlv",
+      "updatedAt": "2025-11-30T05:00:13.690Z"
+    },
+    {
+      "name": "1上_1-10单元（1/3）",
+      "wordIds": [
+        "builtin_0_八",
+        "builtin_40_六",
+        "builtin_51_七",
+        "builtin_59_十",
+        "builtin_14_大",
+        "builtin_36_了",
+        "builtin_53_人",
+        "builtin_98_子",
+        "builtin_20_二",
+        "builtin_55_三",
+        "builtin_57_上",
+        "builtin_83_一",
+        "builtin_31_九",
+        "builtin_69_王",
+        "builtin_16_东",
+        "builtin_33_可",
+        "builtin_74_西",
+        "builtin_82_叶",
+        "builtin_19_耳",
+        "builtin_34_口",
+        "builtin_45_目",
+        "builtin_62_手",
+        "builtin_73_午",
+        "builtin_75_下",
+        "builtin_29_几",
+        "builtin_42_马",
+        "builtin_79_牙",
+        "builtin_84_用",
+        "builtin_97_竹",
+        "builtin_26_禾",
+        "builtin_28_火",
+        "builtin_54_日",
+        "builtin_66_田",
+        "builtin_22_个",
+        "builtin_52_去",
+        "builtin_48_鸟",
+        "builtin_61_是",
+        "builtin_64_四",
+        "builtin_65_天",
+        "builtin_77_小"
+      ],
+      "type": "practice",
+      "status": "completed",
+      "progress": {
+        "total": 40,
+        "completed": 40,
+        "correct": 24,
+        "errors": [
+          "builtin_14_大",
+          "builtin_28_火",
+          "builtin_40_六",
+          "builtin_42_马",
+          "builtin_52_去",
+          "builtin_53_人",
+          "builtin_54_日",
+          "builtin_57_上",
+          "builtin_59_十",
+          "builtin_64_四",
+          "builtin_65_天",
+          "builtin_69_王",
+          "builtin_74_西",
+          "builtin_83_一",
+          "builtin_84_用",
+          "builtin_98_子"
+        ]
+      },
+      "id": "task_1764469381039_pps5lxkcv",
+      "createdAt": "2025-11-30T02:23:01.039Z",
+      "updatedAt": "2025-11-30T02:23:21.615Z"
+    },
+    {
+      "name": "1上_1-10单元（2/3）",
+      "wordIds": [
+        "builtin_12_虫",
+        "builtin_56_山",
+        "builtin_63_水",
+        "builtin_88_雨",
+        "builtin_90_云",
+        "builtin_25_关",
+        "builtin_32_开",
+        "builtin_50_女",
+        "builtin_76_先",
+        "builtin_18_儿",
+        "builtin_30_见",
+        "builtin_37_里",
+        "builtin_67_头",
+        "builtin_89_月",
+        "builtin_38_力",
+        "builtin_44_木",
+        "builtin_46_男",
+        "builtin_68_土",
+        "builtin_78_心",
+        "builtin_10_厂",
+        "builtin_23_工",
+        "builtin_43_门",
+        "builtin_70_卫",
+        "builtin_71_我",
+        "builtin_87_右",
+        "builtin_91_在",
+        "builtin_99_左",
+        "builtin_6_本",
+        "builtin_8_不",
+        "builtin_11_尺",
+        "builtin_15_刀",
+        "builtin_58_少",
+        "builtin_2_爸",
+        "builtin_41_妈",
+        "builtin_9_才",
+        "builtin_27_和",
+        "builtin_81_也",
+        "builtin_86_又",
+        "builtin_21_风",
+        "builtin_39_立"
+      ],
+      "type": "practice",
+      "status": "pending",
+      "progress": {
+        "total": 40,
+        "completed": 0,
+        "correct": 0,
+        "errors": []
+      },
+      "id": "task_1764469381040_kyka9xb14",
+      "createdAt": "2025-11-30T02:23:01.040Z",
+      "updatedAt": "2025-11-30T02:23:01.040Z"
+    },
+    {
+      "name": "1上_1-10单元（3/3）",
+      "wordIds": [
+        "builtin_72_五",
+        "builtin_94_正",
+        "builtin_96_中",
+        "builtin_3_白",
+        "builtin_49_牛",
+        "builtin_80_羊",
+        "builtin_93_爪",
+        "builtin_1_巴",
+        "builtin_7_比",
+        "builtin_24_公",
+        "builtin_92_长",
+        "builtin_4_办",
+        "builtin_13_出",
+        "builtin_17_多",
+        "builtin_60_石",
+        "builtin_95_只",
+        "builtin_5_半",
+        "builtin_35_来",
+        "builtin_47_你",
+        "builtin_85_有"
+      ],
+      "type": "practice",
+      "status": "pending",
+      "progress": {
+        "total": 20,
+        "completed": 0,
+        "correct": 0,
+        "errors": []
+      },
+      "id": "task_1764469381040_juf9mp70d",
+      "createdAt": "2025-11-30T02:23:01.040Z",
+      "updatedAt": "2025-11-30T02:23:01.040Z"
+    },
+    {
+      "name": "复习计划 - 3天后",
+      "wordIds": [
+        "builtin_0_八",
+        "builtin_40_六",
+        "builtin_51_七",
+        "builtin_59_十",
+        "builtin_36_了",
+        "builtin_53_人",
+        "builtin_14_大",
+        "builtin_31_九",
+        "builtin_69_王",
+        "builtin_98_子",
+        "builtin_28_火",
+        "builtin_42_马",
+        "builtin_52_去",
+        "builtin_54_日",
+        "builtin_57_上",
+        "builtin_64_四",
+        "builtin_65_天",
+        "builtin_74_西",
+        "builtin_83_一",
+        "builtin_84_用"
+      ],
+      "type": "review",
+      "status": "pending",
+      "scheduledDate": "2025-12-03",
+      "createdAt": "2025-11-30T02:24:00.094Z",
+      "progress": {
+        "total": 20,
+        "completed": 0,
+        "correct": 0,
+        "errors": []
+      },
+      "id": "task_1764469440094_9k2zm5zsg",
+      "updatedAt": "2025-11-30T02:24:00.094Z"
+    },
+    {
+      "name": "复习计划 - 4天后",
+      "wordIds": [
+        "builtin_0_八",
+        "builtin_40_六",
+        "builtin_51_七",
+        "builtin_59_十",
+        "builtin_36_了",
+        "builtin_53_人",
+        "builtin_14_大",
+        "builtin_31_九",
+        "builtin_69_王",
+        "builtin_98_子",
+        "builtin_28_火",
+        "builtin_42_马",
+        "builtin_52_去",
+        "builtin_54_日",
+        "builtin_57_上",
+        "builtin_64_四",
+        "builtin_65_天",
+        "builtin_74_西",
+        "builtin_83_一",
+        "builtin_84_用",
+        "builtin_16_东",
+        "builtin_18_儿",
+        "builtin_19_耳",
+        "builtin_22_个",
+        "builtin_25_关",
+        "builtin_26_禾",
+        "builtin_29_几",
+        "builtin_33_可",
+        "builtin_45_目",
+        "builtin_48_鸟",
+        "builtin_50_女",
+        "builtin_55_三",
+        "builtin_61_是",
+        "builtin_62_手",
+        "builtin_63_水",
+        "builtin_66_田",
+        "builtin_82_叶",
+        "builtin_90_云",
+        "builtin_97_竹"
+      ],
+      "type": "review",
+      "status": "paused",
+      "scheduledDate": "2025-12-04",
+      "createdAt": "2025-11-30T02:45:13.389Z",
+      "progress": {
+        "total": 39,
+        "completed": 0,
+        "correct": 0,
+        "errors": []
+      },
+      "id": "task_1764470713389_lc5tlsmbv",
+      "updatedAt": "2025-11-30T05:50:20.955Z"
+    },
+    {
+      "name": "1上_1-10单元（1/4）",
+      "wordIds": [
+        "builtin_0_八",
+        "builtin_40_六",
+        "builtin_51_七",
+        "builtin_59_十",
+        "builtin_14_大",
+        "builtin_36_了",
+        "builtin_53_人",
+        "builtin_98_子",
+        "builtin_20_二",
+        "builtin_55_三",
+        "builtin_57_上",
+        "builtin_83_一",
+        "builtin_31_九",
+        "builtin_69_王",
+        "builtin_16_东",
+        "builtin_33_可",
+        "builtin_74_西",
+        "builtin_82_叶",
+        "builtin_19_耳",
+        "builtin_34_口",
+        "builtin_45_目",
+        "builtin_62_手",
+        "builtin_73_午",
+        "builtin_75_下",
+        "builtin_29_几",
+        "builtin_42_马",
+        "builtin_79_牙",
+        "builtin_84_用",
+        "builtin_97_竹",
+        "builtin_26_禾"
+      ],
+      "type": "practice",
+      "status": "completed",
+      "progress": {
+        "total": 30,
+        "completed": 30,
+        "correct": 16,
+        "errors": [
+          "builtin_33_可",
+          "builtin_34_口",
+          "builtin_36_了",
+          "builtin_40_六",
+          "builtin_45_目",
+          "builtin_57_上",
+          "builtin_62_手",
+          "builtin_73_午",
+          "builtin_75_下",
+          "builtin_82_叶",
+          "builtin_83_一",
+          "builtin_84_用",
+          "builtin_97_竹",
+          "builtin_98_子"
+        ]
+      },
+      "id": "task_1764478795110_g1r24aab7",
+      "createdAt": "2025-11-30T04:59:55.110Z",
+      "updatedAt": "2025-11-30T05:00:35.952Z"
+    },
+    {
+      "name": "1上_1-10单元（2/4）",
+      "wordIds": [
+        "builtin_28_火",
+        "builtin_54_日",
+        "builtin_66_田",
+        "builtin_22_个",
+        "builtin_52_去",
+        "builtin_48_鸟",
+        "builtin_61_是",
+        "builtin_64_四",
+        "builtin_65_天",
+        "builtin_77_小",
+        "builtin_12_虫",
+        "builtin_56_山",
+        "builtin_63_水",
+        "builtin_88_雨",
+        "builtin_90_云",
+        "builtin_25_关",
+        "builtin_32_开",
+        "builtin_50_女",
+        "builtin_76_先",
+        "builtin_18_儿",
+        "builtin_30_见",
+        "builtin_37_里",
+        "builtin_67_头",
+        "builtin_89_月",
+        "builtin_38_力",
+        "builtin_44_木",
+        "builtin_46_男",
+        "builtin_68_土",
+        "builtin_78_心",
+        "builtin_10_厂"
+      ],
+      "type": "practice",
+      "status": "pending",
+      "progress": {
+        "total": 30,
+        "completed": 0,
+        "correct": 0,
+        "errors": []
+      },
+      "id": "task_1764478795111_i6wrtpbut",
+      "createdAt": "2025-11-30T04:59:55.111Z",
+      "updatedAt": "2025-11-30T04:59:55.111Z"
+    },
+    {
+      "name": "1上_1-10单元（3/4）",
+      "wordIds": [
+        "builtin_23_工",
+        "builtin_43_门",
+        "builtin_70_卫",
+        "builtin_71_我",
+        "builtin_87_右",
+        "builtin_91_在",
+        "builtin_99_左",
+        "builtin_6_本",
+        "builtin_8_不",
+        "builtin_11_尺",
+        "builtin_15_刀",
+        "builtin_58_少",
+        "builtin_2_爸",
+        "builtin_41_妈",
+        "builtin_9_才",
+        "builtin_27_和",
+        "builtin_81_也",
+        "builtin_86_又",
+        "builtin_21_风",
+        "builtin_39_立",
+        "builtin_72_五",
+        "builtin_94_正",
+        "builtin_96_中",
+        "builtin_3_白",
+        "builtin_49_牛",
+        "builtin_80_羊",
+        "builtin_93_爪",
+        "builtin_1_巴",
+        "builtin_7_比",
+        "builtin_24_公"
+      ],
+      "type": "practice",
+      "status": "pending",
+      "progress": {
+        "total": 30,
+        "completed": 0,
+        "correct": 0,
+        "errors": []
+      },
+      "id": "task_1764478795111_3bjzjap5j",
+      "createdAt": "2025-11-30T04:59:55.111Z",
+      "updatedAt": "2025-11-30T04:59:55.111Z"
+    },
+    {
+      "name": "1上_1-10单元（4/4）",
+      "wordIds": [
+        "builtin_92_长",
+        "builtin_4_办",
+        "builtin_13_出",
+        "builtin_17_多",
+        "builtin_60_石",
+        "builtin_95_只",
+        "builtin_5_半",
+        "builtin_35_来",
+        "builtin_47_你",
+        "builtin_85_有"
+      ],
+      "type": "practice",
+      "status": "pending",
+      "progress": {
+        "total": 10,
+        "completed": 0,
+        "correct": 0,
+        "errors": []
+      },
+      "id": "task_1764478795114_yyperswvk",
+      "createdAt": "2025-11-30T04:59:55.115Z",
+      "updatedAt": "2025-11-30T04:59:55.115Z"
+    },
+    {
+      "name": "复习计划 - 5天后",
+      "wordIds": [
+        "builtin_0_八",
+        "builtin_40_六",
+        "builtin_51_七",
+        "builtin_59_十",
+        "builtin_36_了",
+        "builtin_53_人",
+        "builtin_14_大",
+        "builtin_31_九",
+        "builtin_69_王",
+        "builtin_98_子",
+        "builtin_28_火",
+        "builtin_42_马",
+        "builtin_52_去",
+        "builtin_54_日",
+        "builtin_57_上",
+        "builtin_64_四",
+        "builtin_65_天",
+        "builtin_74_西",
+        "builtin_83_一",
+        "builtin_84_用",
+        "builtin_16_东",
+        "builtin_18_儿",
+        "builtin_19_耳",
+        "builtin_22_个",
+        "builtin_25_关",
+        "builtin_26_禾",
+        "builtin_29_几",
+        "builtin_33_可",
+        "builtin_45_目",
+        "builtin_48_鸟",
+        "builtin_50_女",
+        "builtin_55_三",
+        "builtin_61_是",
+        "builtin_62_手",
+        "builtin_63_水",
+        "builtin_66_田",
+        "builtin_82_叶",
+        "builtin_90_云",
+        "builtin_97_竹",
+        "builtin_34_口",
+        "builtin_73_午",
+        "builtin_75_下"
+      ],
+      "type": "review",
+      "status": "pending",
+      "scheduledDate": "2025-12-05",
+      "createdAt": "2025-11-30T05:02:23.780Z",
+      "progress": {
+        "total": 42,
+        "completed": 0,
+        "correct": 0,
+        "errors": []
+      },
+      "id": "task_1764478943780_kwh03ei9b",
+      "updatedAt": "2025-11-30T05:02:23.780Z"
+    }
+  ]
+}
