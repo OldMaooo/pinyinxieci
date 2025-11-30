@@ -512,8 +512,7 @@ const Main = {
             
             // 更新按钮状态（更新所有管理模式按钮）
             const allModeBtns = [
-                document.getElementById('home-management-mode-btn-toolbar'),
-                document.getElementById('home-management-mode-btn')
+                document.getElementById('home-management-mode-btn-toolbar')
             ].filter(Boolean);
             
             console.log('[Main.bindHomeManagementMode] 找到的按钮数量:', allModeBtns.length);
@@ -558,7 +557,7 @@ const Main = {
                     showManagementModeBtn: true
                 });
                 
-                // 重新绑定工具栏中的管理模式按钮
+                // 重新绑定工具栏中的管理模式按钮和批量操作按钮
                 setTimeout(() => {
                     const toolbarBtn = document.getElementById('home-management-mode-btn-toolbar');
                     if (toolbarBtn) {
@@ -567,6 +566,41 @@ const Main = {
                         const newBtn = toolbarBtn.cloneNode(true);
                         toolbarBtn.parentNode.replaceChild(newBtn, toolbarBtn);
                         newBtn.addEventListener('click', () => toggleManagementMode(newBtn));
+                    }
+                    
+                    // 重新绑定批量操作按钮（因为视图重新渲染了）
+                    const unpracticedBtn = document.getElementById('home-batch-unpracticed-btn');
+                    const masterBtn = document.getElementById('home-batch-master-btn');
+                    const errorBtn = document.getElementById('home-batch-error-btn');
+                    
+                    if (unpracticedBtn) {
+                        const newUnpracticedBtn = unpracticedBtn.cloneNode(true);
+                        unpracticedBtn.parentNode.replaceChild(newUnpracticedBtn, unpracticedBtn);
+                        newUnpracticedBtn.addEventListener('click', () => {
+                            if (typeof WordBank !== 'undefined' && WordBank.batchSetStatusForHome) {
+                                WordBank.batchSetStatusForHome('default');
+                            }
+                        });
+                    }
+                    
+                    if (masterBtn) {
+                        const newMasterBtn = masterBtn.cloneNode(true);
+                        masterBtn.parentNode.replaceChild(newMasterBtn, masterBtn);
+                        newMasterBtn.addEventListener('click', () => {
+                            if (typeof WordBank !== 'undefined' && WordBank.batchSetStatusForHome) {
+                                WordBank.batchSetStatusForHome('mastered');
+                            }
+                        });
+                    }
+                    
+                    if (errorBtn) {
+                        const newErrorBtn = errorBtn.cloneNode(true);
+                        errorBtn.parentNode.replaceChild(newErrorBtn, errorBtn);
+                        newErrorBtn.addEventListener('click', () => {
+                            if (typeof WordBank !== 'undefined' && WordBank.batchSetStatusForHome) {
+                                WordBank.batchSetStatusForHome('error');
+                            }
+                        });
                     }
                 }, 100);
             }
@@ -593,28 +627,7 @@ const Main = {
         };
         
         // 绑定批量操作工具栏中的按钮（静态HTML）
-        // 注意：这个按钮在批量操作工具栏中，默认是隐藏的
-        const batchToolbarBtn = document.getElementById('home-management-mode-btn');
-        console.log('[Main.bindHomeManagementMode] 批量操作工具栏按钮:', batchToolbarBtn);
-        if (batchToolbarBtn) {
-            // 移除可能存在的旧监听器（通过克隆节点）
-            const newBatchBtn = batchToolbarBtn.cloneNode(true);
-            batchToolbarBtn.parentNode.replaceChild(newBatchBtn, batchToolbarBtn);
-            newBatchBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-                console.log('[Main.bindHomeManagementMode] 批量操作工具栏按钮被点击', {
-                    buttonId: newBatchBtn.id,
-                    buttonElement: newBatchBtn,
-                    eventType: e.type
-                });
-                toggleManagementMode(newBatchBtn);
-            });
-            console.log('[Main.bindHomeManagementMode] 批量操作工具栏按钮绑定成功');
-        } else {
-            console.warn('[Main.bindHomeManagementMode] ⚠️ 找不到批量操作工具栏按钮 (home-management-mode-btn)');
-        }
+        // 注意：home-management-mode-btn 按钮已从HTML中移除，不再需要绑定
         
         // 尝试绑定工具栏中的按钮（可能需要等待渲染完成）
         if (!bindToolbarButton()) {
@@ -637,30 +650,36 @@ const Main = {
             }
         }
         
-        // 绑定批量操作按钮
+        // 绑定批量操作按钮（使用克隆节点方式，避免重复绑定）
         const unpracticedBtn = document.getElementById('home-batch-unpracticed-btn');
         const masterBtn = document.getElementById('home-batch-master-btn');
         const errorBtn = document.getElementById('home-batch-error-btn');
         
         if (unpracticedBtn) {
-            unpracticedBtn.addEventListener('click', () => {
-                if (typeof WordBank !== 'undefined' && WordBank.batchSetStatus) {
+            const newUnpracticedBtn = unpracticedBtn.cloneNode(true);
+            unpracticedBtn.parentNode.replaceChild(newUnpracticedBtn, unpracticedBtn);
+            newUnpracticedBtn.addEventListener('click', () => {
+                if (typeof WordBank !== 'undefined' && WordBank.batchSetStatusForHome) {
                     WordBank.batchSetStatusForHome('default');
                 }
             });
         }
         
         if (masterBtn) {
-            masterBtn.addEventListener('click', () => {
-                if (typeof WordBank !== 'undefined' && WordBank.batchSetStatus) {
+            const newMasterBtn = masterBtn.cloneNode(true);
+            masterBtn.parentNode.replaceChild(newMasterBtn, masterBtn);
+            newMasterBtn.addEventListener('click', () => {
+                if (typeof WordBank !== 'undefined' && WordBank.batchSetStatusForHome) {
                     WordBank.batchSetStatusForHome('mastered');
                 }
             });
         }
         
         if (errorBtn) {
-            errorBtn.addEventListener('click', () => {
-                if (typeof WordBank !== 'undefined' && WordBank.batchSetStatus) {
+            const newErrorBtn = errorBtn.cloneNode(true);
+            errorBtn.parentNode.replaceChild(newErrorBtn, errorBtn);
+            newErrorBtn.addEventListener('click', () => {
+                if (typeof WordBank !== 'undefined' && WordBank.batchSetStatusForHome) {
                     WordBank.batchSetStatusForHome('error');
                 }
             });

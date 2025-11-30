@@ -691,6 +691,123 @@ const WordBank = {
     },
     
     /**
+     * 批量设置状态（首页专用）
+     */
+    batchSetStatusForHome(status) {
+        const container = document.getElementById('practice-range-container-home');
+        if (!container) {
+            this.showToast('warning', '找不到练习范围容器');
+            return;
+        }
+        
+        const selected = container.querySelectorAll('.unit-checkbox:checked');
+        if (selected.length === 0) {
+            this.showToast('warning', '请先选择要设置的单元');
+            return;
+        }
+        
+        const wordBank = Storage.getWordBank();
+        if (typeof PracticeRange === 'undefined' || !PracticeRange.groupWordsBySemesterUnit) {
+            this.showToast('danger', '练习范围模块未加载');
+            return;
+        }
+        
+        const grouped = PracticeRange.groupWordsBySemesterUnit(wordBank);
+        const selectedWords = [];
+        
+        selected.forEach(checkbox => {
+            const semester = checkbox.dataset.semester;
+            const unit = checkbox.dataset.unit;
+            const words = grouped[semester]?.[unit];
+            if (words && Array.isArray(words)) {
+                selectedWords.push(...words);
+            }
+        });
+        
+        if (selectedWords.length === 0) {
+            this.showToast('warning', '未找到选中的题目');
+            return;
+        }
+        
+        const statusMap = {
+            'default': '未练习',
+            'mastered': '已掌握',
+            'error': '错题'
+        };
+        const action = statusMap[status] || '设置';
+        
+        if (confirm(`确定要将选中的 ${selectedWords.length} 个字设为${action}吗？`)) {
+            // 批量设置状态
+            let updated = 0;
+            selectedWords.forEach(word => {
+                if (Storage.setWordMasteryStatus) {
+                    Storage.setWordMasteryStatus(word.id, status);
+                    updated++;
+                    
+                    // 如果设为错题，同时添加到错题本
+                    if (status === 'error' && Storage.addErrorWord) {
+                        Storage.addErrorWord(word.id, word.word, word.pinyin || '', null);
+                    }
+                    // 如果设为已掌握或未练习，从错题本中移除（如果存在）
+                    else if ((status === 'mastered' || status === 'default') && Storage.removeErrorWord) {
+                        Storage.removeErrorWord(word.id);
+                    }
+                }
+            });
+            
+            this.showToast('success', `已${action} ${updated} 个字`);
+            
+            // 重新渲染首页练习范围视图，更新饼图和标签颜色
+            if (typeof PracticeRange !== 'undefined' && PracticeRange.renderTableView) {
+                PracticeRange.renderTableView(container, wordBank, {
+                    context: 'home',
+                    managementMode: true,
+                    stickyToolbar: true,
+                    showOnlyWrongToggle: true,
+                    showManagementModeBtn: true
+                });
+                
+                // 只重新绑定批量操作按钮（不重新绑定整个管理模式，避免重复绑定）
+                setTimeout(() => {
+                    const unpracticedBtn = document.getElementById('home-batch-unpracticed-btn');
+                    const masterBtn = document.getElementById('home-batch-master-btn');
+                    const errorBtn = document.getElementById('home-batch-error-btn');
+                    
+                    if (unpracticedBtn) {
+                        const newUnpracticedBtn = unpracticedBtn.cloneNode(true);
+                        unpracticedBtn.parentNode.replaceChild(newUnpracticedBtn, unpracticedBtn);
+                        newUnpracticedBtn.addEventListener('click', () => {
+                            if (typeof WordBank !== 'undefined' && WordBank.batchSetStatusForHome) {
+                                WordBank.batchSetStatusForHome('default');
+                            }
+                        });
+                    }
+                    
+                    if (masterBtn) {
+                        const newMasterBtn = masterBtn.cloneNode(true);
+                        masterBtn.parentNode.replaceChild(newMasterBtn, masterBtn);
+                        newMasterBtn.addEventListener('click', () => {
+                            if (typeof WordBank !== 'undefined' && WordBank.batchSetStatusForHome) {
+                                WordBank.batchSetStatusForHome('mastered');
+                            }
+                        });
+                    }
+                    
+                    if (errorBtn) {
+                        const newErrorBtn = errorBtn.cloneNode(true);
+                        errorBtn.parentNode.replaceChild(newErrorBtn, errorBtn);
+                        newErrorBtn.addEventListener('click', () => {
+                            if (typeof WordBank !== 'undefined' && WordBank.batchSetStatusForHome) {
+                                WordBank.batchSetStatusForHome('error');
+                            }
+                        });
+                    }
+                }, 100);
+            }
+        }
+    },
+    
+    /**
      * 更新学期饼图（批量设置后立即更新）
      */
     updateSemesterPies(container, status, selectedWords) {

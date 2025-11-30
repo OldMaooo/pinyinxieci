@@ -21,10 +21,15 @@ const TaskListUI = {
      * 绑定事件
      */
     bindEvents() {
-        // 清空全部按钮（需要家长验证）
+        // 清空全部按钮（需要家长验证）- 使用克隆节点方式，避免重复绑定
         const clearAllBtn = document.getElementById('task-list-clear-all-btn');
         if (clearAllBtn) {
-            clearAllBtn.addEventListener('click', () => {
+            const newClearAllBtn = clearAllBtn.cloneNode(true);
+            clearAllBtn.parentNode.replaceChild(newClearAllBtn, clearAllBtn);
+            newClearAllBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('[TaskListUI] 清空全部按钮被点击');
                 this.showDeleteConfirm(null, true); // true表示清空全部
             });
         }
@@ -1070,12 +1075,29 @@ const TaskListUI = {
             });
         });
         
-        // 删除按钮（需要家长验证）
+        // 删除按钮（需要家长验证）- 直接绑定，避免事件委托的问题
         document.querySelectorAll('.task-delete-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            // 先移除可能存在的旧监听器（通过克隆节点）
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            
+            // 使用箭头函数确保 this 上下文正确
+            const self = this;
+            newBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
-                const taskId = btn.getAttribute('data-task-id');
-                this.showDeleteConfirm(taskId);
+                e.preventDefault();
+                e.stopImmediatePropagation(); // 阻止其他事件处理器
+                const taskId = this.getAttribute('data-task-id');
+                console.log('[TaskListUI.bindTaskCardEvents] 删除按钮被点击', {
+                    taskId: taskId,
+                    button: this,
+                    event: e
+                });
+                if (taskId) {
+                    self.showDeleteConfirm(taskId);
+                } else {
+                    console.error('[TaskListUI.bindTaskCardEvents] 删除按钮没有 taskId 属性', this);
+                }
             });
         });
         
@@ -1851,39 +1873,104 @@ const TaskListUI = {
      * @param {boolean} isClearAll - 是否清空全部
      */
     showDeleteConfirm(taskId, isClearAll = false) {
+        console.log('[TaskListUI.showDeleteConfirm] 显示删除确认', { taskId, isClearAll });
         // 检查是否在5分钟内已验证过
         if (this.isAdminVerified()) {
+            console.log('[TaskListUI.showDeleteConfirm] 已在5分钟内验证过，直接执行删除');
             // 直接执行删除操作
             this.executeDelete(taskId, isClearAll);
             return;
         }
         
-        // 需要重新验证
-        const password = prompt('请输入管理员密码以确认删除：\n（输入英文字母Admin，区分大小写）');
-        if (password === 'Admin') {
-            // 保存验证时间戳
-            this.saveAdminVerified();
-            // 执行删除操作
-            this.executeDelete(taskId, isClearAll);
-        } else if (password !== null) {
-            alert('密码错误，删除操作已取消。');
-        }
+        // 需要重新验证 - 使用自定义模态框替代 prompt()
+        console.log('[TaskListUI.showDeleteConfirm] 需要验证密码');
+        this._pendingDeleteTaskId = taskId;
+        this._pendingDeleteIsClearAll = isClearAll;
+        
+        // 显示密码输入模态框
+        const modal = new bootstrap.Modal(document.getElementById('task-delete-password-modal'));
+        const passwordInput = document.getElementById('task-delete-password-input');
+        const errorDiv = document.getElementById('task-delete-password-error');
+        const confirmBtn = document.getElementById('task-delete-password-confirm-btn');
+        
+        // 清空输入和错误信息
+        passwordInput.value = '';
+        errorDiv.style.display = 'none';
+        passwordInput.classList.remove('is-invalid');
+        
+        // 绑定确认按钮事件（移除旧的事件监听器）
+        const newConfirmBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+        
+        // 处理确认按钮点击
+        newConfirmBtn.addEventListener('click', () => {
+            const password = passwordInput.value.trim();
+            console.log('[TaskListUI.showDeleteConfirm] 用户输入的密码:', password ? '已输入' : '空');
+            
+            if (password === 'Admin') {
+                console.log('[TaskListUI.showDeleteConfirm] 密码正确，执行删除');
+                // 保存验证时间戳
+                this.saveAdminVerified();
+                // 关闭模态框
+                modal.hide();
+                // 执行删除操作
+                this.executeDelete(this._pendingDeleteTaskId, this._pendingDeleteIsClearAll);
+                // 清空待删除信息
+                this._pendingDeleteTaskId = null;
+                this._pendingDeleteIsClearAll = false;
+            } else {
+                console.log('[TaskListUI.showDeleteConfirm] 密码错误');
+                passwordInput.classList.add('is-invalid');
+                errorDiv.style.display = 'block';
+                passwordInput.focus();
+            }
+        });
+        
+        // 处理回车键
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                newConfirmBtn.click();
+            }
+        });
+        
+        // 处理模态框关闭事件（清空状态）
+        const modalElement = document.getElementById('task-delete-password-modal');
+        const handleModalHidden = () => {
+            passwordInput.value = '';
+            errorDiv.style.display = 'none';
+            passwordInput.classList.remove('is-invalid');
+            this._pendingDeleteTaskId = null;
+            this._pendingDeleteIsClearAll = false;
+            modalElement.removeEventListener('hidden.bs.modal', handleModalHidden);
+        };
+        modalElement.addEventListener('hidden.bs.modal', handleModalHidden);
+        
+        // 显示模态框并聚焦输入框
+        modal.show();
+        setTimeout(() => {
+            passwordInput.focus();
+        }, 300);
     },
     
     /**
      * 执行删除操作
      */
     executeDelete(taskId, isClearAll) {
+        console.log('[TaskListUI.executeDelete] 开始执行删除操作', { taskId, isClearAll });
         if (isClearAll) {
             if (confirm('确定要清空所有任务吗？此操作不可恢复。')) {
-                TaskList.clearAllTasks();
-                this.render();
+                console.log('[TaskListUI.executeDelete] 清空所有任务');
+                const result = TaskList.clearAllTasks();
+                console.log('[TaskListUI.executeDelete] 清空结果:', result);
+                this.load(); // 使用 load() 而不是 render()，确保重新绑定事件
                 this.updateBadge();
             }
         } else if (taskId) {
             if (confirm('确定要删除这个任务吗？')) {
-                TaskList.deleteTask(taskId);
-                this.render();
+                console.log('[TaskListUI.executeDelete] 删除任务:', taskId);
+                const result = TaskList.deleteTask(taskId);
+                console.log('[TaskListUI.executeDelete] 删除结果:', result);
+                this.load(); // 使用 load() 而不是 render()，确保重新绑定事件
                 this.updateBadge();
             }
         }

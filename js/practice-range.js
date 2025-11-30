@@ -904,20 +904,54 @@ const PracticeRange = {
      * 更新首页管理模式的选中数量
      */
     updateHomeSelectedCount(container) {
+        // 统计选中的单元中的字数量（考虑「只练错题」开关）
+        const wordBank = Storage.getWordBank();
+        const grouped = this.groupWordsBySemesterUnit(wordBank);
+        let total = 0;
+        
+        // 检查是否开启了「只练错题」开关
+        const onlyWrongToggle = container.querySelector('[data-toggle="only-wrong"]');
+        const onlyWrong = onlyWrongToggle && onlyWrongToggle.checked;
+        
+        // 如果开启了「只练错题」，获取所有错题ID
+        let errorWordIds = new Set();
+        if (onlyWrong) {
+            const errorWords = Storage.getErrorWordsFiltered();
+            errorWordIds = new Set(errorWords.map(ew => ew.wordId));
+        }
+        
         const selected = container.querySelectorAll('.unit-checkbox:checked');
-        const count = selected.length;
+        selected.forEach(cb => {
+            const semester = cb.dataset.semester;
+            const unit = cb.dataset.unit;
+            const words = grouped[semester]?.[unit];
+            if (Array.isArray(words)) {
+                if (onlyWrong) {
+                    // 只统计错题数量
+                    words.forEach(word => {
+                        if (errorWordIds.has(word.id)) {
+                            total++;
+                        }
+                    });
+                } else {
+                    // 统计所有字
+                    total += words.length;
+                }
+            }
+        });
+        
         const countEl = document.getElementById('home-selected-count');
         const toolbar = document.getElementById('home-batch-toolbar');
         const unpracticedBtn = document.getElementById('home-batch-unpracticed-btn');
         const masterBtn = document.getElementById('home-batch-master-btn');
         const errorBtn = document.getElementById('home-batch-error-btn');
         
-        if (countEl) countEl.textContent = count;
+        if (countEl) countEl.textContent = total;
         if (toolbar) {
-            toolbar.classList.toggle('d-none', count === 0);
-            toolbar.style.display = count > 0 ? 'flex' : 'none';
+            toolbar.classList.toggle('d-none', total === 0);
+            toolbar.style.display = total > 0 ? 'flex' : 'none';
         }
-        const disabled = count === 0;
+        const disabled = total === 0;
         if (unpracticedBtn) unpracticedBtn.disabled = disabled;
         if (masterBtn) masterBtn.disabled = disabled;
         if (errorBtn) errorBtn.disabled = disabled;
