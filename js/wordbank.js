@@ -96,12 +96,21 @@ const WordBank = {
                 return this.importFromFile(file);
             }
             
+            // 检查是否是同步数据格式
+            if (data.type === 'sync') {
+                // 如果是同步数据，使用同步数据导入
+                return this.importSyncData(file, mergeMode);
+            }
+            
             // 确认导入
             const mode = mergeMode ? '合并' : '替换';
             const confirmMsg = `即将${mode}所有数据：\n` +
                 `- 题库：${data.wordBank?.length || 0} 个字\n` +
                 `- 练习记录：${data.practiceLogs?.length || 0} 条\n` +
                 `- 错题：${data.errorWords?.length || 0} 个\n` +
+                `- 掌握状态：${Object.keys(data.wordMastery || {}).length} 个\n` +
+                `- 复习计划：${Object.keys(data.reviewPlans || {}).length} 个\n` +
+                `- 任务列表：${data.taskList?.length || 0} 个\n` +
                 `- 设置：${data.settings ? '已包含' : '无'}\n\n` +
                 `确定要${mode}吗？${mergeMode ? '(会保留现有数据)' : '(会清空现有数据)'}`;
             
@@ -114,6 +123,7 @@ const WordBank = {
             
             // 重新加载界面
             this.loadWordBank();
+            this.loadMasteryView();
             
             // 更新统计
             if (typeof Statistics !== 'undefined') {
@@ -125,16 +135,76 @@ const WordBank = {
                 ErrorBook.load();
             }
             
+            // 更新任务列表
+            if (typeof TaskListUI !== 'undefined' && TaskListUI.load) {
+                TaskListUI.load();
+            }
+            
             const stats = {
                 words: data.wordBank?.length || 0,
                 logs: data.practiceLogs?.length || 0,
-                errors: data.errorWords?.length || 0
+                errors: data.errorWords?.length || 0,
+                mastery: Object.keys(data.wordMastery || {}).length,
+                plans: Object.keys(data.reviewPlans || {}).length,
+                tasks: data.taskList?.length || 0
             };
             
             this.showToast('success', 
-                `✅ 导入成功！题库：${stats.words} 字，练习：${stats.logs} 条，错题：${stats.errors} 个`);
+                `✅ 导入成功！包含 ${stats.words} 字，${stats.logs} 条练习记录，${stats.errors} 个错题，${stats.mastery} 个掌握状态，${stats.plans} 个复习计划，${stats.tasks} 个任务`);
         } catch (error) {
             console.error('导入失败:', error);
+            this.showToast('danger', `导入失败: ${error.message}`);
+        }
+    },
+    
+    /**
+     * 导入同步数据（轻量级，只导入需要同步的数据）
+     */
+    async importSyncData(file, mergeMode = false) {
+        try {
+            const text = await file.text();
+            const data = JSON.parse(text);
+            
+            // 确认导入
+            const mode = mergeMode ? '合并' : '替换';
+            const confirmMsg = `即将${mode}同步数据：\n` +
+                `- 掌握状态：${Object.keys(data.wordMastery || {}).length} 个\n` +
+                `- 错题：${data.errorWords?.length || 0} 个\n` +
+                `- 复习计划：${Object.keys(data.reviewPlans || {}).length} 个\n` +
+                `- 任务列表：${data.taskList?.length || 0} 个\n\n` +
+                `确定要${mode}吗？${mergeMode ? '(会保留现有数据)' : '(会清空现有数据)'}`;
+            
+            if (!confirm(confirmMsg)) {
+                return;
+            }
+            
+            // 导入数据
+            Storage.importSyncData(data, mergeMode);
+            
+            // 重新加载界面
+            this.loadMasteryView();
+            
+            // 更新错题本
+            if (typeof ErrorBook !== 'undefined') {
+                ErrorBook.load();
+            }
+            
+            // 更新任务列表
+            if (typeof TaskListUI !== 'undefined' && TaskListUI.load) {
+                TaskListUI.load();
+            }
+            
+            const stats = {
+                mastery: Object.keys(data.wordMastery || {}).length,
+                errors: data.errorWords?.length || 0,
+                plans: Object.keys(data.reviewPlans || {}).length,
+                tasks: data.taskList?.length || 0
+            };
+            
+            this.showToast('success', 
+                `✅ 同步数据导入成功！包含 ${stats.mastery} 个掌握状态，${stats.errors} 个错题，${stats.plans} 个复习计划，${stats.tasks} 个任务`);
+        } catch (error) {
+            console.error('导入同步数据失败:', error);
             this.showToast('danger', `导入失败: ${error.message}`);
         }
     },
@@ -161,7 +231,7 @@ const WordBank = {
     },
     
     /**
-     * 导出完整数据（题库+练习记录+错题本+设置）
+     * 导出完整数据（题库+练习记录+错题本+设置+掌握状态+复习计划+任务列表）
      */
     exportToFile() {
         const data = Storage.exportAll();
@@ -176,11 +246,38 @@ const WordBank = {
         const stats = {
             words: data.wordBank?.length || 0,
             logs: data.practiceLogs?.length || 0,
-            errors: data.errorWords?.length || 0
+            errors: data.errorWords?.length || 0,
+            mastery: Object.keys(data.wordMastery || {}).length,
+            plans: Object.keys(data.reviewPlans || {}).length,
+            tasks: data.taskList?.length || 0
         };
         
         this.showToast('success', 
-            `✅ 导出成功！包含 ${stats.words} 字，${stats.logs} 条练习记录，${stats.errors} 个错题`);
+            `✅ 导出成功！包含 ${stats.words} 字，${stats.logs} 条练习记录，${stats.errors} 个错题，${stats.mastery} 个掌握状态，${stats.plans} 个复习计划，${stats.tasks} 个任务`);
+    },
+    
+    /**
+     * 导出同步数据（轻量级，只包含需要同步的数据：掌握状态、错题、复习计划、任务列表）
+     */
+    exportSyncData() {
+        const data = Storage.exportSyncData();
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `看拼音写词_同步数据_${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        const stats = {
+            mastery: Object.keys(data.wordMastery || {}).length,
+            errors: data.errorWords?.length || 0,
+            plans: Object.keys(data.reviewPlans || {}).length,
+            tasks: data.taskList?.length || 0
+        };
+        
+        this.showToast('success', 
+            `✅ 同步数据导出成功！包含 ${stats.mastery} 个掌握状态，${stats.errors} 个错题，${stats.plans} 个复习计划，${stats.tasks} 个任务`);
     },
     
     /**
@@ -308,13 +405,15 @@ const WordBank = {
         });
         
         // 监听单个字的点击事件（设置掌握状态）
+        // 使用捕获阶段，确保在行点击事件之前处理
         container.addEventListener('click', (e) => {
             const wordTag = e.target.closest('.word-tag-clickable');
             if (wordTag && wordTag.dataset.wordId) {
                 e.stopPropagation(); // 阻止事件冒泡到行
-                this.showWordMasteryMenu(wordTag, wordTag.dataset.wordId);
+                e.preventDefault(); // 阻止默认行为
+                this.toggleWordMasteryStatus(wordTag, wordTag.dataset.wordId);
             }
-        });
+        }, true); // 使用捕获阶段
         
         // 批量设为已掌握
         const masterBtn = document.getElementById('wordbank-batch-master-btn');
@@ -349,9 +448,9 @@ const WordBank = {
     },
     
     /**
-     * 显示单个字的掌握状态菜单
+     * 切换单个字的掌握状态（三态循环：默认 → 错题 → 已掌握 → 默认）
      */
-    showWordMasteryMenu(wordTag, wordId) {
+    toggleWordMasteryStatus(wordTag, wordId) {
         const wordBank = Storage.getWordBank();
         const word = wordBank.find(w => w.id === wordId);
         if (!word) {
@@ -360,12 +459,13 @@ const WordBank = {
         }
         
         // 获取当前状态
-        const currentStatus = Storage.getWordMasteryStatus(wordId);
+        const mastery = Storage.getWordMastery();
+        const currentStatus = mastery[wordId] || 'default'; // 直接检查对象，不使用getWordMasteryStatus避免默认值问题
         
         // 三态循环：默认 → 错题 → 已掌握 → 默认
         let nextStatus;
         let actionText;
-        if (currentStatus === 'default') {
+        if (!currentStatus || currentStatus === 'default') {
             nextStatus = 'error';
             actionText = '设为错题';
         } else if (currentStatus === 'error') {
@@ -373,11 +473,25 @@ const WordBank = {
             actionText = '设为已掌握';
         } else { // mastered
             nextStatus = 'default';
-            actionText = '设为默认';
+            actionText = '设为未练习';
         }
         
         // 设置新状态
         Storage.setWordMasteryStatus(wordId, nextStatus);
+        
+        // 同步错题本
+        if (nextStatus === 'error') {
+            // 添加到错题本
+            if (Storage.addErrorWord) {
+                Storage.addErrorWord(wordId, word.word, word.pinyin || '', null);
+            }
+        } else if (nextStatus === 'default' || nextStatus === 'mastered') {
+            // 从错题本移除
+            if (Storage.removeErrorWord) {
+                Storage.removeErrorWord(wordId);
+            }
+        }
+        
         this.showToast('success', `已将"${word.word}"${actionText}`);
         
         // 立即更新标签颜色，无需等待刷新
@@ -507,27 +621,15 @@ const WordBank = {
 document.addEventListener('DOMContentLoaded', () => {
     const importBtn = document.getElementById('import-btn');
     const importInput = document.getElementById('import-file-input');
-    const importModeSelect = document.getElementById('import-mode-select');
     const importMergeSelect = document.getElementById('import-merge-select');
-    const exportFullBtn = document.getElementById('export-full-btn');
-    const exportWordBankBtn = document.getElementById('export-wordbank-btn');
+    const exportSyncBtn = document.getElementById('export-sync-btn');
     
     // 更新统计
     if (typeof WordBank !== 'undefined') {
         WordBank.updateDataStats();
     }
     
-    // 导入模式选择
-    if (importModeSelect) {
-        importModeSelect.addEventListener('change', () => {
-            const isFull = importModeSelect.value === 'full';
-            if (importMergeSelect) {
-                importMergeSelect.style.display = isFull ? 'block' : 'none';
-            }
-        });
-    }
-    
-    // 导入按钮
+    // 导入按钮（只支持同步数据导入）
     if (importBtn && importInput) {
         importBtn.addEventListener('click', async () => {
             if (importInput.files.length === 0) {
@@ -535,13 +637,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
-            const mode = importModeSelect?.value || 'wordbank';
             const mergeMode = importMergeSelect?.value === 'merge';
             
-            if (mode === 'full') {
-                await WordBank.importFullData(importInput.files[0], mergeMode);
-            } else {
-                await WordBank.importFromFile(importInput.files[0]);
+            // 尝试导入同步数据，如果不是同步数据格式，则提示错误
+            try {
+                const text = await importInput.files[0].text();
+                const data = JSON.parse(text);
+                
+                if (data.type === 'sync') {
+                    // 是同步数据，使用同步数据导入
+                    await WordBank.importSyncData(importInput.files[0], mergeMode);
+                } else if (data.version) {
+                    // 是完整数据，提示用户使用完整数据导入功能（如果将来需要）
+                    WordBank.showToast('warning', '这是完整数据文件，请使用完整数据导入功能（如果可用）');
+                } else {
+                    // 未知格式
+                    WordBank.showToast('warning', '文件格式不正确，请选择同步数据文件');
+                }
+            } catch (error) {
+                WordBank.showToast('danger', `导入失败: ${error.message}`);
             }
             
             // 更新统计
@@ -552,29 +666,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // 导出完整数据
-    if (exportFullBtn) {
-        exportFullBtn.addEventListener('click', () => {
-            WordBank.exportToFile();
+    // 展开收起图标切换
+    const importExportHeader = document.getElementById('import-export-header');
+    const importExportCollapse = document.getElementById('import-export-collapse');
+    const importExportChevron = document.getElementById('import-export-chevron');
+    if (importExportHeader && importExportCollapse && importExportChevron) {
+        importExportCollapse.addEventListener('show.bs.collapse', () => {
+            importExportChevron.classList.remove('bi-chevron-down');
+            importExportChevron.classList.add('bi-chevron-up');
+        });
+        importExportCollapse.addEventListener('hide.bs.collapse', () => {
+            importExportChevron.classList.remove('bi-chevron-up');
+            importExportChevron.classList.add('bi-chevron-down');
         });
     }
     
-    // 仅导出题库
-    if (exportWordBankBtn) {
-        exportWordBankBtn.addEventListener('click', () => {
-            WordBank.exportWordBankOnly();
-        });
-    }
-    
-    // 导出错题和复习计划
-    const exportErrorsBtn = document.getElementById('export-errors-btn');
-    if (exportErrorsBtn) {
-        exportErrorsBtn.addEventListener('click', () => {
-            if (typeof Export !== 'undefined') {
-                Export.exportErrorsAndReviewPlan();
-            } else {
-                alert('导出模块未加载');
-            }
+    // 导出同步数据
+    if (exportSyncBtn) {
+        exportSyncBtn.addEventListener('click', () => {
+            WordBank.exportSyncData();
         });
     }
 });

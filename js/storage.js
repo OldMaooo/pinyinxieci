@@ -397,14 +397,34 @@ const Storage = {
      */
     exportAll() {
         return {
-            version: "1.0",
+            version: "1.1", // 升级版本号，包含新字段
             exportDate: new Date().toISOString(),
             wordBank: this.getWordBank(),
             practiceLogs: this.getPracticeLogs(),
             practiceLogsDebug: this.getPracticeLogs({ debug: true }),
             errorWords: this.getErrorWords(),
             errorWordsDebug: this.getErrorWords({ debug: true }),
+            wordMastery: this.getWordMastery(), // 掌握状态（已掌握/错题/未练习）
+            reviewPlans: this.getAllReviewPlans(), // 复习计划
+            taskList: typeof TaskList !== 'undefined' ? TaskList.getAllTasks() : [], // 任务列表
             settings: this.getSettings()
+        };
+    },
+    
+    /**
+     * 导出同步数据（轻量级，只包含需要同步的数据）
+     * 包含：掌握状态、错题、复习计划、任务列表
+     * 不包含：题库、练习记录（这些数据较大，且通常不需要同步）
+     */
+    exportSyncData() {
+        return {
+            version: "1.1",
+            type: "sync", // 标记为同步数据
+            exportDate: new Date().toISOString(),
+            wordMastery: this.getWordMastery(), // 掌握状态（已掌握/错题/未练习）
+            errorWords: this.getErrorWords(), // 错题
+            reviewPlans: this.getAllReviewPlans(), // 复习计划
+            taskList: typeof TaskList !== 'undefined' ? TaskList.getAllTasks() : [] // 任务列表
         };
     },
 
@@ -565,9 +585,129 @@ const Storage = {
             }
         }
         
+        // 导入掌握状态（wordMastery）
+        if (data.wordMastery && typeof data.wordMastery === 'object') {
+            if (merge) {
+                // 合并模式：合并掌握状态
+                const existing = this.getWordMastery();
+                Object.assign(existing, data.wordMastery);
+                this.saveWordMastery(existing);
+            } else {
+                // 替换模式：直接替换
+                this.saveWordMastery(data.wordMastery);
+            }
+        }
+        
+        // 导入复习计划（reviewPlans）
+        if (data.reviewPlans) {
+            if (merge) {
+                // 合并模式：合并复习计划
+                const existing = this.getAllReviewPlans();
+                const existingObj = {};
+                existing.forEach(p => { if (p.wordId) existingObj[p.wordId] = p; });
+                const newPlans = Array.isArray(data.reviewPlans) ? data.reviewPlans : Object.values(data.reviewPlans);
+                newPlans.forEach(p => { if (p.wordId) existingObj[p.wordId] = p; });
+                this.saveAllReviewPlans(existingObj);
+            } else {
+                // 替换模式：直接替换
+                this.saveAllReviewPlans(data.reviewPlans);
+            }
+        }
+        
+        // 导入任务列表（taskList）
+        if (data.taskList && Array.isArray(data.taskList)) {
+            if (typeof TaskList !== 'undefined' && TaskList.saveAllTasks) {
+                if (merge) {
+                    // 合并模式：合并任务列表（去重）
+                    const existing = TaskList.getAllTasks();
+                    const existingIds = new Set(existing.map(t => t.id));
+                    const newTasks = data.taskList.filter(t => !existingIds.has(t.id));
+                    TaskList.saveAllTasks([...existing, ...newTasks]);
+                } else {
+                    // 替换模式：直接替换
+                    TaskList.saveAllTasks(data.taskList);
+                }
+            }
+        }
+        
         // 设置总是替换（不合并）
         if (data.settings) {
             this.saveSettings(data.settings);
+        }
+    },
+    
+    /**
+     * 导入同步数据（轻量级，只导入需要同步的数据）
+     */
+    importSyncData(data, merge = false) {
+        if (!data || !data.version) {
+            throw new Error('无效的数据格式，需要包含 version 字段');
+        }
+        
+        if (data.type !== 'sync') {
+            console.warn('[Storage.importSyncData] 数据格式不是同步数据，尝试导入...');
+        }
+        
+        // 导入掌握状态
+        if (data.wordMastery && typeof data.wordMastery === 'object') {
+            if (merge) {
+                const existing = this.getWordMastery();
+                Object.assign(existing, data.wordMastery);
+                this.saveWordMastery(existing);
+            } else {
+                this.saveWordMastery(data.wordMastery);
+            }
+        }
+        
+        // 导入错题（合并模式会去重）
+        if (data.errorWords && Array.isArray(data.errorWords)) {
+            if (merge) {
+                const existing = this.getErrorWords();
+                const errorMap = new Map(existing.map(error => [error.wordId, error]));
+                data.errorWords.forEach(error => {
+                    const existing = errorMap.get(error.wordId);
+                    if (existing) {
+                        // 合并：保留错误次数更大的
+                        existing.errorCount = Math.max(existing.errorCount, error.errorCount);
+                        if (error.lastErrorDate && new Date(error.lastErrorDate) > new Date(existing.lastErrorDate)) {
+                            existing.lastErrorDate = error.lastErrorDate;
+                        }
+                    } else {
+                        errorMap.set(error.wordId, error);
+                    }
+                });
+                this.saveErrorWords(Array.from(errorMap.values()));
+            } else {
+                this.saveErrorWords(data.errorWords);
+            }
+        }
+        
+        // 导入复习计划
+        if (data.reviewPlans) {
+            if (merge) {
+                const existing = this.getAllReviewPlans();
+                const existingObj = {};
+                existing.forEach(p => { if (p.wordId) existingObj[p.wordId] = p; });
+                const newPlans = Array.isArray(data.reviewPlans) ? data.reviewPlans : Object.values(data.reviewPlans);
+                newPlans.forEach(p => { if (p.wordId) existingObj[p.wordId] = p; });
+                this.saveAllReviewPlans(existingObj);
+            } else {
+                this.saveAllReviewPlans(data.reviewPlans);
+            }
+        }
+        
+        // 导入任务列表
+        if (data.taskList && Array.isArray(data.taskList)) {
+            if (typeof TaskList !== 'undefined' && TaskList.saveAllTasks) {
+                if (merge) {
+                    const existing = TaskList.getAllTasks();
+                    const existingIds = new Set(existing.map(t => t.id));
+                    const newTasks = data.taskList.filter(t => !existingIds.has(t.id));
+                    TaskList.saveAllTasks([...existing, ...newTasks]);
+                } else {
+                    TaskList.saveAllTasks(data.taskList);
+                }
+            }
         }
     },
 

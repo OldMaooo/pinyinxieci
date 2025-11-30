@@ -478,6 +478,10 @@ const PracticeRange = {
         
         container.querySelectorAll('.unit-row').forEach(row => {
             row.addEventListener('click', (e) => {
+                // 如果点击的是可点击的字标签，不处理行点击事件
+                if (e.target.closest('.word-tag-clickable')) {
+                    return; // 让字标签的点击事件处理
+                }
                 if (e.target.closest('input')) return;
                 const checkbox = row.querySelector('.unit-checkbox');
             if (!checkbox) return;
