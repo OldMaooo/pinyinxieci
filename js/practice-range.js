@@ -6,14 +6,14 @@ const PracticeRange = {
     init() {
         this.refresh();
     },
-
+    
     refresh() {
-        console.log('[PracticeRange] refresh() triggered');
         this.renderContainer('practice-range-container', { context: 'modal' });
         this.renderContainer('practice-range-container-home', {
             context: 'home',
             stickyToolbar: true,
-            showOnlyWrongToggle: true
+            showOnlyWrongToggle: true,
+            showManagementModeBtn: true
         });
     },
 
@@ -28,9 +28,7 @@ const PracticeRange = {
             return;
         }
         const wordBank = Storage.getWordBank() || [];
-        console.log(`[PracticeRange] renderContainer(${containerId}) wordBank size = ${wordBank.length}`);
         if (wordBank.length === 0) {
-            console.warn(`[PracticeRange] renderContainer(${containerId}) 题库为空，显示加载提示`);
             container.innerHTML = '<div class="text-muted py-3 text-center">正在加载默认题库，请稍候…</div>';
             return;
         }
@@ -105,11 +103,6 @@ const PracticeRange = {
         const centerX = 10;
         const centerY = 10;
         
-        // 计算比例
-        const masteredRatio = masteredCount / totalCount;
-        const errorRatio = errorCount / totalCount;
-        const defaultRatio = (totalCount - masteredCount - errorCount) / totalCount;
-        
         // 如果全部是灰色（未练习）
         if (masteredCount === 0 && errorCount === 0) {
             return `<div class="completion-pie"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="${grayColor}"/></svg></div>`;
@@ -126,9 +119,13 @@ const PracticeRange = {
         
         const paths = [];
         
-        // 绿色（已掌握）
-        if (masteredRatio > 0) {
-            const angle = masteredRatio * 360;
+        // 绿色（已掌握）- 只绘制非零的部分，且角度至少为0.5度以避免尖角
+        if (masteredCount > 0) {
+            let angle = (masteredCount / totalCount) * 360;
+            // 确保最小角度为0.5度，避免尖角
+            if (angle > 0 && angle < 0.5) {
+                angle = 0.5;
+            }
             const endAngle = currentAngle + angle;
             const startRad = (currentAngle * Math.PI) / 180;
             const endRad = (endAngle * Math.PI) / 180;
@@ -137,13 +134,18 @@ const PracticeRange = {
             const x2 = centerX + radius * Math.cos(endRad);
             const y2 = centerY + radius * Math.sin(endRad);
             const largeArcFlag = angle > 180 ? 1 : 0;
-            paths.push(`<path d="M ${centerX} ${centerY} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z" fill="#28a745"/>`);
+            // 确保路径闭合：使用 Z 闭合路径
+            paths.push(`<path d="M ${centerX} ${centerY} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z" fill="#28a745" stroke="none"/>`);
             currentAngle = endAngle;
         }
         
-        // 红色（错题）
-        if (errorRatio > 0) {
-            const angle = errorRatio * 360;
+        // 红色（错题）- 只绘制非零的部分，且角度至少为0.5度以避免尖角
+        if (errorCount > 0) {
+            let angle = (errorCount / totalCount) * 360;
+            // 确保最小角度为0.5度，避免尖角
+            if (angle > 0 && angle < 0.5) {
+                angle = 0.5;
+            }
             const endAngle = currentAngle + angle;
             const startRad = (currentAngle * Math.PI) / 180;
             const endRad = (endAngle * Math.PI) / 180;
@@ -152,7 +154,8 @@ const PracticeRange = {
             const x2 = centerX + radius * Math.cos(endRad);
             const y2 = centerY + radius * Math.sin(endRad);
             const largeArcFlag = angle > 180 ? 1 : 0;
-            paths.push(`<path d="M ${centerX} ${centerY} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z" fill="#dc3545"/>`);
+            // 确保路径闭合：使用 Z 闭合路径
+            paths.push(`<path d="M ${centerX} ${centerY} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z" fill="#dc3545" stroke="none"/>`);
             currentAngle = endAngle;
         }
         
@@ -184,8 +187,17 @@ const PracticeRange = {
             }
         });
         
+        // 检查是否是管理模式（home上下文且管理模式开启）
+        const isManagementMode = options.context === 'home' && options.managementMode === true;
+        
         let html = '<div class="practice-range-selector d-flex flex-column" style="height: 100%;">';
-        html += this.renderToolbar(options);
+        // 在home上下文或wordbank上下文显示工具栏
+        if (options.context === 'home' || options.context === 'wordbank') {
+            html += this.renderToolbar({
+                ...options,
+                showManagementModeBtn: options.context === 'home'
+            });
+        }
         html += '<div class="flex-grow-1" style="overflow-y: auto; min-height: 0;">';
         
         const accordionId = `${container.id}-accordion`;
@@ -207,7 +219,9 @@ const PracticeRange = {
             let semesterErrorCount = 0;
             let semesterTotalCount = 0;
             const isWordbankContext = options.context === 'wordbank';
-            const wordMastery = isWordbankContext && typeof Storage !== 'undefined' && Storage.getWordMastery 
+            const isManagementMode = options.context === 'home' && options.managementMode === true;
+            const shouldShowMastery = isWordbankContext || isManagementMode;
+            const wordMastery = shouldShowMastery && typeof Storage !== 'undefined' && Storage.getWordMastery 
                 ? Storage.getWordMastery() 
                 : {};
             
@@ -218,13 +232,16 @@ const PracticeRange = {
                     words.forEach(w => {
                         let isMastered = false;
                         let isError = false;
-                        if (isWordbankContext && wordMastery[w.id]) {
-                            // 在wordbank上下文中，优先使用手动设置的状态
+                        // 统一使用 wordMastery 来判断状态（如果存在）
+                        // 如果不存在，则使用自动判断（仅用于非管理模式）
+                        if (shouldShowMastery) {
+                            // 在wordbank上下文或管理模式中，只使用手动设置的状态
                             const masteryStatus = wordMastery[w.id];
                             isMastered = masteryStatus === 'mastered';
                             isError = masteryStatus === 'error';
+                            // 如果 masteryStatus 为 undefined，表示未练习（default），不计数
                         } else {
-                            // 非wordbank上下文，使用自动判断
+                            // 非wordbank上下文且非管理模式，使用自动判断
                             isError = errorWordIds.has(w.id);
                             const hasCorrect = wordCorrectCount.get(w.id) > 0;
                             isMastered = hasCorrect && !isError;
@@ -281,9 +298,11 @@ const PracticeRange = {
                 // 计算每个字的状态和完成率
                 let masteredCount = 0;
                 const isWordbankContext = options.context === 'wordbank';
+                const isManagementMode = options.context === 'home' && options.managementMode === true;
+                const shouldShowMastery = isWordbankContext || isManagementMode;
                 
-                // 在wordbank上下文中，获取手动设置的掌握状态
-                const wordMastery = isWordbankContext && typeof Storage !== 'undefined' && Storage.getWordMastery 
+                // 在wordbank上下文或管理模式中，获取手动设置的掌握状态
+                const wordMastery = shouldShowMastery && typeof Storage !== 'undefined' && Storage.getWordMastery 
                     ? Storage.getWordMastery() 
                     : {};
                 
@@ -291,8 +310,8 @@ const PracticeRange = {
                     let tagClass = 'word-tag-default';
                     let isMastered = false;
                     
-                    if (isWordbankContext) {
-                        // 在wordbank上下文中，优先使用手动设置的状态
+                    if (shouldShowMastery) {
+                        // 在wordbank上下文或管理模式中，优先使用手动设置的状态
                         // 注意：如果手动设置为'default'，wordMastery中会删除该记录
                         // 但我们需要检查是否曾经手动设置过（通过检查是否有其他状态）
                         const manualStatus = wordMastery[w.id];
@@ -303,12 +322,12 @@ const PracticeRange = {
                             tagClass = 'word-tag-error';
                         } else {
                             // manualStatus为undefined或'default'，使用默认状态
-                            // 在wordbank上下文中，如果手动设置为default，应该显示为未练习
+                            // 在wordbank上下文或管理模式中，如果手动设置为default，应该显示为未练习
                             tagClass = 'word-tag-default';
                             isMastered = false;
                         }
                     } else {
-                        // 非wordbank上下文，使用自动判断
+                        // 非wordbank上下文且非管理模式，使用自动判断
                         const isError = errorWordIds.has(w.id);
                         const hasCorrect = wordCorrectCount.get(w.id) > 0;
                         // 已掌握：有正确记录且无错误
@@ -326,21 +345,48 @@ const PracticeRange = {
                     
                     if (isMastered) masteredCount++;
                     
-                    // 在wordbank上下文中，添加data-word-id和点击样式
-                    // 在home上下文中，也添加点击功能（用于首页切换掌握状态）
+                    // 在wordbank上下文、管理模式或home上下文中，添加data-word-id和点击样式
                     const isHomeContext = options.context === 'home';
-                    const clickableClass = (isWordbankContext || isHomeContext) ? 'word-tag-clickable' : '';
-                    const dataAttr = (isWordbankContext || isHomeContext) ? `data-word-id="${w.id}"` : '';
-                    const titleText = (isWordbankContext || isHomeContext) ? '点击切换掌握状态（默认→错题→已掌握）' : '';
+                    const clickableClass = (isWordbankContext || isManagementMode || isHomeContext) ? 'word-tag-clickable' : '';
+                    const dataAttr = (isWordbankContext || isManagementMode || isHomeContext) ? `data-word-id="${w.id}"` : '';
+                    const titleText = (isWordbankContext || isManagementMode || isHomeContext) ? '点击切换掌握状态（默认→错题→已掌握）' : '';
                     
                     return `<span class="word-tag ${tagClass} ${clickableClass}" ${dataAttr} title="${titleText}">${w.word}</span>`;
                 }).join('');
                 
-                // 计算完成率并生成饼图
-                const completionRateHtml = this.generateCompletionPie(masteredCount, words.length);
+                // 计算完成率并生成饼图（使用三种状态：已掌握、错题、未练习）
+                // 统计单元内的三种状态数量 - 必须与标签颜色使用完全相同的逻辑
+                let unitMasteredCount = 0;
+                let unitErrorCount = 0;
+                words.forEach(w => {
+                    if (shouldShowMastery) {
+                        // 在wordbank上下文或管理模式中，只使用手动设置的状态（与标签颜色逻辑完全一致）
+                        const masteryStatus = wordMastery[w.id];
+                        if (masteryStatus === 'mastered') unitMasteredCount++;
+                        else if (masteryStatus === 'error') unitErrorCount++;
+                        // undefined 或 'default' 不计数（算未练习）
+                    } else {
+                        // 非wordbank上下文且非管理模式，使用自动判断（与标签颜色逻辑完全一致）
+                        const isError = errorWordIds.has(w.id);
+                        const hasCorrect = wordCorrectCount.get(w.id) > 0;
+                        if (hasCorrect && !isError) unitMasteredCount++;
+                        else if (isError) unitErrorCount++;
+                        // 其他情况不计数（算未练习）
+                    }
+                });
+                const completionRateHtml = this.generateSemesterPie(unitMasteredCount, unitErrorCount, words.length);
+                
+                // 检查是否需要显示checkbox
+                // 在home上下文（首页）时，复选框始终显示，用于选择练习范围
+                // 在wordbank上下文时，复选框用于批量操作
+                // 在管理模式时，复选框也用于批量操作
+                const shouldShowCheckbox = options.context === 'home' || options.context === 'wordbank' || isManagementMode;
+                const checkboxHtml = shouldShowCheckbox
+                    ? `<input type="checkbox" class="form-check-input unit-checkbox me-2" data-semester="${semesterKey}" data-unit="${unitKey}">`
+                    : '';
                 
                 html += `<tr class="unit-row" data-semester="${semesterKey}" data-unit="${unitKey}" data-row-id="${sanitized}" style="cursor: pointer;">`;
-                html += `<td><input type="checkbox" class="form-check-input unit-checkbox me-2" data-semester="${semesterKey}" data-unit="${unitKey}">${unitLabel}</td>`;
+                html += `<td>${checkboxHtml}${unitLabel}</td>`;
                 html += `<td class="word-tags-cell">${wordTags}</td>`;
                 html += `<td style="text-align: center;">${words.length}</td>`;
                 html += `<td style="text-align: center;">${completionRateHtml}</td>`;
@@ -455,7 +501,7 @@ const PracticeRange = {
     },
 
     renderToolbar(options = {}) {
-        const { stickyToolbar = false, showOnlyWrongToggle = false } = options;
+        const { stickyToolbar = false, showOnlyWrongToggle = false, showManagementModeBtn = false } = options;
         const stickyClasses = stickyToolbar
             ? 'practice-range-toolbar sticky-top border-bottom bg-body p-2'
             : 'practice-range-toolbar border-bottom p-2';
@@ -473,6 +519,11 @@ const PracticeRange = {
                     </div>
                     ` : ''}
                     <span class="ms-auto text-muted" data-selected-count>已选择: 0 个字</span>
+                    ${showManagementModeBtn ? `
+                    <button class="btn btn-sm btn-outline-secondary" id="home-management-mode-btn-toolbar">
+                        <i class="bi bi-gear"></i> 管理模式
+                    </button>
+                    ` : ''}
                 </div>
             </div>
         `;
@@ -501,9 +552,21 @@ const PracticeRange = {
             // 初始状态
             setTimeout(updateSelectAllState, 100);
             
-            // 监听单元复选框变化
+            // 监听单元复选框变化（有全选复选框的情况）
             container.querySelectorAll('.unit-checkbox').forEach(cb => {
-                cb.addEventListener('change', updateSelectAllState);
+                cb.addEventListener('change', (e) => {
+                    updateSelectAllState();
+                    this.updateSemesterCheckboxState(container, e.target.dataset.semester);
+                    // 同时更新选中数量
+                    const isManagementMode = options.context === 'home' && options.managementMode === true;
+                    if (isManagementMode && container.id === 'practice-range-container-home') {
+                        this.updateHomeSelectedCount(container);
+                        // 同时也更新工具栏中的计数
+                        this.updateSelectedCount(container, options);
+                    } else {
+                        this.updateSelectedCount(container, options);
+                    }
+                });
             });
         }
 
@@ -535,7 +598,15 @@ const PracticeRange = {
                 e.stopPropagation();
                 const semester = e.target.dataset.semester;
                 this.toggleSemester(container, semester, e.target.checked);
-                this.updateSelectedCount(container, options);
+                // 更新选中数量
+                const isManagementMode = options.context === 'home' && options.managementMode === true;
+                if (isManagementMode && container.id === 'practice-range-container-home') {
+                    this.updateHomeSelectedCount(container);
+                    // 同时也更新工具栏中的计数
+                    this.updateSelectedCount(container, options);
+                } else {
+                    this.updateSelectedCount(container, options);
+                }
             });
         });
         
@@ -550,12 +621,24 @@ const PracticeRange = {
             });
         });
         
-        container.querySelectorAll('.unit-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
-                this.updateSemesterCheckboxState(container, checkbox.dataset.semester);
-                this.updateSelectedCount(container, options);
+        // 注意：.unit-checkbox 的事件已经在 selectAllCheckbox 部分绑定过了
+        // 这里只需要绑定那些没有全选复选框的情况
+        if (!selectAllCheckbox) {
+            container.querySelectorAll('.unit-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', (e) => {
+                    this.updateSemesterCheckboxState(container, checkbox.dataset.semester);
+                    // 更新选中数量
+                    const isManagementMode = options.context === 'home' && options.managementMode === true;
+                    if (isManagementMode && container.id === 'practice-range-container-home') {
+                        this.updateHomeSelectedCount(container);
+                        // 同时也更新工具栏中的计数
+                        this.updateSelectedCount(container, options);
+                    } else {
+                        this.updateSelectedCount(container, options);
+                    }
+                });
             });
-        });
+        }
         
         // 绑定单个字的点击事件（切换掌握状态）- 在home和wordbank上下文中
         if (options.context === 'home' || options.context === 'wordbank') {
@@ -568,10 +651,8 @@ const PracticeRange = {
                     // 在home上下文中，使用WordBank的方法切换状态
                     if (options.context === 'home' && typeof WordBank !== 'undefined' && WordBank.toggleWordMasteryStatus) {
                         WordBank.toggleWordMasteryStatus(wordTag, wordTag.dataset.wordId);
-                        // 刷新视图以更新饼图
-                        if (typeof PracticeRange !== 'undefined' && PracticeRange.refresh) {
-                            PracticeRange.refresh();
-                        }
+                        // 不重新渲染整个视图，只更新当前字的标签颜色（已经在 toggleWordMasteryStatus 中更新了）
+                        // 如果需要更新饼图，可以延迟批量更新，避免频繁渲染
                     }
                     // 在wordbank上下文中，已经在bindMasteryEvents中处理
                 }
@@ -683,25 +764,29 @@ const PracticeRange = {
     },
 
     updateSelectedCount(container, options = {}) {
-        const wordBank = Storage.getWordBank();
-        const grouped = this.groupWordsBySemesterUnit(wordBank);
-        let total = 0;
-        container.querySelectorAll('.unit-checkbox:checked').forEach(cb => {
-            const semester = cb.dataset.semester;
-            const unit = cb.dataset.unit;
-            const words = grouped[semester]?.[unit];
-            if (Array.isArray(words)) {
-                total += words.length;
+        try {
+            const wordBank = Storage.getWordBank();
+            const grouped = this.groupWordsBySemesterUnit(wordBank);
+            let total = 0;
+            const checkedUnits = container.querySelectorAll('.unit-checkbox:checked');
+            checkedUnits.forEach(cb => {
+                const semester = cb.dataset.semester;
+                const unit = cb.dataset.unit;
+                const words = grouped[semester]?.[unit];
+                if (Array.isArray(words)) {
+                    total += words.length;
+                }
+            });
+            const label = container.querySelector('[data-selected-count]');
+            if (label) {
+                label.textContent = `已选择: ${total} 个字`;
             }
-        });
-        const label = container.querySelector('[data-selected-count]');
-        if (label) {
-            label.textContent = `已选择: ${total} 个字`;
-        }
-        console.log(`[PracticeRange] container=${container.id} 已选择 ${total} 个字 (checked units=${container.querySelectorAll('.unit-checkbox:checked').length})`);
-        this.saveSelection(container);
-        if (container.id === 'practice-range-container-home') {
-            this.updateDynamicCountButton(total);
+            this.saveSelection(container);
+            if (container.id === 'practice-range-container-home') {
+                this.updateDynamicCountButton(total);
+            }
+        } catch (error) {
+            console.error(`[PracticeRange.updateSelectedCount] 错误:`, error);
         }
     },
     
@@ -765,6 +850,29 @@ const PracticeRange = {
         this.updateSelectedCount(toRoot, { context: toRoot.id === 'practice-range-container-home' ? 'home' : 'modal' });
     },
 
+    /**
+     * 更新首页管理模式的选中数量
+     */
+    updateHomeSelectedCount(container) {
+        const selected = container.querySelectorAll('.unit-checkbox:checked');
+        const count = selected.length;
+        const countEl = document.getElementById('home-selected-count');
+        const toolbar = document.getElementById('home-batch-toolbar');
+        const unpracticedBtn = document.getElementById('home-batch-unpracticed-btn');
+        const masterBtn = document.getElementById('home-batch-master-btn');
+        const errorBtn = document.getElementById('home-batch-error-btn');
+        
+        if (countEl) countEl.textContent = count;
+        if (toolbar) {
+            toolbar.classList.toggle('d-none', count === 0);
+            toolbar.style.display = count > 0 ? 'flex' : 'none';
+        }
+        const disabled = count === 0;
+        if (unpracticedBtn) unpracticedBtn.disabled = disabled;
+        if (masterBtn) masterBtn.disabled = disabled;
+        if (errorBtn) errorBtn.disabled = disabled;
+    },
+    
     setErrorWordsFromLog(errorWordIds) {
         if (!errorWordIds || errorWordIds.length === 0) return;
         try {

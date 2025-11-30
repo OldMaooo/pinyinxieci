@@ -460,24 +460,36 @@ const WordBank = {
         
         // 获取当前状态
         const mastery = Storage.getWordMastery();
-        const currentStatus = mastery[wordId] || 'default'; // 直接检查对象，不使用getWordMasteryStatus避免默认值问题
+        // 直接检查对象，如果不存在则为 undefined（表示 default 状态）
+        const currentStatus = mastery[wordId];
         
-        // 三态循环：默认 → 错题 → 已掌握 → 默认
+        // 三态循环：undefined/default → error → mastered → undefined/default
         let nextStatus;
         let actionText;
-        if (!currentStatus || currentStatus === 'default') {
+        if (currentStatus === undefined || currentStatus === 'default') {
+            // 当前是默认状态（未练习），切换到错题
             nextStatus = 'error';
             actionText = '设为错题';
         } else if (currentStatus === 'error') {
+            // 当前是错题，切换到已掌握
             nextStatus = 'mastered';
             actionText = '设为已掌握';
-        } else { // mastered
+        } else if (currentStatus === 'mastered') {
+            // 当前是已掌握，切换回默认
             nextStatus = 'default';
             actionText = '设为未练习';
+        } else {
+            // 未知状态，重置为错题
+            nextStatus = 'error';
+            actionText = '设为错题';
         }
         
         // 设置新状态
         Storage.setWordMasteryStatus(wordId, nextStatus);
+        
+        // 验证状态是否设置成功
+        const verifyMastery = Storage.getWordMastery();
+        const actualStatus = verifyMastery[wordId]; // 如果设置为 'default'，这里会是 undefined
         
         // 同步错题本
         if (nextStatus === 'error') {
@@ -494,8 +506,67 @@ const WordBank = {
         
         this.showToast('success', `已将"${word.word}"${actionText}`);
         
-        // 立即更新标签颜色，无需等待刷新
-        this.updateWordTagColor(wordTag, nextStatus);
+        // 立即更新标签颜色，使用实际保存的状态（如果设置为 'default'，actualStatus 会是 undefined，需要转换为 'default'）
+        const statusForDisplay = actualStatus || 'default';
+        this.updateWordTagColor(wordTag, statusForDisplay);
+        
+        // 如果是首页上下文，更新对应的饼图（延迟批量更新，避免频繁渲染）
+        const container = document.getElementById('practice-range-container-home');
+        if (container) {
+            // 使用防抖，避免频繁更新饼图
+            if (!this._pieUpdateTimer) {
+                this._pieUpdateTimer = setTimeout(() => {
+                    this.updatePieChartsForContainer(container);
+                    this._pieUpdateTimer = null;
+                }, 300);
+            }
+        }
+    },
+    
+    /**
+     * 更新容器中所有饼图（批量更新，避免频繁渲染）
+     */
+    updatePieChartsForContainer(container) {
+        if (!container || typeof PracticeRange === 'undefined') return;
+        
+        const wordBank = typeof Storage !== 'undefined' ? Storage.getWordBank() : [];
+        const grouped = PracticeRange.groupWordsBySemesterUnit(wordBank);
+        const wordMastery = typeof Storage !== 'undefined' ? Storage.getWordMastery() : {};
+        
+        // 更新所有单元和学期的饼图
+        Object.keys(grouped).forEach(semesterKey => {
+            Object.keys(grouped[semesterKey]).forEach(unitKey => {
+                const words = grouped[semesterKey][unitKey];
+                let masteredCount = 0, errorCount = 0;
+                words.forEach(w => {
+                    const status = wordMastery[w.id];
+                    if (status === 'mastered') masteredCount++;
+                    else if (status === 'error') errorCount++;
+                    // undefined 或 'default' 不计数（算未练习）
+                });
+                
+                // 更新单元饼图 - 使用 words.length 作为总数，确保与渲染时一致
+                const unitPie = container.querySelector(`[data-semester="${semesterKey}"][data-unit="${unitKey}"] .completion-pie`);
+                if (unitPie && PracticeRange.generateSemesterPie) {
+                    unitPie.outerHTML = PracticeRange.generateSemesterPie(masteredCount, errorCount, words.length);
+                }
+            });
+            
+            // 更新学期饼图
+            const semesterWords = Object.values(grouped[semesterKey]).flat();
+            let semesterMastered = 0, semesterError = 0;
+            semesterWords.forEach(w => {
+                const status = wordMastery[w.id];
+                if (status === 'mastered') semesterMastered++;
+                else if (status === 'error') semesterError++;
+                // undefined 或 'default' 不计数（算未练习）
+            });
+            const semesterPie = container.querySelector(`[data-semester="${semesterKey}"] .semester-pie`);
+            if (semesterPie && PracticeRange.generateSemesterPie) {
+                // 使用 semesterWords.length 作为总数，确保与渲染时一致
+                semesterPie.outerHTML = PracticeRange.generateSemesterPie(semesterMastered, semesterError, semesterWords.length);
+            }
+        });
     },
     
     /**

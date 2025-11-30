@@ -421,69 +421,30 @@ const Main = {
                 const splitThreshold = 50;
                 console.log('[Main.init] 拆分阈值:', splitThreshold, '选中题目数:', selectedWords.length);
                 
-                // 如果题目数量超过阈值，询问是否拆分
+                // 如果题目数量超过阈值，显示确认弹窗
                 if (selectedWords.length > splitThreshold) {
-                    console.log('[Main.init] 题目数量超过阈值，询问是否拆分...');
-                    if (confirm(`已选择 ${selectedWords.length} 题，是否拆分任务？\n\n点击"确定"拆分任务，点击"取消"直接开始练习。`)) {
-                        console.log('[Main.init] 用户选择拆分任务');
-                        // 显示拆分弹窗
-                        const wordIds = selectedWords.map(w => w.id);
-                        const selectedUnits = this.getSelectedUnitsForTaskName();
-                        console.log('[Main.init] 选中的单元:', selectedUnits);
-                        const taskName = typeof TaskList !== 'undefined' ? TaskList.generateTaskName(selectedUnits) : '未命名任务';
-                        console.log('[Main.init] 生成的任务名称:', taskName);
+                    console.log('[Main.init] 题目数量超过阈值，显示确认弹窗...');
+                    // 显示确认弹窗
+                    const confirmModal = document.getElementById('practice-confirm-modal');
+                    const confirmCountEl = document.getElementById('practice-confirm-count');
+                    if (confirmModal && confirmCountEl) {
+                        confirmCountEl.textContent = selectedWords.length;
+                        const modalInstance = new bootstrap.Modal(confirmModal);
+                        modalInstance.show();
                         
-                        if (typeof TaskListUI !== 'undefined') {
-                            console.log('[Main.init] 调用 TaskListUI.showSplitModal...');
-                            TaskListUI.showSplitModal(wordIds, taskName);
-                            console.log('[Main.init] TaskListUI.showSplitModal 调用完成');
-                        } else {
-                            console.error('[Main.init] ❌ TaskListUI 未定义，无法显示拆分弹窗');
-                        }
+                        // 存储当前选中的题目，供按钮回调使用
+                        this._pendingPracticeWords = selectedWords;
+                        
+                        // 等待用户选择（通过按钮事件处理）
                         return;
                     } else {
-                        console.log('[Main.init] 用户取消拆分，直接开始练习');
+                        console.warn('[Main.init] 确认弹窗元素不存在，使用默认行为');
                     }
                 }
                 
                 // 直接开始练习，跳过练习范围选择页面
                 console.log('[Main.init] 准备直接开始练习...');
-                // 先同步范围选择（在后台进行）
-                if (typeof PracticeRange !== 'undefined' && PracticeRange.syncSelection) {
-                    console.log('[Main.init] 同步范围选择...');
-                    PracticeRange.syncSelection('practice-range-container-home', 'practice-range-container');
-                }
-                // 直接开始练习
-                if (typeof Practice === 'undefined') {
-                    console.warn('[Main.init] Practice 模块未定义，尝试动态加载脚本...');
-                    try {
-                        const loaded = await this.ensurePracticeModule();
-                        if (!loaded) {
-                            alert('练习模块加载失败，请刷新页面后重试。');
-                            console.error('[Main.init] 动态加载 Practice 脚本后仍未定义');
-                            return;
-                        }
-                    } catch (loadErr) {
-                        alert('练习模块加载失败，请刷新页面后重试。');
-                        console.error('[Main.init] 动态加载 Practice 模块失败:', loadErr);
-                        return;
-                    }
-                }
-
-                if (typeof Practice !== 'undefined') {
-                    console.log('[Main.init] Practice 模块存在，授权并开始练习...');
-                    if (Practice.allowPracticePageOnce) {
-                        Practice.allowPracticePageOnce();
-                        console.log('[Main.init] 练习页授权已授予');
-                    }
-                    console.log('[Main.init] 切换到练习页...');
-                    this.showPage('practice');
-                    console.log('[Main.init] 调用 Practice.start()...');
-                    Practice.start();
-                    console.log('[Main.init] Practice.start() 调用完成');
-                } else {
-                    console.error('[Main.init] ❌ Practice 模块仍未定义，无法开始练习');
-                }
+                await this.startPracticeDirectly(selectedWords);
             });
         }
 
@@ -513,7 +474,904 @@ const Main = {
             });
         }
         
+        // 绑定首页管理模式切换
+        this.bindHomeManagementMode();
+        
+        // 绑定首页导入导出
+        this.bindHomeImportExport();
+        
+        // 绑定练习确认弹窗
+        this.bindPracticeConfirmModal();
+        
         console.log('[Main.init] ===== 初始化完成 =====');
+    },
+    
+    /**
+     * 绑定首页管理模式切换
+     */
+    bindHomeManagementMode() {
+        console.log('[Main.bindHomeManagementMode] ===== 开始绑定管理模式 =====');
+        // 管理模式按钮可能在工具栏中（动态生成）或批量操作工具栏中（静态）
+        let isManagementMode = false;
+        
+        const toggleManagementMode = (btn) => {
+            console.log('[Main.bindHomeManagementMode] ===== 管理模式按钮被点击 =====', { 
+                btn: btn?.id || btn?.className, 
+                currentMode: isManagementMode,
+                btnElement: btn
+            });
+            isManagementMode = !isManagementMode;
+            console.log('[Main.bindHomeManagementMode] 切换后状态:', isManagementMode);
+            
+            // 更新按钮状态（更新所有管理模式按钮）
+            const allModeBtns = [
+                document.getElementById('home-management-mode-btn-toolbar'),
+                document.getElementById('home-management-mode-btn')
+            ].filter(Boolean);
+            
+            console.log('[Main.bindHomeManagementMode] 找到的按钮数量:', allModeBtns.length);
+            
+            allModeBtns.forEach(button => {
+                if (isManagementMode) {
+                    button.classList.remove('btn-outline-secondary');
+                    button.classList.add('btn-primary');
+                    button.innerHTML = '<i class="bi bi-gear-fill"></i> 管理模式';
+                } else {
+                    button.classList.remove('btn-primary');
+                    button.classList.add('btn-outline-secondary');
+                    button.innerHTML = '<i class="bi bi-gear"></i> 管理模式';
+                }
+            });
+            
+            // 显示/隐藏开始练习按钮和批量操作工具栏
+            const startPracticeBar = document.getElementById('home-start-practice-bar');
+            const batchToolbar = document.getElementById('home-batch-toolbar');
+            
+            console.log('[Main.bindHomeManagementMode] 工具栏元素:', { startPracticeBar, batchToolbar });
+            
+            if (isManagementMode) {
+                if (startPracticeBar) startPracticeBar.style.display = 'none';
+                if (batchToolbar) batchToolbar.classList.remove('d-none');
+            } else {
+                if (startPracticeBar) startPracticeBar.style.display = 'block';
+                if (batchToolbar) batchToolbar.classList.add('d-none');
+            }
+            
+            // 重新渲染练习范围视图（带管理模式选项）
+            const container = document.getElementById('practice-range-container-home');
+            console.log('[Main.bindHomeManagementMode] 容器:', container);
+            if (container && typeof PracticeRange !== 'undefined') {
+                const wordBank = typeof Storage !== 'undefined' ? Storage.getWordBank() : [];
+                console.log('[Main.bindHomeManagementMode] 开始重新渲染，题库数量:', wordBank.length);
+                PracticeRange.renderTableView(container, wordBank, {
+                    context: 'home',
+                    managementMode: isManagementMode,
+                    stickyToolbar: true,
+                    showOnlyWrongToggle: true,
+                    showManagementModeBtn: true
+                });
+                
+                // 重新绑定工具栏中的管理模式按钮
+                setTimeout(() => {
+                    const toolbarBtn = document.getElementById('home-management-mode-btn-toolbar');
+                    if (toolbarBtn) {
+                        console.log('[Main.bindHomeManagementMode] 重新绑定工具栏按钮');
+                        // 移除旧的事件监听器，添加新的
+                        const newBtn = toolbarBtn.cloneNode(true);
+                        toolbarBtn.parentNode.replaceChild(newBtn, toolbarBtn);
+                        newBtn.addEventListener('click', () => toggleManagementMode(newBtn));
+                    }
+                }, 100);
+            }
+        };
+        
+        // 绑定工具栏中的按钮（动态生成，需要延迟绑定）
+        const bindToolbarButton = () => {
+            const toolbarBtn = document.getElementById('home-management-mode-btn-toolbar');
+            console.log('[Main.bindHomeManagementMode] 尝试绑定工具栏按钮:', toolbarBtn);
+            if (toolbarBtn) {
+                // 移除可能存在的旧监听器
+                const newBtn = toolbarBtn.cloneNode(true);
+                toolbarBtn.parentNode.replaceChild(newBtn, toolbarBtn);
+                newBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('[Main.bindHomeManagementMode] 工具栏按钮被点击');
+                    toggleManagementMode(newBtn);
+                });
+                console.log('[Main.bindHomeManagementMode] 工具栏按钮绑定成功');
+                return true;
+            }
+            return false;
+        };
+        
+        // 绑定批量操作工具栏中的按钮（静态HTML）
+        const batchToolbarBtn = document.getElementById('home-management-mode-btn');
+        console.log('[Main.bindHomeManagementMode] 批量操作工具栏按钮:', batchToolbarBtn);
+        if (batchToolbarBtn) {
+            batchToolbarBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('[Main.bindHomeManagementMode] 批量操作工具栏按钮被点击');
+                toggleManagementMode(batchToolbarBtn);
+            });
+            console.log('[Main.bindHomeManagementMode] 批量操作工具栏按钮绑定成功');
+        }
+        
+        // 尝试绑定工具栏中的按钮（可能需要等待渲染完成）
+        if (!bindToolbarButton()) {
+            console.log('[Main.bindHomeManagementMode] 工具栏按钮不存在，等待渲染...');
+            // 如果按钮还不存在，等待一段时间后重试
+            setTimeout(() => {
+                bindToolbarButton();
+            }, 500);
+            
+            // 监听DOM变化，当工具栏按钮出现时立即绑定
+            const observer = new MutationObserver(() => {
+                if (bindToolbarButton()) {
+                    console.log('[Main.bindHomeManagementMode] 通过MutationObserver绑定成功');
+                    observer.disconnect();
+                }
+            });
+            const container = document.getElementById('practice-range-container-home');
+            if (container) {
+                observer.observe(container, { childList: true, subtree: true });
+            }
+        }
+        
+        // 绑定批量操作按钮
+        const unpracticedBtn = document.getElementById('home-batch-unpracticed-btn');
+        const masterBtn = document.getElementById('home-batch-master-btn');
+        const errorBtn = document.getElementById('home-batch-error-btn');
+        
+        if (unpracticedBtn) {
+            unpracticedBtn.addEventListener('click', () => {
+                if (typeof WordBank !== 'undefined' && WordBank.batchSetStatus) {
+                    WordBank.batchSetStatusForHome('default');
+                }
+            });
+        }
+        
+        if (masterBtn) {
+            masterBtn.addEventListener('click', () => {
+                if (typeof WordBank !== 'undefined' && WordBank.batchSetStatus) {
+                    WordBank.batchSetStatusForHome('mastered');
+                }
+            });
+        }
+        
+        if (errorBtn) {
+            errorBtn.addEventListener('click', () => {
+                if (typeof WordBank !== 'undefined' && WordBank.batchSetStatus) {
+                    WordBank.batchSetStatusForHome('error');
+                }
+            });
+        }
+    },
+    
+    /**
+     * 绑定练习确认弹窗的按钮事件
+     */
+    bindPracticeConfirmModal() {
+        const noSplitBtn = document.getElementById('practice-confirm-no-split-btn');
+        const splitBtn = document.getElementById('practice-confirm-split-btn');
+        const confirmModal = document.getElementById('practice-confirm-modal');
+        
+        if (!noSplitBtn || !splitBtn || !confirmModal) {
+            console.warn('[Main.bindPracticeConfirmModal] 弹窗元素不存在');
+            return;
+        }
+        
+        // 不拆分按钮：直接开始练习
+        noSplitBtn.addEventListener('click', async () => {
+            console.log('[Main.bindPracticeConfirmModal] 用户选择不拆分，直接开始练习');
+            const modalInstance = bootstrap.Modal.getInstance(confirmModal);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+            
+            const selectedWords = this._pendingPracticeWords || [];
+            if (selectedWords.length === 0) {
+                console.error('[Main.bindPracticeConfirmModal] 没有待练习的题目');
+                return;
+            }
+            
+            // 开始练习
+            await this.startPracticeDirectly(selectedWords);
+            this._pendingPracticeWords = null;
+        });
+        
+        // 拆分练习按钮：显示拆分弹窗
+        splitBtn.addEventListener('click', () => {
+            console.log('[Main.bindPracticeConfirmModal] 用户选择拆分练习');
+            const modalInstance = bootstrap.Modal.getInstance(confirmModal);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+            
+            const selectedWords = this._pendingPracticeWords || [];
+            if (selectedWords.length === 0) {
+                console.error('[Main.bindPracticeConfirmModal] 没有待练习的题目');
+                return;
+            }
+            
+            // 显示拆分弹窗
+            const wordIds = selectedWords.map(w => w.id);
+            const selectedUnits = this.getSelectedUnitsForTaskName();
+            console.log('[Main.bindPracticeConfirmModal] 选中的单元:', selectedUnits);
+            const taskName = typeof TaskList !== 'undefined' ? TaskList.generateTaskName(selectedUnits) : '未命名任务';
+            console.log('[Main.bindPracticeConfirmModal] 生成的任务名称:', taskName);
+            
+            if (typeof TaskListUI !== 'undefined') {
+                console.log('[Main.bindPracticeConfirmModal] 调用 TaskListUI.showSplitModal...');
+                TaskListUI.showSplitModal(wordIds, taskName);
+                console.log('[Main.bindPracticeConfirmModal] TaskListUI.showSplitModal 调用完成');
+            } else {
+                console.error('[Main.bindPracticeConfirmModal] ❌ TaskListUI 未定义，无法显示拆分弹窗');
+            }
+            
+            this._pendingPracticeWords = null;
+        });
+        
+        // 取消按钮：关闭弹窗（已通过 data-bs-dismiss="modal" 自动处理）
+        confirmModal.addEventListener('hidden.bs.modal', () => {
+            // 弹窗关闭时清空待练习的题目
+            this._pendingPracticeWords = null;
+        });
+    },
+    
+    /**
+     * 直接开始练习（不拆分）
+     */
+    async startPracticeDirectly(selectedWords) {
+        console.log('[Main.startPracticeDirectly] 准备直接开始练习...');
+        // 先同步范围选择（在后台进行）
+        if (typeof PracticeRange !== 'undefined' && PracticeRange.syncSelection) {
+            console.log('[Main.startPracticeDirectly] 同步范围选择...');
+            PracticeRange.syncSelection('practice-range-container-home', 'practice-range-container');
+        }
+        // 直接开始练习
+        if (typeof Practice === 'undefined') {
+            console.warn('[Main.startPracticeDirectly] Practice 模块未定义，尝试动态加载脚本...');
+            try {
+                const loaded = await this.ensurePracticeModule();
+                if (!loaded) {
+                    alert('练习模块加载失败，请刷新页面后重试。');
+                    console.error('[Main.startPracticeDirectly] 动态加载 Practice 脚本后仍未定义');
+                    return;
+                }
+            } catch (loadErr) {
+                alert('练习模块加载失败，请刷新页面后重试。');
+                console.error('[Main.startPracticeDirectly] 动态加载 Practice 模块失败:', loadErr);
+                return;
+            }
+        }
+
+        if (typeof Practice !== 'undefined') {
+            console.log('[Main.startPracticeDirectly] Practice 模块存在，授权并开始练习...');
+            if (Practice.allowPracticePageOnce) {
+                Practice.allowPracticePageOnce();
+                console.log('[Main.startPracticeDirectly] 练习页授权已授予');
+            }
+            console.log('[Main.startPracticeDirectly] 切换到练习页...');
+            this.showPage('practice');
+            console.log('[Main.startPracticeDirectly] 调用 Practice.start()...');
+            Practice.start();
+            console.log('[Main.startPracticeDirectly] Practice.start() 调用完成');
+        } else {
+            console.error('[Main.startPracticeDirectly] ❌ Practice 模块仍未定义，无法开始练习');
+        }
+    },
+    
+    /**
+     * 绑定首页导入导出
+     */
+    bindHomeImportExport() {
+        // 导入按钮 - 点击后选择文件
+        const importBtn = document.getElementById('home-import-btn');
+        const importInput = document.getElementById('home-import-file-input');
+        
+        if (importBtn && importInput) {
+            importBtn.addEventListener('click', () => {
+                importInput.click();
+            });
+            
+            // 文件选择后显示预览弹框
+            importInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                try {
+                    const text = await file.text();
+                    const data = JSON.parse(text);
+                    
+                    // 检查数据格式
+                    if (!data.version) {
+                        if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                            WordBank.showToast('danger', '无效的数据格式');
+                        }
+                        // 清空文件选择，以便下次可以选择相同文件
+                        importInput.value = '';
+                        return;
+                    }
+                    
+                    // 显示预览弹框
+                    this.showImportPreview(data, file);
+                } catch (error) {
+                    console.error('[Main] 解析文件失败:', error);
+                    if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                        WordBank.showToast('danger', '文件解析失败: ' + (error.message || '未知错误'));
+                    }
+                    // 清空文件选择，以便下次可以选择相同文件
+                    importInput.value = '';
+                }
+            });
+        }
+        
+        // 确认导入按钮
+        const confirmImportBtn = document.getElementById('home-import-preview-confirm-btn');
+        if (confirmImportBtn) {
+            let pendingImportData = null;
+            
+            confirmImportBtn.addEventListener('click', async () => {
+                const mergeSelect = document.getElementById('home-import-preview-merge-select');
+                const mergeMode = mergeSelect && mergeSelect.value === 'merge';
+                
+                if (!pendingImportData) {
+                    if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                        WordBank.showToast('warning', '文件数据丢失，请重新选择');
+                    }
+                    return;
+                }
+                
+                try {
+                    // 获取选中的范围
+                    const previewContainer = document.getElementById('home-import-preview-container');
+                    const selectedUnits = [];
+                    if (previewContainer) {
+                        previewContainer.querySelectorAll('.import-unit-checkbox:checked').forEach(cb => {
+                            selectedUnits.push({
+                                semester: cb.dataset.semester,
+                                unit: cb.dataset.unit
+                            });
+                        });
+                    }
+                    
+                    // 如果没有选中任何单元，提示用户
+                    if (selectedUnits.length === 0) {
+                        if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                            WordBank.showToast('warning', '请至少选择一个单元');
+                        }
+                        return;
+                    }
+                    
+                    // 过滤数据：只保留选中范围内的数据
+                    const filteredData = this.filterImportDataByRange(pendingImportData, selectedUnits);
+                    
+                    // 直接使用Storage.importSyncData导入过滤后的数据
+                    if (typeof Storage !== 'undefined' && Storage.importSyncData) {
+                        Storage.importSyncData(filteredData, mergeMode);
+                        
+                        // 重新加载界面
+                        if (typeof WordBank !== 'undefined' && WordBank.loadMasteryView) {
+                            WordBank.loadMasteryView();
+                        }
+                        
+                        // 更新错题本
+                        if (typeof ErrorBook !== 'undefined' && ErrorBook.load) {
+                            ErrorBook.load();
+                        }
+                        
+                        // 更新统计
+                        if (typeof Statistics !== 'undefined' && Statistics.updateHomeStats) {
+                            Statistics.updateHomeStats();
+                        }
+                        
+                        if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                            WordBank.showToast('success', '导入成功');
+                        }
+                        // 关闭弹框
+                        const modalEl = document.getElementById('home-import-preview-modal');
+                        if (modalEl) {
+                            const modal = bootstrap.Modal.getInstance(modalEl);
+                            if (modal) modal.hide();
+                        }
+                        // 清空文件选择和数据
+                        if (importInput) importInput.value = '';
+                        pendingImportData = null;
+                        // 刷新视图
+                        if (typeof PracticeRange !== 'undefined' && PracticeRange.refresh) {
+                            PracticeRange.refresh();
+                        }
+                    } else {
+                        throw new Error('Storage.importSyncData 不可用');
+                    }
+                } catch (error) {
+                    console.error('[Main] 导入失败:', error);
+                    if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                        WordBank.showToast('danger', '导入失败: ' + (error.message || '未知错误'));
+                    }
+                }
+            });
+            
+            // 保存pendingImportData的引用
+            window._pendingImportData = (data) => {
+                pendingImportData = data;
+            };
+        }
+        
+        // 导出按钮 - 显示导出选择弹框
+        const exportSyncBtn = document.getElementById('home-export-sync-btn');
+        if (exportSyncBtn) {
+            exportSyncBtn.addEventListener('click', () => {
+                this.showExportPreview();
+            });
+        }
+        
+        // 确认导出按钮
+        const confirmExportBtn = document.getElementById('home-export-preview-confirm-btn');
+        if (confirmExportBtn) {
+            confirmExportBtn.addEventListener('click', () => {
+                const previewContainer = document.getElementById('home-export-preview-container');
+                const selectedUnits = [];
+                if (previewContainer) {
+                    previewContainer.querySelectorAll('.export-unit-checkbox:checked').forEach(cb => {
+                        selectedUnits.push({
+                            semester: cb.dataset.semester,
+                            unit: cb.dataset.unit
+                        });
+                    });
+                }
+                
+                // 如果没有选中任何单元，提示用户
+                if (selectedUnits.length === 0) {
+                    if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                        WordBank.showToast('warning', '请至少选择一个单元');
+                    }
+                    return;
+                }
+                
+                // 导出选中范围的数据
+                this.exportSyncDataByRange(selectedUnits);
+                
+                // 关闭弹框
+                const modalEl = document.getElementById('home-export-preview-modal');
+                if (modalEl) {
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
+                }
+            });
+        }
+        
+        // 绑定导入导出折叠框的图标切换
+        const importExportHeader = document.getElementById('home-import-export-header');
+        const importExportChevron = document.getElementById('home-import-export-chevron');
+        if (importExportHeader && importExportChevron) {
+            importExportHeader.addEventListener('click', () => {
+                // Bootstrap collapse会自动处理，我们只需要更新图标
+                setTimeout(() => {
+                    const collapse = document.getElementById('home-import-export-collapse');
+                    if (collapse) {
+                        const isExpanded = collapse.classList.contains('show');
+                        if (isExpanded) {
+                            importExportChevron.classList.remove('bi-chevron-down');
+                            importExportChevron.classList.add('bi-chevron-up');
+                        } else {
+                            importExportChevron.classList.remove('bi-chevron-up');
+                            importExportChevron.classList.add('bi-chevron-down');
+                        }
+                    }
+                }, 100);
+            });
+        }
+    },
+    
+    /**
+     * 显示导入预览弹框
+     */
+    showImportPreview(data, file) {
+        const previewContainer = document.getElementById('home-import-preview-container');
+        
+        if (!previewContainer) return;
+        
+        // 保存文件数据到全局变量
+        if (window._pendingImportData) {
+            window._pendingImportData(data);
+        }
+        
+        // 提取导入数据中的所有状态（mastered、error、default）
+        const wordMastery = data.wordMastery || {};
+        const errorWords = data.errorWords || [];
+        
+        console.log('[Main.showImportPreview] 导入数据:', {
+            wordMasteryCount: Object.keys(wordMastery).length,
+            errorWordsCount: errorWords.length,
+            sampleWordMastery: Object.keys(wordMastery).slice(0, 5).map(id => ({ id, status: wordMastery[id] }))
+        });
+        
+        // 从wordMastery中提取所有状态的字
+        const masteredWordIds = new Set();
+        const errorWordIds = new Set();
+        const defaultWordIds = new Set();
+        
+        // 从errorWords数组中提取（errorWords中的wordId都是error状态）
+        errorWords.forEach(ew => errorWordIds.add(ew.wordId));
+        
+        // 从wordMastery中提取所有状态（这是主要来源）
+        Object.keys(wordMastery).forEach(wordId => {
+            const status = wordMastery[wordId];
+            if (status === 'mastered') {
+                masteredWordIds.add(wordId);
+                // 如果errorWords中也有，以wordMastery为准
+                errorWordIds.delete(wordId);
+            } else if (status === 'error') {
+                errorWordIds.add(wordId);
+            } else if (status === 'default') {
+                defaultWordIds.add(wordId);
+                // 如果errorWords中也有，以wordMastery为准
+                errorWordIds.delete(wordId);
+            }
+        });
+        
+        console.log('[Main.showImportPreview] 提取的状态:', {
+            mastered: masteredWordIds.size,
+            error: errorWordIds.size,
+            default: defaultWordIds.size
+        });
+        
+        // 获取完整题库以显示字的信息
+        const wordBank = typeof Storage !== 'undefined' ? Storage.getWordBank() : [];
+        const allWordObjects = [];
+        
+        // 合并所有有状态的字
+        const allWordIds = new Set([...masteredWordIds, ...errorWordIds, ...defaultWordIds]);
+        allWordIds.forEach(wordId => {
+            const word = wordBank.find(w => w.id === wordId);
+            if (word) {
+                // 添加状态信息
+                word._importStatus = masteredWordIds.has(wordId) ? 'mastered' : 
+                                    errorWordIds.has(wordId) ? 'error' : 'default';
+                allWordObjects.push(word);
+            }
+        });
+        
+        // 按学期和单元分组
+        if (typeof PracticeRange !== 'undefined' && PracticeRange.groupWordsBySemesterUnit) {
+            const grouped = PracticeRange.groupWordsBySemesterUnit(allWordObjects);
+            const semesters = PracticeRange.sortSemesters(Object.keys(grouped));
+            
+            let html = '<div class="practice-range-preview">';
+            
+            if (semesters.length === 0) {
+                html += '<div class="text-center text-muted py-3">导入数据中没有掌握状态数据</div>';
+            } else {
+                semesters.forEach(semesterKey => {
+                    const units = PracticeRange.sortUnits(grouped[semesterKey]);
+                    const semesterLabel = semesterKey;
+                    const semesterId = PracticeRange.sanitizeId(`import-semester-${semesterKey}`);
+                    
+                    html += `<div class="mb-3">`;
+                    html += `<div class="form-check mb-2">`;
+                    html += `<input class="form-check-input import-semester-checkbox" type="checkbox" id="${semesterId}" data-semester="${semesterKey}" checked>`;
+                    html += `<label class="form-check-label fw-bold" for="${semesterId}">${semesterLabel}</label>`;
+                    html += `</div>`;
+                    
+                    // 使用表格样式显示单元
+                    html += `<table class="table table-sm table-borderless mb-0">`;
+                    html += `<tbody>`;
+                    
+                    units.forEach(unitKey => {
+                        const words = grouped[semesterKey][unitKey];
+                        if (Array.isArray(words) && words.length > 0) {
+                            const unitLabel = words.unitLabel || PracticeRange.formatUnitLabel(unitKey);
+                            const unitId = PracticeRange.sanitizeId(`import-unit-${semesterKey}-${unitKey}`);
+                            
+                            // 按状态分组显示
+                            const masteredWords = words.filter(w => w._importStatus === 'mastered');
+                            const errorWords = words.filter(w => w._importStatus === 'error');
+                            const defaultWords = words.filter(w => w._importStatus === 'default');
+                            
+                            // 显示字，用颜色区分状态
+                            const wordTags = [];
+                            masteredWords.forEach(w => wordTags.push(`<span class="word-tag word-tag-mastered">${w.word}</span>`));
+                            errorWords.forEach(w => wordTags.push(`<span class="word-tag word-tag-error">${w.word}</span>`));
+                            defaultWords.forEach(w => wordTags.push(`<span class="word-tag word-tag-default">${w.word}</span>`));
+                            
+                            html += `<tr>`;
+                            html += `<td style="width: 80px; vertical-align: top; padding-top: 0.5rem;">`;
+                            html += `<div class="form-check">`;
+                            html += `<input class="form-check-input import-unit-checkbox" type="checkbox" id="${unitId}" data-semester="${semesterKey}" data-unit="${unitKey}" checked>`;
+                            html += `<label class="form-check-label" for="${unitId}">${unitLabel}</label>`;
+                            html += `</div>`;
+                            html += `</td>`;
+                            html += `<td class="word-tags-cell" style="padding-top: 0.5rem;">${wordTags.join('')}</td>`;
+                            html += `</tr>`;
+                        }
+                    });
+                    
+                    html += `</tbody></table>`;
+                    html += `</div>`;
+                });
+            }
+            
+            html += '</div>';
+            previewContainer.innerHTML = html;
+            
+            // 绑定复选框事件（学期复选框控制单元复选框）
+            previewContainer.querySelectorAll('.import-semester-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', (e) => {
+                    const semester = e.target.dataset.semester;
+                    const checked = e.target.checked;
+                    previewContainer.querySelectorAll(`.import-unit-checkbox[data-semester="${semester}"]`).forEach(unitCb => {
+                        unitCb.checked = checked;
+                    });
+                });
+            });
+        } else {
+            previewContainer.innerHTML = '<div class="text-center text-muted py-3">无法解析导入数据</div>';
+        }
+        
+        // 显示弹框
+        const modal = new bootstrap.Modal(document.getElementById('home-import-preview-modal'));
+        modal.show();
+    },
+    
+    /**
+     * 根据选中的范围过滤导入数据
+     */
+    filterImportDataByRange(data, selectedUnits) {
+        if (!selectedUnits || selectedUnits.length === 0) {
+            return { ...data, wordMastery: {}, errorWords: [] };
+        }
+        
+        // 获取完整题库
+        const wordBank = typeof Storage !== 'undefined' ? Storage.getWordBank() : [];
+        
+        // 按学期和单元分组
+        const grouped = typeof PracticeRange !== 'undefined' && PracticeRange.groupWordsBySemesterUnit 
+            ? PracticeRange.groupWordsBySemesterUnit(wordBank) 
+            : {};
+        
+        // 构建选中范围内的wordId集合
+        const selectedWordIds = new Set();
+        selectedUnits.forEach(({ semester, unit }) => {
+            const words = grouped[semester]?.[unit];
+            if (Array.isArray(words)) {
+                words.forEach(w => selectedWordIds.add(w.id));
+            }
+        });
+        
+        // 过滤wordMastery
+        const filteredWordMastery = {};
+        if (data.wordMastery) {
+            Object.keys(data.wordMastery).forEach(wordId => {
+                if (selectedWordIds.has(wordId)) {
+                    filteredWordMastery[wordId] = data.wordMastery[wordId];
+                }
+            });
+        }
+        
+        // 过滤errorWords
+        const filteredErrorWords = [];
+        if (data.errorWords && Array.isArray(data.errorWords)) {
+            data.errorWords.forEach(ew => {
+                if (selectedWordIds.has(ew.wordId)) {
+                    filteredErrorWords.push(ew);
+                }
+            });
+        }
+        
+        return {
+            ...data,
+            wordMastery: filteredWordMastery,
+            errorWords: filteredErrorWords
+        };
+    },
+    
+    /**
+     * 显示导出预览弹框
+     */
+    showExportPreview() {
+        const previewContainer = document.getElementById('home-export-preview-container');
+        if (!previewContainer) return;
+        
+        // 获取当前数据
+        const wordMastery = typeof Storage !== 'undefined' ? Storage.getWordMastery() : {};
+        const errorWords = typeof Storage !== 'undefined' ? Storage.getErrorWordsFiltered() : [];
+        
+        // 提取所有有状态的字
+        const masteredWordIds = new Set();
+        const errorWordIds = new Set();
+        const defaultWordIds = new Set();
+        
+        // 从errorWords数组中提取
+        errorWords.forEach(ew => errorWordIds.add(ew.wordId));
+        
+        // 从wordMastery中提取所有状态
+        Object.keys(wordMastery).forEach(wordId => {
+            const status = wordMastery[wordId];
+            if (status === 'mastered') {
+                masteredWordIds.add(wordId);
+            } else if (status === 'error') {
+                errorWordIds.add(wordId);
+            } else if (status === 'default') {
+                defaultWordIds.add(wordId);
+            }
+        });
+        
+        // 获取完整题库
+        const wordBank = typeof Storage !== 'undefined' ? Storage.getWordBank() : [];
+        const allWordObjects = [];
+        
+        // 合并所有有状态的字
+        const allWordIds = new Set([...masteredWordIds, ...errorWordIds, ...defaultWordIds]);
+        allWordIds.forEach(wordId => {
+            const word = wordBank.find(w => w.id === wordId);
+            if (word) {
+                // 添加状态信息
+                word._exportStatus = masteredWordIds.has(wordId) ? 'mastered' : 
+                                    errorWordIds.has(wordId) ? 'error' : 'default';
+                allWordObjects.push(word);
+            }
+        });
+        
+        // 按学期和单元分组
+        if (typeof PracticeRange !== 'undefined' && PracticeRange.groupWordsBySemesterUnit) {
+            const grouped = PracticeRange.groupWordsBySemesterUnit(allWordObjects);
+            const semesters = PracticeRange.sortSemesters(Object.keys(grouped));
+            
+            let html = '<div class="practice-range-preview">';
+            
+            if (semesters.length === 0) {
+                html += '<div class="text-center text-muted py-3">当前没有掌握状态数据</div>';
+            } else {
+                semesters.forEach(semesterKey => {
+                    const units = PracticeRange.sortUnits(grouped[semesterKey]);
+                    const semesterLabel = semesterKey;
+                    const semesterId = PracticeRange.sanitizeId(`export-semester-${semesterKey}`);
+                    
+                    html += `<div class="mb-3">`;
+                    html += `<div class="form-check mb-2">`;
+                    html += `<input class="form-check-input export-semester-checkbox" type="checkbox" id="${semesterId}" data-semester="${semesterKey}" checked>`;
+                    html += `<label class="form-check-label fw-bold" for="${semesterId}">${semesterLabel}</label>`;
+                    html += `</div>`;
+                    
+                    // 使用表格样式显示单元
+                    html += `<table class="table table-sm table-borderless mb-0">`;
+                    html += `<tbody>`;
+                    
+                    units.forEach(unitKey => {
+                        const words = grouped[semesterKey][unitKey];
+                        if (Array.isArray(words) && words.length > 0) {
+                            const unitLabel = words.unitLabel || PracticeRange.formatUnitLabel(unitKey);
+                            const unitId = PracticeRange.sanitizeId(`export-unit-${semesterKey}-${unitKey}`);
+                            
+                            // 按状态分组显示
+                            const masteredWords = words.filter(w => w._exportStatus === 'mastered');
+                            const errorWords = words.filter(w => w._exportStatus === 'error');
+                            const defaultWords = words.filter(w => w._exportStatus === 'default');
+                            
+                            // 显示字，用颜色区分状态
+                            const wordTags = [];
+                            masteredWords.forEach(w => wordTags.push(`<span class="word-tag word-tag-mastered">${w.word}</span>`));
+                            errorWords.forEach(w => wordTags.push(`<span class="word-tag word-tag-error">${w.word}</span>`));
+                            defaultWords.forEach(w => wordTags.push(`<span class="word-tag word-tag-default">${w.word}</span>`));
+                            
+                            html += `<tr>`;
+                            html += `<td style="width: 80px; vertical-align: top; padding-top: 0.5rem;">`;
+                            html += `<div class="form-check">`;
+                            html += `<input class="form-check-input export-unit-checkbox" type="checkbox" id="${unitId}" data-semester="${semesterKey}" data-unit="${unitKey}" checked>`;
+                            html += `<label class="form-check-label" for="${unitId}">${unitLabel}</label>`;
+                            html += `</div>`;
+                            html += `</td>`;
+                            html += `<td class="word-tags-cell" style="padding-top: 0.5rem;">${wordTags.join('')}</td>`;
+                            html += `</tr>`;
+                        }
+                    });
+                    
+                    html += `</tbody></table>`;
+                    html += `</div>`;
+                });
+            }
+            
+            html += '</div>';
+            previewContainer.innerHTML = html;
+            
+            // 绑定复选框事件（学期复选框控制单元复选框）
+            previewContainer.querySelectorAll('.export-semester-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', (e) => {
+                    const semester = e.target.dataset.semester;
+                    const checked = e.target.checked;
+                    previewContainer.querySelectorAll(`.export-unit-checkbox[data-semester="${semester}"]`).forEach(unitCb => {
+                        unitCb.checked = checked;
+                    });
+                });
+            });
+        } else {
+            previewContainer.innerHTML = '<div class="text-center text-muted py-3">无法加载数据</div>';
+        }
+        
+        // 显示弹框
+        const modal = new bootstrap.Modal(document.getElementById('home-export-preview-modal'));
+        modal.show();
+    },
+    
+    /**
+     * 根据选中的范围导出数据
+     */
+    exportSyncDataByRange(selectedUnits) {
+        if (!selectedUnits || selectedUnits.length === 0) {
+            if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                WordBank.showToast('warning', '请至少选择一个单元');
+            }
+            return;
+        }
+        
+        // 获取完整数据
+        const fullData = typeof Storage !== 'undefined' ? Storage.exportSyncData() : null;
+        if (!fullData) {
+            if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                WordBank.showToast('danger', '无法获取导出数据');
+            }
+            return;
+        }
+        
+        // 获取完整题库
+        const wordBank = typeof Storage !== 'undefined' ? Storage.getWordBank() : [];
+        
+        // 按学期和单元分组
+        const grouped = typeof PracticeRange !== 'undefined' && PracticeRange.groupWordsBySemesterUnit 
+            ? PracticeRange.groupWordsBySemesterUnit(wordBank) 
+            : {};
+        
+        // 构建选中范围内的wordId集合
+        const selectedWordIds = new Set();
+        selectedUnits.forEach(({ semester, unit }) => {
+            const words = grouped[semester]?.[unit];
+            if (Array.isArray(words)) {
+                words.forEach(w => selectedWordIds.add(w.id));
+            }
+        });
+        
+        // 过滤wordMastery
+        const filteredWordMastery = {};
+        if (fullData.wordMastery) {
+            Object.keys(fullData.wordMastery).forEach(wordId => {
+                if (selectedWordIds.has(wordId)) {
+                    filteredWordMastery[wordId] = fullData.wordMastery[wordId];
+                }
+            });
+        }
+        
+        // 过滤errorWords
+        const filteredErrorWords = [];
+        if (fullData.errorWords && Array.isArray(fullData.errorWords)) {
+            fullData.errorWords.forEach(ew => {
+                if (selectedWordIds.has(ew.wordId)) {
+                    filteredErrorWords.push(ew);
+                }
+            });
+        }
+        
+        // 构建导出数据
+        const exportData = {
+            ...fullData,
+            wordMastery: filteredWordMastery,
+            errorWords: filteredErrorWords
+        };
+        
+        // 下载文件
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `看拼音写词_同步数据_${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+            WordBank.showToast('success', '导出成功');
+        }
     },
     
     /**

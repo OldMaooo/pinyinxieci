@@ -321,9 +321,14 @@ const Storage = {
             if (roundId) {
                 errorWord.roundId = roundId;
             }
+            // 只保留第一次写错的快照，不更新已有快照
+            // 如果已有快照，就不添加新快照（无论是答对还是答错）
             if (snapshotData) {
                 errorWord.handwritingSnapshots = errorWord.handwritingSnapshots || [];
-            errorWord.handwritingSnapshots.push(snapshotData);
+                // 只有在还没有快照的情况下，才添加快照（保留第一次写错的字迹）
+                if (errorWord.handwritingSnapshots.length === 0) {
+                    errorWord.handwritingSnapshots.push(snapshotData);
+                }
             }
         } else {
             // 创建新错题记录
@@ -417,11 +422,18 @@ const Storage = {
      * 不包含：题库、练习记录（这些数据较大，且通常不需要同步）
      */
     exportSyncData() {
+        // 获取所有掌握状态（包括已掌握、错题、未练习）
+        // 注意：'default' 状态的字在 wordMastery 中不存在（被删除了），所以只导出明确设置的状态
+        const wordMastery = this.getWordMastery();
+        
+        // 为了完整性，我们也可以导出所有字的状态（包括未练习的）
+        // 但为了保持轻量级，这里只导出明确设置的状态
+        // 如果需要导出所有字的状态，可以遍历 wordBank 并添加默认状态
         return {
             version: "1.1",
             type: "sync", // 标记为同步数据
             exportDate: new Date().toISOString(),
-            wordMastery: this.getWordMastery(), // 掌握状态（已掌握/错题/未练习）
+            wordMastery: wordMastery, // 掌握状态（已掌握/错题，不包含未练习的，因为未练习的会被删除）
             errorWords: this.getErrorWords(), // 错题
             reviewPlans: this.getAllReviewPlans(), // 复习计划
             taskList: typeof TaskList !== 'undefined' ? TaskList.getAllTasks() : [] // 任务列表

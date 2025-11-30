@@ -172,6 +172,11 @@ const Handwriting = {
      * 开始绘制
      */
     startDrawing(x, y) {
+        // 如果用户开始画第一笔，且当前在重做模式，立即退出重做模式并恢复新题状态
+        if (typeof Practice !== 'undefined' && Practice.exitRetryModeImmediately) {
+            Practice.exitRetryModeImmediately();
+        }
+        
         this.isDrawing = true;
         this.currentPath = [{ x, y }];
         this.ctx.beginPath();
