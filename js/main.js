@@ -139,6 +139,16 @@ const Main = {
                 PracticeRange.init();
             }, 500);
         }
+        
+        // 页面加载时自动下载并合并云端数据（如果启用自动同步）
+        if (typeof SupabaseSync !== 'undefined' && SupabaseSync.isAutoSyncEnabled && SupabaseSync.isAutoSyncEnabled()) {
+            // 延迟执行，确保所有模块都已加载
+            setTimeout(() => {
+                if (SupabaseSync.autoDownload) {
+                    SupabaseSync.autoDownload();
+                }
+            }, 2000);
+        }
     },
     
     /**
@@ -1745,6 +1755,25 @@ const Main = {
         if (downloadBtn) {
             downloadBtn.addEventListener('click', async () => {
                 await this.handleDownload();
+            });
+        }
+        
+        // 自动同步开关
+        const autoSyncSwitch = document.getElementById('supabase-auto-sync-switch');
+        if (autoSyncSwitch) {
+            // 读取当前设置
+            if (typeof SupabaseSync !== 'undefined' && SupabaseSync.isAutoSyncEnabled) {
+                autoSyncSwitch.checked = SupabaseSync.isAutoSyncEnabled();
+            }
+            
+            autoSyncSwitch.addEventListener('change', (e) => {
+                if (typeof SupabaseSync !== 'undefined' && SupabaseSync.setAutoSyncEnabled) {
+                    SupabaseSync.setAutoSyncEnabled(e.target.checked);
+                    const status = e.target.checked ? '已启用' : '已禁用';
+                    if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                        WordBank.showToast('info', `自动同步${status}`);
+                    }
+                }
             });
         }
     },

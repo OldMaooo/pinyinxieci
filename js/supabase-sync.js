@@ -8,6 +8,12 @@ const SupabaseSync = {
     _isInitialized: false,
     _lastSyncTime: null,
     _isSyncing: false,
+    _autoUploadTimer: null,
+    _autoUploadDelay: 2000, // 2秒防抖延迟
+    _isAutoSyncEnabled: true, // 默认启用自动同步
+    _lastSyncTimestamp: 0, // 上次同步的时间戳
+    _minSyncInterval: 30000, // 最小同步间隔：30秒（避免频繁同步）
+    _pendingSync: false, // 是否有待同步的更改
 
     /**
      * 初始化 Supabase 客户端
@@ -137,6 +143,7 @@ const SupabaseSync = {
             }
 
             this._lastSyncTime = new Date().toISOString();
+            this._lastSyncTimestamp = Date.now();
             console.log('[SupabaseSync] 上传成功');
             
             return {
@@ -270,6 +277,7 @@ const SupabaseSync = {
             }
 
             this._lastSyncTime = new Date().toISOString();
+            this._lastSyncTimestamp = Date.now();
             console.log('[SupabaseSync] 同步完成');
 
             return {
@@ -300,6 +308,202 @@ const SupabaseSync = {
      */
     isSyncing() {
         return this._isSyncing;
+    },
+
+    /**
+     * 检查是否启用自动同步
+     */
+    isAutoSyncEnabled() {
+        try {
+            const setting = localStorage.getItem('supabase_auto_sync');
+            return setting === null ? this._isAutoSyncEnabled : setting === '1';
+        } catch (e) {
+            return this._isAutoSyncEnabled;
+        }
+    },
+
+    /**
+     * 设置自动同步开关
+     */
+    setAutoSyncEnabled(enabled) {
+        this._isAutoSyncEnabled = enabled;
+        try {
+            localStorage.setItem('supabase_auto_sync', enabled ? '1' : '0');
+        } catch (e) {
+            console.warn('[SupabaseSync] 保存自动同步设置失败:', e);
+        }
+    },
+
+    /**
+     * 标记有待同步的更改（不立即同步）
+     * 用于在数据变更时标记，等待合适的时机再同步
+     */
+    markPendingSync() {
+        this._pendingSync = true;
+        console.log('[SupabaseSync] 标记有待同步的更改');
+    },
+
+    /**
+     * 检查是否可以同步（满足最小间隔要求）
+     */
+    canSync() {
+        const now = Date.now();
+        const timeSinceLastSync = now - this._lastSyncTimestamp;
+        
+        if (timeSinceLastSync < this._minSyncInterval) {
+            console.log(`[SupabaseSync] 距离上次同步仅 ${Math.round(timeSinceLastSync / 1000)} 秒，跳过同步（最小间隔：${this._minSyncInterval / 1000} 秒）`);
+            return false;
+        }
+        
+        return true;
+    },
+
+    /**
+     * 自动上传（带防抖和最小间隔限制）
+     * 仅在满足条件时上传，避免频繁同步
+     */
+    autoUpload(force = false) {
+        if (!this.isAutoSyncEnabled()) {
+            return;
+        }
+
+        // 标记有待同步的更改
+        this.markPendingSync();
+
+        // 如果强制同步，立即执行
+        if (force) {
+            this._executePendingSync();
+            return;
+        }
+
+        // 清除之前的定时器
+        if (this._autoUploadTimer) {
+            clearTimeout(this._autoUploadTimer);
+        }
+
+        // 设置新的定时器（延迟执行，给更多操作时间）
+        this._autoUploadTimer = setTimeout(() => {
+            this._executePendingSync();
+        }, this._autoUploadDelay);
+    },
+
+    /**
+     * 执行待同步的上传
+     */
+    async _executePendingSync() {
+        if (!this._pendingSync) {
+            return;
+        }
+
+        if (!this.canSync()) {
+            // 如果还不能同步，稍后再试
+            this._autoUploadTimer = setTimeout(() => {
+                this._executePendingSync();
+            }, this._minSyncInterval - (Date.now() - this._lastSyncTimestamp));
+            return;
+        }
+
+        if (this._isSyncing) {
+            console.log('[SupabaseSync] 正在同步中，跳过自动上传');
+            return;
+        }
+
+        try {
+            console.log('[SupabaseSync] 执行自动上传...');
+            const result = await this.upload();
+            if (result.success) {
+                this._pendingSync = false;
+                this._lastSyncTimestamp = Date.now();
+                console.log('[SupabaseSync] 自动上传成功');
+            } else {
+                console.warn('[SupabaseSync] 自动上传失败:', result.message);
+            }
+        } catch (error) {
+            console.error('[SupabaseSync] 自动上传异常:', error);
+        }
+    },
+
+    /**
+     * 在练习完成时触发同步（强制同步，忽略最小间隔）
+     */
+    async syncAfterPractice() {
+        if (!this.isAutoSyncEnabled()) {
+            return;
+        }
+
+        if (this._isSyncing) {
+            console.log('[SupabaseSync] 正在同步中，稍后重试...');
+            // 如果正在同步，稍后再试
+            setTimeout(() => this.syncAfterPractice(), 5000);
+            return;
+        }
+
+        try {
+            console.log('[SupabaseSync] 练习完成，开始同步...');
+            const result = await this.sync();
+            if (result.success) {
+                this._pendingSync = false;
+                this._lastSyncTimestamp = Date.now();
+                console.log('[SupabaseSync] 练习后同步成功');
+            } else {
+                console.warn('[SupabaseSync] 练习后同步失败:', result.message);
+            }
+        } catch (error) {
+            console.error('[SupabaseSync] 练习后同步异常:', error);
+        }
+    },
+
+    /**
+     * 自动下载并合并（页面加载时调用）
+     */
+    async autoDownload() {
+        if (!this.isAutoSyncEnabled()) {
+            console.log('[SupabaseSync] 自动同步已禁用，跳过自动下载');
+            return;
+        }
+
+        if (this._isSyncing) {
+            console.log('[SupabaseSync] 正在同步中，跳过自动下载');
+            return;
+        }
+
+        try {
+            console.log('[SupabaseSync] 自动下载数据...');
+            const result = await this.download();
+            
+            if (result.success && result.data) {
+                // 合并数据到本地
+                try {
+                    if (!result.data.version) {
+                        result.data.version = "1.1";
+                    }
+                    if (!result.data.type) {
+                        result.data.type = "sync";
+                    }
+                    Storage.importSyncData(result.data, true);
+                    console.log('[SupabaseSync] 自动下载并合并成功');
+                    
+                    // 刷新相关页面数据
+                    if (typeof PracticeRange !== 'undefined') {
+                        PracticeRange.renderTableView('practice-range-container-home', {});
+                    }
+                    if (typeof TaskListUI !== 'undefined') {
+                        TaskListUI.load();
+                    }
+                    if (typeof ErrorBook !== 'undefined') {
+                        ErrorBook.load();
+                    }
+                } catch (mergeError) {
+                    console.error('[SupabaseSync] 自动合并失败:', mergeError);
+                }
+            } else if (result.success && !result.data) {
+                console.log('[SupabaseSync] 云端暂无数据');
+            } else {
+                console.warn('[SupabaseSync] 自动下载失败:', result.message);
+            }
+        } catch (error) {
+            console.error('[SupabaseSync] 自动下载异常:', error);
+        }
     }
 };
 

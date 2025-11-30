@@ -1720,6 +1720,14 @@ const Practice = {
         
         // 清除任务ID
         this.currentTaskId = null;
+        
+        // 练习完成后，触发自动同步
+        if (typeof SupabaseSync !== 'undefined' && SupabaseSync.syncAfterPractice) {
+            // 延迟一点执行，确保所有数据都已保存
+            setTimeout(() => {
+                SupabaseSync.syncAfterPractice();
+            }, 500);
+        }
     },
     
     _buildPracticeLogPayload({ partial, isDebug }) {

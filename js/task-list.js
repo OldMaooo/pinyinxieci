@@ -51,9 +51,15 @@ const TaskList = {
             const verify = localStorage.getItem(this.KEY);
             if (verify) {
                 const parsed = JSON.parse(verify);
-                console.log('[TaskList.saveAllTasks] ✅ 保存成功，验证通过，任务数量:', parsed.length);
-                console.log('[TaskList.saveAllTasks] ===== 保存任务列表完成 =====');
-                return true;
+            console.log('[TaskList.saveAllTasks] ✅ 保存成功，验证通过，任务数量:', parsed.length);
+            console.log('[TaskList.saveAllTasks] ===== 保存任务列表完成 =====');
+            
+            // 标记有待同步的更改（不立即同步，等待练习完成）
+            if (typeof SupabaseSync !== 'undefined' && SupabaseSync.markPendingSync) {
+                SupabaseSync.markPendingSync();
+            }
+            
+            return true;
             } else {
                 console.error('[TaskList.saveAllTasks] ❌ 保存失败，验证时 localStorage 为空');
                 return false;

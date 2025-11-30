@@ -83,6 +83,10 @@ const Storage = {
      */
     saveWordMastery(masteryStatus) {
         localStorage.setItem(this.KEYS.WORD_MASTERY, JSON.stringify(masteryStatus || {}));
+        // 标记有待同步的更改（不立即同步，等待练习完成）
+        if (typeof SupabaseSync !== 'undefined' && SupabaseSync.markPendingSync) {
+            SupabaseSync.markPendingSync();
+        }
     },
     
     /**
@@ -307,6 +311,10 @@ const Storage = {
         const debug = options.debug === true;
         const key = debug ? this.KEYS.ERROR_WORDS_DEBUG : this.KEYS.ERROR_WORDS;
         this._saveList(key, errorWords);
+        // 标记有待同步的更改（不立即同步，等待练习完成）
+        if (typeof SupabaseSync !== 'undefined' && SupabaseSync.markPendingSync) {
+            SupabaseSync.markPendingSync();
+        }
     },
 
     addErrorWord(wordId, word, pinyin, snapshot, roundId = null) {
