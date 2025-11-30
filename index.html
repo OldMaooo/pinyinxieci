@@ -10,7 +10,7 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <!-- 楷体字体 - 本地加载并缓存 -->
-    <script src="js/font-loader.js?v=1.3.82"></script>
+    <script src="js/font-loader.js?v=1.3.83"></script>
     <!-- pinyin-pro 拼音库 -->
     <script src="https://unpkg.com/pinyin-pro@3.14.0/dist/index.js"></script>
     <!-- 自定义样式 -->
@@ -22,7 +22,7 @@
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#home">
                 <i class="bi bi-pencil-square"></i> 看拼音写词
-                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.82</span>
+                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.83</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -154,29 +154,29 @@
                 <!-- 左栏：设置项（竖排） -->
                 <div class="col-auto" style="width: 300px; flex-shrink: 0;">
                     <div class="practice-settings-sticky">
-                        <div class="row g-3 flex-column">
-                            <div class="col-12">
-                                <label class="form-label">题目数量</label>
-                                <input type="number" class="form-control" id="word-count-input-home" value="20" min="1" placeholder="输入数量">
-                                <div class="d-flex gap-2 flex-wrap mt-2">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary word-count-quick" data-value="10">10</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary word-count-quick" data-value="20">20</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary word-count-quick" data-value="50">50</button>
-                                    <!-- 动态按钮将插入在此处之后 -->
+                            <div class="row g-3 flex-column">
+                                <div class="col-12">
+                                    <label class="form-label">题目数量</label>
+                                    <input type="number" class="form-control" id="word-count-input-home" value="20" min="1" placeholder="输入数量">
+                                    <div class="d-flex gap-2 flex-wrap mt-2">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary word-count-quick" data-value="10">10</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary word-count-quick" data-value="20">20</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary word-count-quick" data-value="50">50</button>
+                                        <!-- 动态按钮将插入在此处之后 -->
+                                    </div>
+                                    <div class="form-text">可直接输入或点击快捷选项</div>
                                 </div>
-                                <div class="form-text">可直接输入或点击快捷选项</div>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label">时间限制（秒/字）</label>
-                                <input type="number" class="form-control" id="time-limit-input-home" value="30" min="5" max="120">
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label">练习模式</label>
-                                <select class="form-select" id="practice-mode-select-home" style="max-width: 220px;">
-                                    <option value="normal" selected>标准模式（识别+判题）</option>
-                                    <option value="paper">纸质书写模式（不判题）</option>
-                                </select>
-                            </div>
+                                <div class="col-12">
+                                    <label class="form-label">时间限制（秒/字）</label>
+                                    <input type="number" class="form-control" id="time-limit-input-home" value="30" min="5" max="120">
+                                </div>
+                                <div class="col-12">
+                            <label class="form-label">练习模式</label>
+                            <select class="form-select" id="practice-mode-select-home" style="max-width: 220px;">
+                                <option value="normal" selected>标准模式（识别+判题）</option>
+                                <option value="paper">纸质书写模式（不判题）</option>
+                            </select>
+                        </div>
                         </div>
                     </div>
                     
@@ -226,7 +226,7 @@
                                     <button class="btn btn-sm btn-outline-secondary ms-auto" id="home-management-mode-btn">
                                         <i class="bi bi-gear"></i> 管理模式
                                     </button>
-                                </div>
+                        </div>
                                 <div class="d-flex gap-2 mt-2">
                                     <button class="btn btn-sm btn-outline-primary flex-fill" id="home-batch-unpracticed-btn">
                                         <i class="bi bi-circle"></i> 设为未练习
@@ -237,7 +237,7 @@
                                     <button class="btn btn-sm btn-danger flex-fill" id="home-batch-error-btn">
                                         <i class="bi bi-x-circle"></i> 设为错题
                                     </button>
-                                </div>
+                        </div>
                             </div>
                         </div>
                     </div>
@@ -534,9 +534,9 @@
                                         <div class="col-md-6 mb-3">
                                             <h6><i class="bi bi-upload"></i> 导入同步数据</h6>
                                             <select class="form-select mb-2" id="import-merge-select">
-                                                <option value="replace">替换现有数据</option>
-                                                <option value="merge">合并数据（保留现有）</option>
-                                            </select>
+                                                    <option value="replace">替换现有数据</option>
+                                                    <option value="merge">合并数据（保留现有）</option>
+                                                </select>
                                             <input type="file" class="form-control mb-2" id="import-file-input" accept=".json">
                                             <button class="btn btn-primary" id="import-btn">
                                                 <i class="bi bi-upload"></i> 开始导入

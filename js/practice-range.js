@@ -571,10 +571,10 @@ const PracticeRange = {
         }
 
         if (options.showOnlyWrongToggle) {
-        const toggle = container.querySelector('[data-toggle="only-wrong"]');
-        if (toggle) {
-            try {
-                toggle.checked = localStorage.getItem('practice_error_only') === '1';
+            const toggle = container.querySelector('[data-toggle="only-wrong"]');
+            if (toggle) {
+                try {
+                    toggle.checked = localStorage.getItem('practice_error_only') === '1';
                 } catch (e) {}
                 toggle.addEventListener('change', (e) => {
                     try {
@@ -582,9 +582,15 @@ const PracticeRange = {
                         else localStorage.removeItem('practice_error_only');
                     } catch (err) {
                         console.warn('保存"只练错题"状态失败', err);
-                }
-            });
-        }
+                    }
+                    // 更新选中数量（因为只练错题会影响统计）
+                    const isManagementMode = options.context === 'home' && options.managementMode === true;
+                    if (isManagementMode && container.id === 'practice-range-container-home') {
+                        this.updateHomeSelectedCount(container);
+                    }
+                    this.updateSelectedCount(container, options);
+                });
+            }
         }
 
         container.querySelectorAll('.semester-checkbox').forEach(checkbox => {
@@ -768,13 +774,35 @@ const PracticeRange = {
             const wordBank = Storage.getWordBank();
             const grouped = this.groupWordsBySemesterUnit(wordBank);
             let total = 0;
+            
+            // 检查是否开启了「只练错题」开关
+            const onlyWrongToggle = container.querySelector('[data-toggle="only-wrong"]');
+            const onlyWrong = onlyWrongToggle && onlyWrongToggle.checked;
+            
+            // 如果开启了「只练错题」，获取所有错题ID
+            let errorWordIds = new Set();
+            if (onlyWrong) {
+                const errorWords = Storage.getErrorWordsFiltered();
+                errorWordIds = new Set(errorWords.map(ew => ew.wordId));
+            }
+            
             const checkedUnits = container.querySelectorAll('.unit-checkbox:checked');
             checkedUnits.forEach(cb => {
                 const semester = cb.dataset.semester;
                 const unit = cb.dataset.unit;
                 const words = grouped[semester]?.[unit];
                 if (Array.isArray(words)) {
-                    total += words.length;
+                    if (onlyWrong) {
+                        // 只统计错题数量
+                        words.forEach(word => {
+                            if (errorWordIds.has(word.id)) {
+                                total++;
+                            }
+                        });
+                    } else {
+                        // 统计所有字
+                        total += words.length;
+                    }
                 }
             });
             const label = container.querySelector('[data-selected-count]');
@@ -821,12 +849,34 @@ const PracticeRange = {
         const wordBank = Storage.getWordBank();
         const grouped = this.groupWordsBySemesterUnit(wordBank);
         const selectedWords = [];
+        
+        // 检查是否开启了「只练错题」开关
+        const onlyWrongToggle = container.querySelector('[data-toggle="only-wrong"]');
+        const onlyWrong = onlyWrongToggle && onlyWrongToggle.checked;
+        
+        // 如果开启了「只练错题」，获取所有错题ID
+        let errorWordIds = new Set();
+        if (onlyWrong) {
+            const errorWords = Storage.getErrorWordsFiltered();
+            errorWordIds = new Set(errorWords.map(ew => ew.wordId));
+        }
+        
         container.querySelectorAll('.unit-checkbox:checked').forEach(cb => {
             const semester = cb.dataset.semester;
             const unit = cb.dataset.unit;
             const words = grouped[semester]?.[unit];
             if (Array.isArray(words)) {
-                selectedWords.push(...words);
+                if (onlyWrong) {
+                    // 只添加错题
+                    words.forEach(word => {
+                        if (errorWordIds.has(word.id)) {
+                            selectedWords.push(word);
+                        }
+                    });
+                } else {
+                    // 添加所有字
+                    selectedWords.push(...words);
+                }
             }
         });
         return selectedWords;

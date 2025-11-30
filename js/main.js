@@ -276,6 +276,13 @@ const Main = {
                     }
                 }, 100);
             }
+        } else if (pageId === 'home') {
+            // 首页：重新绑定管理模式按钮（因为按钮可能是动态生成的）
+            setTimeout(() => {
+                if (this.bindHomeManagementMode) {
+                    this.bindHomeManagementMode();
+                }
+            }, 200);
         } else if (pageId === 'reviewplan') {
             // 复习计划已合并到任务清单中，不再单独显示
             // 如果用户访问复习计划页面，重定向到任务清单
@@ -586,16 +593,27 @@ const Main = {
         };
         
         // 绑定批量操作工具栏中的按钮（静态HTML）
+        // 注意：这个按钮在批量操作工具栏中，默认是隐藏的
         const batchToolbarBtn = document.getElementById('home-management-mode-btn');
         console.log('[Main.bindHomeManagementMode] 批量操作工具栏按钮:', batchToolbarBtn);
         if (batchToolbarBtn) {
-            batchToolbarBtn.addEventListener('click', (e) => {
+            // 移除可能存在的旧监听器（通过克隆节点）
+            const newBatchBtn = batchToolbarBtn.cloneNode(true);
+            batchToolbarBtn.parentNode.replaceChild(newBatchBtn, batchToolbarBtn);
+            newBatchBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('[Main.bindHomeManagementMode] 批量操作工具栏按钮被点击');
-                toggleManagementMode(batchToolbarBtn);
+                e.stopImmediatePropagation();
+                console.log('[Main.bindHomeManagementMode] 批量操作工具栏按钮被点击', {
+                    buttonId: newBatchBtn.id,
+                    buttonElement: newBatchBtn,
+                    eventType: e.type
+                });
+                toggleManagementMode(newBatchBtn);
             });
             console.log('[Main.bindHomeManagementMode] 批量操作工具栏按钮绑定成功');
+        } else {
+            console.warn('[Main.bindHomeManagementMode] ⚠️ 找不到批量操作工具栏按钮 (home-management-mode-btn)');
         }
         
         // 尝试绑定工具栏中的按钮（可能需要等待渲染完成）
