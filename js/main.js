@@ -424,8 +424,8 @@ const Main = {
                     return;
                 }
                 
-                // 获取拆分阈值（默认50，可从设置中读取）
-                const splitThreshold = 50;
+                // 获取拆分阈值（默认25，可从设置中读取）
+                const splitThreshold = 25;
                 console.log('[Main.init] 拆分阈值:', splitThreshold, '选中题目数:', selectedWords.length);
                 
                 // 如果题目数量超过阈值，显示确认弹窗

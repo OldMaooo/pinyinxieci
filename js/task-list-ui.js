@@ -10,6 +10,11 @@ const TaskListUI = {
     currentViewType: 'cards', // 'calendar' | 'cards'
     
     /**
+     * 是否处于批量操作模式
+     */
+    _isBatchMode: false,
+    
+    /**
      * 初始化
      */
     init() {
@@ -39,6 +44,38 @@ const TaskListUI = {
         if (viewCompletedBtn) {
             viewCompletedBtn.addEventListener('click', () => {
                 this.showCompletedTasks();
+            });
+        }
+        
+        // 批量操作模式按钮
+        const batchModeBtn = document.getElementById('task-list-batch-mode-btn');
+        if (batchModeBtn) {
+            batchModeBtn.addEventListener('click', () => {
+                this.toggleBatchMode();
+            });
+        }
+        
+        // 全选按钮
+        const selectAllBtn = document.getElementById('task-list-select-all-btn');
+        if (selectAllBtn) {
+            selectAllBtn.addEventListener('click', () => {
+                this.selectAllTasks();
+            });
+        }
+        
+        // 取消全选按钮
+        const deselectAllBtn = document.getElementById('task-list-deselect-all-btn');
+        if (deselectAllBtn) {
+            deselectAllBtn.addEventListener('click', () => {
+                this.deselectAllTasks();
+            });
+        }
+        
+        // 批量删除按钮
+        const batchDeleteBtn = document.getElementById('task-list-batch-delete-btn');
+        if (batchDeleteBtn) {
+            batchDeleteBtn.addEventListener('click', () => {
+                this.batchDeleteTasks();
             });
         }
         
@@ -81,13 +118,15 @@ const TaskListUI = {
     
     /**
      * 加载任务清单（只使用卡片视图）
+     * @param {boolean} skipAutoGenerate - 是否跳过自动生成复习任务（用于清空所有任务后避免立即重新生成）
      */
-    load() {
+    load(skipAutoGenerate = false) {
         console.log('[TaskListUI.load] ===== 开始加载任务清单 =====');
         console.log('[TaskListUI.load] 显示已完成:', this._showingCompleted);
+        console.log('[TaskListUI.load] 跳过自动生成:', skipAutoGenerate);
         
-        // 确保自动生成复习任务
-        const allTasks = TaskList.getAllTasksWithAutoReview(30);
+        // 确保自动生成复习任务（除非明确跳过）
+        const allTasks = TaskList.getAllTasksWithAutoReview(30, skipAutoGenerate);
         console.log('[TaskListUI.load] 获取所有任务（含自动生成）:', allTasks.length);
         
         // 只使用卡片视图
@@ -427,6 +466,8 @@ const TaskListUI = {
         // 绑定所有事件（包括待排期卡片的日期选择按钮）
         console.log('[TaskListUI.renderCardsView] 绑定事件...');
         this.bindTaskCardEvents();
+        // 更新批量操作模式的UI显示
+        this.updateBatchModeUI();
         console.log('[TaskListUI.renderCardsView] 事件绑定完成');
         
         // 绑定拖拽事件
@@ -552,6 +593,8 @@ const TaskListUI = {
         
         // 绑定任务卡片事件
         this.bindTaskCardEvents();
+        // 更新批量操作模式的UI显示
+        this.updateBatchModeUI();
         
         // 绑定卡片视图中的任务卡片点击事件
         document.querySelectorAll('.task-card-item').forEach(item => {
@@ -640,19 +683,27 @@ const TaskListUI = {
         return `
             ${cardWrapper}
             <div class="position-relative mb-2">
-                <h6 class="card-title mb-1">
-                    <i class="bi ${typeIcon}"></i> ${this.escapeHtml(task.name)}
-                </h6>
-                <button class="btn btn-sm btn-outline-danger task-delete-btn position-absolute top-0 end-0" 
-                        data-task-id="${task.id}" 
-                        title="删除"
-                        style="z-index: 10;">
-                    <i class="bi bi-trash"></i>
-                </button>
+                <div class="d-flex align-items-center gap-2">
+                    <input type="checkbox" class="form-check-input task-select-checkbox" 
+                           data-task-id="${task.id}" 
+                           style="flex-shrink: 0; ${this._isBatchMode ? 'display: block;' : 'display: none;'}"
+                           id="task-checkbox-${task.id}">
+                    <h6 class="card-title mb-1 flex-grow-1">
+                        <i class="bi ${typeIcon}"></i> ${this.escapeHtml(task.name)}
+                    </h6>
+                    <button class="btn btn-sm btn-outline-danger task-delete-btn" 
+                            data-task-id="${task.id}" 
+                            title="删除"
+                            style="z-index: 10; ${this._isBatchMode ? 'display: none;' : 'display: block;'}">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
             </div>
             <div class="mb-2 d-flex align-items-center gap-2">
                 <label class="small text-muted mb-0" style="min-width: 70px;">${dateLabel}</label>
-                ${canSchedule ? `
+                ${task.status === TaskList.STATUS.COMPLETED ? `
+                <span class="small text-muted">${this.escapeHtml(dateDisplay)}</span>
+                ` : canSchedule ? `
                 <input type="date" 
                        class="form-control form-control-sm task-schedule-date-input" 
                        data-task-id="${task.id}" 
@@ -662,6 +713,20 @@ const TaskListUI = {
                 <span class="small text-muted">${this.escapeHtml(dateDisplay)}</span>
                 `}
             </div>
+            ${task.status === TaskList.STATUS.COMPLETED ? `
+            <div class="mt-2">
+                ${(() => {
+                    const score = progress.total > 0 ? Math.round((progress.correct / progress.total) * 100) : 0;
+                    const errorCount = progress.total - progress.correct;
+                    return `
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="small text-muted">分数: <strong class="text-primary">${score}</strong></span>
+                        <span class="small text-muted">对: <strong class="text-success">${progress.correct}</strong> 错: <strong class="text-danger">${errorCount}</strong></span>
+                    </div>
+                    `;
+                })()}
+            </div>
+            ` : `
             <div class="mt-2">
                 <div class="d-flex justify-content-between small text-muted mb-1">
                     <span>进度: ${progress.completed}/${progress.total}</span>
@@ -672,6 +737,7 @@ const TaskListUI = {
                          aria-valuenow="${progressPercent}" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
+            `}
             <div class="mt-3 d-flex gap-2">
                 ${task.status === TaskList.STATUS.PENDING || task.status === TaskList.STATUS.PAUSED ? `
                     <button class="btn btn-sm btn-primary task-start-btn" data-task-id="${task.id}">
@@ -961,15 +1027,21 @@ const TaskListUI = {
             <div class="card task-card" data-task-id="${task.id}" style="cursor: pointer; ${inInbox ? 'width: 100%; max-width: 350px;' : ''}" title="点击查看任务详情">
                 <div class="card-body">
                     <div class="position-relative mb-2">
-                        <h6 class="card-title mb-1">
-                            <i class="bi ${typeIcon}"></i> ${this.escapeHtml(task.name)}
-                        </h6>
-                        <button class="btn btn-sm btn-outline-danger task-delete-btn position-absolute top-0 end-0" 
-                                data-task-id="${task.id}" 
-                                title="删除"
-                                style="z-index: 10;">
-                            <i class="bi bi-trash"></i>
-                        </button>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="checkbox" class="form-check-input task-select-checkbox" 
+                                   data-task-id="${task.id}" 
+                                   style="flex-shrink: 0; ${this._isBatchMode ? 'display: block;' : 'display: none;'}"
+                                   id="task-checkbox-${task.id}">
+                            <h6 class="card-title mb-1 flex-grow-1">
+                                <i class="bi ${typeIcon}"></i> ${this.escapeHtml(task.name)}
+                            </h6>
+                            <button class="btn btn-sm btn-outline-danger task-delete-btn" 
+                                    data-task-id="${task.id}" 
+                                    title="删除"
+                                    style="z-index: 10; ${this._isBatchMode ? 'display: none;' : 'display: block;'}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
                     </div>
                     ${inInbox ? `
                     <div class="mb-2 d-flex align-items-center gap-2">
@@ -1098,6 +1170,21 @@ const TaskListUI = {
                 } else {
                     console.error('[TaskListUI.bindTaskCardEvents] 删除按钮没有 taskId 属性', this);
                 }
+            });
+        });
+        
+        // 批量选择复选框事件
+        document.querySelectorAll('.task-select-checkbox').forEach(checkbox => {
+            const newCheckbox = checkbox.cloneNode(true);
+            checkbox.parentNode.replaceChild(newCheckbox, checkbox);
+            
+            newCheckbox.addEventListener('change', () => {
+                this.updateSelectedCount();
+            });
+            
+            // 阻止点击复选框时触发卡片点击事件
+            newCheckbox.addEventListener('click', (e) => {
+                e.stopPropagation();
             });
         });
         
@@ -1962,16 +2049,49 @@ const TaskListUI = {
                 console.log('[TaskListUI.executeDelete] 清空所有任务');
                 const result = TaskList.clearAllTasks();
                 console.log('[TaskListUI.executeDelete] 清空结果:', result);
-                this.load(); // 使用 load() 而不是 render()，确保重新绑定事件
+                
+                // 验证是否真的清空了（包括自动生成的复习任务）
+                const verifyTasks = TaskList.getAllTasks();
+                if (verifyTasks.length > 0) {
+                    console.warn('[TaskListUI.executeDelete] ⚠️ 清空后仍有任务残留，强制清空:', verifyTasks.length);
+                    // 再次强制清空
+                    localStorage.removeItem(TaskList.KEY);
+                    console.log('[TaskListUI.executeDelete] 已强制清空localStorage');
+                }
+                
+                // 清空后立即加载时，跳过自动生成复习任务，避免立即重新生成
+                this.load(true); // 传入 true 跳过自动生成
                 this.updateBadge();
             }
         } else if (taskId) {
-            if (confirm('确定要删除这个任务吗？')) {
-                console.log('[TaskListUI.executeDelete] 删除任务:', taskId);
-                const result = TaskList.deleteTask(taskId);
-                console.log('[TaskListUI.executeDelete] 删除结果:', result);
-                this.load(); // 使用 load() 而不是 render()，确保重新绑定事件
-                this.updateBadge();
+            // 检查是否是批量删除（多个任务ID用逗号分隔）
+            if (taskId.includes(',')) {
+                const taskIds = taskId.split(',').filter(id => id.trim());
+                if (confirm(`确定要删除这 ${taskIds.length} 个任务吗？此操作不可恢复。`)) {
+                    console.log('[TaskListUI.executeDelete] 批量删除任务:', taskIds);
+                    let deletedCount = 0;
+                    taskIds.forEach(id => {
+                        const result = TaskList.deleteTask(id.trim());
+                        if (result.success) {
+                            deletedCount++;
+                        }
+                    });
+                    console.log('[TaskListUI.executeDelete] 批量删除结果:', { total: taskIds.length, deleted: deletedCount });
+                    this.load();
+                    this.updateBadge();
+                    // 退出批量模式
+                    if (this._isBatchMode) {
+                        this.toggleBatchMode();
+                    }
+                }
+            } else {
+                if (confirm('确定要删除这个任务吗？')) {
+                    console.log('[TaskListUI.executeDelete] 删除任务:', taskId);
+                    const result = TaskList.deleteTask(taskId);
+                    console.log('[TaskListUI.executeDelete] 删除结果:', result);
+                    this.load(); // 使用 load() 而不是 render()，确保重新绑定事件
+                    this.updateBadge();
+                }
             }
         }
     },
@@ -1983,6 +2103,113 @@ const TaskListUI = {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    },
+    
+    /**
+     * 切换批量操作模式
+     */
+    toggleBatchMode() {
+        this._isBatchMode = !this._isBatchMode;
+        const toolbar = document.getElementById('task-list-batch-toolbar');
+        const batchModeBtn = document.getElementById('task-list-batch-mode-btn');
+        
+        if (toolbar) {
+            if (this._isBatchMode) {
+                toolbar.classList.remove('d-none');
+            } else {
+                toolbar.classList.add('d-none');
+                // 退出批量模式时，取消所有选择
+                this.deselectAllTasks();
+            }
+        }
+        
+        // 更新按钮状态
+        if (batchModeBtn) {
+            if (this._isBatchMode) {
+                batchModeBtn.classList.remove('btn-outline-secondary');
+                batchModeBtn.classList.add('btn-secondary');
+            } else {
+                batchModeBtn.classList.remove('btn-secondary');
+                batchModeBtn.classList.add('btn-outline-secondary');
+            }
+        }
+        
+        // 更新所有卡片的显示状态
+        this.updateBatchModeUI();
+    },
+    
+    /**
+     * 更新批量操作模式的UI显示
+     */
+    updateBatchModeUI() {
+        const checkboxes = document.querySelectorAll('.task-select-checkbox');
+        const deleteBtns = document.querySelectorAll('.task-delete-btn');
+        
+        checkboxes.forEach(cb => {
+            cb.style.display = this._isBatchMode ? 'block' : 'none';
+        });
+        
+        deleteBtns.forEach(btn => {
+            btn.style.display = this._isBatchMode ? 'none' : 'block';
+        });
+        
+        // 更新已选择数量
+        this.updateSelectedCount();
+    },
+    
+    /**
+     * 全选任务
+     */
+    selectAllTasks() {
+        const checkboxes = document.querySelectorAll('.task-select-checkbox');
+        checkboxes.forEach(cb => {
+            cb.checked = true;
+        });
+        this.updateSelectedCount();
+    },
+    
+    /**
+     * 取消全选任务
+     */
+    deselectAllTasks() {
+        const checkboxes = document.querySelectorAll('.task-select-checkbox');
+        checkboxes.forEach(cb => {
+            cb.checked = false;
+        });
+        this.updateSelectedCount();
+    },
+    
+    /**
+     * 更新已选择任务数量
+     */
+    updateSelectedCount() {
+        const checkboxes = document.querySelectorAll('.task-select-checkbox:checked');
+        const count = checkboxes.length;
+        const countEl = document.getElementById('task-list-selected-count');
+        const batchDeleteBtn = document.getElementById('task-list-batch-delete-btn');
+        
+        if (countEl) {
+            countEl.textContent = count;
+        }
+        
+        if (batchDeleteBtn) {
+            batchDeleteBtn.disabled = count === 0;
+        }
+    },
+    
+    /**
+     * 批量删除任务
+     */
+    batchDeleteTasks() {
+        const checkboxes = document.querySelectorAll('.task-select-checkbox:checked');
+        const taskIds = Array.from(checkboxes).map(cb => cb.getAttribute('data-task-id'));
+        
+        if (taskIds.length === 0) {
+            return;
+        }
+        
+        console.log('[TaskListUI.batchDeleteTasks] 准备批量删除任务:', taskIds);
+        this.showDeleteConfirm(taskIds.join(','), false); // 传递多个任务ID，用逗号分隔
     }
 };
 

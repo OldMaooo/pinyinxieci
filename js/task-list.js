@@ -175,7 +175,22 @@ const TaskList = {
      * 清空所有任务
      */
     clearAllTasks() {
-        this.saveAllTasks([]);
+        console.log('[TaskList.clearAllTasks] 开始清空所有任务');
+        // 确保真正清空所有任务，包括自动生成的复习任务
+        const result = this.saveAllTasks([]);
+        console.log('[TaskList.clearAllTasks] 清空结果:', result);
+        
+        // 验证是否真的清空了
+        const verifyTasks = this.getAllTasks();
+        if (verifyTasks.length > 0) {
+            console.error('[TaskList.clearAllTasks] ⚠️ 清空后仍有任务残留:', verifyTasks.length);
+            // 强制清空
+            localStorage.removeItem(this.KEY);
+            console.log('[TaskList.clearAllTasks] 已强制清空localStorage');
+        } else {
+            console.log('[TaskList.clearAllTasks] ✅ 所有任务已清空');
+        }
+        
         return { success: true };
     },
     
@@ -209,17 +224,18 @@ const TaskList = {
         for (let i = 0; i < taskCount; i++) {
             const start = i * questionsPerTask;
             const end = Math.min(start + questionsPerTask, totalQuestions);
-            const taskWordIds = wordIds.slice(start, end);
+            // 确保每个任务的 wordIds 是独立的数组副本，不引用原始数组
+            const taskWordIds = [...wordIds.slice(start, end)];
             
             const taskName = `${name}（${i + 1}/${taskCount}）`;
             
             tasks.push({
                 name: taskName,
-                wordIds: taskWordIds,
+                wordIds: taskWordIds, // 独立的数组副本
                 type: this.TYPE.PRACTICE,
                 status: this.STATUS.PENDING,
                 progress: {
-                    total: taskWordIds.length,
+                    total: taskWordIds.length, // 确保 total 等于实际 wordIds 长度
                     completed: 0,
                     correct: 0,
                     errors: []
@@ -444,9 +460,16 @@ const TaskList = {
      * 获取所有任务（包括自动生成的复习任务）
      * 如果某天的复习任务不存在，自动生成
      * @param {number} daysAhead - 提前生成多少天的复习任务（默认7天）
+     * @param {boolean} skipAutoGenerate - 是否跳过自动生成（用于清空所有任务后避免立即重新生成）
      */
-    getAllTasksWithAutoReview(daysAhead = 7) {
+    getAllTasksWithAutoReview(daysAhead = 7, skipAutoGenerate = false) {
         const tasks = this.getAllTasks();
+        
+        // 如果跳过自动生成，直接返回现有任务
+        if (skipAutoGenerate) {
+            return tasks;
+        }
+        
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         

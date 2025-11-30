@@ -306,6 +306,33 @@ const Practice = {
         let task = null;
         if (currentTaskId && typeof TaskList !== 'undefined') {
             task = TaskList.getTask(currentTaskId);
+        } else if (!currentTaskId && typeof TaskList !== 'undefined' && typeof TaskListUI !== 'undefined') {
+            // 如果没有任务ID，创建一个新任务（单独练习）
+            const wordIds = words.map(w => w.id);
+            const selectedUnits = typeof Main !== 'undefined' && Main.getSelectedUnitsForTaskName ? Main.getSelectedUnitsForTaskName() : [];
+            const taskName = TaskList.generateTaskName(selectedUnits) || '练习任务';
+            
+            const newTask = {
+                name: taskName,
+                wordIds: wordIds,
+                type: TaskList.TYPE.PRACTICE,
+                status: TaskList.STATUS.IN_PROGRESS,
+                progress: {
+                    total: wordIds.length,
+                    completed: 0,
+                    correct: 0,
+                    errors: []
+                }
+            };
+            
+            const result = TaskList.addTask(newTask);
+            if (result.success) {
+                this.currentTaskId = newTask.id;
+                task = newTask;
+                console.log('[Practice.start] 创建新任务:', { taskId: this.currentTaskId, taskName, wordCount: wordIds.length });
+            } else {
+                console.error('[Practice.start] 创建任务失败:', result);
+            }
         }
         
         if (currentTaskId && task && task.progress && task.progress.completed > 0) {
@@ -813,7 +840,12 @@ const Practice = {
     },
 
     pause() {
-        if (!this.isActive || this.isPaused) return;
+        if (!this.isActive) return;
+        // 如果已经暂停，再次调用pause应该不做任何操作（防止重复暂停）
+        if (this.isPaused) {
+            console.log('[Practice.pause] 已经处于暂停状态，忽略重复调用');
+            return;
+        }
         if (this.timer) {
             clearInterval(this.timer);
             this.timer = null;
@@ -823,10 +855,16 @@ const Practice = {
         if (timerPauseIcon) {
             timerPauseIcon.className = 'bi bi-play-fill';
         }
+        console.log('[Practice.pause] 已暂停');
     },
 
     resume() {
-        if (!this.isActive || !this.isPaused) return;
+        if (!this.isActive) return;
+        // 如果没有暂停，调用resume应该不做任何操作（防止重复继续）
+        if (!this.isPaused) {
+            console.log('[Practice.resume] 未处于暂停状态，忽略调用');
+            return;
+        }
         this.isPaused = false;
         const timerPauseIcon = document.getElementById('timer-pause-icon');
         if (timerPauseIcon) {
@@ -834,6 +872,7 @@ const Practice = {
         }
         const wordStartTime = this._currentWordStartTime || Date.now();
         this.startTimer(wordStartTime);
+        console.log('[Practice.resume] 已继续');
     },
     
     /**
@@ -936,7 +975,7 @@ const Practice = {
         }
         
         const timeSinceLastSubmit = now - this.lastSubmitTime;
-        if (!bypassCooldown && timeSinceLastSubmit < 10000 && this.lastSubmitTime > 0 && this.lastSubmitWordId === word.id) {
+        if (!bypassCooldown && timeSinceLastSubmit < 3000 && this.lastSubmitTime > 0 && this.lastSubmitWordId === word.id) {
             // 容错机制：如果连续3次被拦截，自动清除限制（可能是bug导致）
             this.consecutiveBlockCount++;
             if (this.consecutiveBlockCount >= 3) {
@@ -953,7 +992,7 @@ const Practice = {
                 this.consecutiveBlockCount = 0;
                 // 继续执行提交，不返回
             } else {
-                const remainingSeconds = Math.ceil((10000 - timeSinceLastSubmit) / 1000);
+                const remainingSeconds = Math.ceil((3000 - timeSinceLastSubmit) / 1000);
                 console.warn('[Practice] 提交被拦截', {
                     wordId: word.id,
                     word: word.word,
@@ -1172,12 +1211,15 @@ const Practice = {
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalBtnHtml;
             
-            // 如果答对了，继续下一题（无论是否在重做模式）
+            // 如果答对了，继续下一题（但重做模式下需要等待用户确认）
             // 如果答错了，只有在重做模式下才不进入下一题（等待用户重新提交）
             // 如果答错了且不在重做模式（第一次答错），已经调用了 enterRetryMode，不应该进入下一题
             if (result.passed) {
                 // 答对了，继续下一题
-                this.scheduleNextWord(this.mode === 'normal' ? 2000 : 300, () => {
+                // 在重做模式下，即使答对了，也应该等待用户确认（延迟更长）
+                const wasRetrying = this._isRetryingError;
+                const delay = wasRetrying ? 3000 : (this.mode === 'normal' ? 2000 : 300);
+                this.scheduleNextWord(delay, () => {
                     // 保存当前题目到历史
                     if (this.currentIndex < this.currentWords.length) {
                         this.history.push({
