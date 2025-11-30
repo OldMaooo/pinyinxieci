@@ -74,9 +74,19 @@ const Debug = {
     },
 
     setEnabled(enabled) {
+        const wasEnabled = this.isEnabled;
         this.isEnabled = !!enabled;
         try { localStorage.setItem('debugMode', this.isEnabled ? '1' : '0'); } catch(e) {}
         this.applyVisibility();
+        
+        // 如果状态发生变化（开启或关闭），自动刷新页面
+        if (wasEnabled !== this.isEnabled) {
+            const action = this.isEnabled ? '开启' : '关闭';
+            console.log(`[Debug] 调试模式已${action}，页面将在1秒后自动刷新...`);
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        }
     },
 
     applyVisibility() {

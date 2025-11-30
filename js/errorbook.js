@@ -277,7 +277,12 @@ const ErrorBook = {
         const items = (log.details && log.details.length
             ? log.details
             : (log.errorWords||[]).map(id=>({wordId:id,correct:false,snapshot:(errorMap.get(id)?.handwritingSnapshots?.slice(-1)[0]?.snapshot)||''})));
-        const cards = items.map((d, idx) => {
+        
+        // 分成错误和正确两部分，先显示错误的
+        const errorItems = items.map((d, idx) => ({ ...d, originalIdx: idx })).filter(d => !d.correct);
+        const correctItems = items.map((d, idx) => ({ ...d, originalIdx: idx })).filter(d => d.correct);
+        
+        const renderCard = (d) => {
             const w = wordBank.find(x=>x.id===d.wordId);
             if (!w) return '';
             // 优先使用本次练习的快照，而不是错题本历史快照
@@ -289,6 +294,7 @@ const ErrorBook = {
             const groupsTextRaw = storedDisplay || fallbackGroups || '';
             const groupsText = this.escapeHtml(groupsTextRaw);
             const isWrong = !d.correct;
+            const originalIdx = d.originalIdx !== undefined ? d.originalIdx : items.findIndex(item => item.wordId === d.wordId);
             return `
             <div class="col">
                 <div class="card h-100 shadow-sm">
@@ -304,7 +310,7 @@ const ErrorBook = {
                                 <div class="result-toggle ${isWrong ? 'active' : ''}" 
                                      data-log-id="${log.id}" 
                                      data-word-id="${w.id}" 
-                                     data-item-idx="${idx}" 
+                                     data-item-idx="${originalIdx}" 
                                      data-is-wrong="${isWrong}">
                                     <span class="result-toggle-icon">${isWrong ? '✕' : ''}</span>
                                 </div>
@@ -319,8 +325,26 @@ const ErrorBook = {
                     </div>
                 </div>
             </div>`;
-        }).join('');
-        container.innerHTML = `<div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">${cards || '<div class="text-muted small">暂无错题</div>'}</div>`;
+        };
+        
+        // 先渲染错误的，再渲染正确的
+        const errorCards = errorItems.map(d => renderCard(d)).join('');
+        const correctCards = correctItems.map(d => renderCard(d)).join('');
+        
+        let html = '';
+        if (errorItems.length > 0) {
+            html += `<h5 class="mb-3 mt-0">错误的（${errorItems.length}个）：</h5>`;
+            html += `<div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3 mb-4">${errorCards}</div>`;
+        }
+        if (correctItems.length > 0) {
+            html += `<h5 class="mb-3 mt-0">正确的（${correctItems.length}个）：</h5>`;
+            html += `<div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">${correctCards}</div>`;
+        }
+        if (errorItems.length === 0 && correctItems.length === 0) {
+            html = '<div class="text-muted small">暂无数据</div>';
+        }
+        
+        container.innerHTML = html;
         this.initResultToggleControls(container);
     },
 

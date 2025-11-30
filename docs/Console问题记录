@@ -1,0 +1,469 @@
+practice.js?v=1.3.64:1967 [Practice] 下一题按钮被点击，事件类型: mousedown 时间戳: 1764466301466
+practice.js?v=1.3.64:1626 [Practice.showNextQuestion] 🔍 调试信息: {
+  "timestamp": "2025-11-30T01:31:41.473Z",
+  "action": "点击下一题",
+  "hasContent": true,
+  "mode": "normal",
+  "willCallAPI": true,
+  "currentIndex": 0,
+  "totalWords": 4
+}
+practice.js?v=1.3.64:1642 [Practice.showNextQuestion] ✅ 画布有内容，将调用识别API
+practice.js?v=1.3.64:1643 [Practice.showNextQuestion] 📡 API调用路径: submitAnswer() -> Recognition.recognize()
+practice.js?v=1.3.64:1644 [Practice.showNextQuestion] 💡 提示：如果看到 Recognition 相关的日志，说明已调用API
+handwriting.js?v=1.3.64:453 Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently
+hasContent @ handwriting.js?v=1.3.64:453
+submitAnswer @ practice.js?v=1.3.64:925
+showNextQuestion @ practice.js?v=1.3.64:1646
+handleNext @ practice.js?v=1.3.64:1972
+nextBtn.addEventListener.passive @ practice.js?v=1.3.64:1982
+handwriting.js?v=1.3.64:306 Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently
+getSnapshot @ handwriting.js?v=1.3.64:306
+submitAnswer @ practice.js?v=1.3.64:938
+showNextQuestion @ practice.js?v=1.3.64:1646
+handleNext @ practice.js?v=1.3.64:1972
+nextBtn.addEventListener.passive @ practice.js?v=1.3.64:1982
+practice.js?v=1.3.64:957 [Practice.submitAnswer] ✅ 画布有内容，开始调用识别API
+practice.js?v=1.3.64:958 [Practice.submitAnswer] 📡 API调用路径: Recognition.recognize()
+practice.js?v=1.3.64:959 [Practice.submitAnswer] 📊 快照大小: 3.20 KB
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301512_jbtex36qy] 开始识别请求 {imageBase64Length: 3278, base64DataLength: 3256, hasDataPrefix: true}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301512_jbtex36qy JSON] {
+  "requestId": "rec_1764466301512_jbtex36qy",
+  "timestamp": "2025-11-30T01:31:41.512Z",
+  "level": "info",
+  "message": "开始识别请求",
+  "data": {
+    "imageBase64Length": 3278,
+    "base64DataLength": 3256,
+    "hasDataPrefix": true
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301512_jbtex36qy] 环境检测 {hostname: 'localhost', isGitHubPages: false, isLocal: true, isVercel: false}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301512_jbtex36qy JSON] {
+  "requestId": "rec_1764466301512_jbtex36qy",
+  "timestamp": "2025-11-30T01:31:41.512Z",
+  "level": "info",
+  "message": "环境检测",
+  "data": {
+    "hostname": "localhost",
+    "isGitHubPages": false,
+    "isLocal": true,
+    "isVercel": false
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301512_jbtex36qy] 代理配置检查 {hasAppConfig: false, appConfigProxy: null, localStorageProxy: null, configuredBase: '(未配置)'}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301512_jbtex36qy JSON] {
+  "requestId": "rec_1764466301512_jbtex36qy",
+  "timestamp": "2025-11-30T01:31:41.512Z",
+  "level": "info",
+  "message": "代理配置检查",
+  "data": {
+    "hasAppConfig": false,
+    "appConfigProxy": null,
+    "localStorageProxy": null,
+    "configuredBase": "(未配置)"
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301512_jbtex36qy] 代理URL确定 {isLocal: true, isGitHubPages: false, sameOriginUrl: '/api/baidu-proxy', localProxyUrl: 'http://localhost:3001/api/baidu-proxy', configuredBase: '(未配置)', …}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301512_jbtex36qy JSON] {
+  "requestId": "rec_1764466301512_jbtex36qy",
+  "timestamp": "2025-11-30T01:31:41.512Z",
+  "level": "info",
+  "message": "代理URL确定",
+  "data": {
+    "isLocal": true,
+    "isGitHubPages": false,
+    "sameOriginUrl": "/api/baidu-proxy",
+    "localProxyUrl": "http://localhost:3001/api/baidu-proxy",
+    "configuredBase": "(未配置)",
+    "finalProxyUrl": "http://localhost:3001/api/baidu-proxy"
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301512_jbtex36qy] 准备发送请求 {url: 'http://localhost:3001/api/baidu-proxy', method: 'POST', bodySize: '3.32KB', hasAccessToken: true, isLocal: true, …}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301512_jbtex36qy JSON] {
+  "requestId": "rec_1764466301512_jbtex36qy",
+  "timestamp": "2025-11-30T01:31:41.513Z",
+  "level": "info",
+  "message": "准备发送请求",
+  "data": {
+    "url": "http://localhost:3001/api/baidu-proxy",
+    "method": "POST",
+    "bodySize": "3.32KB",
+    "hasAccessToken": true,
+    "isLocal": true,
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301512_jbtex36qy] 开始 fetch 请求 {url: 'http://localhost:3001/api/baidu-proxy'}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301512_jbtex36qy JSON] {
+  "requestId": "rec_1764466301512_jbtex36qy",
+  "timestamp": "2025-11-30T01:31:41.514Z",
+  "level": "info",
+  "message": "开始 fetch 请求",
+  "data": {
+    "url": "http://localhost:3001/api/baidu-proxy"
+  }
+}
+practice.js?v=1.3.64:1967 [Practice] 下一题按钮被点击，事件类型: click 时间戳: 1764466301554
+practice.js?v=1.3.64:1626 [Practice.showNextQuestion] 🔍 调试信息: {
+  "timestamp": "2025-11-30T01:31:41.555Z",
+  "action": "点击下一题",
+  "hasContent": true,
+  "mode": "normal",
+  "willCallAPI": true,
+  "currentIndex": 0,
+  "totalWords": 4
+}
+practice.js?v=1.3.64:1642 [Practice.showNextQuestion] ✅ 画布有内容，将调用识别API
+practice.js?v=1.3.64:1643 [Practice.showNextQuestion] 📡 API调用路径: submitAnswer() -> Recognition.recognize()
+practice.js?v=1.3.64:1644 [Practice.showNextQuestion] 💡 提示：如果看到 Recognition 相关的日志，说明已调用API
+handwriting.js?v=1.3.64:306 Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently
+getSnapshot @ handwriting.js?v=1.3.64:306
+submitAnswer @ practice.js?v=1.3.64:938
+showNextQuestion @ practice.js?v=1.3.64:1646
+handleNext @ practice.js?v=1.3.64:1972
+practice.js?v=1.3.64:957 [Practice.submitAnswer] ✅ 画布有内容，开始调用识别API
+practice.js?v=1.3.64:958 [Practice.submitAnswer] 📡 API调用路径: Recognition.recognize()
+practice.js?v=1.3.64:959 [Practice.submitAnswer] 📊 快照大小: 3.20 KB
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301569_cxnmnullr] 开始识别请求 {imageBase64Length: 3278, base64DataLength: 3256, hasDataPrefix: true}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301569_cxnmnullr JSON] {
+  "requestId": "rec_1764466301569_cxnmnullr",
+  "timestamp": "2025-11-30T01:31:41.569Z",
+  "level": "info",
+  "message": "开始识别请求",
+  "data": {
+    "imageBase64Length": 3278,
+    "base64DataLength": 3256,
+    "hasDataPrefix": true
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301569_cxnmnullr] 环境检测 {hostname: 'localhost', isGitHubPages: false, isLocal: true, isVercel: false}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301569_cxnmnullr JSON] {
+  "requestId": "rec_1764466301569_cxnmnullr",
+  "timestamp": "2025-11-30T01:31:41.569Z",
+  "level": "info",
+  "message": "环境检测",
+  "data": {
+    "hostname": "localhost",
+    "isGitHubPages": false,
+    "isLocal": true,
+    "isVercel": false
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301569_cxnmnullr] 代理配置检查 {hasAppConfig: false, appConfigProxy: null, localStorageProxy: null, configuredBase: '(未配置)'}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301569_cxnmnullr JSON] {
+  "requestId": "rec_1764466301569_cxnmnullr",
+  "timestamp": "2025-11-30T01:31:41.569Z",
+  "level": "info",
+  "message": "代理配置检查",
+  "data": {
+    "hasAppConfig": false,
+    "appConfigProxy": null,
+    "localStorageProxy": null,
+    "configuredBase": "(未配置)"
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301569_cxnmnullr] 代理URL确定 {isLocal: true, isGitHubPages: false, sameOriginUrl: '/api/baidu-proxy', localProxyUrl: 'http://localhost:3001/api/baidu-proxy', configuredBase: '(未配置)', …}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301569_cxnmnullr JSON] {
+  "requestId": "rec_1764466301569_cxnmnullr",
+  "timestamp": "2025-11-30T01:31:41.569Z",
+  "level": "info",
+  "message": "代理URL确定",
+  "data": {
+    "isLocal": true,
+    "isGitHubPages": false,
+    "sameOriginUrl": "/api/baidu-proxy",
+    "localProxyUrl": "http://localhost:3001/api/baidu-proxy",
+    "configuredBase": "(未配置)",
+    "finalProxyUrl": "http://localhost:3001/api/baidu-proxy"
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301569_cxnmnullr] 准备发送请求 {url: 'http://localhost:3001/api/baidu-proxy', method: 'POST', bodySize: '3.32KB', hasAccessToken: true, isLocal: true, …}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301569_cxnmnullr JSON] {
+  "requestId": "rec_1764466301569_cxnmnullr",
+  "timestamp": "2025-11-30T01:31:41.573Z",
+  "level": "info",
+  "message": "准备发送请求",
+  "data": {
+    "url": "http://localhost:3001/api/baidu-proxy",
+    "method": "POST",
+    "bodySize": "3.32KB",
+    "hasAccessToken": true,
+    "isLocal": true,
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301569_cxnmnullr] 开始 fetch 请求 {url: 'http://localhost:3001/api/baidu-proxy'}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301569_cxnmnullr JSON] {
+  "requestId": "rec_1764466301569_cxnmnullr",
+  "timestamp": "2025-11-30T01:31:41.574Z",
+  "level": "info",
+  "message": "开始 fetch 请求",
+  "data": {
+    "url": "http://localhost:3001/api/baidu-proxy"
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301569_cxnmnullr] Fetch 请求完成 {status: 200, statusText: 'OK', fetchTime: '215ms', headers: {…}}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301569_cxnmnullr JSON] {
+  "requestId": "rec_1764466301569_cxnmnullr",
+  "timestamp": "2025-11-30T01:31:41.788Z",
+  "level": "info",
+  "message": "Fetch 请求完成",
+  "data": {
+    "status": 200,
+    "statusText": "OK",
+    "fetchTime": "215ms",
+    "headers": {
+      "access-control-allow-headers": "Content-Type",
+      "access-control-allow-methods": "GET, POST, OPTIONS",
+      "access-control-allow-origin": "*",
+      "connection": "keep-alive",
+      "content-type": "application/json",
+      "date": "Sun, 30 Nov 2025 01:31:41 GMT",
+      "keep-alive": "timeout=5",
+      "transfer-encoding": "chunked"
+    }
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301569_cxnmnullr] 响应接收完成 {status: 200, statusText: 'OK', totalTime: '219ms', fetchTime: '215ms'}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301569_cxnmnullr JSON] {
+  "requestId": "rec_1764466301569_cxnmnullr",
+  "timestamp": "2025-11-30T01:31:41.788Z",
+  "level": "info",
+  "message": "响应接收完成",
+  "data": {
+    "status": 200,
+    "statusText": "OK",
+    "totalTime": "219ms",
+    "fetchTime": "215ms"
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301569_cxnmnullr] 响应文本接收 {textLength: 69, preview: '{"words_result":[],"words_result_num":0,"log_id":1994942378313533237}'}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301569_cxnmnullr JSON] {
+  "requestId": "rec_1764466301569_cxnmnullr",
+  "timestamp": "2025-11-30T01:31:41.789Z",
+  "level": "info",
+  "message": "响应文本接收",
+  "data": {
+    "textLength": 69,
+    "preview": "{\"words_result\":[],\"words_result_num\":0,\"log_id\":1994942378313533237}"
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301569_cxnmnullr] 响应JSON解析成功 {hasErrorCode: false, errorCode: null, errorMsg: null, hasWordsResult: true, wordsResultCount: 0, …}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301569_cxnmnullr JSON] {
+  "requestId": "rec_1764466301569_cxnmnullr",
+  "timestamp": "2025-11-30T01:31:41.789Z",
+  "level": "info",
+  "message": "响应JSON解析成功",
+  "data": {
+    "hasErrorCode": false,
+    "errorCode": null,
+    "errorMsg": null,
+    "hasWordsResult": true,
+    "wordsResultCount": 0,
+    "hasProxyInfo": false,
+    "proxyInfo": null
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301569_cxnmnullr] 响应数据分析 {errorCode: null, errorMsg: null, wordsResultCount: 0, firstWord: null, proxyInfo: null}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301569_cxnmnullr JSON] {
+  "requestId": "rec_1764466301569_cxnmnullr",
+  "timestamp": "2025-11-30T01:31:41.789Z",
+  "level": "info",
+  "message": "响应数据分析",
+  "data": {
+    "errorCode": null,
+    "errorMsg": null,
+    "wordsResultCount": 0,
+    "firstWord": null,
+    "proxyInfo": null
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301569_cxnmnullr] 识别结果为空 {responseData: {…}, totalTime: '221ms'}
+consoleLog @ recognition.js?v=1.3.64:296
+recognizeBaidu @ recognition.js?v=1.3.64:707
+await in recognizeBaidu
+recognize @ recognition.js?v=1.3.64:180
+submitAnswer @ practice.js?v=1.3.64:982
+showNextQuestion @ practice.js?v=1.3.64:1646
+handleNext @ practice.js?v=1.3.64:1972
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301569_cxnmnullr JSON] {
+  "requestId": "rec_1764466301569_cxnmnullr",
+  "timestamp": "2025-11-30T01:31:41.790Z",
+  "level": "warn",
+  "message": "识别结果为空",
+  "data": {
+    "responseData": {
+      "words_result": [],
+      "words_result_num": 0,
+      "log_id": 1994942378313533200
+    },
+    "totalTime": "221ms"
+  }
+}
+consoleLog @ recognition.js?v=1.3.64:298
+recognizeBaidu @ recognition.js?v=1.3.64:707
+await in recognizeBaidu
+recognize @ recognition.js?v=1.3.64:180
+submitAnswer @ practice.js?v=1.3.64:982
+showNextQuestion @ practice.js?v=1.3.64:1646
+handleNext @ practice.js?v=1.3.64:1972
+word-groups.js?v=1.3.64:139 [WordGroups] 为 "大" 生成拼音: dà
+practice.js?v=1.3.64:1239 [Practice.showFeedback] 调试信息: {isCorrect: false, correctWord: '大', wordPinyin: 'dà', displayText: 'dà小, dà家, dà人', currentDisplayText: 'dà小, dà家, dà人'}
+practice.js?v=1.3.64:1258 [Practice.showFeedback] 通过拼音匹配替换成功
+practice.js?v=1.3.64:1317 [Practice.showFeedback] 最终displayText: <span class="text-danger fw-bold">大</span>小, <span class="text-danger fw-bold">大</span>家, <span clas
+handwriting.js?v=1.3.64:508 [Handwriting.drawCorrectWord] 字体调试信息: {
+  "word": "大",
+  "cssVariable": "KaiTi_GB2312, KaiTi, \"楷体\", \"Kaiti SC\", \"STKaiti\", \"STKaiti SC\", \"SimKai\", serif",
+  "kaitiFontFamily": "KaiTi_GB2312, KaiTi, \"楷体\", \"Kaiti SC\", \"STKaiti\", \"STKaiti SC\", \"SimKai\", serif",
+  "fontString": "bold 267.325px KaiTi_GB2312, KaiTi, \"楷体\", \"Kaiti SC\", \"STKaiti\", \"STKaiti SC\", \"SimKai\", serif",
+  "fontSize": 267.325,
+  "fontName": "KaiTi_GB2312",
+  "fontLoaded": true
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301512_jbtex36qy] Fetch 请求完成 {status: 200, statusText: 'OK', fetchTime: '294ms', headers: {…}}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301512_jbtex36qy JSON] {
+  "requestId": "rec_1764466301512_jbtex36qy",
+  "timestamp": "2025-11-30T01:31:41.807Z",
+  "level": "info",
+  "message": "Fetch 请求完成",
+  "data": {
+    "status": 200,
+    "statusText": "OK",
+    "fetchTime": "294ms",
+    "headers": {
+      "access-control-allow-headers": "Content-Type",
+      "access-control-allow-methods": "GET, POST, OPTIONS",
+      "access-control-allow-origin": "*",
+      "connection": "keep-alive",
+      "content-type": "application/json",
+      "date": "Sun, 30 Nov 2025 01:31:41 GMT",
+      "keep-alive": "timeout=5",
+      "transfer-encoding": "chunked"
+    }
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301512_jbtex36qy] 响应接收完成 {status: 200, statusText: 'OK', totalTime: '295ms', fetchTime: '294ms'}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301512_jbtex36qy JSON] {
+  "requestId": "rec_1764466301512_jbtex36qy",
+  "timestamp": "2025-11-30T01:31:41.807Z",
+  "level": "info",
+  "message": "响应接收完成",
+  "data": {
+    "status": 200,
+    "statusText": "OK",
+    "totalTime": "295ms",
+    "fetchTime": "294ms"
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301512_jbtex36qy] 响应文本接收 {textLength: 69, preview: '{"words_result":[],"words_result_num":0,"log_id":1994942378314338799}'}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301512_jbtex36qy JSON] {
+  "requestId": "rec_1764466301512_jbtex36qy",
+  "timestamp": "2025-11-30T01:31:41.808Z",
+  "level": "info",
+  "message": "响应文本接收",
+  "data": {
+    "textLength": 69,
+    "preview": "{\"words_result\":[],\"words_result_num\":0,\"log_id\":1994942378314338799}"
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301512_jbtex36qy] 响应JSON解析成功 {hasErrorCode: false, errorCode: null, errorMsg: null, hasWordsResult: true, wordsResultCount: 0, …}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301512_jbtex36qy JSON] {
+  "requestId": "rec_1764466301512_jbtex36qy",
+  "timestamp": "2025-11-30T01:31:41.808Z",
+  "level": "info",
+  "message": "响应JSON解析成功",
+  "data": {
+    "hasErrorCode": false,
+    "errorCode": null,
+    "errorMsg": null,
+    "hasWordsResult": true,
+    "wordsResultCount": 0,
+    "hasProxyInfo": false,
+    "proxyInfo": null
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301512_jbtex36qy] 响应数据分析 {errorCode: null, errorMsg: null, wordsResultCount: 0, firstWord: null, proxyInfo: null}
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301512_jbtex36qy JSON] {
+  "requestId": "rec_1764466301512_jbtex36qy",
+  "timestamp": "2025-11-30T01:31:41.808Z",
+  "level": "info",
+  "message": "响应数据分析",
+  "data": {
+    "errorCode": null,
+    "errorMsg": null,
+    "wordsResultCount": 0,
+    "firstWord": null,
+    "proxyInfo": null
+  }
+}
+recognition.js?v=1.3.64:296 [Recognition rec_1764466301512_jbtex36qy] 识别结果为空 {responseData: {…}, totalTime: '301ms'}
+consoleLog @ recognition.js?v=1.3.64:296
+recognizeBaidu @ recognition.js?v=1.3.64:707
+await in recognizeBaidu
+recognize @ recognition.js?v=1.3.64:180
+submitAnswer @ practice.js?v=1.3.64:982
+showNextQuestion @ practice.js?v=1.3.64:1646
+handleNext @ practice.js?v=1.3.64:1972
+nextBtn.addEventListener.passive @ practice.js?v=1.3.64:1982
+recognition.js?v=1.3.64:298 [Recognition rec_1764466301512_jbtex36qy JSON] {
+  "requestId": "rec_1764466301512_jbtex36qy",
+  "timestamp": "2025-11-30T01:31:41.813Z",
+  "level": "warn",
+  "message": "识别结果为空",
+  "data": {
+    "responseData": {
+      "words_result": [],
+      "words_result_num": 0,
+      "log_id": 1994942378314338800
+    },
+    "totalTime": "301ms"
+  }
+}
+consoleLog @ recognition.js?v=1.3.64:298
+recognizeBaidu @ recognition.js?v=1.3.64:707
+await in recognizeBaidu
+recognize @ recognition.js?v=1.3.64:180
+submitAnswer @ practice.js?v=1.3.64:982
+showNextQuestion @ practice.js?v=1.3.64:1646
+handleNext @ practice.js?v=1.3.64:1972
+nextBtn.addEventListener.passive @ practice.js?v=1.3.64:1982
+word-groups.js?v=1.3.64:139 [WordGroups] 为 "大" 生成拼音: dà
+practice.js?v=1.3.64:1239 [Practice.showFeedback] 调试信息: {isCorrect: false, correctWord: '大', wordPinyin: 'dà', displayText: 'dà小, dà家, dà人', currentDisplayText: 'dà小, dà家, dà人'}
+practice.js?v=1.3.64:1258 [Practice.showFeedback] 通过拼音匹配替换成功
+practice.js?v=1.3.64:1317 [Practice.showFeedback] 最终displayText: <span class="text-danger fw-bold">大</span>小, <span class="text-danger fw-bold">大</span>家, <span clas
+handwriting.js?v=1.3.64:508 [Handwriting.drawCorrectWord] 字体调试信息: {
+  "word": "大",
+  "cssVariable": "KaiTi_GB2312, KaiTi, \"楷体\", \"Kaiti SC\", \"STKaiti\", \"STKaiti SC\", \"SimKai\", serif",
+  "kaitiFontFamily": "KaiTi_GB2312, KaiTi, \"楷体\", \"Kaiti SC\", \"STKaiti\", \"STKaiti SC\", \"SimKai\", serif",
+  "fontString": "bold 267.325px KaiTi_GB2312, KaiTi, \"楷体\", \"Kaiti SC\", \"STKaiti\", \"STKaiti SC\", \"SimKai\", serif",
+  "fontSize": 267.325,
+  "fontName": "KaiTi_GB2312",
+  "fontLoaded": true
+}
+practice.js?v=1.3.64:555 [Practice.showNextWord] WordGroups检查: {
+  "wordGroupsDefined": true,
+  "word": "了",
+  "pinyin": "",
+  "windowWordGroups": false,
+  "globalWordGroups": false
+}
+practice.js?v=1.3.64:565 [Practice.showNextWord] WordGroups状态: {
+  "_loaded": true,
+  "_loading": false,
+  "groupsCount": 1512,
+  "hasWord": true
+}
+word-groups.js?v=1.3.64:172 [WordGroups.getDisplayText] {word: '了', pinyin: '', groupsLength: 4, groups: Array(4), _loaded: true, …}
+word-groups.js?v=1.3.64:139 [WordGroups] 为 "了" 生成拼音: le
+word-groups.js?v=1.3.64:210 [WordGroups.getDisplayText] 有拼音，替换后: 好le, 完le, 走le
+practice.js?v=1.3.64:611 [Practice] 显示题目: {
+  "word": "了",
+  "pinyin": "(空)",
+  "displayText": "好le, 完le, 走le",
+  "wordId": "builtin_36_了"
+}

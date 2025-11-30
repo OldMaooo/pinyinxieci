@@ -277,9 +277,14 @@ const Main = {
                 }, 100);
             }
         } else if (pageId === 'reviewplan') {
-            if (typeof ReviewPlanUI !== 'undefined' && ReviewPlanUI.load) {
-                ReviewPlanUI.load();
+            // 复习计划已合并到任务清单中，不再单独显示
+            // 如果用户访问复习计划页面，重定向到任务清单
+            if (typeof Main !== 'undefined') {
+                Main.showPage('tasklist');
             }
+            // if (typeof ReviewPlanUI !== 'undefined' && ReviewPlanUI.load) {
+            //     ReviewPlanUI.load();
+            // }
         }
     },
     
@@ -498,7 +503,63 @@ const Main = {
             if (timeHomeEl && p.timeLimit !== undefined) timeHomeEl.value = p.timeLimit;
         }
         
+        // 绑定清除缓存按钮
+        const clearCacheBtn = document.getElementById('clear-cache-btn');
+        if (clearCacheBtn) {
+            clearCacheBtn.addEventListener('click', () => {
+                if (confirm('确定要清除缓存并刷新页面吗？\n\n这将清除浏览器缓存，但不会删除您的练习记录和题库数据。')) {
+                    this.clearCache();
+                }
+            });
+        }
+        
         console.log('[Main.init] ===== 初始化完成 =====');
+    },
+    
+    /**
+     * 清除缓存并刷新页面
+     */
+    clearCache() {
+        try {
+            // 清除所有localStorage中的缓存相关数据（保留用户数据）
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                // 只清除缓存相关的key，保留用户数据
+                if (key && (
+                    key.includes('cache') || 
+                    key.includes('Cache') ||
+                    key.includes('version') ||
+                    key.includes('Version') ||
+                    key === 'builtin_wordbank_version'
+                )) {
+                    keysToRemove.push(key);
+                }
+            }
+            keysToRemove.forEach(key => {
+                try {
+                    localStorage.removeItem(key);
+                    console.log(`[Main.clearCache] 已清除: ${key}`);
+                } catch (e) {
+                    console.warn(`[Main.clearCache] 清除 ${key} 失败:`, e);
+                }
+            });
+            
+            // 强制刷新页面（绕过缓存）
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(registrations => {
+                    registrations.forEach(registration => registration.unregister());
+                });
+            }
+            
+            // 使用时间戳强制刷新
+            const timestamp = new Date().getTime();
+            window.location.href = `${window.location.pathname}?nocache=${timestamp}${window.location.hash}`;
+        } catch (error) {
+            console.error('[Main.clearCache] 清除缓存失败:', error);
+            alert('清除缓存失败，请手动刷新页面');
+            window.location.reload(true);
+        }
     },
     
     /**

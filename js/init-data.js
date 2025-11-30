@@ -59,7 +59,11 @@ const InitData = {
         for (const file of this.BUILTIN_FILES) {
             try {
                 console.log(`[InitData] (${context}) 正在拉取 ${file}`);
-                const resp = await fetch(`${file}${timestamp}`, { cache: 'no-cache' });
+                // 对中文文件名进行URL编码，确保在不同浏览器中都能正常加载
+                const encodedFile = file.split('/').map(part => encodeURIComponent(part)).join('/');
+                const url = `${encodedFile}${timestamp}`;
+                console.log(`[InitData] (${context}) 请求URL: ${url}`);
+                const resp = await fetch(url, { cache: 'no-cache' });
                 if (!resp.ok) {
                     console.warn(`[InitData] (${context}) 无法加载 ${file}: HTTP ${resp.status}`);
                     continue;
@@ -142,9 +146,12 @@ const InitData = {
         console.log(`[InitData] (${context}) 使用 legacy 备份文件加载默认题库`);
         const version = typeof APP_VERSION !== 'undefined' ? APP_VERSION.version : Date.now();
         const timestamp = `?v=${version}&t=${Date.now()}`;
-        let resp = await fetch(`data/wordbank/三年级上册.json${timestamp}`, { cache: 'no-cache' });
+        // 对中文文件名进行URL编码
+        const file1 = 'data/wordbank/三年级上册.json'.split('/').map(part => encodeURIComponent(part)).join('/');
+        let resp = await fetch(`${file1}${timestamp}`, { cache: 'no-cache' });
             if (!resp.ok) {
-            resp = await fetch(`data/三年级上册写字表.json${timestamp}`, { cache: 'no-cache' });
+            const file2 = 'data/三年级上册写字表.json'.split('/').map(part => encodeURIComponent(part)).join('/');
+            resp = await fetch(`${file2}${timestamp}`, { cache: 'no-cache' });
             }
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             const data = await resp.json();

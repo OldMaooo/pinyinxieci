@@ -29,14 +29,22 @@ const TaskListUI = {
             });
         }
         
-        // 视图类型切换（日历/卡片）
-        document.querySelectorAll('input[name="task-view-type"]').forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                this.currentViewType = e.target.value;
-                this.updateViewTypeUI();
-                this.load();
+        // 查看已完成按钮
+        const viewCompletedBtn = document.getElementById('task-list-view-completed-btn');
+        if (viewCompletedBtn) {
+            viewCompletedBtn.addEventListener('click', () => {
+                this.showCompletedTasks();
             });
-        });
+        }
+        
+        // 视图类型切换（日历/卡片）- 已移除，只使用卡片视图
+        // document.querySelectorAll('input[name="task-view-type"]').forEach(radio => {
+        //     radio.addEventListener('change', (e) => {
+        //         this.currentViewType = e.target.value;
+        //         this.updateViewTypeUI();
+        //         this.load();
+        //     });
+        // });
         
         // 显示模式切换（合并/拆分）- 已移除
         
@@ -67,24 +75,19 @@ const TaskListUI = {
     },
     
     /**
-     * 加载任务清单（根据当前视图类型）
+     * 加载任务清单（只使用卡片视图）
      */
     load() {
         console.log('[TaskListUI.load] ===== 开始加载任务清单 =====');
-        console.log('[TaskListUI.load] 当前视图类型:', this.currentViewType);
+        console.log('[TaskListUI.load] 显示已完成:', this._showingCompleted);
         
         // 确保自动生成复习任务
         const allTasks = TaskList.getAllTasksWithAutoReview(30);
         console.log('[TaskListUI.load] 获取所有任务（含自动生成）:', allTasks.length);
         
-        // 根据视图类型渲染
-        if (this.currentViewType === 'cards') {
-            console.log('[TaskListUI.load] 渲染卡片视图...');
-            this.renderCardsView();
-        } else {
-            console.log('[TaskListUI.load] 渲染日历视图...');
-            this.renderCalendarView();
-        }
+        // 只使用卡片视图
+        console.log('[TaskListUI.load] 渲染卡片视图...');
+        this.renderCardsView();
         
         console.log('[TaskListUI.load] ===== 加载任务清单完成 =====');
     },
@@ -106,14 +109,22 @@ const TaskListUI = {
         
         const tasks = TaskList.getAllTasksWithAutoReview(30); // 生成30天的任务
         
-        // 过滤掉已完成的任务
-        const activeTasks = tasks.filter(t => t.status !== TaskList.STATUS.COMPLETED);
+        // 根据是否显示已完成来过滤任务
+        const activeTasks = this._showingCompleted 
+            ? tasks.filter(t => t.status === TaskList.STATUS.COMPLETED)
+            : tasks.filter(t => t.status !== TaskList.STATUS.COMPLETED);
         
         // 渲染日历
         this.renderCalendar(calendarContainer, activeTasks);
         
-        // 渲染待排期任务
-        this.renderInboxTasks(activeTasks, 'calendar');
+        // 渲染待排期任务（只在显示进行中任务时显示）
+        if (!this._showingCompleted) {
+            this.renderInboxTasks(activeTasks, 'calendar');
+        } else {
+            // 隐藏待排期区域
+            const inboxArea = document.getElementById('task-inbox-area-calendar');
+            if (inboxArea) inboxArea.style.display = 'none';
+        }
         
         // 绑定拖拽事件
         this.bindDragEvents();
@@ -385,8 +396,10 @@ const TaskListUI = {
         const tasks = TaskList.getAllTasksWithAutoReview(30);
         console.log('[TaskListUI.renderCardsView] 获取所有任务:', tasks.length);
         
-        // 过滤掉已完成的任务
-        const activeTasks = tasks.filter(t => t.status !== TaskList.STATUS.COMPLETED);
+        // 根据是否显示已完成来过滤任务
+        const activeTasks = this._showingCompleted 
+            ? tasks.filter(t => t.status === TaskList.STATUS.COMPLETED)
+            : tasks.filter(t => t.status !== TaskList.STATUS.COMPLETED);
         console.log('[TaskListUI.renderCardsView] 活跃任务数:', activeTasks.length);
         console.log('[TaskListUI.renderCardsView] 任务列表:', activeTasks.map(t => ({ id: t.id, name: t.name, status: t.status, scheduledDate: t.scheduledDate })));
         
@@ -395,10 +408,16 @@ const TaskListUI = {
         this.renderCards(cardsContainer, activeTasks);
         console.log('[TaskListUI.renderCardsView] 卡片渲染完成');
         
-        // 渲染待排期任务
-        console.log('[TaskListUI.renderCardsView] 开始渲染待排期任务...');
-        this.renderInboxTasks(activeTasks, 'cards');
-        console.log('[TaskListUI.renderCardsView] 待排期任务渲染完成');
+        // 渲染待排期任务（只在显示进行中任务时显示）
+        if (!this._showingCompleted) {
+            console.log('[TaskListUI.renderCardsView] 开始渲染待排期任务...');
+            this.renderInboxTasks(activeTasks, 'cards');
+            console.log('[TaskListUI.renderCardsView] 待排期任务渲染完成');
+        } else {
+            // 隐藏待排期区域
+            const inboxArea = document.getElementById('task-inbox-area-cards');
+            if (inboxArea) inboxArea.style.display = 'none';
+        }
         
         // 绑定所有事件（包括待排期卡片的日期选择按钮）
         console.log('[TaskListUI.renderCardsView] 绑定事件...');
@@ -417,18 +436,51 @@ const TaskListUI = {
         const cardsArea = container.querySelector('#task-cards-area');
         if (!cardsArea) return;
         
+        // 如果显示已完成任务，直接显示所有已完成任务
+        if (this._showingCompleted) {
+            const completedTasks = tasks.filter(t => t.status === TaskList.STATUS.COMPLETED);
+            
+            if (completedTasks.length === 0) {
+                cardsArea.innerHTML = `
+                    <div class="text-center text-muted py-5">
+                        <i class="bi bi-check-circle" style="font-size: 3rem;"></i>
+                        <p class="mt-3">暂无已完成任务</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 按完成时间排序（最新的在前）
+            completedTasks.sort((a, b) => {
+                const dateA = new Date(a.updatedAt || a.createdAt || 0);
+                const dateB = new Date(b.updatedAt || b.createdAt || 0);
+                return dateB - dateA;
+            });
+            
+            let html = '<div class="task-cards-grid">';
+            completedTasks.forEach(task => {
+                html += `
+                    <div class="task-card-item" data-task-id="${task.id}">
+                        ${this.renderTaskCardForCardsView(task, true)}
+                    </div>
+                `;
+            });
+            html += '</div>';
+            cardsArea.innerHTML = html;
+            return;
+        }
+        
+        // 显示进行中的任务：只显示已排期的任务
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         
-        // 分离任务（排除已完成的任务）
-        const scheduledTasks = tasks.filter(t => t.scheduledDate && t.status !== TaskList.STATUS.COMPLETED).sort((a, b) => {
+        const scheduledTasks = tasks.filter(t => t.scheduledDate).sort((a, b) => {
             const dateA = new Date(a.scheduledDate + 'T00:00:00');
             const dateB = new Date(b.scheduledDate + 'T00:00:00');
             return dateA - dateB;
         });
-        const unscheduledTasks = tasks.filter(t => !t.scheduledDate && t.status !== TaskList.STATUS.COMPLETED);
         
-        if (scheduledTasks.length === 0 && unscheduledTasks.length === 0) {
+        if (scheduledTasks.length === 0) {
             cardsArea.innerHTML = `
                 <div class="text-center text-muted py-5">
                     <i class="bi bi-inbox" style="font-size: 3rem;"></i>
@@ -458,7 +510,7 @@ const TaskListUI = {
         if (todayTasks.length > 0) {
             html += `
                 <div class="task-cards-section-header">
-                    <h5 class="mb-3 text-primary">
+                    <h5 class="mb-0 text-primary">
                         <i class="bi bi-calendar-check"></i> 今天
                     </h5>
                 </div>
@@ -476,7 +528,7 @@ const TaskListUI = {
         if (futureTasks.length > 0) {
             html += `
                 <div class="task-cards-section-header">
-                    <h5 class="mb-3 text-primary">
+                    <h5 class="mb-0 text-primary">
                         <i class="bi bi-calendar-event"></i> 未来任务
                     </h5>
                 </div>
@@ -484,24 +536,6 @@ const TaskListUI = {
             futureTasks.forEach(task => {
                 html += `
                     <div class="task-card-item" data-task-id="${task.id}" data-date="${task.scheduledDate}">
-                        ${this.renderTaskCardForCardsView(task, true)}
-                    </div>
-                `;
-            });
-        }
-        
-        // 待排期任务区域
-        if (unscheduledTasks.length > 0) {
-            html += `
-                <div class="task-cards-section-header">
-                    <h5 class="mb-3 text-primary">
-                        <i class="bi bi-inbox"></i> 待排期任务
-                    </h5>
-                </div>
-            `;
-            unscheduledTasks.forEach(task => {
-                html += `
-                    <div class="task-card-item" data-task-id="${task.id}">
                         ${this.renderTaskCardForCardsView(task, true)}
                     </div>
                 `;
@@ -1139,10 +1173,18 @@ const TaskListUI = {
         const confirmBtn = document.getElementById('date-picker-confirm-btn');
         const cancelBtn = document.getElementById('date-picker-cancel-btn');
         
-        // 设置当前日期
-        const today = new Date().toISOString().split('T')[0];
-        const currentDate = task.scheduledDate || today;
+        // 设置当前日期（如果有排期日期则使用，否则留空，不自动设置今天）
+        const currentDate = task.scheduledDate || '';
         inputEl.value = currentDate;
+        
+        // 防止iPad上自动选择日期：禁用input的自动行为
+        inputEl.setAttribute('readonly', 'readonly');
+        inputEl.addEventListener('focus', (e) => {
+            e.target.removeAttribute('readonly');
+        });
+        inputEl.addEventListener('blur', (e) => {
+            e.target.setAttribute('readonly', 'readonly');
+        });
         
         const modal = new bootstrap.Modal(modalEl);
         modal.show();
@@ -1168,8 +1210,11 @@ const TaskListUI = {
             this.load();
         });
         
-        // 取消排期按钮
+        // 取消排期按钮（还原）
         newCancelBtn.addEventListener('click', () => {
+            // 清空日期输入框
+            inputEl.value = '';
+            // 更新任务，清空排期日期
             TaskList.updateTask(taskId, {
                 scheduledDate: null
             });
@@ -1187,101 +1232,36 @@ const TaskListUI = {
             }
         });
         
-        // 模态框关闭时聚焦输入框
+        // 模态框关闭时聚焦输入框（但保持readonly，防止自动选择）
         modalEl.addEventListener('shown.bs.modal', () => {
-            inputEl.focus();
+            // 不自动聚焦，避免iPad上自动选择日期
+            // inputEl.focus();
         });
     },
     
     /**
-     * 显示已完成任务
+     * 显示已完成任务（切换视图显示已完成任务）
      */
     showCompletedTasks() {
-        const tasks = TaskList.getAllTasks();
-        const completedTasks = tasks.filter(t => t.status === TaskList.STATUS.COMPLETED);
+        // 切换视图状态
+        this._showingCompleted = !this._showingCompleted;
         
-        if (completedTasks.length === 0) {
-            if (typeof WordBank !== 'undefined' && WordBank.showToast) {
-                WordBank.showToast('info', '暂无已完成任务');
+        // 重新加载视图
+        this.load();
+        
+        // 更新按钮文本
+        const btn = document.getElementById('task-list-view-completed-btn');
+        if (btn) {
+            if (this._showingCompleted) {
+                btn.innerHTML = '<i class="bi bi-list-check"></i> 查看进行中';
+                btn.classList.remove('btn-outline-secondary');
+                btn.classList.add('btn-secondary');
+            } else {
+                btn.innerHTML = '<i class="bi bi-check-circle"></i> 查看已完成';
+                btn.classList.remove('btn-secondary');
+                btn.classList.add('btn-outline-secondary');
             }
-            return;
         }
-        
-        // 使用任务详情弹窗显示已完成任务列表
-        const modal = new bootstrap.Modal(document.getElementById('task-detail-modal'));
-        const modalEl = document.getElementById('task-detail-modal');
-        const titleEl = document.getElementById('task-detail-title');
-        const contentEl = document.getElementById('task-detail-content');
-        
-        if (titleEl) {
-            titleEl.textContent = `已完成任务 (${completedTasks.length})`;
-        }
-        
-        if (contentEl) {
-            let html = '<div class="list-group">';
-            completedTasks.forEach(task => {
-                const progress = task.progress || { total: 0, completed: 0, correct: 0 };
-                const progressPercent = progress.total > 0 ? Math.round((progress.completed / progress.total) * 100) : 0;
-                const typeIcon = task.type === TaskList.TYPE.REVIEW ? 'bi-arrow-repeat' : 'bi-pencil-square';
-                
-                html += `
-                    <div class="list-group-item list-group-item-action" style="cursor: pointer;" data-task-id="${task.id}">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div class="flex-grow-1">
-                                <h6 class="mb-1">
-                                    <i class="bi ${typeIcon}"></i> ${this.escapeHtml(task.name)}
-                                </h6>
-                                <div class="small text-muted">
-                                    <div>进度: ${progress.completed}/${progress.total} (${progressPercent}%)</div>
-                                    <div>正确: ${progress.correct} | 错误: ${progress.errors.length}</div>
-                                </div>
-                            </div>
-                            <button class="btn btn-sm btn-outline-primary task-restart-btn" data-task-id="${task.id}">
-                                <i class="bi bi-arrow-clockwise"></i> 重新开始
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            html += '</div>';
-            contentEl.innerHTML = html;
-            
-            // 绑定重新开始按钮
-            contentEl.querySelectorAll('.task-restart-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const taskId = btn.getAttribute('data-task-id');
-                    if (confirm('确定要重新开始这个任务吗？进度将被重置。')) {
-                        TaskList.updateTask(taskId, {
-                            status: TaskList.STATUS.PENDING,
-                            progress: {
-                                total: TaskList.getTask(taskId).wordIds.length,
-                                completed: 0,
-                                correct: 0,
-                                errors: []
-                            }
-                        });
-                        modal.hide();
-                        this.load();
-                        if (typeof WordBank !== 'undefined' && WordBank.showToast) {
-                            WordBank.showToast('success', '任务已重置，可以重新开始');
-                        }
-                    }
-                });
-            });
-            
-            // 绑定列表项点击事件（查看详情）
-            contentEl.querySelectorAll('.list-group-item').forEach(item => {
-                item.addEventListener('click', (e) => {
-                    if (e.target.closest('button')) return;
-                    const taskId = item.getAttribute('data-task-id');
-                    modal.hide();
-                    this.showTaskDetail(taskId);
-                });
-            });
-        }
-        
-        modal.show();
     },
     
     /**

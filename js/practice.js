@@ -8,6 +8,7 @@ const Practice = {
     currentIndex: 0,
     // 记录之前的题目历史（用于返回上一题）
     history: [],
+    isProcessingNextQuestion: false, // 防止重复调用showNextQuestion
     practiceLog: {
         totalWords: 0,
         correctCount: 0,
@@ -34,6 +35,7 @@ const Practice = {
         this.practiceLog.wordTimes.push(wordTime);
         this.practiceLog.totalTime += wordTime;
         this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null, displayText: this._currentDisplayText });
+        this.updateProgressVisual();
         this.showFeedback(false, word, '');
         if (typeof Handwriting !== 'undefined' && Handwriting.clear) {
             Handwriting.clear();
@@ -162,7 +164,25 @@ const Practice = {
             if (task) {
                 currentTaskId = taskIdFromStorage;
                 const wordBank = Storage.getWordBank();
+                // 重要：任务模式下，只使用任务中的wordIds，确保不会包含其他题目
                 words = wordBank.filter(w => task.wordIds.includes(w.id));
+                
+                console.log('[Practice.start] 任务模式：', {
+                    taskId: taskIdFromStorage,
+                    taskName: task.name,
+                    taskWordIdsCount: task.wordIds.length,
+                    taskProgressTotal: task.progress?.total,
+                    filteredWordsCount: words.length
+                });
+                
+                // 验证：确保words数量与task.wordIds数量一致
+                if (words.length !== task.wordIds.length) {
+                    console.warn('[Practice.start] ⚠️ 任务题目数量不匹配：', {
+                        taskWordIdsCount: task.wordIds.length,
+                        filteredWordsCount: words.length,
+                        missingWordIds: task.wordIds.filter(id => !words.some(w => w.id === id))
+                    });
+                }
                 
                 // 保留所有题目，从completed位置开始（在设置currentIndex时处理）
             }
@@ -244,9 +264,17 @@ const Practice = {
         }
         
         // 随机选择或限制数量
-        // 注意：任务模式下不应该应用wordCount限制，应该使用所有题目
+        // 重要：任务模式下不应该应用wordCount限制，应该使用任务中的所有题目（已通过task.wordIds过滤）
+        // 任务模式下，words已经通过task.wordIds过滤，不应该再次限制
         if (!currentTaskId && !forcedMode && wordCount !== 'all') {
             words = this.shuffleArray(words).slice(0, wordCount);
+        } else if (currentTaskId) {
+            // 任务模式下，确保words数量与任务一致（不应该被wordCount限制）
+            console.log('[Practice.start] 任务模式：使用任务中的所有题目，不应用wordCount限制', {
+                wordsCount: words.length,
+                wordCount: wordCount,
+                taskId: currentTaskId
+            });
         }
         if (forcedMode) {
             // 用完即清除，下一次回到手动模式
@@ -364,6 +392,32 @@ const Practice = {
         if (!this.isActive || !this.practiceLog || this.practiceLog.totalWords === 0) return;
         let isDebug = false; try { isDebug = localStorage.getItem('debugMode') === '1'; } catch(e) {}
         try {
+            // 先保存练习记录（partial），然后保存错题到按轮视图
+            const logPayload = this._buildPracticeLogPayload({ partial: true, isDebug });
+            let log = null;
+            try {
+                log = Storage.addPracticeLog(logPayload);
+                
+                // 保存错题到按轮视图（使用log.id作为roundId）
+                if (log && log.id && this.practiceLog.details) {
+                    const errorDetails = this.practiceLog.details.filter(d => !d.correct);
+                    if (errorDetails.length > 0 && typeof Storage !== 'undefined' && Storage.saveErrorWordsForRound) {
+                        const errorWords = errorDetails.map(d => {
+                            const word = this.currentWords.find(w => w.id === d.wordId);
+                            return {
+                                wordId: d.wordId,
+                                word: word ? word.word : '',
+                                pinyin: word ? (word.pinyin || '') : '',
+                                snapshot: d.snapshot || null
+                            };
+                        });
+                        Storage.saveErrorWordsForRound(log.id, errorWords);
+                    }
+                }
+            } catch (e) {
+                console.warn('保存未完成练习记录失败:', e);
+            }
+            
             // 使用草稿保存而不是写入正式练习记录，避免生成重复的按轮记录
             this.saveAutosaveDraft();
             
@@ -603,6 +657,9 @@ const Practice = {
         document.getElementById('progress-badge').textContent = 
             `${this.currentIndex + 1}/${this.currentWords.length}`;
         
+        // 更新答题数可视化
+        this.updateProgressVisual();
+        
         // 清除画布
         Handwriting.clear();
         
@@ -628,21 +685,97 @@ const Practice = {
     },
     
     /**
+     * 更新可见的调试信息显示
+     */
+    updateDebugInfo(message) {
+        const debugInfoEl = document.getElementById('debug-info-text');
+        const debugInfoContainer = document.getElementById('practice-debug-info');
+        if (debugInfoEl) {
+            debugInfoEl.textContent = message;
+            // 确保调试信息区域可见
+            if (debugInfoContainer) {
+                debugInfoContainer.classList.remove('d-none');
+                debugInfoContainer.style.display = 'block';
+            }
+        }
+    },
+    
+    /**
+     * 更新答题数可视化
+     */
+    updateProgressVisual() {
+        const container = document.getElementById('progress-visual');
+        if (!container) return;
+        
+        const total = this.currentWords.length;
+        const completed = this.practiceLog.details?.length || 0;
+        const correct = this.practiceLog.correctCount || 0;
+        const error = this.practiceLog.errorCount || 0;
+        const remaining = total - completed;
+        
+        container.innerHTML = '';
+        
+        // 显示已完成的格子（绿色=正确，红色=错误）
+        for (let i = 0; i < completed; i++) {
+            const detail = this.practiceLog.details[i];
+            const square = document.createElement('div');
+            square.style.width = '8px';
+            square.style.height = '8px';
+            square.style.backgroundColor = detail?.correct ? '#10b981' : '#ef4444'; // 绿色或红色
+            square.style.borderRadius = '1px';
+            square.style.margin = '0'; // 去掉间距
+            container.appendChild(square);
+        }
+        
+        // 显示未完成的灰色格子
+        for (let i = 0; i < remaining; i++) {
+            const square = document.createElement('div');
+            square.style.width = '8px';
+            square.style.height = '8px';
+            square.style.backgroundColor = '#e5e7eb'; // 灰色
+            square.style.borderRadius = '1px';
+            square.style.margin = '0'; // 去掉间距
+            container.appendChild(square);
+        }
+        
+        // 数字在最后（通过progress-badge显示，这里不需要额外显示）
+    },
+    
+    /**
      * 开始计时器
      */
     startTimer(startTime) {
         let remaining = this.timeLimit;
-        const timerBadge = document.getElementById('timer-badge');
+        const timerProgress = document.getElementById('timer-progress');
+        const timerPauseIcon = document.getElementById('timer-pause-icon');
         
         if (this.timer) {
             clearInterval(this.timer);
         }
         
-        timerBadge.textContent = `${remaining}秒`;
+        // 更新环形进度
+        const circumference = 2 * Math.PI * 26; // r=26
+        const progress = (this.timeLimit - remaining) / this.timeLimit;
+        const offset = circumference - (progress * circumference);
+        if (timerProgress) {
+            timerProgress.style.strokeDasharray = `${circumference} ${circumference}`;
+            timerProgress.style.strokeDashoffset = offset;
+        }
+        
+        // 更新暂停图标
+        if (timerPauseIcon) {
+            timerPauseIcon.className = 'bi bi-pause-fill';
+        }
         
         this.timer = setInterval(() => {
             remaining--;
-            timerBadge.textContent = `${remaining}秒`;
+            
+            // 更新环形进度
+            const progress = (this.timeLimit - remaining) / this.timeLimit;
+            const offset = circumference - (progress * circumference);
+            if (timerProgress) {
+                timerProgress.style.strokeDashoffset = offset;
+            }
             
             if (remaining <= 0) {
                 clearInterval(this.timer);
@@ -658,16 +791,20 @@ const Practice = {
             this.timer = null;
         }
         this.isPaused = true;
-        const btn = document.getElementById('pause-practice-btn');
-        if (btn) btn.textContent = '继续';
+        const timerPauseIcon = document.getElementById('timer-pause-icon');
+        if (timerPauseIcon) {
+            timerPauseIcon.className = 'bi bi-play-fill';
+        }
     },
 
     resume() {
         if (!this.isActive || !this.isPaused) return;
         this.isPaused = false;
-        const btn = document.getElementById('pause-practice-btn');
-        if (btn) btn.textContent = '暂停';
-        const wordStartTime = Date.now();
+        const timerPauseIcon = document.getElementById('timer-pause-icon');
+        if (timerPauseIcon) {
+            timerPauseIcon.className = 'bi bi-pause-fill';
+        }
+        const wordStartTime = this._currentWordStartTime || Date.now();
         this.startTimer(wordStartTime);
     },
     
@@ -697,6 +834,7 @@ const Practice = {
                     if (result.success && result.passed) {
                         this.practiceLog.correctCount++;
                         this.practiceLog.details.push({ wordId: word.id, correct: true, snapshot, displayText: this._currentDisplayText });
+                        this.updateProgressVisual();
                         this.showFeedback(true, word, '');
                         
                         // 如果是复习计划中的字，更新复习计划状态
@@ -705,6 +843,7 @@ const Practice = {
                         this.practiceLog.errorCount++;
                         await this.recordError(word, snapshot);
                         this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot, displayText: this._currentDisplayText });
+                        this.updateProgressVisual();
                         this.showFeedback(false, word, result.recognized || '时间到');
                         
                         // 如果是复习计划中的字，更新复习计划状态
@@ -714,6 +853,7 @@ const Practice = {
                     this.practiceLog.errorCount++;
                     await this.recordError(word, snapshot);
                     this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot, displayText: this._currentDisplayText });
+                    this.updateProgressVisual();
                     this.showFeedback(false, word, '时间到');
                 }
             } else {
@@ -721,6 +861,7 @@ const Practice = {
                 this.practiceLog.errorCount++;
                 await this.recordError(word, null);
                 this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null, displayText: this._currentDisplayText });
+                this.updateProgressVisual();
                 this.showFeedback(false, word, '时间到');
                 
                 // 更新任务进度（如果有任务）
@@ -811,6 +952,12 @@ const Practice = {
             const hasInk = typeof Handwriting !== 'undefined' && Handwriting.hasContent && Handwriting.hasContent();
             if (!hasInk) {
                 // 没有笔迹：直接判为错题，不调用API
+                console.log('[Practice.submitAnswer] ⏭️ 画布为空，跳过识别API，直接判错');
+                console.log('[Practice.submitAnswer] 🚫 不会调用 Recognition.recognize()');
+                this.updateDebugInfo('⏭️ 画布为空，跳过识别API，直接判错');
+                if (typeof Debug !== 'undefined') {
+                    Debug.log('info', '画布为空，跳过识别API，不会调用Recognition.recognize()', 'practice');
+                }
                 await this.handleEmptySubmission(word);
                 return;
             }
@@ -832,9 +979,22 @@ const Practice = {
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>识别中...';
         
-        // 显示识别中
-        document.getElementById('feedback-area').innerHTML = 
-            '<div class="loading"></div> 识别中...';
+        // 显示识别中（只有正常模式且有笔迹时才显示）
+        if (this.mode === 'normal' && snapshot) {
+            console.log('[Practice.submitAnswer] ✅ 画布有内容，开始调用识别API');
+            console.log('[Practice.submitAnswer] 📡 API调用路径: Recognition.recognize()');
+            console.log('[Practice.submitAnswer] 📊 快照大小:', (snapshot.length / 1024).toFixed(2), 'KB');
+            this.updateDebugInfo(`✅ 画布有内容，正在调用识别API（快照: ${(snapshot.length / 1024).toFixed(2)}KB）`);
+            if (typeof Debug !== 'undefined') {
+                Debug.log('info', `画布有内容，开始识别API调用，快照大小: ${(snapshot.length / 1024).toFixed(2)}KB`, 'practice');
+            }
+            document.getElementById('feedback-area').innerHTML = 
+                '<div class="loading"></div> 识别中...';
+        } else {
+            console.log('[Practice.submitAnswer] ⚠️ 不显示"识别中"提示 - 模式:', this.mode, '快照:', snapshot ? '有' : '无');
+            console.log('[Practice.submitAnswer] 🚫 不会调用 Recognition.recognize()');
+            this.updateDebugInfo('🚫 不会调用识别API（模式或快照问题）');
+        }
         
         try {
             // 调试日志
@@ -885,6 +1045,13 @@ const Practice = {
                     this.practiceLog.correctCount++;
                     // 保存详情（保留正确也保留快照）
                     this.practiceLog.details.push({ wordId: word.id, correct: true, snapshot, displayText: this._currentDisplayText });
+                    
+                    // 同步到题库管理的掌握状态：答对的题目标记为已掌握
+                    if (typeof Storage !== 'undefined' && Storage.setWordMasteryStatus) {
+                        Storage.setWordMasteryStatus(word.id, 'mastered');
+                    }
+                    
+                    this.updateProgressVisual();
                     this.showFeedback(true, word, '');
                 } else {
                     // 纸质模式：不反馈对错，快速进入下一题
@@ -906,6 +1073,13 @@ const Practice = {
                     this.practiceLog.errorCount++;
                     await this.recordError(word, snapshot);
                     this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot, displayText: this._currentDisplayText });
+                    
+                    // 同步到题库管理的掌握状态：答错的题目标记为错题
+                    if (typeof Storage !== 'undefined' && Storage.setWordMasteryStatus) {
+                        Storage.setWordMasteryStatus(word.id, 'error');
+                    }
+                    
+                    this.updateProgressVisual();
                     this.showFeedback(false, word, result.recognized);
                 } else {
                     document.getElementById('feedback-area').innerHTML = '';
@@ -925,7 +1099,7 @@ const Practice = {
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalBtnHtml;
             
-            // 2秒后下一题
+            // 2秒后下一题（如果是最后一题，直接结束）
             this.scheduleNextWord(this.mode === 'normal' ? 2000 : 300, () => {
                 // 保存当前题目到历史
                 if (this.currentIndex < this.currentWords.length) {
@@ -936,6 +1110,20 @@ const Practice = {
                     });
                 }
                 this.currentIndex++;
+                
+                console.log('[Practice.submitAnswer] 提交后，currentIndex:', this.currentIndex, 'totalWords:', this.currentWords.length);
+                
+                // 检查是否是最后一题（在递增后检查）
+                // 注意：currentIndex 已经递增，所以如果 currentIndex >= totalWords，说明已经处理完所有题目
+                if (this.currentIndex >= this.currentWords.length) {
+                    // 最后一题已提交，直接结束
+                    console.log('[Practice] 最后一题已提交，结束练习 (currentIndex:', this.currentIndex, '>= totalWords:', this.currentWords.length, ')');
+                    this.isProcessingNextQuestion = false; // 重置处理状态
+                    this.finish();
+                    return;
+                }
+                
+                this.isProcessingNextQuestion = false; // 重置处理状态
                 this.showNextWord();
             });
         this._currentWordStartTime = null;
@@ -1064,6 +1252,19 @@ const Practice = {
             }
             this.currentIndex++;
             this.isSkipping = false; // 重置跳过状态
+            
+            console.log('[Practice.skipAnswer] 跳过后，currentIndex:', this.currentIndex, 'totalWords:', this.currentWords.length);
+            
+            // 检查是否是最后一题（在递增后检查）
+            if (this.currentIndex >= this.currentWords.length) {
+                // 最后一题已处理，直接结束
+                console.log('[Practice] 最后一题已处理（不会），结束练习 (currentIndex:', this.currentIndex, '>= totalWords:', this.currentWords.length, ')');
+                this.isProcessingNextQuestion = false; // 重置处理状态
+                this.finish();
+                return;
+            }
+            
+            this.isProcessingNextQuestion = false; // 重置处理状态
             this.showNextWord();
         });
         this._currentWordStartTime = null;
@@ -1192,12 +1393,12 @@ const Practice = {
     /**
      * 记录错题
      */
-    async recordError(word, snapshot) {
+    async recordError(word, snapshot, roundId = null) {
         this.practiceLog.errorWords.push(word.id);
         
         // 保存到错题本（无论是否有快照，都记录错题）
         if (typeof Storage !== 'undefined' && Storage.addErrorWord) {
-            const errorWord = Storage.addErrorWord(word.id, word.word, word.pinyin || '', snapshot || null);
+            const errorWord = Storage.addErrorWord(word.id, word.word, word.pinyin || '', snapshot || null, roundId);
             
             // 为错题创建复习计划
             if (errorWord && typeof ReviewPlan !== 'undefined' && ReviewPlan.createPlanForErrorWord) {
@@ -1269,6 +1470,23 @@ const Practice = {
         let log = null;
         try {
             log = Storage.addPracticeLog(logPayload);
+            
+            // 保存错题到按轮视图（使用log.id作为roundId）
+            if (log && log.id && this.practiceLog.details) {
+                const errorDetails = this.practiceLog.details.filter(d => !d.correct);
+                if (errorDetails.length > 0 && typeof Storage !== 'undefined' && Storage.saveErrorWordsForRound) {
+                    const errorWords = errorDetails.map(d => {
+                        const word = this.currentWords.find(w => w.id === d.wordId);
+                        return {
+                            wordId: d.wordId,
+                            word: word ? word.word : '',
+                            pinyin: word ? (word.pinyin || '') : '',
+                            snapshot: d.snapshot || null
+                        };
+                    });
+                    Storage.saveErrorWordsForRound(log.id, errorWords);
+                }
+            }
         } catch (error) {
             console.error('保存练习记录失败:', error);
             alert('保存练习记录失败，请稍后再试。');
@@ -1407,6 +1625,9 @@ const Practice = {
         document.getElementById('progress-badge').textContent = 
             `${this.currentIndex + 1}/${this.currentWords.length}`;
         
+        // 更新答题数可视化
+        this.updateProgressVisual();
+        
         // 清除画布
         Handwriting.clear();
         
@@ -1436,44 +1657,130 @@ const Practice = {
     /**
      * 跳转到下一题（手动）
      */
-    showNextQuestion() {
+    async showNextQuestion() {
         if (!this.isActive) {
             console.warn('[Practice] 练习未激活，无法跳转下一题');
             return;
         }
-        if (this.currentIndex >= this.currentWords.length - 1) {
-            alert('已经是最后一题了');
+        
+        // 防止重复调用：如果正在处理中，直接返回
+        if (this.isProcessingNextQuestion) {
+            console.log('[Practice.showNextQuestion] 正在处理中，忽略重复调用');
             return;
         }
-        this.lastSubmitTime = 0;
-        this.lastSubmitWordId = null;
-        this.consecutiveBlockCount = 0;
-        this.isSubmitting = false;
+        this.isProcessingNextQuestion = true;
         
-        // 如果当前有未提交的笔迹，自动提交并判断
-        if (this.mode === 'normal' && typeof Handwriting !== 'undefined' && Handwriting.hasContent && Handwriting.hasContent()) {
+        // 检查画布是否有内容
+        const hasContent = this.mode === 'normal' && typeof Handwriting !== 'undefined' && Handwriting.hasContent && Handwriting.hasContent();
+        
+        // 添加详细的调试信息
+        const debugInfo = {
+            timestamp: new Date().toISOString(),
+            action: '点击下一题',
+            hasContent: hasContent,
+            mode: this.mode,
+            currentIndex: this.currentIndex,
+            totalWords: this.currentWords.length,
+            isLastQuestion: this.currentIndex >= this.currentWords.length - 1
+        };
+        
+        console.log('[Practice.showNextQuestion] 🔍 调试信息:', JSON.stringify(debugInfo, null, 2));
+        
+        if (hasContent) {
+            // 画布有内容，提交识别
+            console.log('[Practice.showNextQuestion] ✅ 画布有内容，将调用识别API');
+            this.updateDebugInfo('✅ 画布有内容，正在调用识别API...');
             this.submitAnswer({ bypassCooldown: true });
             return;
-        }
-
-        // 停止当前计时器
-        if (this.timer) {
-            clearInterval(this.timer);
-            this.timer = null;
-        }
-        
-        // 保存当前题目到历史
-        const word = this.currentWords[this.currentIndex];
-        if (this.currentIndex < this.currentWords.length) {
-            this.history.push({
-                word: word,
-                index: this.currentIndex,
-                snapshot: null
+        } else {
+            // 画布没有内容，记录为错题（类似点击「不会」的效果）
+            console.log('[Practice.showNextQuestion] ⏭️ 画布为空，记录为错题并进入下一题（类似点击「不会」）');
+            this.updateDebugInfo('⏭️ 画布为空，记录为错题并进入下一题');
+            
+            const word = this.currentWords[this.currentIndex];
+            const wordTime = this._currentWordStartTime ? (Date.now() - this._currentWordStartTime) / 1000 : 0;
+            
+            // 停止计时
+            if (this.timer) {
+                clearInterval(this.timer);
+                this.timer = null;
+            }
+            
+            // 检查是否已存在该题目的记录，如果存在则移除旧的（防止重复）
+            const existingIdx = this.practiceLog.details.findIndex(d => d.wordId === word.id);
+            if (existingIdx >= 0) {
+                const oldDetail = this.practiceLog.details[existingIdx];
+                // 如果旧记录是正确的，需要调整计数
+                if (oldDetail.correct) {
+                    this.practiceLog.correctCount = Math.max(0, this.practiceLog.correctCount - 1);
+                } else {
+                    // 如果旧记录是错误，需要调整计数（避免重复计数）
+                    this.practiceLog.errorCount = Math.max(0, this.practiceLog.errorCount - 1);
+                }
+                this.practiceLog.details.splice(existingIdx, 1);
+            }
+            
+            // 记录为错误（不会）
+            this.practiceLog.errorCount++;
+            this.practiceLog.wordTimes.push(wordTime);
+            this.practiceLog.totalTime += wordTime;
+            
+            // 记录错题到错题本
+            await this.recordError(word, null);
+            
+            // 同步到题库管理的掌握状态：记录为错题
+            if (typeof Storage !== 'undefined' && Storage.setWordMasteryStatus) {
+                Storage.setWordMasteryStatus(word.id, 'error');
+            }
+            
+            this.practiceLog.details.push({ wordId: word.id, correct: false, snapshot: null, displayText: this._currentDisplayText });
+            this.updateProgressVisual();
+            
+            // 显示反馈（错误）
+            this.showFeedback(false, word, '');
+            
+            // 持续草稿保存
+            this.saveAutosaveDraft();
+            
+            // 更新任务进度（如果有任务，在答题后立即更新）
+            if (this.currentTaskId && typeof TaskList !== 'undefined') {
+                this.updateTaskProgress(false);
+            }
+            
+            // 保存当前题目到历史
+            if (this.currentIndex < this.currentWords.length) {
+                this.history.push({
+                    word: word,
+                    index: this.currentIndex,
+                    snapshot: null
+                });
+            }
+            
+            // 先检查是否是最后一题（在递增前检查）
+            const isLastQuestion = this.currentIndex >= this.currentWords.length - 1;
+            console.log('[Practice.showNextQuestion] 记录错题前，currentIndex:', this.currentIndex, 'totalWords:', this.currentWords.length, 'isLastQuestion:', isLastQuestion);
+            
+            // 递增索引
+            this.currentIndex++;
+            this._currentWordStartTime = null;
+            
+            console.log('[Practice.showNextQuestion] 记录错题后，currentIndex:', this.currentIndex, 'totalWords:', this.currentWords.length);
+            
+            // 如果是最后一题，直接结束（不需要等待2秒）
+            if (isLastQuestion) {
+                console.log('[Practice] 最后一题已处理，结束练习 (currentIndex:', this.currentIndex, '>= totalWords:', this.currentWords.length, ')');
+                this.isProcessingNextQuestion = false; // 重置处理状态
+                this.finish();
+                return;
+            }
+            
+            // 2秒后下一题
+            this.scheduleNextWord(2000, () => {
+                console.log('[Practice.showNextQuestion] 2秒后进入下一题，currentIndex:', this.currentIndex);
+                this.isProcessingNextQuestion = false; // 重置处理状态
+                this.showNextWord();
             });
         }
-        
-        this.currentIndex++;
-        this.showNextWord();
     },
     
     /**
@@ -1733,9 +2040,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (endBtn) {
         endBtn.addEventListener('click', () => Practice.end());
     }
-    const pauseBtn = document.getElementById('pause-practice-btn');
-    if (pauseBtn) {
-        pauseBtn.addEventListener('click', () => {
+    const timerPauseBtn = document.getElementById('timer-pause-btn');
+    if (timerPauseBtn) {
+        timerPauseBtn.addEventListener('click', () => {
             if (Practice.isPaused) Practice.resume(); else Practice.pause();
         });
     }
@@ -1773,6 +2080,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.warn('[Practice] 练习未激活，无法跳转下一题');
                 return false;
             }
+            // 防止重复调用：如果正在处理中，直接返回
+            if (Practice.isProcessingNextQuestion) {
+                console.log('[Practice] 正在处理下一题，忽略重复点击');
+                return false;
+            }
             Practice.showNextQuestion();
             return false;
         };
@@ -1786,6 +2098,163 @@ document.addEventListener('DOMContentLoaded', () => {
             handleNext(e);
         }, { passive: false, capture: true });
         console.log('[Practice] ✅ 下一题按钮已绑定 (click, touchstart, touchend, mousedown, onclick, capture模式)');
+    }
+    
+    // 调试模式：一键做题按钮
+    const debugAutoAnswerBtn = document.getElementById('debug-auto-answer-btn');
+    if (debugAutoAnswerBtn) {
+        const handleDebugAutoAnswer = async () => {
+            if (!Practice.isActive) {
+                console.warn('[Practice] 练习未激活，无法一键做题');
+                return;
+            }
+            
+            const remaining = Practice.currentWords.length - Practice.currentIndex;
+            if (remaining <= 1) {
+                alert('只剩1题或更少，无需一键做题');
+                return;
+            }
+            
+            const confirmMsg = `当前剩余 ${remaining} 题，一键做题将自动完成 ${remaining - 1} 题，留1题。\n\n确定要继续吗？`;
+            if (!confirm(confirmMsg)) {
+                return;
+            }
+            
+            console.log('[Practice] 开始一键做题，剩余题目:', remaining, '将完成:', remaining - 1);
+            
+            // 禁用按钮，防止重复点击
+            debugAutoAnswerBtn.disabled = true;
+            debugAutoAnswerBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> 处理中...';
+            
+            try {
+                // 自动完成 N-1 道题
+                const targetIndex = Practice.currentWords.length - 1; // 最后一题的索引
+                let completed = 0;
+                
+                while (Practice.currentIndex < targetIndex && Practice.isActive) {
+                    const word = Practice.currentWords[Practice.currentIndex];
+                    const wordTime = Practice._currentWordStartTime ? (Date.now() - Practice._currentWordStartTime) / 1000 : 0;
+                    
+                    // 停止计时
+                    if (Practice.timer) {
+                        clearInterval(Practice.timer);
+                        Practice.timer = null;
+                    }
+                    
+                    // 检查是否已存在该题目的记录
+                    const existingIdx = Practice.practiceLog.details.findIndex(d => d.wordId === word.id);
+                    if (existingIdx >= 0) {
+                        const oldDetail = Practice.practiceLog.details[existingIdx];
+                        if (oldDetail.correct) {
+                            Practice.practiceLog.correctCount = Math.max(0, Practice.practiceLog.correctCount - 1);
+                        } else {
+                            Practice.practiceLog.errorCount = Math.max(0, Practice.practiceLog.errorCount - 1);
+                        }
+                        Practice.practiceLog.details.splice(existingIdx, 1);
+                    }
+                    
+                    // 随机决定对错（50%概率正确）
+                    const isCorrect = Math.random() > 0.5;
+                    
+                    if (isCorrect) {
+                        Practice.practiceLog.correctCount++;
+                        // 同步到题库管理的掌握状态：记录为已掌握
+                        if (typeof Storage !== 'undefined' && Storage.setWordMasteryStatus) {
+                            Storage.setWordMasteryStatus(word.id, 'mastered');
+                        }
+                    } else {
+                        Practice.practiceLog.errorCount++;
+                        // 记录错题到错题本
+                        await Practice.recordError(word, null);
+                        // 同步到题库管理的掌握状态：记录为错题
+                        if (typeof Storage !== 'undefined' && Storage.setWordMasteryStatus) {
+                            Storage.setWordMasteryStatus(word.id, 'error');
+                        }
+                    }
+                    
+                    Practice.practiceLog.wordTimes.push(wordTime);
+                    Practice.practiceLog.totalTime += wordTime;
+                    
+                    Practice.practiceLog.details.push({
+                        wordId: word.id,
+                        correct: isCorrect,
+                        snapshot: null,
+                        displayText: Practice._currentDisplayText
+                    });
+                    
+                    // 保存当前题目到历史
+                    if (Practice.currentIndex < Practice.currentWords.length) {
+                        Practice.history.push({
+                            word: word,
+                            index: Practice.currentIndex,
+                            snapshot: null
+                        });
+                    }
+                    
+                    Practice.currentIndex++;
+                    Practice._currentWordStartTime = null;
+                    completed++;
+                    
+                    // 更新进度可视化
+                    if (Practice.updateProgressVisual) {
+                        Practice.updateProgressVisual();
+                    }
+                    
+                    // 更新任务进度（如果有任务）
+                    if (Practice.currentTaskId && typeof TaskList !== 'undefined') {
+                        Practice.updateTaskProgress(false);
+                    }
+                    
+                    // 短暂延迟，避免UI卡顿
+                    await new Promise(resolve => setTimeout(resolve, 50));
+                }
+                
+                console.log('[Practice] 一键做题完成，共完成:', completed, '题');
+                
+                // 显示下一题（最后一题）
+                if (Practice.currentIndex < Practice.currentWords.length) {
+                    Practice.showNextWord();
+                }
+                
+            } catch (e) {
+                console.error('[Practice] 一键做题出错:', e);
+                alert('一键做题出错：' + e.message);
+            } finally {
+                // 恢复按钮
+                debugAutoAnswerBtn.disabled = false;
+                debugAutoAnswerBtn.innerHTML = '<i class="bi bi-lightning-fill"></i> 一键做题';
+            }
+        };
+        
+        debugAutoAnswerBtn.addEventListener('click', handleDebugAutoAnswer);
+        console.log('[Practice] ✅ 调试模式一键做题按钮已绑定');
+        
+        // 根据调试模式显示/隐藏按钮
+        const updateDebugButtonVisibility = () => {
+            try {
+                const isDebug = localStorage.getItem('debugMode') === '1';
+                if (isDebug) {
+                    debugAutoAnswerBtn.classList.remove('d-none');
+                } else {
+                    debugAutoAnswerBtn.classList.add('d-none');
+                }
+            } catch (e) {
+                console.error('[Practice] 更新调试按钮可见性失败:', e);
+            }
+        };
+        
+        // 初始检查
+        updateDebugButtonVisibility();
+        
+        // 监听调试模式变化
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'debugMode') {
+                updateDebugButtonVisibility();
+            }
+        });
+        
+        // 定期检查（防止storage事件不触发）
+        setInterval(updateDebugButtonVisibility, 1000);
     }
     
     const undoBtn = document.getElementById('undo-stroke-btn');

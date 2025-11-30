@@ -327,14 +327,23 @@ const WordBank = {
             });
         }
         
-        // 批量设为未掌握
-        const unmasterBtn = document.getElementById('wordbank-batch-unmaster-btn');
-        if (unmasterBtn) {
-            // 移除旧的事件监听器，避免重复绑定
-            const newUnmasterBtn = unmasterBtn.cloneNode(true);
-            unmasterBtn.parentNode.replaceChild(newUnmasterBtn, unmasterBtn);
-            newUnmasterBtn.addEventListener('click', () => {
-                this.batchSetMastery(false);
+        // 批量设为未练习
+        const unpracticedBtn = document.getElementById('wordbank-batch-unpracticed-btn');
+        if (unpracticedBtn) {
+            const newUnpracticedBtn = unpracticedBtn.cloneNode(true);
+            unpracticedBtn.parentNode.replaceChild(newUnpracticedBtn, unpracticedBtn);
+            newUnpracticedBtn.addEventListener('click', () => {
+                this.batchSetStatus('default');
+            });
+        }
+        
+        // 批量设为错题
+        const errorBtn = document.getElementById('wordbank-batch-error-btn');
+        if (errorBtn) {
+            const newErrorBtn = errorBtn.cloneNode(true);
+            errorBtn.parentNode.replaceChild(newErrorBtn, errorBtn);
+            newErrorBtn.addEventListener('click', () => {
+                this.batchSetStatus('error');
             });
         }
     },
@@ -403,25 +412,31 @@ const WordBank = {
         const count = selected.length;
         const countEl = document.getElementById('wordbank-selected-count');
         const toolbar = document.getElementById('wordbank-batch-toolbar');
+        const unpracticedBtn = document.getElementById('wordbank-batch-unpracticed-btn');
         const masterBtn = document.getElementById('wordbank-batch-master-btn');
-        const unmasterBtn = document.getElementById('wordbank-batch-unmaster-btn');
+        const errorBtn = document.getElementById('wordbank-batch-error-btn');
         
         if (countEl) countEl.textContent = count;
         if (toolbar) {
             toolbar.style.display = count > 0 ? 'flex' : 'none';
         }
-        if (masterBtn) {
-            masterBtn.disabled = count === 0;
-        }
-        if (unmasterBtn) {
-            unmasterBtn.disabled = count === 0;
-        }
+        const disabled = count === 0;
+        if (unpracticedBtn) unpracticedBtn.disabled = disabled;
+        if (masterBtn) masterBtn.disabled = disabled;
+        if (errorBtn) errorBtn.disabled = disabled;
     },
     
     /**
-     * 批量设置掌握状态
+     * 批量设置掌握状态（兼容旧方法）
      */
     batchSetMastery(isMastered) {
+        this.batchSetStatus(isMastered ? 'mastered' : 'default');
+    },
+    
+    /**
+     * 批量设置状态（未练习/已掌握/错题）
+     */
+    batchSetStatus(status) {
         const container = document.getElementById('wordbank-practice-range-container');
         if (!container) return;
         
@@ -454,13 +469,33 @@ const WordBank = {
             return;
         }
         
-        // 更新掌握状态（需要在Storage中添加掌握状态存储）
-        // 这里先实现基本逻辑，后续可以扩展Storage支持掌握状态
-        const action = isMastered ? '设为已掌握' : '设为未掌握';
-        if (confirm(`确定要将选中的 ${selectedWords.length} 个字${action}吗？`)) {
-            // TODO: 实现掌握状态的存储和更新
-            // 目前先显示提示
-            this.showToast('success', `已${action} ${selectedWords.length} 个字`);
+        const statusMap = {
+            'default': '未练习',
+            'mastered': '已掌握',
+            'error': '错题'
+        };
+        const action = statusMap[status] || '设置';
+        
+        if (confirm(`确定要将选中的 ${selectedWords.length} 个字设为${action}吗？`)) {
+            // 批量设置状态
+            let updated = 0;
+            selectedWords.forEach(word => {
+                if (Storage.setWordMasteryStatus) {
+                    Storage.setWordMasteryStatus(word.id, status);
+                    updated++;
+                    
+                    // 如果设为错题，同时添加到错题本
+                    if (status === 'error' && Storage.addErrorWord) {
+                        Storage.addErrorWord(word.id, word.word, word.pinyin || '', null);
+                    }
+                    // 如果设为已掌握或未练习，从错题本中移除（如果存在）
+                    else if ((status === 'mastered' || status === 'default') && Storage.removeErrorWord) {
+                        Storage.removeErrorWord(word.id);
+                    }
+                }
+            });
+            
+            this.showToast('success', `已${action} ${updated} 个字`);
             
             // 刷新视图
             this.loadMasteryView();

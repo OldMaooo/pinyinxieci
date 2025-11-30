@@ -106,19 +106,24 @@ const Handwriting = {
      */
     bindEvents() {
         // 触摸事件（iPad）
+        // 只在触摸点在 Canvas 内部时才 preventDefault，避免影响按钮
         this.canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
             const touch = e.touches[0];
             const rect = this.canvas.getBoundingClientRect();
-            this.startDrawing(
-                touch.clientX - rect.left,
-                touch.clientY - rect.top
-            );
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            
+            // 检查触摸点是否在 Canvas 内部
+            if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+                e.preventDefault();
+                this.startDrawing(x, y);
+            }
+            // 如果不在 Canvas 内部，不阻止默认行为，让按钮可以响应
         });
         
         this.canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
             if (this.isDrawing) {
+                e.preventDefault(); // 只有在绘制时才阻止
                 const touch = e.touches[0];
                 const rect = this.canvas.getBoundingClientRect();
                 this.continueDrawing(
@@ -129,8 +134,10 @@ const Handwriting = {
         });
         
         this.canvas.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            this.stopDrawing();
+            if (this.isDrawing) {
+                e.preventDefault(); // 只有在绘制时才阻止
+                this.stopDrawing();
+            }
         });
         
         // 鼠标事件（电脑）
@@ -441,17 +448,21 @@ const Handwriting = {
     
     /**
      * 检查是否有内容
+     * 优先检查是否有笔迹路径（最可靠），避免田字格背景被误判
      */
     hasContent() {
-        const imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-        const data = imageData.data;
-        
-        // 检查是否有非透明像素
-        for (let i = 3; i < data.length; i += 4) {
-            if (data[i] !== 0) { // alpha通道不为0
-                return true;
-            }
+        // 最简单可靠的方法：检查是否有笔迹路径
+        // paths 数组在用户绘制时会被填充，清空画布时会被清空
+        if (this.paths && Array.isArray(this.paths) && this.paths.length > 0) {
+            return true;
         }
+        
+        // 如果没有路径记录，检查当前正在绘制的路径
+        if (this.currentPath && Array.isArray(this.currentPath) && this.currentPath.length > 0) {
+            return true;
+        }
+        
+        // 如果路径记录为空，说明没有笔迹
         return false;
     },
 

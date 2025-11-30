@@ -118,12 +118,16 @@ const PracticeRange = {
         const accordionId = `${container.id}-accordion`;
         html += `<div class="accordion practice-range-accordion" id="${accordionId}">`;
         
+        // 获取选中的学期（如果有）
+        const selectedSemesters = this.getSelectedSemesters(container);
+        
         // 按学期划分，每个学期一个表格
         semesters.forEach((semesterKey, idx) => {
             const units = this.sortUnits(grouped[semesterKey]);
             const headingId = `${accordionId}-heading-${idx}`;
             const collapseId = `${accordionId}-collapse-${idx}`;
-            const isFirst = idx < 3; // 前3个学期默认展开
+            // 默认全部收起，如果有选中的学期则展开
+            const isExpanded = selectedSemesters.has(semesterKey);
             
             // 计算学期的完成率（所有单元的字）
             let semesterMasteredCount = 0;
@@ -163,9 +167,9 @@ const PracticeRange = {
                                        data-semester="${semesterKey}"
                                        style="margin: 0; cursor: pointer; width: 0.6em; height: 0.6em; vertical-align: middle;">
                             </div>
-                            <button class="accordion-button practice-semester-btn ${isFirst ? '' : 'collapsed'}" type="button"
+                            <button class="accordion-button practice-semester-btn ${isExpanded ? '' : 'collapsed'}" type="button"
                                     data-collapse-target="#${collapseId}"
-                                    aria-expanded="${isFirst}" aria-controls="${collapseId}"
+                                    aria-expanded="${isExpanded}" aria-controls="${collapseId}"
                                     style="flex: 1; border: none; padding: 0.5rem 0.75rem; text-align: left; cursor: pointer; display: flex; align-items: center;">
                                 <span>${semesterKey}</span>
                                 <span style="margin-left: 0.5rem; display: inline-flex; align-items: center;">${semesterPieHtml}</span>
@@ -173,7 +177,7 @@ const PracticeRange = {
                         </div>
                     </h2>
                     <div id="${collapseId}"
-                         class="accordion-collapse collapse ${isFirst ? 'show' : ''}"
+                         class="accordion-collapse collapse ${isExpanded ? 'show' : ''}"
                          aria-labelledby="${headingId}" data-bs-parent="#${accordionId}">
                         <div class="accordion-body p-2">
                             <table class="table table-sm mb-0 practice-range-table">
@@ -209,8 +213,10 @@ const PracticeRange = {
                     let tagClass = 'word-tag-default';
                     let isMastered = false;
                     
-                    if (isWordbankContext && wordMastery[w.id]) {
+                    if (isWordbankContext) {
                         // 在wordbank上下文中，优先使用手动设置的状态
+                        // 注意：如果手动设置为'default'，wordMastery中会删除该记录
+                        // 但我们需要检查是否曾经手动设置过（通过检查是否有其他状态）
                         const manualStatus = wordMastery[w.id];
                         if (manualStatus === 'mastered') {
                             tagClass = 'word-tag-mastered';
@@ -218,10 +224,13 @@ const PracticeRange = {
                         } else if (manualStatus === 'error') {
                             tagClass = 'word-tag-error';
                         } else {
+                            // manualStatus为undefined或'default'，使用默认状态
+                            // 在wordbank上下文中，如果手动设置为default，应该显示为未练习
                             tagClass = 'word-tag-default';
+                            isMastered = false;
                         }
                     } else {
-                        // 非wordbank上下文，或没有手动设置，使用自动判断
+                        // 非wordbank上下文，使用自动判断
                         const isError = errorWordIds.has(w.id);
                         const hasCorrect = wordCorrectCount.get(w.id) > 0;
                         // 已掌握：有正确记录且无错误
@@ -284,6 +293,9 @@ const PracticeRange = {
         const semesters = this.sortSemesters(Object.keys(grouped));
         const accordionId = `${container.id}-accordion`;
         
+        // 获取选中的学期（如果有）
+        const selectedSemesters = this.getSelectedSemesters(container);
+        
         let html = '<div class="practice-range-selector">';
         html += this.renderToolbar(options);
         html += '<div class="p-3">';
@@ -293,7 +305,8 @@ const PracticeRange = {
             const units = this.sortUnits(grouped[semesterKey]);
             const headingId = `${accordionId}-heading-${idx}`;
             const collapseId = `${accordionId}-collapse-${idx}`;
-            const isFirst = idx === 0;
+            // 默认全部收起，如果有选中的学期则展开
+            const isExpanded = selectedSemesters.has(semesterKey);
 
         html += `
                 <div class="accordion-item">
@@ -304,16 +317,16 @@ const PracticeRange = {
                                        data-semester="${semesterKey}"
                                        style="margin: 0; cursor: pointer; width: 0.6em; height: 0.6em; vertical-align: middle;">
                     </div>
-                            <button class="accordion-button practice-semester-btn ${isFirst ? '' : 'collapsed'}" type="button"
+                            <button class="accordion-button practice-semester-btn ${isExpanded ? '' : 'collapsed'}" type="button"
                                     data-collapse-target="#${collapseId}"
-                                    aria-expanded="${isFirst}" aria-controls="${collapseId}"
+                                    aria-expanded="${isExpanded}" aria-controls="${collapseId}"
                                     style="flex: 1; border: none; padding: 0.5rem 0.75rem; text-align: left; cursor: pointer;">
                                 <span>${semesterKey}</span>
                             </button>
                 </div>
                     </h2>
                     <div id="${collapseId}"
-                         class="accordion-collapse collapse ${isFirst ? 'show' : ''}"
+                         class="accordion-collapse collapse ${isExpanded ? 'show' : ''}"
                          aria-labelledby="${headingId}" data-bs-parent="#${accordionId}">
                         <div class="accordion-body">
             `;
@@ -784,5 +797,20 @@ const PracticeRange = {
         } catch (err) {
             return {};
         }
+    },
+    
+    /**
+     * 获取选中的学期集合
+     */
+    getSelectedSemesters(container) {
+        const selectedSemesters = new Set();
+        const saved = this.getSavedSelection();
+        Object.keys(saved).forEach(semester => {
+            const units = saved[semester] || [];
+            if (units.length > 0) {
+                selectedSemesters.add(semester);
+            }
+        });
+        return selectedSemesters;
     }
 };

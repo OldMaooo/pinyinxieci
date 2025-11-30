@@ -104,6 +104,9 @@ const Storage = {
         const mastery = this.getWordMastery();
         if (status === 'default') {
             // 删除该记录，使用默认值
+            // 但为了在wordbank上下文中能正确显示，我们需要标记为已清除手动设置
+            // 使用特殊值 '_cleared' 表示曾经手动设置过但已清除，这样在wordbank中不会回退到自动判断
+            // 实际上，删除记录即可，因为wordbank上下文会检查wordMastery[w.id]是否存在
             delete mastery[wordId];
         } else {
             mastery[wordId] = status;
@@ -294,13 +297,13 @@ const Storage = {
         this._saveList(key, errorWords);
     },
 
-    addErrorWord(wordId, word, pinyin, snapshot) {
+    addErrorWord(wordId, word, pinyin, snapshot, roundId = null) {
         const useDebug = this.isDebugMode();
         const errorWords = this.getErrorWords({ debug: useDebug });
         let errorWord = errorWords.find(ew => ew.wordId === wordId);
         
         const snapshotData = snapshot ? {
-            practiceId: `log_${Date.now()}`,
+            practiceId: roundId || `log_${Date.now()}`,
             snapshot: snapshot,
             date: new Date().toISOString()
         } : null;
@@ -313,6 +316,10 @@ const Storage = {
             // 如果还没有markedAt，添加它（用于复习计划）
             if (!errorWord.markedAt) {
                 errorWord.markedAt = errorWord.firstErrorDate || now;
+            }
+            // 如果提供了roundId，更新或添加roundId
+            if (roundId) {
+                errorWord.roundId = roundId;
             }
             if (snapshotData) {
                 errorWord.handwritingSnapshots = errorWord.handwritingSnapshots || [];
@@ -328,6 +335,7 @@ const Storage = {
                 firstErrorDate: now,
                 lastErrorDate: now,
                 errorCount: 1,
+                roundId: roundId || null, // 添加roundId字段
                 handwritingSnapshots: snapshotData ? [snapshotData] : []
             };
             errorWords.push(errorWord);
@@ -335,6 +343,24 @@ const Storage = {
         
         this.saveErrorWords(errorWords, { debug: useDebug });
         return errorWord;
+    },
+    
+    /**
+     * 保存错题到指定轮次（用于按轮视图）
+     */
+    saveErrorWordsForRound(roundId, errorWords) {
+        if (!roundId) return;
+        const useDebug = this.isDebugMode();
+        const allErrorWords = this.getErrorWords({ debug: useDebug });
+        // 移除该轮次的其他错题
+        const others = allErrorWords.filter(item => item.roundId !== roundId);
+        // 为新错题添加roundId
+        const newErrorWords = errorWords.map(ew => ({
+            ...ew,
+            roundId: roundId
+        }));
+        // 合并保存
+        this.saveErrorWords([...others, ...newErrorWords], { debug: useDebug });
     },
 
     removeErrorWord(wordId) {

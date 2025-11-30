@@ -82,6 +82,24 @@ const Statistics = {
             confirmBtn.disabled = true;
             confirmBtn.onclick = () => {
                 if (this.hasChanges) {
+                    // 获取当前日志ID（从结果页的卡片中获取）
+                    const container = document.getElementById('error-words-list');
+                    if (container) {
+                        const firstToggle = container.querySelector('.result-toggle');
+                        if (firstToggle) {
+                            const logId = firstToggle.getAttribute('data-log-id');
+                            if (logId) {
+                                const logs = Storage.getPracticeLogs();
+                                const log = logs.find(l => l.id === logId);
+                                if (log) {
+                                    // 重新渲染卡片，确保卡片移动到正确的模块
+                                    if (typeof ErrorBook !== 'undefined' && ErrorBook.renderCardsForLog) {
+                                        ErrorBook.renderCardsForLog(log, false);
+                                    }
+                                }
+                            }
+                        }
+                    }
                     this.hasChanges = false;
                     confirmBtn.disabled = true;
                     // 更新首页统计
@@ -101,17 +119,49 @@ const Statistics = {
      * 更新结果页统计显示
      */
     updateResultStats(log) {
-        document.getElementById('result-total').textContent = log.totalWords || 0;
         const correct = log.correctCount || 0;
         const error = log.errorCount || 0;
-        const accuracy = log.totalWords > 0 ? 
-            Math.round((correct / log.totalWords) * 100) : 0;
-        document.getElementById('result-accuracy').textContent = `${accuracy}%`;
-        document.getElementById('result-correct-error').textContent = `正确${correct}，错误${error}`;
-        document.getElementById('result-total-time').textContent = 
-            `${Math.round(log.totalTime || 0)}秒`;
-        document.getElementById('result-avg-time').textContent = 
-            `${Math.round(log.averageTime || 0)}秒`;
+        const total = log.totalWords || 0;
+        const score = total > 0 ? Math.round((correct / total) * 100) : 0;
+        
+        // 分数放在第一个，字体大
+        const scoreEl = document.getElementById('result-accuracy');
+        if (scoreEl) {
+            scoreEl.textContent = `${score}分`;
+            scoreEl.style.fontSize = '2rem';
+            scoreEl.style.fontWeight = 'bold';
+        }
+        
+        // 其他统计：数字和label字体大小互换
+        const totalEl = document.getElementById('result-total');
+        if (totalEl) {
+            totalEl.textContent = total;
+            totalEl.style.fontSize = '1rem'; // 数字用1rem（原来是0.9rem）
+        }
+        
+        const correctErrorEl = document.getElementById('result-correct-error');
+        if (correctErrorEl) {
+            correctErrorEl.textContent = `正确${correct}，错误${error}`;
+            correctErrorEl.style.fontSize = '0.85rem';
+        }
+        
+        const totalTimeEl = document.getElementById('result-total-time');
+        if (totalTimeEl) {
+            totalTimeEl.textContent = `${Math.round(log.totalTime || 0)}秒`;
+            totalTimeEl.style.fontSize = '1rem'; // 数字用1rem（原来是0.9rem）
+        }
+        
+        const avgTimeEl = document.getElementById('result-avg-time');
+        if (avgTimeEl) {
+            avgTimeEl.textContent = `${Math.round(log.averageTime || 0)}秒`;
+            avgTimeEl.style.fontSize = '1rem'; // 数字用1rem（原来是0.9rem）
+        }
+        
+        // label字体大小改为0.9rem（原来是1rem）
+        const statTexts = document.querySelectorAll('.stat-text');
+        statTexts.forEach(el => {
+            el.style.fontSize = '0.9rem';
+        });
     },
     
     /**
@@ -206,7 +256,7 @@ const Statistics = {
         // 更新显示
         this.updateResultStats(log);
         
-        // 更新卡片显示（重新渲染）
+        // 更新卡片显示（重新渲染，立即更新UI）
         if (typeof ErrorBook !== 'undefined' && ErrorBook.renderCardsForLog) {
             ErrorBook.renderCardsForLog(log, false);
         }
