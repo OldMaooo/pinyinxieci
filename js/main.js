@@ -141,13 +141,93 @@ const Main = {
         }
         
         // 页面加载时自动下载并合并云端数据（如果启用自动同步）
-        if (typeof SupabaseSync !== 'undefined' && SupabaseSync.isAutoSyncEnabled && SupabaseSync.isAutoSyncEnabled()) {
-            // 延迟执行，确保所有模块都已加载
+        if (typeof SupabaseSync !== 'undefined') {
+            // 更新同步状态显示
             setTimeout(() => {
-                if (SupabaseSync.autoDownload) {
-                    SupabaseSync.autoDownload();
-                }
-            }, 2000);
+                this.updateSyncStatusDisplay();
+            }, 1000);
+
+            if (SupabaseSync.isAutoSyncEnabled && SupabaseSync.isAutoSyncEnabled()) {
+                // 延迟执行，确保所有模块都已加载
+                setTimeout(() => {
+                    if (SupabaseSync.autoDownload) {
+                        SupabaseSync.autoDownload().then(() => {
+                            this.updateSyncStatusDisplay();
+                        });
+                    }
+                }, 2000);
+            }
+        }
+    },
+    
+    /**
+     * 更新同步状态显示
+     */
+    async updateSyncStatusDisplay() {
+        if (typeof SupabaseSync === 'undefined' || typeof Storage === 'undefined') return;
+        
+        const timeEl = document.getElementById('home-sync-time');
+        const timeValueEl = document.getElementById('home-sync-time-value');
+        const statusEl = document.getElementById('home-sync-status');
+        
+        if (!timeEl || !timeValueEl) return;
+        
+        const localTime = Storage.getLocalLastModified();
+        const cloudStatus = await SupabaseSync.checkCloudStatus();
+        
+        let html = '';
+        
+        // 本地时间
+        const formatTime = (isoString) => {
+            if (!isoString) return '无';
+            const date = new Date(isoString);
+            return date.toLocaleString('zh-CN', {
+                month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit'
+            });
+        };
+        
+        html += `<div class="d-flex justify-content-between"><span>本地版本:</span> <span class="text-primary">${formatTime(localTime)}</span></div>`;
+        
+        // 云端时间
+        if (cloudStatus.error) {
+            html += `<div class="d-flex justify-content-between"><span>云端版本:</span> <span class="text-danger">获取失败</span></div>`;
+        } else if (!cloudStatus.exists) {
+            html += `<div class="d-flex justify-content-between"><span>云端版本:</span> <span class="text-muted">无数据</span></div>`;
+        } else {
+            html += `<div class="d-flex justify-content-between"><span>云端版本:</span> <span class="text-success">${formatTime(cloudStatus.updatedAt)}</span></div>`;
+        }
+        
+        // 同步状态判断
+        let syncState = '';
+        if (cloudStatus.exists && cloudStatus.updatedAt && localTime) {
+            const cloudTs = new Date(cloudStatus.updatedAt).getTime();
+            const localTs = new Date(localTime).getTime();
+            const diff = Math.abs(cloudTs - localTs);
+            
+            if (diff < 2000) { // 允许2秒误差
+                syncState = '<span class="badge bg-success">已同步</span>';
+            } else if (cloudTs > localTs) {
+                syncState = '<span class="badge bg-warning text-dark">云端较新</span>';
+            } else {
+                syncState = '<span class="badge bg-info text-dark">本地较新</span>';
+            }
+        } else if (!cloudStatus.exists && localTime) {
+             syncState = '<span class="badge bg-secondary">未同步</span>';
+        }
+        
+        html += `<div class="d-flex justify-content-between mt-1"><span>状态:</span> ${syncState}</div>`;
+        
+        timeValueEl.innerHTML = html;
+        timeEl.style.display = 'block';
+        
+        // 更新状态文字
+        if (statusEl && !SupabaseSync.isSyncing()) {
+             if (cloudStatus.error) {
+                 statusEl.innerHTML = '<i class="bi bi-exclamation-circle text-warning"></i> 无法连接云端';
+             } else {
+                 statusEl.innerHTML = '<i class="bi bi-check-circle text-success"></i> 就绪';
+             }
         }
     },
     
@@ -1832,20 +1912,6 @@ const Main = {
             if (result.success) {
                 statusEl.innerHTML = '<i class="bi bi-check-circle text-success"></i> 同步成功';
                 
-                // 更新最后同步时间
-                if (result.lastSyncTime) {
-                    const syncTime = new Date(result.lastSyncTime);
-                    const localTime = syncTime.toLocaleString('zh-CN', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                    timeValueEl.textContent = localTime;
-                    timeEl.style.display = 'block';
-                }
-
                 // 刷新相关页面数据
                 if (typeof PracticeRange !== 'undefined') {
                     PracticeRange.renderTableView('practice-range-container-home', {});
@@ -1861,6 +1927,9 @@ const Main = {
                 if (typeof WordBank !== 'undefined' && WordBank.showToast) {
                     WordBank.showToast('success', '数据同步成功');
                 }
+                
+                // 更新状态显示
+                this.updateSyncStatusDisplay();
             } else {
                 statusEl.innerHTML = `<i class="bi bi-x-circle text-danger"></i> ${result.message || '同步失败'}`;
                 if (typeof WordBank !== 'undefined' && WordBank.showToast) {

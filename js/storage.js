@@ -15,7 +15,8 @@ const Storage = {
         PRACTICE_AUTOSAVE: 'practice_autosave',
         BUILTIN_VERSION: 'builtin_wordbank_version',
         WORD_MASTERY: 'word_mastery_status', // 字的掌握状态：'default' | 'error' | 'mastered'
-        REVIEW_PLANS: 'review_plans' // 复习计划
+        REVIEW_PLANS: 'review_plans', // 复习计划
+        LOCAL_LAST_MODIFIED: 'local_last_modified' // 本地最后修改时间
     },
 
     isDebugMode() {
@@ -41,6 +42,21 @@ const Storage = {
     
     _saveList(key, list) {
         localStorage.setItem(key, JSON.stringify(list || []));
+        this.updateLocalLastModified();
+    },
+
+    /**
+     * 更新本地最后修改时间
+     */
+    updateLocalLastModified() {
+        localStorage.setItem(this.KEYS.LOCAL_LAST_MODIFIED, new Date().toISOString());
+    },
+
+    /**
+     * 获取本地最后修改时间
+     */
+    getLocalLastModified() {
+        return localStorage.getItem(this.KEYS.LOCAL_LAST_MODIFIED);
     },
 
     /**
@@ -91,6 +107,7 @@ const Storage = {
      */
     saveWordMastery(masteryStatus) {
         localStorage.setItem(this.KEYS.WORD_MASTERY, JSON.stringify(masteryStatus || {}));
+        this.updateLocalLastModified();
         // 标记有待同步的更改（不立即同步，等待练习完成）
         if (typeof SupabaseSync !== 'undefined' && SupabaseSync.markPendingSync) {
             SupabaseSync.markPendingSync();
@@ -160,6 +177,7 @@ const Storage = {
             plansObj = plans;
         }
         localStorage.setItem(this.KEYS.REVIEW_PLANS, JSON.stringify(plansObj));
+        this.updateLocalLastModified();
     },
     
     getReviewPlan(wordId) {
@@ -198,6 +216,7 @@ const Storage = {
 
     saveWordBank(wordBank) {
         localStorage.setItem(this.KEYS.WORD_BANK, JSON.stringify(wordBank || []));
+        this.updateLocalLastModified();
     },
 
     addWord(word) {

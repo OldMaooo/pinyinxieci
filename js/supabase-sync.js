@@ -279,6 +279,11 @@ const SupabaseSync = {
             this._lastSyncTime = new Date().toISOString();
             this._lastSyncTimestamp = Date.now();
             console.log('[SupabaseSync] 同步完成');
+            
+            // 更新本地最后修改时间，与云端保持一致（避免时间差导致状态判断错误）
+            if (typeof Storage !== 'undefined' && Storage.updateLocalLastModified) {
+                Storage.updateLocalLastModified();
+            }
 
             return {
                 success: true,
@@ -301,6 +306,38 @@ const SupabaseSync = {
      */
     getLastSyncTime() {
         return this._lastSyncTime;
+    },
+
+    /**
+     * 获取云端数据状态（最后更新时间）
+     */
+    async checkCloudStatus() {
+        try {
+            await this.init();
+
+            // 获取云端数据元信息
+            const { data, error } = await this._client
+                .from('user_data')
+                .select('updated_at, last_sync_time')
+                .eq('id', 'single_user')
+                .single();
+
+            if (error) {
+                if (error.code === 'PGRST116') {
+                    return { exists: false };
+                }
+                throw error;
+            }
+
+            return {
+                exists: true,
+                updatedAt: data.updated_at,
+                lastSyncTime: data.last_sync_time
+            };
+        } catch (error) {
+            console.error('[SupabaseSync] 获取云端状态失败:', error);
+            return { error: error };
+        }
     },
 
     /**

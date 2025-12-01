@@ -54,6 +54,11 @@ const TaskList = {
             console.log('[TaskList.saveAllTasks] ✅ 保存成功，验证通过，任务数量:', parsed.length);
             console.log('[TaskList.saveAllTasks] ===== 保存任务列表完成 =====');
             
+            // 更新本地修改时间
+            if (typeof Storage !== 'undefined' && Storage.updateLocalLastModified) {
+                Storage.updateLocalLastModified();
+            }
+
             // 标记有待同步的更改（不立即同步，等待练习完成）
             if (typeof SupabaseSync !== 'undefined' && SupabaseSync.markPendingSync) {
                 SupabaseSync.markPendingSync();
