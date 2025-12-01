@@ -483,16 +483,30 @@ const SupabaseSync = {
                     Storage.importSyncData(result.data, true);
                     console.log('[SupabaseSync] 自动下载并合并成功');
                     
-                    // 刷新相关页面数据
-                    if (typeof PracticeRange !== 'undefined') {
-                        PracticeRange.renderTableView('practice-range-container-home', {});
-                    }
-                    if (typeof TaskListUI !== 'undefined') {
-                        TaskListUI.load();
-                    }
-                    if (typeof ErrorBook !== 'undefined') {
-                        ErrorBook.load();
-                    }
+                    // 延迟刷新相关页面数据，确保数据已完全合并
+                    setTimeout(() => {
+                        try {
+                            // 验证 wordBank 是否正确
+                            const wordBank = Storage.getWordBank();
+                            if (!Array.isArray(wordBank)) {
+                                console.error('[SupabaseSync.autoDownload] wordBank 不是数组，尝试修复...');
+                                Storage.saveWordBank([]);
+                            }
+                            
+                            // 刷新相关页面数据
+                            if (typeof PracticeRange !== 'undefined') {
+                                PracticeRange.renderTableView('practice-range-container-home', {});
+                            }
+                            if (typeof TaskListUI !== 'undefined') {
+                                TaskListUI.load();
+                            }
+                            if (typeof ErrorBook !== 'undefined') {
+                                ErrorBook.load();
+                            }
+                        } catch (refreshError) {
+                            console.error('[SupabaseSync.autoDownload] 刷新页面数据失败:', refreshError);
+                        }
+                    }, 100);
                 } catch (mergeError) {
                     console.error('[SupabaseSync] 自动合并失败:', mergeError);
                 }

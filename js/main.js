@@ -1994,16 +1994,30 @@ const Main = {
                             timeEl.style.display = 'block';
                         }
 
-                        // 刷新相关页面数据
-                        if (typeof PracticeRange !== 'undefined') {
-                            PracticeRange.renderTableView('practice-range-container-home', {});
-                        }
-                        if (typeof TaskListUI !== 'undefined') {
-                            TaskListUI.load();
-                        }
-                        if (typeof ErrorBook !== 'undefined') {
-                            ErrorBook.load();
-                        }
+                        // 延迟刷新相关页面数据，确保数据已完全合并
+                        setTimeout(() => {
+                            try {
+                                // 验证 wordBank 是否正确
+                                const wordBank = Storage.getWordBank();
+                                if (!Array.isArray(wordBank)) {
+                                    console.error('[Main.handleDownload] wordBank 不是数组，尝试修复...');
+                                    Storage.saveWordBank([]);
+                                }
+                                
+                                // 刷新相关页面数据
+                                if (typeof PracticeRange !== 'undefined') {
+                                    PracticeRange.renderTableView('practice-range-container-home', {});
+                                }
+                                if (typeof TaskListUI !== 'undefined') {
+                                    TaskListUI.load();
+                                }
+                                if (typeof ErrorBook !== 'undefined') {
+                                    ErrorBook.load();
+                                }
+                            } catch (refreshError) {
+                                console.error('[Main.handleDownload] 刷新页面数据失败:', refreshError);
+                            }
+                        }, 100);
 
                         if (typeof WordBank !== 'undefined' && WordBank.showToast) {
                             WordBank.showToast('success', '数据下载并合并成功');

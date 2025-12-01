@@ -968,6 +968,11 @@ const PracticeRange = {
 
     groupWordsBySemesterUnit(wordBank) {
         const grouped = {};
+        // 确保 wordBank 是数组
+        if (!Array.isArray(wordBank)) {
+            console.warn('[PracticeRange.groupWordsBySemesterUnit] wordBank 不是数组:', wordBank);
+            return grouped;
+        }
         wordBank.forEach(word => {
             const gradeLabel = this.formatGradeLabel(word.grade);
             const semesterLabel = this.formatSemesterLabel(word.semester);

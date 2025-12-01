@@ -259,6 +259,11 @@ const WordGroups = {
             return;
         }
         const wordBank = Storage.getWordBank() || [];
+        // 确保 wordBank 是数组
+        if (!Array.isArray(wordBank)) {
+            console.warn('[WordGroups.checkSingleWords] wordBank 不是数组:', wordBank);
+            return;
+        }
         const singles = new Set();
         wordBank.forEach(item => {
             const word = typeof item?.word === 'string' ? item.word.trim() : '';
