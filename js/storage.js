@@ -27,8 +27,16 @@ const Storage = {
     },
     
     _getList(key) {
-        const data = localStorage.getItem(key);
-        return data ? JSON.parse(data) : [];
+        try {
+            const data = localStorage.getItem(key);
+            if (!data) return [];
+            const parsed = JSON.parse(data);
+            // 确保返回的是数组
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+            console.warn(`[Storage._getList] 解析 ${key} 失败:`, e);
+            return [];
+        }
     },
     
     _saveList(key, list) {
@@ -292,7 +300,9 @@ const Storage = {
     },
     
     getErrorWords(options = {}) {
-        return this._getErrorWordsStore(options.debug === true);
+        const result = this._getErrorWordsStore(options.debug === true);
+        // 确保返回的是数组
+        return Array.isArray(result) ? result : [];
     },
 
     getErrorWordsFiltered() {
@@ -727,8 +737,17 @@ const Storage = {
         }
         // 合并从wordMastery中提取的错题
         if (errorWordsFromMastery.length > 0) {
-            const errorMap = new Map(allErrorWords.map(error => [error.wordId, error]));
+            const errorMap = new Map();
+            // 确保 allErrorWords 是数组
+            if (Array.isArray(allErrorWords)) {
+                allErrorWords.forEach(error => {
+                    if (error && error.wordId) {
+                        errorMap.set(error.wordId, error);
+                    }
+                });
+            }
             errorWordsFromMastery.forEach(error => {
+                if (!error || !error.wordId) return;
                 const existing = errorMap.get(error.wordId);
                 if (existing) {
                     // 如果已存在，保留原有数据（可能有快照等更多信息）
@@ -747,20 +766,33 @@ const Storage = {
         if (allErrorWords.length > 0) {
             if (merge) {
                 const existing = this.getErrorWords();
-                const errorMap = new Map(existing.map(error => [error.wordId, error]));
-                allErrorWords.forEach(error => {
-                    const existing = errorMap.get(error.wordId);
-                    if (existing) {
-                        // 合并：保留错误次数更大的
-                        existing.errorCount = Math.max(existing.errorCount, error.errorCount);
-                        if (error.lastErrorDate && new Date(error.lastErrorDate) > new Date(existing.lastErrorDate)) {
-                            existing.lastErrorDate = error.lastErrorDate;
+                // 确保 existing 是数组
+                if (!Array.isArray(existing)) {
+                    console.warn('[Storage.importSyncData] existing errorWords 不是数组，使用空数组');
+                    const errorMap = new Map();
+                    allErrorWords.forEach(error => {
+                        if (error && error.wordId) {
+                            errorMap.set(error.wordId, error);
                         }
-                    } else {
-                        errorMap.set(error.wordId, error);
-                    }
-                });
-                this.saveErrorWords(Array.from(errorMap.values()));
+                    });
+                    this.saveErrorWords(Array.from(errorMap.values()));
+                } else {
+                    const errorMap = new Map(existing.map(error => [error.wordId, error]));
+                    allErrorWords.forEach(error => {
+                        if (!error || !error.wordId) return;
+                        const existing = errorMap.get(error.wordId);
+                        if (existing) {
+                            // 合并：保留错误次数更大的
+                            existing.errorCount = Math.max(existing.errorCount || 0, error.errorCount || 0);
+                            if (error.lastErrorDate && new Date(error.lastErrorDate) > new Date(existing.lastErrorDate || 0)) {
+                                existing.lastErrorDate = error.lastErrorDate;
+                            }
+                        } else {
+                            errorMap.set(error.wordId, error);
+                        }
+                    });
+                    this.saveErrorWords(Array.from(errorMap.values()));
+                }
             } else {
                 this.saveErrorWords(allErrorWords);
             }
