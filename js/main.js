@@ -1945,7 +1945,27 @@ const Main = {
                     };
                     statusEl.appendChild(conflictBtn);
                 } else {
-                    statusEl.innerHTML = '<i class="bi bi-check-circle text-success"></i> 同步成功';
+                    statusEl.innerHTML = '<i class="bi bi-check-circle text-success"></i> 同步成功，正在恢复内置题库...';
+                }
+                
+                // 强制恢复三年级上册内置题库（确保题库正确）
+                console.log('[Main.handleSync] 强制恢复三年级上册内置题库...');
+                if (typeof Storage !== 'undefined' && Storage.forceRestoreGrade3UpBuiltinWordBank) {
+                    const restoreResult = await Storage.forceRestoreGrade3UpBuiltinWordBank();
+                    if (restoreResult.success) {
+                        if (result.hasConflicts && result.conflicts && result.conflicts.length > 0) {
+                            statusEl.innerHTML = `<i class="bi bi-check-circle text-success"></i> 同步成功，内置题库已恢复（${result.conflicts.length} 个冲突）`;
+                        } else {
+                            statusEl.innerHTML = '<i class="bi bi-check-circle text-success"></i> 同步成功，内置题库已恢复';
+                        }
+                    }
+                } else if (typeof InitData !== 'undefined' && InitData.loadDefaultWordBank) {
+                    await InitData.loadDefaultWordBank('force-restore-after-sync');
+                    if (result.hasConflicts && result.conflicts && result.conflicts.length > 0) {
+                        statusEl.innerHTML = `<i class="bi bi-check-circle text-success"></i> 同步成功，内置题库已恢复（${result.conflicts.length} 个冲突）`;
+                    } else {
+                        statusEl.innerHTML = '<i class="bi bi-check-circle text-success"></i> 同步成功，内置题库已恢复';
+                    }
                 }
                 
                 // 刷新相关页面数据
@@ -1962,9 +1982,9 @@ const Main = {
                 // 显示成功提示
                 if (typeof WordBank !== 'undefined' && WordBank.showToast) {
                     if (result.hasConflicts && result.conflicts && result.conflicts.length > 0) {
-                        WordBank.showToast('warning', `同步成功，但发现 ${result.conflicts.length} 个冲突`);
+                        WordBank.showToast('warning', `同步成功，内置题库已恢复（${result.conflicts.length} 个冲突）`);
                     } else {
-                        WordBank.showToast('success', '数据同步成功');
+                        WordBank.showToast('success', '数据同步成功，内置题库已恢复');
                     }
                 }
                 

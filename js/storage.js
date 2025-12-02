@@ -1108,6 +1108,50 @@ const Storage = {
         } else {
             console.log('[Storage._ensureGrade3UpBuiltinWordBank] 三年级上册内置题库完整，共', grade3UpWords.length, '个字');
         }
+    },
+
+    /**
+     * 强制恢复三年级上册内置题库（用于修复被修改的题库）
+     */
+    async forceRestoreGrade3UpBuiltinWordBank() {
+        console.log('[Storage.forceRestoreGrade3UpBuiltinWordBank] 开始强制恢复三年级上册内置题库...');
+        
+        // 获取当前题库
+        const current = this.getWordBank();
+        
+        // 移除所有三年级上册的字（包括用户添加的）
+        const filtered = current.filter(word => 
+            !(word.grade === 3 && (word.semester === '上' || word.semester === '上册'))
+        );
+        
+        console.log('[Storage.forceRestoreGrade3UpBuiltinWordBank] 已移除', current.length - filtered.length, '个三年级上册的字');
+        
+        // 保存过滤后的题库
+        this.saveWordBank(filtered);
+        
+        // 强制重新加载内置题库
+        if (typeof InitData !== 'undefined' && InitData.loadDefaultWordBank) {
+            try {
+                await InitData.loadDefaultWordBank('force-restore-grade3-up');
+                console.log('[Storage.forceRestoreGrade3UpBuiltinWordBank] ✅ 三年级上册内置题库已强制恢复');
+                
+                // 刷新UI
+                if (typeof WordBank !== 'undefined' && WordBank.loadWordBank) {
+                    WordBank.loadWordBank();
+                }
+                if (typeof PracticeRange !== 'undefined' && PracticeRange.refresh) {
+                    PracticeRange.refresh();
+                }
+                
+                return { success: true, message: '三年级上册内置题库已强制恢复' };
+            } catch (err) {
+                console.error('[Storage.forceRestoreGrade3UpBuiltinWordBank] 强制恢复失败:', err);
+                return { success: false, message: err.message || '强制恢复失败' };
+            }
+        } else {
+            console.error('[Storage.forceRestoreGrade3UpBuiltinWordBank] InitData 不可用');
+            return { success: false, message: 'InitData 不可用' };
+        }
     }
 };
 
