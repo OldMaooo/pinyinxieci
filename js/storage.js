@@ -1082,6 +1082,32 @@ const Storage = {
                 console.warn('[Storage] resetBuiltinWordBank -> InitData 不可用，无法自动导入默认题库');
             }
         }, 50);
+    },
+
+    /**
+     * 确保三年级上册内置题库存在（写死，不允许用户修改）
+     */
+    async _ensureGrade3UpBuiltinWordBank() {
+        const current = this.getWordBank();
+        const grade3UpWords = current.filter(word => 
+            word.grade === 3 && 
+            (word.semester === '上' || word.semester === '上册') &&
+            this.isBuiltinWord(word)
+        );
+        
+        // 如果三年级上册的内置题库不完整（少于200个字），强制重新加载
+        if (grade3UpWords.length < 200) {
+            console.warn('[Storage._ensureGrade3UpBuiltinWordBank] 三年级上册内置题库不完整（', grade3UpWords.length, '个字），强制重新加载');
+            if (typeof InitData !== 'undefined' && InitData.loadDefaultWordBank) {
+                try {
+                    await InitData.loadDefaultWordBank('ensure-grade3-up');
+                } catch (err) {
+                    console.error('[Storage._ensureGrade3UpBuiltinWordBank] 重新加载失败:', err);
+                }
+            }
+        } else {
+            console.log('[Storage._ensureGrade3UpBuiltinWordBank] 三年级上册内置题库完整，共', grade3UpWords.length, '个字');
+        }
     }
 };
 
