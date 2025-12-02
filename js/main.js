@@ -1910,7 +1910,20 @@ const Main = {
             const result = await SupabaseSync.sync();
             
             if (result.success) {
-                statusEl.innerHTML = '<i class="bi bi-check-circle text-success"></i> 同步成功';
+                // 检查是否有冲突
+                if (result.hasConflicts && result.conflicts && result.conflicts.length > 0) {
+                    statusEl.innerHTML = `<i class="bi bi-exclamation-triangle text-warning"></i> 同步成功，但发现 ${result.conflicts.length} 个冲突`;
+                    // 显示冲突详情按钮
+                    const conflictBtn = document.createElement('button');
+                    conflictBtn.className = 'btn btn-sm btn-warning mt-2 w-100';
+                    conflictBtn.innerHTML = '<i class="bi bi-info-circle"></i> 查看冲突详情';
+                    conflictBtn.onclick = () => {
+                        this.showConflictDetails(result.conflicts);
+                    };
+                    statusEl.appendChild(conflictBtn);
+                } else {
+                    statusEl.innerHTML = '<i class="bi bi-check-circle text-success"></i> 同步成功';
+                }
                 
                 // 刷新相关页面数据
                 if (typeof PracticeRange !== 'undefined') {
@@ -1925,7 +1938,11 @@ const Main = {
 
                 // 显示成功提示
                 if (typeof WordBank !== 'undefined' && WordBank.showToast) {
-                    WordBank.showToast('success', '数据同步成功');
+                    if (result.hasConflicts && result.conflicts && result.conflicts.length > 0) {
+                        WordBank.showToast('warning', `同步成功，但发现 ${result.conflicts.length} 个冲突`);
+                    } else {
+                        WordBank.showToast('success', '数据同步成功');
+                    }
                 }
                 
                 // 更新状态显示
@@ -2119,6 +2136,67 @@ const Main = {
         } finally {
             downloadBtn.disabled = false;
         }
+    },
+    
+    /**
+     * 显示冲突详情
+     */
+    showConflictDetails(conflicts) {
+        // 创建或获取冲突详情弹窗
+        let modalEl = document.getElementById('sync-conflict-modal');
+        if (!modalEl) {
+            modalEl = document.createElement('div');
+            modalEl.id = 'sync-conflict-modal';
+            modalEl.className = 'modal fade';
+            modalEl.innerHTML = `
+                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title"><i class="bi bi-exclamation-triangle text-warning"></i> 同步冲突详情</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="sync-conflict-container"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modalEl);
+        }
+        
+        const container = document.getElementById('sync-conflict-container');
+        if (!container) return;
+        
+        let html = `<p class="text-muted">发现 <strong>${conflicts.length}</strong> 个冲突项：</p>`;
+        html += '<table class="table table-sm table-bordered">';
+        html += '<thead><tr><th>汉字</th><th>拼音</th><th>本地状态</th><th>云端状态</th></tr></thead>';
+        html += '<tbody>';
+        
+        conflicts.forEach(conflict => {
+            const statusMap = {
+                'mastered': '<span class="badge bg-success">已掌握</span>',
+                'error': '<span class="badge bg-danger">错题</span>',
+                'default': '<span class="badge bg-secondary">未练习</span>'
+            };
+            
+            html += `<tr>`;
+            html += `<td><strong>${conflict.word}</strong></td>`;
+            html += `<td>${conflict.pinyin || '-'}</td>`;
+            html += `<td>${statusMap[conflict.localStatus] || conflict.localStatus}</td>`;
+            html += `<td>${statusMap[conflict.cloudStatus] || conflict.cloudStatus}</td>`;
+            html += `</tr>`;
+        });
+        
+        html += '</tbody></table>';
+        html += '<p class="text-muted small mt-2"><i class="bi bi-info-circle"></i> 冲突已通过合并模式解决，当前显示的是合并后的结果。</p>';
+        
+        container.innerHTML = html;
+        
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
     }
 };
 

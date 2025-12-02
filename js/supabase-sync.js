@@ -269,27 +269,45 @@ const SupabaseSync = {
                 }
             }
 
-            // 4. 再次上传合并后的数据（确保两端一致）
-            console.log('[SupabaseSync] 步骤4: 上传合并后的数据...');
-            const finalUploadResult = await this.upload();
-            if (!finalUploadResult.success) {
-                console.warn('[SupabaseSync] 最终上传失败，但本地数据已更新');
-            }
+                   // 4. 检测冲突
+                   console.log('[SupabaseSync] 步骤4: 检测冲突...');
+                   const conflictResult = await this.detectConflicts();
+                   
+                   // 5. 再次上传合并后的数据（确保两端一致）
+                   console.log('[SupabaseSync] 步骤5: 上传合并后的数据...');
+                   const finalUploadResult = await this.upload();
+                   if (!finalUploadResult.success) {
+                       console.warn('[SupabaseSync] 最终上传失败，但本地数据已更新');
+                   }
 
-            this._lastSyncTime = new Date().toISOString();
-            this._lastSyncTimestamp = Date.now();
-            console.log('[SupabaseSync] 同步完成');
+                   this._lastSyncTime = new Date().toISOString();
+                   this._lastSyncTimestamp = Date.now();
+                   console.log('[SupabaseSync] 同步完成');
+
+                   // 返回冲突信息
+                   return {
+                       success: true,
+                       message: '同步成功',
+                       lastSyncTime: this._lastSyncTime,
+                       hasConflicts: conflictResult.hasConflicts,
+                       conflicts: conflictResult.conflicts || []
+                   };
             
             // 更新本地最后修改时间，与云端保持一致（避免时间差导致状态判断错误）
             if (typeof Storage !== 'undefined' && Storage.updateLocalLastModified) {
                 Storage.updateLocalLastModified();
             }
 
-            return {
-                success: true,
-                message: '同步成功',
-                lastSyncTime: this._lastSyncTime
-            };
+                   // 检测冲突
+                   const conflictResult = await this.detectConflicts();
+                   
+                   return {
+                       success: true,
+                       message: '同步成功',
+                       lastSyncTime: this._lastSyncTime,
+                       hasConflicts: conflictResult.hasConflicts,
+                       conflicts: conflictResult.conflicts || []
+                   };
         } catch (error) {
             console.error('[SupabaseSync] 同步失败:', error);
             return {
@@ -337,6 +355,68 @@ const SupabaseSync = {
         } catch (error) {
             console.error('[SupabaseSync] 获取云端状态失败:', error);
             return { error: error };
+        }
+    },
+
+    /**
+     * 检测同步冲突
+     * 比较本地和云端数据，找出冲突项
+     */
+    async detectConflicts() {
+        try {
+            await this.init();
+
+            // 获取本地数据
+            const localData = Storage.exportSyncData();
+            const localMastery = localData.wordMastery || {};
+            const localErrors = new Set((localData.errorWords || []).map(ew => ew.wordId));
+
+            // 获取云端数据
+            const downloadResult = await this.download();
+            if (!downloadResult.success || !downloadResult.data) {
+                return { hasConflicts: false, conflicts: [] };
+            }
+
+            const cloudData = downloadResult.data;
+            const cloudMastery = cloudData.wordMastery || {};
+            const cloudErrors = new Set((cloudData.errorWords || []).map(ew => ew.wordId));
+
+            // 检测冲突
+            const conflicts = [];
+            const allWordIds = new Set([...Object.keys(localMastery), ...Object.keys(cloudMastery)]);
+
+            allWordIds.forEach(wordId => {
+                const localStatus = localMastery[wordId];
+                const cloudStatus = cloudMastery[wordId];
+                const localIsError = localErrors.has(wordId);
+                const cloudIsError = cloudErrors.has(wordId);
+
+                // 如果状态不同，记录冲突
+                if (localStatus !== cloudStatus || localIsError !== cloudIsError) {
+                    const wordBank = Storage.getWordBank();
+                    const word = wordBank.find(w => w.id === wordId);
+                    
+                    conflicts.push({
+                        wordId: wordId,
+                        word: word ? word.word : wordId,
+                        pinyin: word ? word.pinyin : '',
+                        localStatus: localStatus || (localIsError ? 'error' : 'default'),
+                        cloudStatus: cloudStatus || (cloudIsError ? 'error' : 'default'),
+                        localIsError: localIsError,
+                        cloudIsError: cloudIsError
+                    });
+                }
+            });
+
+            return {
+                hasConflicts: conflicts.length > 0,
+                conflicts: conflicts,
+                localCount: Object.keys(localMastery).length,
+                cloudCount: Object.keys(cloudMastery).length
+            };
+        } catch (error) {
+            console.error('[SupabaseSync] 检测冲突失败:', error);
+            return { hasConflicts: false, conflicts: [], error: error.message };
         }
     },
 

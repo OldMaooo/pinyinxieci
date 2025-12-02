@@ -1,0 +1,42 @@
+{
+  "version": "1.1",
+  "type": "sync",
+  "wordMastery": {
+    "word_1": "mastered",
+    "word_2": "error",
+    "word_3": "default",
+    "word_4": "mastered",
+    "word_5": "error"
+  },
+  "errorWords": [
+    {
+      "wordId": "word_2",
+      "word": "二",
+      "pinyin": "èr",
+      "errorCount": 2,
+      "firstErrorDate": "2025-01-15T10:00:00.000Z",
+      "lastErrorDate": "2025-01-20T10:00:00.000Z",
+      "handwritingSnapshots": []
+    },
+    {
+      "wordId": "word_5",
+      "word": "五",
+      "pinyin": "wǔ",
+      "errorCount": 1,
+      "firstErrorDate": "2025-01-18T10:00:00.000Z",
+      "lastErrorDate": "2025-01-18T10:00:00.000Z",
+      "handwritingSnapshots": []
+    }
+  ],
+  "reviewPlans": [
+    {
+      "wordId": "word_2",
+      "word": "二",
+      "pinyin": "èr",
+      "nextReviewDate": "2025-01-25T10:00:00.000Z",
+      "reviewCount": 0
+    }
+  ],
+  "taskList": []
+}
+

@@ -942,19 +942,21 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mb-3">
+                </div>
+                <div class="modal-footer d-flex flex-column">
+                    <div class="mb-3 w-100">
                         <label class="form-label">导入模式</label>
                         <select class="form-select" id="home-import-preview-merge-select">
-                            <option value="replace">替换现有数据</option>
+                            <option value="replace">替换现有数据（覆盖）</option>
                             <option value="merge">合并数据（保留现有）</option>
                         </select>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" id="home-import-preview-confirm-btn">
-                        <i class="bi bi-upload"></i> 确认导入
-                    </button>
+                    <div class="d-flex gap-2 w-100">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary flex-fill" id="home-import-preview-confirm-btn">
+                            <i class="bi bi-upload"></i> 确认导入
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

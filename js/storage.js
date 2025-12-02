@@ -710,14 +710,30 @@ const Storage = {
             console.warn('[Storage.importSyncData] 数据格式不是同步数据，尝试导入...');
         }
         
+        console.log('[Storage.importSyncData] 开始导入，模式:', merge ? '合并' : '覆盖', {
+            hasWordMastery: !!data.wordMastery,
+            hasErrorWords: !!data.errorWords,
+            hasReviewPlans: !!data.reviewPlans,
+            hasTaskList: !!data.taskList
+        });
+        
         // 导入掌握状态
-        if (data.wordMastery && typeof data.wordMastery === 'object') {
-            if (merge) {
+        if (merge) {
+            // 合并模式：合并到现有数据
+            if (data.wordMastery && typeof data.wordMastery === 'object') {
                 const existing = this.getWordMastery();
                 Object.assign(existing, data.wordMastery);
                 this.saveWordMastery(existing);
-            } else {
+            }
+        } else {
+            // 覆盖模式：完全替换
+            if (data.wordMastery && typeof data.wordMastery === 'object') {
+                // 完全替换
                 this.saveWordMastery(data.wordMastery);
+            } else {
+                // 如果导入数据中没有 wordMastery，清空现有数据
+                console.log('[Storage.importSyncData] 覆盖模式：导入数据中没有 wordMastery，清空现有掌握状态');
+                this.saveWordMastery({});
             }
         }
         
@@ -782,8 +798,9 @@ const Storage = {
             allErrorWords.push(...Array.from(errorMap.values()));
         }
         
-        if (allErrorWords.length > 0) {
-            if (merge) {
+        if (merge) {
+            // 合并模式：合并错题
+            if (allErrorWords.length > 0) {
                 const existing = this.getErrorWords();
                 // 确保 existing 是数组
                 if (!Array.isArray(existing)) {
@@ -812,17 +829,22 @@ const Storage = {
                     });
                     this.saveErrorWords(Array.from(errorMap.values()));
                 }
-            } else {
-                this.saveErrorWords(allErrorWords);
             }
-        } else if (!merge) {
-            // 替换模式且没有错题数据，清空错题列表
-            this.saveErrorWords([]);
+        } else {
+            // 覆盖模式：完全替换错题列表
+            if (allErrorWords.length > 0) {
+                this.saveErrorWords(allErrorWords);
+            } else {
+                // 如果导入数据中没有错题，清空现有错题列表
+                console.log('[Storage.importSyncData] 覆盖模式：导入数据中没有错题，清空现有错题列表');
+                this.saveErrorWords([]);
+            }
         }
         
         // 导入复习计划
-        if (data.reviewPlans) {
-            if (merge) {
+        if (merge) {
+            // 合并模式：合并复习计划
+            if (data.reviewPlans) {
                 const existing = this.getAllReviewPlans();
                 const existingObj = {};
                 if (Array.isArray(existing)) {
@@ -833,8 +855,10 @@ const Storage = {
                     newPlans.forEach(p => { if (p.wordId) existingObj[p.wordId] = p; });
                 }
                 this.saveAllReviewPlans(existingObj);
-            } else {
-                // 替换模式：确保数据格式正确
+            }
+        } else {
+            // 覆盖模式：完全替换复习计划
+            if (data.reviewPlans) {
                 if (Array.isArray(data.reviewPlans)) {
                     this.saveAllReviewPlans(data.reviewPlans);
                 } else if (typeof data.reviewPlans === 'object') {
@@ -842,22 +866,39 @@ const Storage = {
                 } else {
                     console.warn('[Storage.importSyncData] reviewPlans 格式不正确，跳过导入');
                 }
+            } else {
+                // 如果导入数据中没有复习计划，清空现有复习计划
+                console.log('[Storage.importSyncData] 覆盖模式：导入数据中没有复习计划，清空现有复习计划');
+                this.saveAllReviewPlans({});
             }
         }
         
         // 导入任务列表
-        if (data.taskList && Array.isArray(data.taskList)) {
-            if (typeof TaskList !== 'undefined' && TaskList.saveAllTasks) {
-                if (merge) {
+        if (typeof TaskList !== 'undefined' && TaskList.saveAllTasks) {
+            if (merge) {
+                // 合并模式：合并任务列表
+                if (data.taskList && Array.isArray(data.taskList)) {
                     const existing = TaskList.getAllTasks();
                     const existingIds = new Set(existing.map(t => t.id));
                     const newTasks = data.taskList.filter(t => !existingIds.has(t.id));
                     TaskList.saveAllTasks([...existing, ...newTasks]);
-                } else {
+                }
+            } else {
+                // 覆盖模式：完全替换任务列表
+                if (data.taskList && Array.isArray(data.taskList)) {
                     TaskList.saveAllTasks(data.taskList);
+                } else {
+                    // 如果导入数据中没有任务列表，清空现有任务列表
+                    console.log('[Storage.importSyncData] 覆盖模式：导入数据中没有任务列表，清空现有任务列表');
+                    TaskList.saveAllTasks([]);
                 }
             }
         }
+        
+        // 更新本地修改时间
+        this.updateLocalLastModified();
+        
+        console.log('[Storage.importSyncData] 导入完成');
     },
 
     /**
