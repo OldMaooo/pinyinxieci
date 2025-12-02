@@ -215,8 +215,15 @@ const Storage = {
     },
 
     saveWordBank(wordBank) {
-        localStorage.setItem(this.KEYS.WORD_BANK, JSON.stringify(wordBank || []));
+        // 确保保存后三年级上册内置题库仍然存在
+        const saved = wordBank || [];
+        localStorage.setItem(this.KEYS.WORD_BANK, JSON.stringify(saved));
         this.updateLocalLastModified();
+        
+        // 异步检查并恢复三年级上册内置题库（如果缺失）
+        setTimeout(() => {
+            this._ensureGrade3UpBuiltinWordBank();
+        }, 100);
     },
 
     addWord(word) {

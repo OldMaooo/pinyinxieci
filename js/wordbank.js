@@ -284,8 +284,16 @@ const WordBank = {
      * 删除生字
      */
     deleteWord(wordId) {
+        const wordBank = Storage.getWordBank();
+        const word = wordBank.find(w => w.id === wordId);
+        
+        // 如果是三年级上册的内置字，不允许删除
+        if (word && word.grade === 3 && (word.semester === '上' || word.semester === '上册') && Storage.isBuiltinWord(word)) {
+            this.showToast('warning', '三年级上册的内置字不允许删除');
+            return;
+        }
+        
         if (confirm('确定要删除这个生字吗？')) {
-            const wordBank = Storage.getWordBank();
             const filtered = wordBank.filter(w => w.id !== wordId);
             Storage.saveWordBank(filtered);
             this.loadWordBank();
