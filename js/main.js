@@ -2116,7 +2116,21 @@ const Main = {
                             result.data.type = "sync";
                         }
                         Storage.importSyncData(result.data, true);
-                        statusEl.innerHTML = '<i class="bi bi-check-circle text-success"></i> 下载并合并成功';
+                        statusEl.innerHTML = '<i class="bi bi-check-circle text-success"></i> 下载并合并成功，正在恢复内置题库...';
+                        
+                        // 强制恢复三年级上册内置题库（确保题库正确）
+                        console.log('[Main.handleDownload] 强制恢复三年级上册内置题库...');
+                        if (typeof Storage !== 'undefined' && Storage.forceRestoreGrade3UpBuiltinWordBank) {
+                            const restoreResult = await Storage.forceRestoreGrade3UpBuiltinWordBank();
+                            if (restoreResult.success) {
+                                statusEl.innerHTML = '<i class="bi bi-check-circle text-success"></i> 下载成功，内置题库已恢复';
+                            } else {
+                                statusEl.innerHTML = '<i class="bi bi-check-circle text-success"></i> 下载成功，但内置题库恢复失败';
+                            }
+                        } else if (typeof InitData !== 'undefined' && InitData.loadDefaultWordBank) {
+                            await InitData.loadDefaultWordBank('force-restore-after-download');
+                            statusEl.innerHTML = '<i class="bi bi-check-circle text-success"></i> 下载成功，内置题库已恢复';
+                        }
                         
                         // 更新最后同步时间
                         if (result.lastSyncTime) {
@@ -2130,6 +2144,10 @@ const Main = {
                             });
                             timeValueEl.textContent = localTime;
                             timeEl.style.display = 'block';
+                        }
+
+                        if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                            WordBank.showToast('success', '数据下载成功，内置题库已恢复');
                         }
 
                         // 延迟刷新相关页面数据，确保数据已完全合并
