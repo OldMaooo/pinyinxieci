@@ -269,45 +269,34 @@ const SupabaseSync = {
                 }
             }
 
-                   // 4. 检测冲突
-                   console.log('[SupabaseSync] 步骤4: 检测冲突...');
-                   const conflictResult = await this.detectConflicts();
-                   
-                   // 5. 再次上传合并后的数据（确保两端一致）
-                   console.log('[SupabaseSync] 步骤5: 上传合并后的数据...');
-                   const finalUploadResult = await this.upload();
-                   if (!finalUploadResult.success) {
-                       console.warn('[SupabaseSync] 最终上传失败，但本地数据已更新');
-                   }
+            // 4. 检测冲突（在最终上传前）
+            console.log('[SupabaseSync] 步骤4: 检测冲突...');
+            const conflictResult = await this.detectConflicts();
+            
+            // 5. 再次上传合并后的数据（确保两端一致）
+            console.log('[SupabaseSync] 步骤5: 上传合并后的数据...');
+            const finalUploadResult = await this.upload();
+            if (!finalUploadResult.success) {
+                console.warn('[SupabaseSync] 最终上传失败，但本地数据已更新');
+            }
 
-                   this._lastSyncTime = new Date().toISOString();
-                   this._lastSyncTimestamp = Date.now();
-                   console.log('[SupabaseSync] 同步完成');
-
-                   // 返回冲突信息
-                   return {
-                       success: true,
-                       message: '同步成功',
-                       lastSyncTime: this._lastSyncTime,
-                       hasConflicts: conflictResult.hasConflicts,
-                       conflicts: conflictResult.conflicts || []
-                   };
+            this._lastSyncTime = new Date().toISOString();
+            this._lastSyncTimestamp = Date.now();
+            console.log('[SupabaseSync] 同步完成');
             
             // 更新本地最后修改时间，与云端保持一致（避免时间差导致状态判断错误）
             if (typeof Storage !== 'undefined' && Storage.updateLocalLastModified) {
                 Storage.updateLocalLastModified();
             }
 
-                   // 检测冲突
-                   const conflictResult = await this.detectConflicts();
-                   
-                   return {
-                       success: true,
-                       message: '同步成功',
-                       lastSyncTime: this._lastSyncTime,
-                       hasConflicts: conflictResult.hasConflicts,
-                       conflicts: conflictResult.conflicts || []
-                   };
+            // 返回冲突信息
+            return {
+                success: true,
+                message: '同步成功',
+                lastSyncTime: this._lastSyncTime,
+                hasConflicts: conflictResult.hasConflicts,
+                conflicts: conflictResult.conflicts || []
+            };
         } catch (error) {
             console.error('[SupabaseSync] 同步失败:', error);
             return {
