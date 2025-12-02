@@ -482,6 +482,7 @@ const Storage = {
             version: "1.1",
             type: "sync", // 标记为同步数据
             exportDate: new Date().toISOString(),
+            wordBank: this.getWordBank(), // 题库数据（确保所有设备题库一致）
             wordMastery: wordMastery, // 掌握状态（已掌握/错题，不包含未练习的，因为未练习的会被删除）
             errorWords: this.getErrorWords(), // 错题
             reviewPlans: this.getAllReviewPlans(), // 复习计划
@@ -711,11 +712,40 @@ const Storage = {
         }
         
         console.log('[Storage.importSyncData] 开始导入，模式:', merge ? '合并' : '覆盖', {
+            hasWordBank: !!data.wordBank,
             hasWordMastery: !!data.wordMastery,
             hasErrorWords: !!data.errorWords,
             hasReviewPlans: !!data.reviewPlans,
             hasTaskList: !!data.taskList
         });
+        
+        // 导入题库（wordBank）- 确保所有设备题库一致
+        if (data.wordBank && Array.isArray(data.wordBank)) {
+            if (merge) {
+                // 合并模式：合并题库（去重）
+                const existingWordBank = this.getWordBank();
+                const newWordBank = Array.isArray(existingWordBank) ? [...existingWordBank] : [];
+                
+                data.wordBank.forEach(word => {
+                    const exists = newWordBank.find(w => 
+                        w.word === word.word && 
+                        w.grade === word.grade && 
+                        w.semester === word.semester && 
+                        w.unit === word.unit
+                    );
+                    if (!exists) {
+                        newWordBank.push(word);
+                    }
+                });
+                this.saveWordBank(newWordBank);
+            } else {
+                // 覆盖模式：完全替换题库
+                this.saveWordBank(data.wordBank);
+            }
+        } else if (!merge) {
+            // 覆盖模式且没有题库数据，保持现有题库不变（避免清空）
+            console.log('[Storage.importSyncData] 覆盖模式：导入数据中没有题库，保持现有题库不变');
+        }
         
         // 导入掌握状态
         if (merge) {
