@@ -1901,6 +1901,15 @@ const Main = {
             return;
         }
 
+        // 检查 SupabaseSync 是否已加载
+        if (typeof SupabaseSync === 'undefined') {
+            statusEl.innerHTML = '<i class="bi bi-exclamation-triangle text-warning"></i> SupabaseSync 模块未加载，请刷新页面重试';
+            if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                WordBank.showToast('warning', 'SupabaseSync 模块未加载，请刷新页面重试');
+            }
+            return;
+        }
+
         // 更新UI状态
         syncBtn.disabled = true;
         syncBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 同步中...';
@@ -1980,6 +1989,15 @@ const Main = {
         const supabaseConfig = Config.getSupabase();
         if (!supabaseConfig || !supabaseConfig.url || !supabaseConfig.anonKey) {
             statusEl.innerHTML = '<i class="bi bi-exclamation-triangle text-warning"></i> 请先在浏览器控制台配置 Supabase：<br><code style="font-size: 0.8em;">Config.saveSupabase({url: "你的URL", anonKey: "你的Key"})</code>';
+            return;
+        }
+
+        // 检查 SupabaseSync 是否已加载
+        if (typeof SupabaseSync === 'undefined') {
+            statusEl.innerHTML = '<i class="bi bi-exclamation-triangle text-warning"></i> SupabaseSync 模块未加载，请刷新页面重试';
+            if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                WordBank.showToast('warning', 'SupabaseSync 模块未加载，请刷新页面重试');
+            }
             return;
         }
 
