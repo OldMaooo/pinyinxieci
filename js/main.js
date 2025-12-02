@@ -141,11 +141,15 @@ const Main = {
         }
         
         // 页面加载时自动下载并合并云端数据（如果启用自动同步）
-        if (typeof SupabaseSync !== 'undefined') {
+        // 延迟检查，确保所有脚本都已加载
+        setTimeout(() => {
+            if (typeof SupabaseSync === 'undefined') {
+                console.warn('[Main.init] SupabaseSync 模块未加载，跳过同步功能');
+                return;
+            }
+            
             // 更新同步状态显示
-            setTimeout(() => {
-                this.updateSyncStatusDisplay();
-            }, 1000);
+            this.updateSyncStatusDisplay();
 
             if (SupabaseSync.isAutoSyncEnabled && SupabaseSync.isAutoSyncEnabled()) {
                 // 延迟执行，确保所有模块都已加载
@@ -157,7 +161,7 @@ const Main = {
                     }
                 }, 2000);
             }
-        }
+        }, 500);
     },
     
     /**
@@ -1765,6 +1769,16 @@ const Main = {
      * 绑定 Supabase 同步按钮事件
      */
     bindSupabaseSyncButtons() {
+        // 检查 SupabaseSync 是否已加载
+        if (typeof SupabaseSync === 'undefined') {
+            console.error('[Main.bindSupabaseSyncButtons] SupabaseSync 模块未加载');
+            const statusEl = document.getElementById('home-sync-status');
+            if (statusEl) {
+                statusEl.innerHTML = '<i class="bi bi-exclamation-triangle text-danger"></i> SupabaseSync 模块未加载，请刷新页面';
+            }
+            return;
+        }
+        
         // 检查配置状态并显示/隐藏配置界面
         this.updateSupabaseConfigUI();
         

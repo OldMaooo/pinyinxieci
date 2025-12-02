@@ -720,6 +720,9 @@
     <script>
         // 检查所有关键模块是否正确定义
         console.log('[Module Check]', {
+            SupabaseSync: typeof SupabaseSync !== 'undefined',
+            Config: typeof Config !== 'undefined',
+            Storage: typeof Storage !== 'undefined',
             WordGroups: typeof WordGroups !== 'undefined',
             Storage: typeof Storage !== 'undefined',
             Practice: typeof Practice !== 'undefined',
