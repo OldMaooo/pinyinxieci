@@ -229,6 +229,25 @@ const Storage = {
                 unit: word.unit
             });
         }
+        
+        // 如果是三年级上册的字，不允许用户手动添加（只能通过内置题库加载）
+        if (word.grade === 3 && (word.semester === '上' || word.semester === '上册') && !word.isBuiltIn && word.source !== 'builtin') {
+            console.warn('[Storage.addWord] 三年级上册的字只能通过内置题库加载，不允许用户手动添加:', text);
+            // 检查是否已存在于内置题库中
+            const existingBuiltin = this.getWordBank().find(w => 
+                w.word === word.word && 
+                w.grade === 3 && 
+                (w.semester === '上' || w.semester === '上册') &&
+                this.isBuiltinWord(w)
+            );
+            if (existingBuiltin) {
+                return existingBuiltin;
+            }
+            // 如果内置题库中没有，可能是内置题库未加载，允许添加但标记为内置
+            word.isBuiltIn = true;
+            word.source = 'builtin';
+        }
+        
         const wordBank = this.getWordBank();
         // 检查是否已存在
         const exists = wordBank.find(w => 
