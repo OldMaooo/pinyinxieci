@@ -720,13 +720,23 @@ const Storage = {
         });
         
         // 导入题库（wordBank）- 确保所有设备题库一致
+        // 注意：内置题库（特别是三年级上册）不会被覆盖，会在导入后强制恢复
         if (data.wordBank && Array.isArray(data.wordBank)) {
+            // 先保存现有的内置题库（特别是三年级上册）
+            const existingWordBank = this.getWordBank();
+            const builtinWords = existingWordBank.filter(word => this.isBuiltinWord(word));
+            
             if (merge) {
-                // 合并模式：合并题库（去重）
-                const existingWordBank = this.getWordBank();
-                const newWordBank = Array.isArray(existingWordBank) ? [...existingWordBank] : [];
+                // 合并模式：合并题库（去重），但排除内置字
+                const userWords = existingWordBank.filter(word => !this.isBuiltinWord(word));
+                const newWordBank = [...userWords];
                 
                 data.wordBank.forEach(word => {
+                    // 跳过内置字，不允许通过同步覆盖
+                    if (this.isBuiltinWord(word)) {
+                        console.log('[Storage.importSyncData] 跳过内置字:', word.word);
+                        return;
+                    }
                     const exists = newWordBank.find(w => 
                         w.word === word.word && 
                         w.grade === word.grade && 
@@ -737,14 +747,22 @@ const Storage = {
                         newWordBank.push(word);
                     }
                 });
-                this.saveWordBank(newWordBank);
+                // 合并内置题库
+                this.saveWordBank([...builtinWords, ...newWordBank]);
             } else {
-                // 覆盖模式：完全替换题库
-                this.saveWordBank(data.wordBank);
+                // 覆盖模式：替换用户题库，但保留内置题库
+                const userWordsFromData = data.wordBank.filter(word => !this.isBuiltinWord(word));
+                this.saveWordBank([...builtinWords, ...userWordsFromData]);
+                console.log('[Storage.importSyncData] 覆盖模式：已保留内置题库，只替换用户题库');
             }
+            
+            // 导入后强制恢复三年级上册内置题库
+            this._ensureGrade3UpBuiltinWordBank();
         } else if (!merge) {
             // 覆盖模式且没有题库数据，保持现有题库不变（避免清空）
             console.log('[Storage.importSyncData] 覆盖模式：导入数据中没有题库，保持现有题库不变');
+            // 确保内置题库存在
+            this._ensureGrade3UpBuiltinWordBank();
         }
         
         // 导入掌握状态
