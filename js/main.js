@@ -1851,6 +1851,14 @@ const Main = {
                 await this.handleDownload();
             });
         }
+
+        // 强制恢复题库按钮
+        const forceRestoreBtn = document.getElementById('home-force-restore-btn');
+        if (forceRestoreBtn) {
+            forceRestoreBtn.addEventListener('click', async () => {
+                await this.handleForceRestore();
+            });
+        }
         
         // 自动同步开关
         const autoSyncSwitch = document.getElementById('supabase-auto-sync-switch');
@@ -2267,6 +2275,61 @@ const Main = {
         
         const modal = new bootstrap.Modal(modalEl);
         modal.show();
+    },
+
+    /**
+     * 处理强制恢复内置题库操作
+     */
+    async handleForceRestore() {
+        const restoreBtn = document.getElementById('home-force-restore-btn');
+        const statusEl = document.getElementById('home-sync-status');
+
+        if (!restoreBtn || !statusEl) return;
+
+        if (!confirm('确定要强制恢复三年级上册内置题库吗？这将删除所有三年级上册的字（包括用户添加的），然后重新加载正确的内置题库。')) {
+            return;
+        }
+
+        // 更新UI状态
+        restoreBtn.disabled = true;
+        statusEl.innerHTML = '<i class="bi bi-hourglass-split text-info"></i> 正在强制恢复内置题库...';
+
+        try {
+            if (typeof Storage !== 'undefined' && Storage.forceRestoreGrade3UpBuiltinWordBank) {
+                const result = await Storage.forceRestoreGrade3UpBuiltinWordBank();
+                
+                if (result.success) {
+                    statusEl.innerHTML = '<i class="bi bi-check-circle text-success"></i> 内置题库已强制恢复';
+                    
+                    if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                        WordBank.showToast('success', '三年级上册内置题库已强制恢复');
+                    }
+                    
+                    // 刷新UI
+                    if (typeof WordBank !== 'undefined' && WordBank.loadWordBank) {
+                        WordBank.loadWordBank();
+                    }
+                    if (typeof PracticeRange !== 'undefined' && PracticeRange.refresh) {
+                        PracticeRange.refresh();
+                    }
+                } else {
+                    statusEl.innerHTML = `<i class="bi bi-x-circle text-danger"></i> 恢复失败: ${result.message || '未知错误'}`;
+                    if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                        WordBank.showToast('danger', result.message || '恢复失败');
+                    }
+                }
+            } else {
+                statusEl.innerHTML = '<i class="bi bi-x-circle text-danger"></i> Storage.forceRestoreGrade3UpBuiltinWordBank 不可用';
+            }
+        } catch (error) {
+            console.error('[Main.handleForceRestore] 恢复异常:', error);
+            statusEl.innerHTML = `<i class="bi bi-x-circle text-danger"></i> 恢复异常: ${error.message}`;
+            if (typeof WordBank !== 'undefined' && WordBank.showToast) {
+                WordBank.showToast('danger', `恢复异常: ${error.message}`);
+            }
+        } finally {
+            restoreBtn.disabled = false;
+        }
     }
 };
 
