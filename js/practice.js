@@ -1438,8 +1438,8 @@ const Practice = {
                 this.timer = null;
             }
             
-            // 延迟2秒后进入下一题
-            this.scheduleNextWord(2000, () => {
+            // 延迟1秒后进入下一题：短暂停留给用户看正确答案，然后自动跳转
+            this.scheduleNextWord(1000, () => {
                 if (this.currentIndex < this.currentWords.length) {
                     this.history.push({
                         word: word,
@@ -2004,7 +2004,16 @@ const Practice = {
             }
         }
         
-        // 防止重复调用：如果正在处理中，直接返回
+        // 在「可以跳过」模式下，点击「下一题」等同于「不会」：直接按错题处理并自动跳到下一题
+        if (this.allowSkip) {
+            console.log('[Practice.showNextQuestion] 在可跳过模式下，点击下一题等同于不会，直接调用 skipAnswer');
+            // 确保不会因为之前的标记导致锁死
+            this.isProcessingNextQuestion = false;
+            this.skipAnswer();
+            return;
+        }
+        
+        // 不可跳过模式下才需要防抖处理，避免重复调用
         if (this.isProcessingNextQuestion) {
             console.log('[Practice.showNextQuestion] 正在处理中，忽略重复调用');
             return;
