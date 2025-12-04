@@ -1480,6 +1480,11 @@ const Practice = {
             // 允许跳过：直接进入下一题，不进入重做模式
             this._currentWordStartTime = null;
             this.isSkipping = false; // 重置跳过状态
+            // 停止当前题目的计时器（下一题会重新启动）
+            if (this.timer) {
+                clearInterval(this.timer);
+                this.timer = null;
+            }
             
             // 延迟2秒后进入下一题
             this.scheduleNextWord(2000, () => {
