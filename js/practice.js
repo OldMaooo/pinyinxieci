@@ -9,6 +9,7 @@ const Practice = {
     // 记录之前的题目历史（用于返回上一题）
     history: [],
     isProcessingNextQuestion: false, // 防止重复调用showNextQuestion
+    allowSkip: true, // 是否允许跳过题目（默认可以跳过）
     practiceLog: {
         totalWords: 0,
         correctCount: 0,
@@ -20,9 +21,22 @@ const Practice = {
     },
 
     async handleEmptySubmission(word) {
+        // 检查是否允许跳过
+        if (!this.allowSkip) {
+            // 不允许跳过时，空提交也应该进入重做模式，但不允许直接跳过
+            // 这里保持原有逻辑，但会在重做模式下阻止跳过
+            if (!this._isRetryingError) {
+                // 第一次空提交，进入重做模式
+            } else {
+                // 已经在重做模式，不允许跳过
+                alert('当前题目尚未答对，无法跳过。请答对后再继续。');
+                return;
+            }
+        }
+        
         // 如果已经在重做模式，说明已经记录过错误了，不应该重复记录
-        if (this._isRetryingError) {
-            return; // 已经在重做模式，不重复处理
+        if (this._isRetryingError && this.allowSkip) {
+            return; // 已经在重做模式，且允许跳过，不重复处理
         }
         
         if (this.timer) {
@@ -1343,6 +1357,17 @@ const Practice = {
      * 绕过提交限制，允许随时跳过
      */
     async skipAnswer() {
+        // 检查是否允许跳过
+        if (!this.allowSkip) {
+            // 检查当前题目是否已答对
+            const currentWordId = this.currentWords[this.currentIndex]?.id;
+            const currentDetail = this.practiceLog.details?.find(d => d.wordId === currentWordId);
+            if (!currentDetail || !currentDetail.correct) {
+                alert('当前题目尚未答对，无法跳过。请答对后再继续。');
+                return;
+            }
+        }
+        
         // 防止重复点击：如果正在处理中，直接返回
         if (this.isSkipping) {
             return;
@@ -1931,6 +1956,17 @@ const Practice = {
         if (!this.isActive) {
             console.warn('[Practice] 练习未激活，无法跳转下一题');
             return;
+        }
+        
+        // 检查是否允许跳过
+        if (!this.allowSkip) {
+            // 检查当前题目是否已答对
+            const currentWordId = this.currentWords[this.currentIndex]?.id;
+            const currentDetail = this.practiceLog.details?.find(d => d.wordId === currentWordId);
+            if (!currentDetail || !currentDetail.correct) {
+                alert('当前题目尚未答对，无法跳过。请答对后再继续。');
+                return;
+            }
         }
         
         // 防止重复调用：如果正在处理中，直接返回

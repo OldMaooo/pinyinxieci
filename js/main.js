@@ -2336,4 +2336,26 @@ const Main = {
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', () => {
     Main.init();
+    
+    // 鼠标离开遮罩功能
+    const overlay = document.getElementById('mouse-leave-overlay');
+    if (overlay) {
+        // 监听鼠标离开页面
+        document.addEventListener('mouseleave', (e) => {
+            // 只有当鼠标真正离开页面时才显示遮罩
+            if (e.clientY <= 0 || e.clientX <= 0 || e.clientX >= window.innerWidth || e.clientY >= window.innerHeight) {
+                overlay.style.display = 'block';
+            }
+        });
+        
+        // 监听鼠标进入页面
+        document.addEventListener('mouseenter', () => {
+            overlay.style.display = 'none';
+        });
+        
+        // 监听鼠标移动（防止在某些情况下遮罩不消失）
+        document.addEventListener('mousemove', () => {
+            overlay.style.display = 'none';
+        });
+    }
 });
