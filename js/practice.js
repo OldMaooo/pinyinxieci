@@ -2021,6 +2021,32 @@ const Practice = {
     },
     
     /**
+     * 更新跳过设置UI
+     */
+    updateSkipSettingUI() {
+        const skipSettingBtn = document.getElementById('skip-setting-btn');
+        if (!skipSettingBtn) return;
+        
+        const skipOptions = document.querySelectorAll('.skip-option');
+        skipOptions.forEach(option => {
+            const isSelected = (option.getAttribute('data-value') === 'true') === this.allowSkip;
+            if (isSelected) {
+                option.classList.add('active');
+                // 更新按钮图标和文本
+                if (this.allowSkip) {
+                    skipSettingBtn.innerHTML = '<i class="bi bi-skip-forward"></i>';
+                    skipSettingBtn.title = '跳过设置：可以跳过';
+                } else {
+                    skipSettingBtn.innerHTML = '<i class="bi bi-skip-forward-fill text-danger"></i>';
+                    skipSettingBtn.title = '跳过设置：不可以跳过';
+                }
+            } else {
+                option.classList.remove('active');
+            }
+        });
+    },
+    
+    /**
      * 数组随机打乱
      */
     shuffleArray(array) {
@@ -2335,6 +2361,22 @@ document.addEventListener('DOMContentLoaded', () => {
             handleNext(e);
         }, { passive: false, capture: true });
         console.log('[Practice] ✅ 下一题按钮已绑定 (click, touchstart, touchend, mousedown, onclick, capture模式)');
+    }
+    
+    // 跳过设置下拉菜单
+    const skipSettingBtn = document.getElementById('skip-setting-btn');
+    if (skipSettingBtn) {
+        // 绑定下拉菜单选项点击事件
+        const skipOptions = document.querySelectorAll('.skip-option');
+        skipOptions.forEach(option => {
+            option.addEventListener('click', (e) => {
+                e.preventDefault();
+                const allowSkip = option.getAttribute('data-value') === 'true';
+                Practice.allowSkip = allowSkip;
+                localStorage.setItem('practice_allow_skip', allowSkip ? 'true' : 'false');
+                Practice.updateSkipSettingUI();
+            });
+        });
     }
     
     // 调试模式：一键做题按钮
