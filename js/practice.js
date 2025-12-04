@@ -350,7 +350,11 @@ const Practice = {
         this.currentIndex = 0;
         }
         
-        this.history = []; // 重置历史记录
+        this.history = []; // 重置历史记录（限制历史记录长度，防止内存泄漏）
+        // 限制历史记录最大长度为100，防止内存泄漏
+        if (this.history.length > 100) {
+            this.history = this.history.slice(-100);
+        }
         
         // 重置提交限制相关状态（容错机制）
         this.lastSubmitTime = 0;
@@ -371,8 +375,8 @@ const Practice = {
         
         this.practiceLog = {
             totalWords: words.length,
-            correctCount: initialCorrect,
-            errorCount: initialErrors.length,
+            correctCount: initialCorrect, // 初始正确数
+            errorCount: initialErrors.length, // 初始错误数
             totalTime: 0,
             startTime: Date.now(),
             wordTimes: [],
@@ -382,6 +386,8 @@ const Practice = {
         
         // 保存初始完成数量，用于计算总进度
         this._initialCompletedCount = initialCompleted;
+        this._initialCorrectCount = initialCorrect; // 保存初始正确数
+        this._initialErrorWords = [...initialErrors]; // 保存初始错题列表（用于复习任务）
         
         this.isActive = true;
         
@@ -445,7 +451,7 @@ const Practice = {
                 log = Storage.addPracticeLog(logPayload);
                 
                 // 保存错题到按轮视图（使用log.id作为roundId）
-                if (log && log.id && this.practiceLog.details) {
+                if (log && log.id && this.practiceLog.details && this.practiceLog.details.length > 0) {
                     const errorDetails = this.practiceLog.details.filter(d => !d.correct);
                     if (errorDetails.length > 0 && typeof Storage !== 'undefined' && Storage.saveErrorWordsForRound) {
                         const errorWords = errorDetails.map(d => {
@@ -457,8 +463,18 @@ const Practice = {
                                 snapshot: d.snapshot || null
                             };
                         });
+                        console.log('[Practice.savePartialIfActive] 保存错题到按轮视图，roundId:', log.id, '错题数:', errorWords.length);
                         Storage.saveErrorWordsForRound(log.id, errorWords);
+                    } else {
+                        console.log('[Practice.savePartialIfActive] 没有错题需要保存到按轮视图');
                     }
+                } else {
+                    console.warn('[Practice.savePartialIfActive] 无法保存错题到按轮视图：', {
+                        hasLog: !!log,
+                        hasLogId: !!(log && log.id),
+                        hasDetails: !!(this.practiceLog && this.practiceLog.details),
+                        detailsLength: this.practiceLog?.details?.length || 0
+                    });
                 }
             } catch (e) {
                 console.warn('保存未完成练习记录失败:', e);
@@ -496,15 +512,27 @@ const Practice = {
         const previousCompleted = this._initialCompletedCount || 0; // 之前已完成的题目数量
         const completed = previousCompleted + currentSessionCompleted; // 总完成数量
         
-        const correct = this.practiceLog.correctCount || 0;
-        const errors = this.practiceLog.errorWords || [];
+        // 正确数需要加上初始正确数
+        const previousCorrect = this._initialCorrectCount || 0;
+        const currentCorrect = this.practiceLog.correctCount || 0;
+        const correct = previousCorrect + (currentCorrect - previousCorrect); // 应该是当前会话的正确数 + 之前正确的数
+        // 但 practiceLog.correctCount 是从 initialCorrect 开始的，所以需要减去初始值再加上
+        const actualCurrentCorrect = currentCorrect - (this._initialCorrectCount || 0);
+        const totalCorrect = previousCorrect + actualCurrentCorrect;
+        
+        // 错题列表需要合并初始错题和当前错题
+        const previousErrors = this._initialErrorWords || [];
+        const currentErrors = this.practiceLog.errorWords || [];
+        // 合并错题列表（去重）
+        const allErrorIds = new Set([...previousErrors.map(e => typeof e === 'string' ? e : e.id || e.wordId), ...currentErrors.map(e => typeof e === 'string' ? e : e.id || e.wordId)]);
+        const errors = Array.from(allErrorIds);
         
         const updates = {
             progress: {
                 total: task.progress.total,
                 completed: completed, // 所有答过的题目（无论对错）= 之前的 + 当前的
-                correct: correct,
-                errors: errors
+                correct: totalCorrect, // 总正确数 = 之前的 + 当前的
+                errors: errors // 合并后的错题列表
             }
         };
         
@@ -620,6 +648,10 @@ const Practice = {
                 word: prevWord,
                 index: this.currentIndex - 1
             });
+            // 限制历史记录最大长度为100，防止内存泄漏
+            if (this.history.length > 100) {
+                this.history = this.history.slice(-100);
+            }
         }
         
         // 显示拼音和词组
@@ -949,6 +981,10 @@ const Practice = {
                     index: this.currentIndex,
                     snapshot: snapshot
                 });
+                // 限制历史记录最大长度为100，防止内存泄漏
+                if (this.history.length > 100) {
+                    this.history = this.history.slice(-100);
+                }
             }
             this.currentIndex++;
             this.showNextWord();
@@ -1055,8 +1091,8 @@ const Practice = {
             if (typeof Debug !== 'undefined') {
                 Debug.log('info', `画布有内容，开始识别API调用，快照大小: ${(snapshot.length / 1024).toFixed(2)}KB`, 'practice');
             }
-            document.getElementById('feedback-area').innerHTML = 
-                '<div class="loading"></div> 识别中...';
+        document.getElementById('feedback-area').innerHTML = 
+            '<div class="loading"></div> 识别中...';
         } else {
             console.log('[Practice.submitAnswer] ⚠️ 不显示"识别中"提示 - 模式:', this.mode, '快照:', snapshot ? '有' : '无');
             console.log('[Practice.submitAnswer] 🚫 不会调用 Recognition.recognize()');
@@ -1131,8 +1167,8 @@ const Practice = {
                             }
                             this.practiceLog.details.splice(existingIdx, 1);
                         }
-                        this.practiceLog.correctCount++;
-                        // 保存详情（保留正确也保留快照）
+                    this.practiceLog.correctCount++;
+                    // 保存详情（保留正确也保留快照）
                         this.practiceLog.details.push({ wordId: word.id, correct: true, snapshot, displayText: this._currentDisplayText });
                         
                         // 同步到题库管理的掌握状态
@@ -1220,15 +1256,19 @@ const Practice = {
                 const wasRetrying = this._isRetryingError;
                 const delay = wasRetrying ? 3000 : (this.mode === 'normal' ? 2000 : 300);
                 this.scheduleNextWord(delay, () => {
-                    // 保存当前题目到历史
-                    if (this.currentIndex < this.currentWords.length) {
-                        this.history.push({
-                            word: word,
-                            index: this.currentIndex,
-                            snapshot: snapshot
-                        });
-                    }
-                    this.currentIndex++;
+                    // 保存当前题目到历史（限制历史记录长度，防止内存泄漏）
+                if (this.currentIndex < this.currentWords.length) {
+                    this.history.push({
+                        word: word,
+                        index: this.currentIndex,
+                        snapshot: snapshot
+                    });
+                        // 限制历史记录最大长度为100，防止内存泄漏
+                        if (this.history.length > 100) {
+                            this.history = this.history.slice(-100);
+                        }
+                }
+                this.currentIndex++;
                     
                     // 检查是否是最后一题（在递增后检查）
                     // 注意：currentIndex 已经递增，所以如果 currentIndex >= totalWords，说明已经处理完所有题目
@@ -1240,7 +1280,7 @@ const Practice = {
                     }
                     
                     this.isProcessingNextQuestion = false; // 重置处理状态
-                    this.showNextWord();
+                this.showNextWord();
                 });
             } else {
                 // 答错了
@@ -1507,8 +1547,8 @@ const Practice = {
         
         // 错误时在田字格中显示正确答案（楷体红色）
         if (!isCorrect && typeof Handwriting !== 'undefined' && Handwriting.drawCorrectWord) {
-            Handwriting.drawCorrectWord(word.word);
-        }
+                Handwriting.drawCorrectWord(word.word);
+            }
     },
     
     /**
@@ -1718,6 +1758,15 @@ const Practice = {
             Storage.clearPracticeAutosave();
         }
         
+        // 练习完成后，创建复习任务（基于第一次练习的错题）
+        // 只有在非任务模式下，且本次练习有错题时才创建
+        if (!this.currentTaskId && log && log.errorWords && log.errorWords.length > 0) {
+            // 检查是否存在该练习对应的复习任务（通过originalPracticeLogId关联）
+            if (typeof TaskList !== 'undefined' && TaskList.createReviewTaskFromPractice) {
+                TaskList.createReviewTaskFromPractice(log.id, log.errorWords);
+            }
+        }
+        
         // 清除任务ID
         this.currentTaskId = null;
         
@@ -1915,7 +1964,7 @@ const Practice = {
             this.updateDebugInfo('⏭️ 画布为空，记录为错题并进入重做模式');
             
             // 调用 handleEmptySubmission，它会进入重做模式
-            const word = this.currentWords[this.currentIndex];
+        const word = this.currentWords[this.currentIndex];
             await this.handleEmptySubmission(word);
             this.isProcessingNextQuestion = false; // 重置处理状态
             return;

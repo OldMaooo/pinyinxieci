@@ -506,6 +506,63 @@ const TaskList = {
         }
         
         return tasks;
+    },
+
+    /**
+     * 从练习记录创建复习任务（基于第一次练习的错题）
+     * @param {string} practiceLogId - 练习记录ID
+     * @param {Array} errorWordIds - 错题ID列表
+     * @returns {Object|null} 复习任务对象，如果已存在则返回null
+     */
+    createReviewTaskFromPractice(practiceLogId, errorWordIds) {
+        if (!errorWordIds || errorWordIds.length === 0) {
+            console.log('[TaskList.createReviewTaskFromPractice] 没有错题，不创建复习任务');
+            return null;
+        }
+
+        // 检查是否已存在基于该练习的复习任务
+        const existingTasks = this.getAllTasks();
+        const existingReviewTask = existingTasks.find(t => 
+            t.type === this.TYPE.REVIEW && 
+            t.originalPracticeLogId === practiceLogId
+        );
+
+        if (existingReviewTask) {
+            console.log('[TaskList.createReviewTaskFromPractice] 复习任务已存在，不重复创建:', existingReviewTask.id);
+            return existingReviewTask;
+        }
+
+        // 计算复习日期（明天）
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const scheduledDateStr = this.formatDateForTask(tomorrow);
+
+        // 创建复习任务
+        const reviewTask = {
+            id: `review_${practiceLogId}_${Date.now()}`,
+            name: `复习任务 - ${this.formatDateDisplay(tomorrow)}`,
+            wordIds: errorWordIds, // 基于第一次练习的错题
+            type: this.TYPE.REVIEW,
+            status: this.STATUS.PENDING,
+            scheduledDate: scheduledDateStr,
+            originalPracticeLogId: practiceLogId, // 关联原始练习记录
+            createdAt: new Date().toISOString(),
+            progress: {
+                total: errorWordIds.length,
+                completed: 0,
+                correct: 0,
+                errors: []
+            }
+        };
+
+        const result = this.addTask(reviewTask);
+        if (result.success) {
+            console.log('[TaskList.createReviewTaskFromPractice] ✅ 复习任务创建成功:', reviewTask.id);
+            return reviewTask;
+        } else {
+            console.error('[TaskList.createReviewTaskFromPractice] ❌ 复习任务创建失败:', result.message);
+            return null;
+        }
     }
 };
 
