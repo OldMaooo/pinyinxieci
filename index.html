@@ -24,7 +24,7 @@
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#home">
                 <i class="bi bi-pencil-square"></i> 看拼音写词
-                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.92</span>
+                <span class="ms-2 small text-muted" id="app-version" style="font-size: 0.7rem;">v1.3.93</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -710,10 +710,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- 项目JS模块 -->
-    <script src="js/version.js?v=1.3.92"></script>
-    <script src="js/storage.js?v=1.3.92"></script>
-    <script src="js/config.js?v=1.3.92"></script>
-    <script src="js/supabase-sync.js?v=1.3.92"></script>
+    <script src="js/version.js?v=1.3.93"></script>
+    <script src="js/storage.js?v=1.3.93"></script>
+    <script src="js/config.js?v=1.3.93"></script>
+    <script src="js/supabase-sync.js?v=1.3.93"></script>
     <script src="js/debug.js?v=1.3.81"></script>
     <script src="js/word-groups.js?v=1.3.81" onerror="console.error('[ERROR] word-groups.js加载失败！', this.src)"></script>
     <script src="js/recognition.js?v=1.3.81"></script>
@@ -721,12 +721,12 @@
     <script src="js/export.js?v=1.3.81"></script>
     <script src="js/review-plan.js?v=1.3.81"></script>
     <script src="js/handwriting.js?v=1.3.81"></script>
-    <script src="js/practice.js?v=1.3.92"></script>
+    <script src="js/practice.js?v=1.3.93"></script>
     <script src="js/statistics.js?v=1.3.81"></script>
     <script src="js/errorbook.js?v=1.3.81"></script>
     <script src="js/init-data.js?v=1.3.81"></script>
     <script src="js/practice-range.js?v=1.3.81"></script>
-    <script src="js/task-list.js?v=1.3.92"></script>
+    <script src="js/task-list.js?v=1.3.93"></script>
     <script src="js/task-list-ui.js?v=1.3.81"></script>
     <script src="js/review-plan-ui.js?v=1.3.81"></script>
     <script src="js/main.js?v=1.3.81"></script>
@@ -932,10 +932,14 @@
                 </div>
                 <div class="modal-body">
                     <pre id="diagnosis-output" style="white-space: pre-wrap; word-wrap: break-word; font-size: 0.85rem;"></pre>
+                    <hr>
+                    <label class="form-label">本轮练习调试数据（JSON，可一键复制给开发者排查）</label>
+                    <textarea id="diagnosis-debug-json" class="form-control" rows="6" readonly style="font-size: 0.8rem; font-family: monospace;"></textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" id="copy-diagnosis-btn">复制到剪贴板</button>
+                    <button type="button" class="btn btn-outline-primary me-auto" id="copy-diagnosis-debug-btn">复制调试JSON</button>
+                    <button type="button" class="btn btn-primary" id="copy-diagnosis-btn">复制报告</button>
                 </div>
             </div>
         </div>
@@ -1012,6 +1016,8 @@
         const diagnoseBtn = document.getElementById('diagnose-btn');
         const diagnosisOutput = document.getElementById('diagnosis-output');
         const copyDiagnosisBtn = document.getElementById('copy-diagnosis-btn');
+        const diagnosisDebugJson = document.getElementById('diagnosis-debug-json');
+        const copyDiagnosisDebugBtn = document.getElementById('copy-diagnosis-debug-btn');
 
         if (diagnoseBtn) {
             diagnoseBtn.addEventListener('click', () => {
@@ -1072,6 +1078,15 @@
                     });
 
                     diagnosisOutput.textContent = output;
+
+                    // 显示调试事件 JSON，方便一键复制
+                    if (diagnosisDebugJson) {
+                        try {
+                            diagnosisDebugJson.value = JSON.stringify(report.debugEvents || [], null, 2);
+                        } catch (e) {
+                            diagnosisDebugJson.value = '生成调试JSON失败: ' + e.message;
+                        }
+                    }
                     const diagnosisModal = new bootstrap.Modal(document.getElementById('diagnosisModal'));
                     diagnosisModal.show();
                 } else {
@@ -1085,9 +1100,9 @@
                 const textToCopy = diagnosisOutput.textContent;
                 try {
                     await navigator.clipboard.writeText(textToCopy);
-                    copyDiagnosisBtn.textContent = '已复制！';
+                    copyDiagnosisBtn.textContent = '已复制报告！';
                     setTimeout(() => {
-                        copyDiagnosisBtn.textContent = '复制到剪贴板';
+                        copyDiagnosisBtn.textContent = '复制报告';
                     }, 2000);
                 } catch (err) {
                     console.error('复制失败:', err);
@@ -1100,9 +1115,40 @@
                     textArea.select();
                     try {
                         document.execCommand('copy');
-                        copyDiagnosisBtn.textContent = '已复制！';
+                        copyDiagnosisBtn.textContent = '已复制报告！';
                         setTimeout(() => {
-                            copyDiagnosisBtn.textContent = '复制到剪贴板';
+                            copyDiagnosisBtn.textContent = '复制报告';
+                        }, 2000);
+                    } catch (e) {
+                        alert('复制失败，请手动复制。');
+                    }
+                    document.body.removeChild(textArea);
+                }
+            });
+        }
+
+        if (copyDiagnosisDebugBtn && diagnosisDebugJson) {
+            copyDiagnosisDebugBtn.addEventListener('click', async () => {
+                const textToCopy = diagnosisDebugJson.value || '';
+                try {
+                    await navigator.clipboard.writeText(textToCopy);
+                    copyDiagnosisDebugBtn.textContent = '已复制调试JSON！';
+                    setTimeout(() => {
+                        copyDiagnosisDebugBtn.textContent = '复制调试JSON';
+                    }, 2000);
+                } catch (err) {
+                    console.error('复制调试JSON失败:', err);
+                    const textArea = document.createElement('textarea');
+                    textArea.value = textToCopy;
+                    textArea.style.position = 'fixed';
+                    textArea.style.opacity = '0';
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        copyDiagnosisDebugBtn.textContent = '已复制调试JSON！';
+                        setTimeout(() => {
+                            copyDiagnosisDebugBtn.textContent = '复制调试JSON';
                         }, 2000);
                     } catch (e) {
                         alert('复制失败，请手动复制。');

@@ -6,6 +6,37 @@
 const Practice = {
     // 用于版本一致性自检的代码版本标签，必须与 APP_VERSION.version 保持一致
     _codeVersion: (typeof APP_VERSION !== 'undefined' ? APP_VERSION.version : 'unknown'),
+    // 本轮练习的调试事件列表，用于一键复制给开发者排查
+    debugEvents: [],
+
+    logDebugEvent(type, payload = {}) {
+        try {
+            const now = new Date();
+            const beijingTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Shanghai' }));
+            this.debugEvents.push({
+                ts: beijingTime.toISOString(),
+                type,
+                index: this.currentIndex,
+                totalWords: this.currentWords?.length || 0,
+                wordId: this.currentWords?.[this.currentIndex]?.id || null,
+                word: this.currentWords?.[this.currentIndex]?.word || null,
+                state: {
+                    isActive: this.isActive,
+                    isPaused: this.isPaused,
+                    isSubmitting: this.isSubmitting,
+                    allowSkip: this.allowSkip,
+                    mode: this.mode
+                },
+                data: payload
+            });
+            // 防止日志无限增长，最多保留最近 500 条
+            if (this.debugEvents.length > 500) {
+                this.debugEvents = this.debugEvents.slice(-500);
+            }
+        } catch (e) {
+            console.error('[Practice.logDebugEvent] 记录调试事件失败:', e);
+        }
+    },
     currentWords: [],
     currentIndex: 0,
     // 记录之前的题目历史（用于返回上一题）
@@ -346,7 +377,7 @@ const Practice = {
                 this.currentIndex = Math.min(task.progress.completed, words.length - 1);
             }
         } else {
-        this.currentIndex = 0;
+            this.currentIndex = 0;
         }
         
         this.history = []; // 重置历史记录（限制历史记录长度，防止内存泄漏）
@@ -361,6 +392,14 @@ const Practice = {
         this.consecutiveBlockCount = 0;
         this.isSubmitting = false;
         
+        // 每轮开始时清空调试日志并记录启动事件
+        this.debugEvents = [];
+        this.logDebugEvent('start_practice', {
+            fromTaskId: this.currentTaskId || null,
+            wordsLength: words.length,
+            resumeFromIndex: this.currentIndex
+        });
+
         // 初始化练习记录
         // 如果是从任务继续，需要恢复之前的进度
         let initialCompleted = 0;
@@ -1009,6 +1048,7 @@ const Practice = {
     async submitAnswer(options = {}) {
         const { bypassCooldown = false } = options;
         const word = this.currentWords[this.currentIndex];
+        this.logDebugEvent('submit_click', { bypassCooldown, wordId: word?.id });
         
         // 防重复提交：同一个字10秒内只能提交一次
         const now = Date.now();
@@ -1038,15 +1078,23 @@ const Practice = {
                 // 继续执行提交，不返回
             } else {
                 const remainingSeconds = Math.ceil((3000 - timeSinceLastSubmit) / 1000);
+                const remainingSeconds = Math.ceil((3000 - timeSinceLastSubmit) / 1000);
                 console.warn('[Practice] 提交被拦截', {
                     wordId: word.id,
                     word: word.word,
                     remainingSeconds: remainingSeconds,
                     consecutiveBlockCount: this.consecutiveBlockCount
                 });
+                this.logDebugEvent('submit_blocked', {
+                    remainingSeconds,
+                    timeSinceLastSubmit,
+                    lastSubmitTime: this.lastSubmitTime,
+                    consecutiveBlockCount: this.consecutiveBlockCount,
+                    lastSubmitWordId: this.lastSubmitWordId
+                });
                 alert(`请等待 ${remainingSeconds} 秒后再提交`);
-            return;
-        }
+                return;
+            }
         } else {
             // 提交未被拦截，重置连续拦截计数
             this.consecutiveBlockCount = 0;
@@ -1086,6 +1134,7 @@ const Practice = {
         this.isSubmitting = true;
         this.lastSubmitTime = now;
         this.lastSubmitWordId = word.id; // 记录当前提交的字ID
+        this.logDebugEvent('submit_start', { wordId: word.id, hasSnapshot: !!snapshot, wordTime });
         const submitBtn = document.getElementById('submit-answer-btn');
         const originalBtnHtml = submitBtn.innerHTML;
         submitBtn.disabled = true;
@@ -2223,7 +2272,8 @@ const Practice = {
             handwriting: {
                 canvasExists: !!document.getElementById('handwriting-canvas'),
                 hasContent: typeof Handwriting !== 'undefined' && Handwriting.hasContent ? Handwriting.hasContent() : false
-            }
+            },
+            debugEvents: this.debugEvents || []
         };
 
         // 检查按钮状态
