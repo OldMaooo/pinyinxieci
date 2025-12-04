@@ -513,18 +513,19 @@ const Practice = {
         const completed = previousCompleted + currentSessionCompleted; // 总完成数量
         
         // 正确数需要加上初始正确数
+        // practiceLog.correctCount 是从 initialCorrect 开始的，所以当前会话的正确数 = correctCount - initialCorrect
         const previousCorrect = this._initialCorrectCount || 0;
-        const currentCorrect = this.practiceLog.correctCount || 0;
-        const correct = previousCorrect + (currentCorrect - previousCorrect); // 应该是当前会话的正确数 + 之前正确的数
-        // 但 practiceLog.correctCount 是从 initialCorrect 开始的，所以需要减去初始值再加上
-        const actualCurrentCorrect = currentCorrect - (this._initialCorrectCount || 0);
-        const totalCorrect = previousCorrect + actualCurrentCorrect;
+        const totalCorrectCount = this.practiceLog.correctCount || 0;
+        const currentSessionCorrect = totalCorrectCount - previousCorrect; // 当前会话正确数
+        const totalCorrect = previousCorrect + currentSessionCorrect; // 总正确数
         
         // 错题列表需要合并初始错题和当前错题
         const previousErrors = this._initialErrorWords || [];
         const currentErrors = this.practiceLog.errorWords || [];
-        // 合并错题列表（去重）
-        const allErrorIds = new Set([...previousErrors.map(e => typeof e === 'string' ? e : e.id || e.wordId), ...currentErrors.map(e => typeof e === 'string' ? e : e.id || e.wordId)]);
+        // 合并错题列表（去重，只保留wordId）
+        const previousErrorIds = previousErrors.map(e => typeof e === 'string' ? e : (e.wordId || e.id || e));
+        const currentErrorIds = currentErrors.map(e => typeof e === 'string' ? e : (e.wordId || e.id || e));
+        const allErrorIds = new Set([...previousErrorIds, ...currentErrorIds]);
         const errors = Array.from(allErrorIds);
         
         const updates = {
@@ -1763,7 +1764,10 @@ const Practice = {
         if (!this.currentTaskId && log && log.errorWords && log.errorWords.length > 0) {
             // 检查是否存在该练习对应的复习任务（通过originalPracticeLogId关联）
             if (typeof TaskList !== 'undefined' && TaskList.createReviewTaskFromPractice) {
+                console.log('[Practice.finish] 创建复习任务，基于练习记录:', log.id, '错题数:', log.errorWords.length);
                 TaskList.createReviewTaskFromPractice(log.id, log.errorWords);
+            } else {
+                console.warn('[Practice.finish] TaskList.createReviewTaskFromPractice 不可用');
             }
         }
         
@@ -2370,13 +2374,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         displayText: Practice._currentDisplayText
                     });
                     
-                    // 保存当前题目到历史
+                    // 保存当前题目到历史（限制长度防止内存泄漏）
                     if (Practice.currentIndex < Practice.currentWords.length) {
                         Practice.history.push({
                             word: word,
                             index: Practice.currentIndex,
                             snapshot: null
                         });
+                        // 限制历史记录最大长度为100，防止内存泄漏
+                        if (Practice.history.length > 100) {
+                            Practice.history = Practice.history.slice(-100);
+                        }
                     }
                     
                     Practice.currentIndex++;
