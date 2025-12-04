@@ -21,31 +21,6 @@ const Practice = {
     },
 
     async handleEmptySubmission(word) {
-        // 检查是否允许跳过
-        if (!this.allowSkip) {
-            // 不允许跳过时，空提交也应该进入重做模式，但不允许直接跳过
-            // 这里保持原有逻辑，但会在重做模式下阻止跳过
-            if (!this._isRetryingError) {
-                // 第一次空提交，进入重做模式
-            } else {
-                // 已经在重做模式，不允许跳过
-                alert('当前题目尚未答对，无法跳过。请答对后再继续。');
-                return;
-            }
-        }
-        
-        // 如果已经在重做模式，且允许跳过，说明之前已经记录过错误了
-        // 允许跳过时，即使已经在重做模式，也允许继续（会在调用处处理进入下一题）
-        if (this._isRetryingError && this.allowSkip) {
-            // 允许跳过时，不阻止，让调用处处理进入下一题
-            // 但需要确保不会重复记录错误
-            const existingIdx = this.practiceLog.details.findIndex(d => d.wordId === word.id);
-            if (existingIdx >= 0) {
-                // 已经记录过，不重复记录
-                return;
-            }
-        }
-        
         if (this.timer) {
             clearInterval(this.timer);
             this.timer = null;
@@ -86,33 +61,10 @@ const Practice = {
         
         this.saveAutosaveDraft();
         
-        if (this.allowSkip) {
-            // 允许跳过：直接进入下一题，不进入重做模式
-            // 延迟2秒后进入下一题
-            this.scheduleNextWord(2000, () => {
-                if (this.currentIndex < this.currentWords.length) {
-                    this.history.push({
-                        word: word,
-                        index: this.currentIndex,
-                        snapshot: null
-                    });
-                    // 限制历史记录最大长度为100，防止内存泄漏
-                    if (this.history.length > 100) {
-                        this.history = this.history.slice(-100);
-                    }
-                }
-                this.currentIndex++;
-                if (this.currentIndex >= this.currentWords.length) {
-                    this.finish();
-                    return;
-                }
-                this.showNextWord();
-            });
-        } else {
-            // 不允许跳过：进入错题重做模式：显示正确答案，8秒后清空画布
-            this.enterRetryMode(word);
-            // 不进入下一题，等待用户重新提交
-        }
+        // 进入错题重做模式：显示正确答案，8秒后清空画布
+        // 不论是否允许跳过，这里统一行为，真正的“跳过”通过 skipAnswer / skipQuestion 来处理
+        this.enterRetryMode(word);
+        // 不进入下一题，等待用户重新提交或显式跳过
     },
     timer: null,
     timeLimit: 30,
@@ -2083,45 +2035,13 @@ const Practice = {
             return;
         } else {
             // 画布没有内容
-            if (this.allowSkip) {
-                // 允许跳过：直接记录为错题并进入下一题（类似点击「不会」的效果）
-                console.log('[Practice.showNextQuestion] ⏭️ 画布为空，允许跳过，记录为错题并进入下一题');
-                this.updateDebugInfo('⏭️ 画布为空，记录为错题并进入下一题');
-                
-        const word = this.currentWords[this.currentIndex];
-                await this.handleEmptySubmission(word);
-                // 允许跳过时，直接进入下一题
-                this.scheduleNextWord(2000, () => {
-        if (this.currentIndex < this.currentWords.length) {
-            this.history.push({
-                word: word,
-                index: this.currentIndex,
-                snapshot: null
-            });
-                        // 限制历史记录最大长度为100，防止内存泄漏
-                        if (this.history.length > 100) {
-                            this.history = this.history.slice(-100);
-        }
-                    }
-        this.currentIndex++;
-                    if (this.currentIndex >= this.currentWords.length) {
-                        this.isProcessingNextQuestion = false;
-                        this.finish();
-                        return;
-                    }
-                    this.isProcessingNextQuestion = false;
-        this.showNextWord();
-                });
-            } else {
-                // 不允许跳过：记录为错题并进入重做模式
-                console.log('[Practice.showNextQuestion] ⏭️ 画布为空，不允许跳过，记录为错题并进入重做模式');
-                this.updateDebugInfo('⏭️ 画布为空，记录为错题并进入重做模式');
-                
-                const word = this.currentWords[this.currentIndex];
-                await this.handleEmptySubmission(word);
-                this.isProcessingNextQuestion = false; // 重置处理状态
-                return;
-            }
+            console.log('[Practice.showNextQuestion] ⏭️ 画布为空，记录为错题并进入重做模式');
+            this.updateDebugInfo('⏭️ 画布为空，记录为错题并进入重做模式');
+            
+            const word = this.currentWords[this.currentIndex];
+            await this.handleEmptySubmission(word);
+            this.isProcessingNextQuestion = false; // 重置处理状态
+            return;
         }
     },
     
