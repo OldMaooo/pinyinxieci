@@ -405,6 +405,15 @@ const Practice = {
         
         this.isActive = true;
         
+        // 初始化跳过设置（从localStorage读取或使用默认值）
+        const savedAllowSkip = localStorage.getItem('practice_allow_skip');
+        if (savedAllowSkip !== null) {
+            this.allowSkip = savedAllowSkip === 'true';
+        } else {
+            this.allowSkip = true; // 默认可以跳过
+        }
+        this.updateSkipSettingUI();
+        
         // 隐藏设置，显示练习界面
         const settingsEl = document.getElementById('practice-settings');
         const practiceAreaEl = document.getElementById('practice-area');
