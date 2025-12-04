@@ -1695,6 +1695,17 @@ const Practice = {
      * 跳过题目
      */
     async skipQuestion() {
+        // 检查是否允许跳过
+        if (!this.allowSkip) {
+            // 检查当前题目是否已答对
+            const currentWordId = this.currentWords[this.currentIndex]?.id;
+            const currentDetail = this.practiceLog.details?.find(d => d.wordId === currentWordId);
+            if (!currentDetail || !currentDetail.correct) {
+                alert('当前题目尚未答对，无法跳过。请答对后再继续。');
+                return;
+            }
+        }
+        
         if (confirm('确定要跳过这道题吗？（将记录为错题）')) {
             this.clearPendingNextWordTimer();
             this.lastSubmitTime = 0;
