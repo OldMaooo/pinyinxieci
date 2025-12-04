@@ -5,6 +5,58 @@
 
 const Main = {
     _practiceScriptPromise: null,
+    
+    /**
+     * 版本一致性自检
+     * 确保 APP_VERSION、页面显示版本和 Practice._codeVersion 完全一致，
+     * 一旦发现不一致，立即强制刷新以加载同一套最新代码，避免「版本号新但逻辑旧」的混合状态。
+     */
+    checkVersionConsistency() {
+        try {
+            if (typeof APP_VERSION === 'undefined') {
+                console.warn('[Main.checkVersionConsistency] APP_VERSION 未定义，跳过版本自检');
+                return;
+            }
+
+            const targetVersion = APP_VERSION.version;
+
+            // 1. 页面显示的版本（左上角）
+            let displayVersion = null;
+            const versionEl = document.getElementById('app-version');
+            if (versionEl && versionEl.textContent) {
+                // 文本形如 "v1.3.92"
+                const match = versionEl.textContent.trim().match(/v(\d+\.\d+\.\d+)/);
+                if (match) {
+                    displayVersion = match[1];
+                }
+            }
+
+            // 2. Practice 模块内部代码版本
+            const practiceVersion = (typeof Practice !== 'undefined' && Practice._codeVersion) 
+                ? Practice._codeVersion 
+                : null;
+
+            // 如果有任何一个存在且与目标版本不一致，则认为版本混乱
+            const mismatch =
+                (displayVersion && displayVersion !== targetVersion) ||
+                (practiceVersion && practiceVersion !== targetVersion);
+
+            if (mismatch) {
+                console.warn('[Main.checkVersionConsistency] 检测到版本不一致，将强制刷新页面以加载最新版本', {
+                    targetVersion,
+                    displayVersion,
+                    practiceVersion
+                });
+                alert(`检测到应用代码版本不一致，将刷新以加载最新版本（v${targetVersion}）。如果多次出现，请稍等片刻再重试。`);
+                const basePath = window.location.pathname || '/';
+                // 使用版本号和时间戳组合，尽可能绕过 Safari 和 CDN 的短期缓存
+                const newUrl = `${basePath}?v=${encodeURIComponent(targetVersion)}&t=${Date.now()}`;
+                window.location.replace(newUrl);
+            }
+        } catch (e) {
+            console.error('[Main.checkVersionConsistency] 自检失败：', e);
+        }
+    },
     /**
      * 初始化
      */
@@ -24,6 +76,9 @@ const Main = {
             } else {
                 console.warn('[Main.init] ⚠️ APP_VERSION 未定义');
             }
+
+            // 版本一致性自检：防止出现「版本号是新的，但核心脚本仍是旧版本」的混合状态
+            this.checkVersionConsistency();
             
             // 确保Storage先初始化
             if (typeof Storage !== 'undefined') {

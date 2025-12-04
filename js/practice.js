@@ -4,6 +4,8 @@
  */
 
 const Practice = {
+    // 用于版本一致性自检的代码版本标签，必须与 APP_VERSION.version 保持一致
+    _codeVersion: (typeof APP_VERSION !== 'undefined' ? APP_VERSION.version : 'unknown'),
     currentWords: [],
     currentIndex: 0,
     // 记录之前的题目历史（用于返回上一题）
