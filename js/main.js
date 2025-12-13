@@ -489,13 +489,13 @@ const Main = {
             });
         }
 
-        // 主题切换
-        const themeBtn = document.getElementById('theme-toggle-btn');
-        if (themeBtn) {
+        // 主题切换（使用设置菜单中的开关）
+        const themeSwitch = document.getElementById('theme-switch');
+        if (themeSwitch) {
             const applyTheme = (mode) => {
                 document.documentElement.setAttribute('data-bs-theme', mode);
                 localStorage.setItem('theme', mode);
-                themeBtn.innerHTML = mode === 'dark' ? '<i class="bi bi-moon"></i> 深色' : '<i class="bi bi-brightness-high"></i> 浅色';
+                themeSwitch.checked = mode === 'dark';
                 // 导航栏配色
                 const navbar = document.querySelector('nav.navbar');
                 if (navbar) {
@@ -511,9 +511,9 @@ const Main = {
             };
             const saved = localStorage.getItem('theme') || 'light';
             applyTheme(saved);
-            themeBtn.addEventListener('click', () => {
-                const current = document.documentElement.getAttribute('data-bs-theme') || 'light';
-                applyTheme(current === 'light' ? 'dark' : 'light');
+            themeSwitch.addEventListener('change', (e) => {
+                const mode = e.target.checked ? 'dark' : 'light';
+                applyTheme(mode);
             });
         }
 
@@ -2392,25 +2392,77 @@ const Main = {
 document.addEventListener('DOMContentLoaded', () => {
     Main.init();
     
-    // 鼠标离开遮罩功能
+    // 鼠标离开遮罩功能（受设置开关控制）
     const overlay = document.getElementById('mouse-leave-overlay');
-    if (overlay) {
-        // 监听鼠标离开页面
-        document.addEventListener('mouseleave', (e) => {
+    const mouseLeaveSwitch = document.getElementById('mouse-leave-dark-switch');
+    
+    // 初始化开关状态
+    if (mouseLeaveSwitch) {
+        const saved = localStorage.getItem('mouseLeaveDark') === 'true';
+        mouseLeaveSwitch.checked = saved;
+    }
+    
+    // 鼠标离开/进入事件处理函数
+    let mouseLeaveHandler = null;
+    let mouseEnterHandler = null;
+    let mouseMoveHandler = null;
+    
+    const enableMouseLeaveDark = () => {
+        if (!overlay || mouseLeaveHandler) return; // 已启用则跳过
+        
+        mouseLeaveHandler = (e) => {
             // 只有当鼠标真正离开页面时才显示遮罩
             if (e.clientY <= 0 || e.clientX <= 0 || e.clientX >= window.innerWidth || e.clientY >= window.innerHeight) {
                 overlay.style.display = 'block';
             }
-        });
+        };
         
-        // 监听鼠标进入页面
-        document.addEventListener('mouseenter', () => {
+        mouseEnterHandler = () => {
             overlay.style.display = 'none';
-        });
+        };
         
-        // 监听鼠标移动（防止在某些情况下遮罩不消失）
-        document.addEventListener('mousemove', () => {
+        mouseMoveHandler = () => {
             overlay.style.display = 'none';
+        };
+        
+        document.addEventListener('mouseleave', mouseLeaveHandler);
+        document.addEventListener('mouseenter', mouseEnterHandler);
+        document.addEventListener('mousemove', mouseMoveHandler);
+    };
+    
+    const disableMouseLeaveDark = () => {
+        if (mouseLeaveHandler) {
+            document.removeEventListener('mouseleave', mouseLeaveHandler);
+            mouseLeaveHandler = null;
+        }
+        if (mouseEnterHandler) {
+            document.removeEventListener('mouseenter', mouseEnterHandler);
+            mouseEnterHandler = null;
+        }
+        if (mouseMoveHandler) {
+            document.removeEventListener('mousemove', mouseMoveHandler);
+            mouseMoveHandler = null;
+        }
+        if (overlay) {
+            overlay.style.display = 'none';
+        }
+    };
+    
+    // 根据开关状态初始化
+    if (mouseLeaveSwitch && mouseLeaveSwitch.checked) {
+        enableMouseLeaveDark();
+    }
+    
+    // 监听开关变化
+    if (mouseLeaveSwitch) {
+        mouseLeaveSwitch.addEventListener('change', (e) => {
+            const enabled = e.target.checked;
+            localStorage.setItem('mouseLeaveDark', enabled ? 'true' : 'false');
+            if (enabled) {
+                enableMouseLeaveDark();
+            } else {
+                disableMouseLeaveDark();
+            }
         });
     }
 });
