@@ -965,7 +965,10 @@ const Main = {
             // 文件选择后显示预览弹框
             importInput.addEventListener('change', async (e) => {
                 const file = e.target.files[0];
-                if (!file) return;
+                if (!file) {
+                    alert('调试提示：未检测到文件 (e.target.files[0] is null)');
+                    return;
+                }
                 
                 try {
                     let text;
@@ -985,21 +988,23 @@ const Main = {
                     
                     // 检查数据格式
                     if (!data.version) {
+                        alert(`调试提示：文件解析成功，但缺少 version 字段。\n文件名: ${file.name}\n文件大小: ${file.size}\n文件类型: ${file.type}\n内容预览: ${text.substring(0, 100)}...`);
+                        
                         if (typeof WordBank !== 'undefined' && WordBank.showToast) {
                             WordBank.showToast('danger', '无效的数据格式');
                         }
-                        // 清空文件选择，以便下次可以选择相同文件
-                        importInput.value = '';
                         return;
                     }
                     
                     // 显示预览弹框
                     this.showImportPreview(data, file);
                 } catch (error) {
+                    alert(`调试提示：导入失败\n错误: ${error.message}\n类型: ${error.name}\n文件名: ${file ? file.name : '未知'}\n文件大小: ${file ? file.size : '未知'}\n文件类型: ${file ? file.type : '未知'}`);
                     console.error('[Main] 解析文件失败:', error);
                     if (typeof WordBank !== 'undefined' && WordBank.showToast) {
                         WordBank.showToast('danger', '文件解析失败: ' + (error.message || '未知错误'));
                     }
+                } finally {
                     // 清空文件选择，以便下次可以选择相同文件
                     importInput.value = '';
                 }
