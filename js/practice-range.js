@@ -3,6 +3,30 @@
  * 参考 @语文-识字 的交互：按年级展开/收起、可保存选择、支持动态题量按钮
  */
 const PracticeRange = {
+    // 保存折叠状态
+    saveCollapseState(containerId, semesterKey, isExpanded) {
+        try {
+            const key = `collapse_state_${containerId}`;
+            const state = JSON.parse(localStorage.getItem(key) || '{}');
+            state[semesterKey] = isExpanded;
+            localStorage.setItem(key, JSON.stringify(state));
+        } catch (e) {
+            console.warn('保存折叠状态失败:', e);
+        }
+    },
+
+    // 获取折叠状态
+    getCollapseState(containerId, semesterKey) {
+        try {
+            const key = `collapse_state_${containerId}`;
+            const state = JSON.parse(localStorage.getItem(key) || '{}');
+            // 默认展开（如果未设置）
+            return state[semesterKey] !== false;
+        } catch (e) {
+            return true;
+        }
+    },
+
     init() {
         this.refresh();
     },
@@ -32,7 +56,7 @@ const PracticeRange = {
             container.innerHTML = '<div class="text-muted py-3 text-center">正在加载默认题库，请稍候…</div>';
             return;
         }
-
+        
         // 首页使用表格视图，模态框使用原来的折叠视图
         if (containerId === 'practice-range-container-home' && options.context === 'home') {
             this.renderTableView(container, wordBank, options);
@@ -211,8 +235,9 @@ const PracticeRange = {
             const units = this.sortUnits(grouped[semesterKey]);
             const headingId = `${accordionId}-heading-${idx}`;
             const collapseId = `${accordionId}-collapse-${idx}`;
-            // 默认全部收起，如果有选中的学期则展开
-            const isExpanded = selectedSemesters.has(semesterKey);
+            
+            // 恢复折叠状态
+            const isExpanded = this.getCollapseState(container.id, semesterKey);
             
             // 计算学期的完成率（所有单元的字）- 支持三种状态：已掌握（绿）、错题（红）、未练习（灰）
             let semesterMasteredCount = 0;
@@ -253,7 +278,7 @@ const PracticeRange = {
             });
             const semesterPieHtml = this.generateSemesterPie(semesterMasteredCount, semesterErrorCount, semesterTotalCount);
             
-            html += `
+        html += `
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="${headingId}">
                         <div class="d-flex align-items-center w-100 practice-semester-header" style="padding: 0;">
@@ -261,7 +286,7 @@ const PracticeRange = {
                 <input type="checkbox" class="form-check-input semester-checkbox" 
                                        data-semester="${semesterKey}"
                                        style="margin: 0; cursor: pointer; width: 0.6em; height: 0.6em; vertical-align: middle;">
-                            </div>
+            </div>
                             <button class="accordion-button practice-semester-btn ${isExpanded ? '' : 'collapsed'}" type="button"
                                     data-collapse-target="#${collapseId}"
                                     aria-expanded="${isExpanded}" aria-controls="${collapseId}"
@@ -639,11 +664,11 @@ const PracticeRange = {
                         this.updateHomeSelectedCount(container);
                         // 同时也更新工具栏中的计数
                         this.updateSelectedCount(container, options);
-                    } else {
+                } else {
                         this.updateSelectedCount(container, options);
-                    }
-                });
+                }
             });
+        });
         }
         
         // 绑定单个字的点击事件（切换掌握状态）- 在home和wordbank上下文中
@@ -705,6 +730,12 @@ const PracticeRange = {
                 if (!target) return;
                 
                 const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+                
+                // 保存状态
+                const semesterKey = btn.querySelector('span')?.textContent;
+                if (semesterKey) {
+                    this.saveCollapseState(container.id, semesterKey, !isExpanded);
+                }
                 
                 // 使用 Bootstrap Collapse API
                 if (typeof bootstrap !== 'undefined' && bootstrap.Collapse) {
@@ -771,8 +802,8 @@ const PracticeRange = {
 
     updateSelectedCount(container, options = {}) {
         try {
-            const wordBank = Storage.getWordBank();
-            const grouped = this.groupWordsBySemesterUnit(wordBank);
+        const wordBank = Storage.getWordBank();
+        const grouped = this.groupWordsBySemesterUnit(wordBank);
             let total = 0;
             
             // 检查是否开启了「只练错题」开关
@@ -786,7 +817,7 @@ const PracticeRange = {
                 errorWordIds = new Set(errorWords.map(ew => ew.wordId));
             }
             
-            const checkedUnits = container.querySelectorAll('.unit-checkbox:checked');
+        const checkedUnits = container.querySelectorAll('.unit-checkbox:checked');
             checkedUnits.forEach(cb => {
                 const semester = cb.dataset.semester;
                 const unit = cb.dataset.unit;
@@ -899,7 +930,7 @@ const PracticeRange = {
         });
         this.updateSelectedCount(toRoot, { context: toRoot.id === 'practice-range-container-home' ? 'home' : 'modal' });
     },
-
+    
     /**
      * 更新首页管理模式的选中数量
      */

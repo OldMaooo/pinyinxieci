@@ -416,7 +416,7 @@ const Main = {
         } else if (pageId === 'wordbank') {
             if (typeof WordBank !== 'undefined') {
                 if (WordBank.loadWordBank) {
-                    WordBank.loadWordBank();
+            WordBank.loadWordBank();
                 }
                 // 延迟加载掌握状态视图，确保DOM已准备好
                 setTimeout(() => {
@@ -968,7 +968,19 @@ const Main = {
                 if (!file) return;
                 
                 try {
-                    const text = await file.text();
+                    let text;
+                    try {
+                        text = await file.text();
+                    } catch (readErr) {
+                        console.warn('[Main] file.text() 读取失败，尝试 FileReader:', readErr);
+                        text = await new Promise((resolve, reject) => {
+                            const reader = new FileReader();
+                            reader.onload = () => resolve(reader.result);
+                            reader.onerror = () => reject(reader.error);
+                            reader.readAsText(file);
+                        });
+                    }
+                    
                     const data = JSON.parse(text);
                     
                     // 检查数据格式
@@ -1631,7 +1643,7 @@ const Main = {
                             Practice.allowPracticePageOnce();
                         }
                         // 切换到练习页面并开始练习
-                        this.showPage('practice');
+                this.showPage('practice');
                         if (typeof Practice !== 'undefined') {
                             Practice.start();
                         }

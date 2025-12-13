@@ -39,6 +39,11 @@ const SupabaseSync = {
         try {
             // 获取配置（优先使用 localStorage 中的配置）
             const supabaseConfig = Config.getSupabase();
+            console.log('[SupabaseSync] 初始化配置:', { 
+                url: supabaseConfig.url ? supabaseConfig.url.substring(0, 20) + '...' : 'undefined',
+                hasKey: !!supabaseConfig.anonKey 
+            });
+
             // 创建 Supabase 客户端（使用匿名认证，单用户模式）
             this._client = supabase.createClient(supabaseConfig.url, supabaseConfig.anonKey, {
                 auth: {
@@ -153,6 +158,9 @@ const SupabaseSync = {
             };
         } catch (error) {
             console.error('[SupabaseSync] 上传失败:', error);
+            if (error.message && error.message.includes('Failed to fetch')) {
+                console.warn('[SupabaseSync] 网络连接失败，请检查网络或 Supabase URL 配置。');
+            }
             return {
                 success: false,
                 message: error.message || '上传失败'
@@ -221,6 +229,9 @@ const SupabaseSync = {
             };
         } catch (error) {
             console.error('[SupabaseSync] 下载失败:', error);
+            if (error.message && error.message.includes('Failed to fetch')) {
+                console.warn('[SupabaseSync] 网络连接失败，请检查网络或 Supabase URL 配置。');
+            }
             return {
                 success: false,
                 message: error.message || '下载失败'
