@@ -1231,11 +1231,6 @@ const Main = {
             ? data.wordBank 
             : (typeof Storage !== 'undefined' ? Storage.getWordBank() : []);
             
-        // 调试诊断
-        const wmKeys = Object.keys(wordMastery).length;
-        const ewLen = errorWords.length;
-        alert(`调试诊断：\n1. 题库来源: ${data.wordBank && data.wordBank.length > 0 ? '导入数据' : '本地数据'}\n2. 题库大小: ${wordBank.length}\n3. 导入数据-掌握状态数: ${wmKeys}\n4. 导入数据-错题数: ${ewLen}\n5. 数据版本: ${data.version || '无'}`);
-
         const allWordObjects = [];
         
         // 合并所有有状态的字
@@ -1259,6 +1254,16 @@ const Main = {
             
             if (semesters.length === 0) {
                 html += '<div class="text-center text-muted py-3">导入数据中没有掌握状态数据</div>';
+                
+                // 如果有掌握状态数据但没有显示出来，说明匹配失败
+                const wmKeys = data.wordMastery ? Object.keys(data.wordMastery).length : 0;
+                if (wmKeys > 0) {
+                    html += `<div class="alert alert-warning mt-3 mx-3 text-start">
+                        <h6><i class="bi bi-exclamation-triangle"></i> 数据匹配失败</h6>
+                        <p class="mb-1 small">检测到导入文件包含 ${wmKeys} 条状态记录，但在当前题库中未找到对应的汉字。</p>
+                        <p class="mb-0 small"><strong>可能原因：</strong><br>1. 导出文件缺失题库数据（建议重新导出）。<br>2. 本地题库与导出设备的题库版本不一致。</p>
+                    </div>`;
+                }
             } else {
                 semesters.forEach(semesterKey => {
                     const units = PracticeRange.sortUnits(grouped[semesterKey]);
@@ -1568,9 +1573,20 @@ const Main = {
             });
         }
         
+        // 过滤 wordBank (明确导出题库，确保跨设备兼容)
+        const filteredWordBank = [];
+        if (fullData.wordBank && Array.isArray(fullData.wordBank)) {
+             fullData.wordBank.forEach(w => {
+                 if (selectedWordIds.has(w.id)) {
+                     filteredWordBank.push(w);
+                 }
+             });
+        }
+        
         // 构建导出数据
         const exportData = {
             ...fullData,
+            wordBank: filteredWordBank,
             wordMastery: filteredWordMastery,
             errorWords: filteredErrorWords
         };
