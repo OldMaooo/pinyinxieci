@@ -1226,7 +1226,16 @@ const Main = {
         });
         
         // 获取完整题库以显示字的信息
-        const wordBank = typeof Storage !== 'undefined' ? Storage.getWordBank() : [];
+        // 优先使用导入数据中的题库，因为可能是跨设备迁移，本地可能没有题库
+        const wordBank = (data.wordBank && Array.isArray(data.wordBank) && data.wordBank.length > 0) 
+            ? data.wordBank 
+            : (typeof Storage !== 'undefined' ? Storage.getWordBank() : []);
+            
+        // 调试诊断
+        const wmKeys = Object.keys(wordMastery).length;
+        const ewLen = errorWords.length;
+        alert(`调试诊断：\n1. 题库来源: ${data.wordBank && data.wordBank.length > 0 ? '导入数据' : '本地数据'}\n2. 题库大小: ${wordBank.length}\n3. 导入数据-掌握状态数: ${wmKeys}\n4. 导入数据-错题数: ${ewLen}\n5. 数据版本: ${data.version || '无'}`);
+
         const allWordObjects = [];
         
         // 合并所有有状态的字
