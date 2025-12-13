@@ -1004,36 +1004,107 @@ const Storage = {
         return this.getWordBank().some(word => this.isBuiltinWord(word));
     },
 
+    /**
+     * 迁移单个字的关联数据（掌握状态、错题记录、复习计划）
+     * 用于当字ID发生变化时（如从本地生成的ID迁移到服务器标准ID）保留学习进度
+     */
+    migrateWordStatus(oldId, newId) {
+        if (!oldId || !newId || oldId === newId) return;
+        
+        // 1. 迁移掌握状态
+        const mastery = this.getWordMastery();
+        if (mastery[oldId]) {
+            console.log(`[Storage] 迁移掌握状态: ${oldId} -> ${newId}`);
+            mastery[newId] = mastery[oldId];
+            delete mastery[oldId];
+            this.saveWordMastery(mastery);
+        }
+        
+        // 2. 迁移错题记录
+        const errorWords = this.getErrorWords();
+        let errorChanged = false;
+        errorWords.forEach(ew => {
+            if (ew.wordId === oldId) {
+                console.log(`[Storage] 迁移错题记录: ${oldId} -> ${newId}`);
+                ew.wordId = newId;
+                errorChanged = true;
+            }
+        });
+        if (errorChanged) {
+            this.saveErrorWords(errorWords);
+        }
+        
+        // 3. 迁移复习计划
+        const reviewPlans = this.getAllReviewPlans();
+        let planChanged = false;
+        reviewPlans.forEach(p => {
+            if (p.wordId === oldId) {
+                console.log(`[Storage] 迁移复习计划: ${oldId} -> ${newId}`);
+                p.wordId = newId;
+                planChanged = true;
+            }
+        });
+        if (planChanged) {
+            this.saveAllReviewPlans(reviewPlans);
+        }
+    },
+
     importBuiltinWordBank(words = [], metadata = {}) {
         console.log('[Storage] importBuiltinWordBank start', {
             incomingCount: words.length,
             metadata
         });
         const current = this.getWordBank();
+        
+        // 构建旧内置题库的映射表，用于迁移数据 (Key: word + grade + semester -> Value: OldID)
+        const oldBuiltinMap = new Map();
+        current.forEach(w => {
+            if (this.isBuiltinWord(w)) {
+                // 使用 字+年级+学期 作为唯一标识
+                const key = `${w.word}_${w.grade}_${w.semester}`;
+                oldBuiltinMap.set(key, w.id);
+            }
+        });
+
         const userWords = current.filter(word => !this.isBuiltinWord(word));
         console.log('[Storage] existing wordBank统计', {
             total: current.length,
             builtin: current.length - userWords.length,
             user: userWords.length
         });
-        const normalized = words.map((word, index) => ({
-            id: word.id || `builtin_${index}_${word.word}`,
-            word: word.word,
-            pinyin: word.pinyin || '',
-            grade: word.grade || 3,
-            semester: word.semester || '上',
-            unit: typeof word.unit === 'number' ? word.unit : word.unit ?? null,
-            unitLabel: word.unitLabel || '',
-            unitOrder: typeof word.unitOrder === 'number'
-                ? word.unitOrder
-                : (typeof word.unit === 'number' ? word.unit : null),
-            sectionType: word.sectionType || '',
-            sourceTitle: word.sourceTitle || '',
-            isBuiltIn: true,
-            source: 'builtin',
-            builtinVersion: metadata.version || metadata.buildDate || 'unknown',
-            addedDate: new Date().toISOString()
-        }));
+        
+        const normalized = words.map((word, index) => {
+            // 优先使用传入的ID (Server ID)，如果没有则回退到生成ID
+            const id = word.id || `builtin_${index}_${word.word}`;
+            
+            // 尝试迁移数据
+            const key = `${word.word}_${word.grade}_${word.semester}`;
+            const oldId = oldBuiltinMap.get(key);
+            
+            if (oldId && oldId !== id) {
+                 this.migrateWordStatus(oldId, id);
+            }
+
+            return {
+                id: id,
+                word: word.word,
+                pinyin: word.pinyin || '',
+                grade: word.grade || 3,
+                semester: word.semester || '上',
+                unit: typeof word.unit === 'number' ? word.unit : word.unit ?? null,
+                unitLabel: word.unitLabel || '',
+                unitOrder: typeof word.unitOrder === 'number'
+                    ? word.unitOrder
+                    : (typeof word.unit === 'number' ? word.unit : null),
+                sectionType: word.sectionType || '',
+                sourceTitle: word.sourceTitle || '',
+                isBuiltIn: true,
+                source: 'builtin',
+                builtinVersion: metadata.version || metadata.buildDate || 'unknown',
+                addedDate: new Date().toISOString()
+            };
+        });
+        
         normalized.forEach(entry => {
             const text = entry.word ? String(entry.word).trim() : '';
             if (text.length === 1) {
@@ -1046,6 +1117,7 @@ const Storage = {
                 });
             }
         });
+        
         const merged = [...userWords, ...normalized];
         this.saveWordBank(merged);
         const versionToken = metadata.version || metadata.buildDate || `len-${normalized.length}`;

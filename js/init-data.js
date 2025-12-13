@@ -77,6 +77,7 @@ const InitData = {
                 console.log(`[InitData] (${context}) ✅ 读取 ${file} 成功，包含 ${words.length} 个字`);
                 words.forEach(word => {
                     collectedWords.push({
+                        id: word.id, // 传递 ID，确保跨设备一致性
                         word: word.word,
                         pinyin: word.pinyin || '',
                         grade: this.normalizeGrade(word.grade),
