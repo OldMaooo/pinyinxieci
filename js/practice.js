@@ -110,14 +110,14 @@ const Practice = {
     isSubmitting: false, // 是否正在提交中
     _currentWordStartTime: null, // 当前题目开始计时点
     _pendingDirectStart: false, // 是否来自首页/错题本的直接启动
-    _allowPracticePageOnce: false, // 是否允许在未激活时进入练习页面一次
+    _practicePageAllowanceExpiry: 0, // 允许进入练习页面的过期时间
     allowPracticePageOnce() {
-        this._allowPracticePageOnce = true;
+        // 设置2秒的有效期，允许在这段时间内多次检查通过（解决 Main.showPage 设置 hash 导致 hashchange 二次触发检查的问题）
+        this._practicePageAllowanceExpiry = Date.now() + 2000;
     },
     consumePracticePageAllowance() {
-        const allowed = this._allowPracticePageOnce;
-        this._allowPracticePageOnce = false;
-        return allowed;
+        // 只要在有效期内，都返回 true
+        return Date.now() < this._practicePageAllowanceExpiry;
     },
     consecutiveBlockCount: 0, // 连续被拦截的次数，用于容错机制
     _nextWordTimer: null,

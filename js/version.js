@@ -3,9 +3,10 @@
  * 每次重要更新时更新版本号
  */
 const APP_VERSION = {
-    version: '1.3.101',
+    version: '1.3.102',
     buildDate: '2025-12-14',
     changelog: [
+        'v1.3.102 - 修复从任务清单开始练习时的页面跳转问题：优化 allowPracticePageOnce 机制，将单次消费改为短时有效期，解决页面切换过程中多次权限检查导致的误拦截',
         'v1.3.101 - 优化 Storage 导入逻辑：在 importSyncData 中显式调用 importBuiltinWordBank 处理内置题库，确保 ID 迁移逻辑在同步时生效；修复了之前版本同步时跳过内置字更新的问题',
         'v1.3.100 - 修复导入过滤逻辑：filterImportDataByRange 优先使用导入文件中的 wordBank 构建过滤条件，解决因本地 ID 与导入 ID 不一致导致掌握状态被错误过滤的问题；导入后自动更新本地题库 ID',
         'v1.3.99 - 实现内置题库 ID 统一化：InitData 加载时传递标准 ID，Storage 导入时自动迁移掌握状态/错题记录/复习计划到新 ID，解决跨设备 ID 不一致问题；建议所有设备更新后执行"恢复题库"以对齐标准 ID',
