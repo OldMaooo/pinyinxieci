@@ -748,41 +748,46 @@ const Storage = {
         // 导入题库（wordBank）- 确保所有设备题库一致
         // 注意：内置题库（特别是三年级上册）不会被覆盖，会在导入后强制恢复
         if (data.wordBank && Array.isArray(data.wordBank)) {
-            // 先保存现有的内置题库（特别是三年级上册）
-            const existingWordBank = this.getWordBank();
-            const builtinWords = existingWordBank.filter(word => this.isBuiltinWord(word));
-            
+            // 1. 分离导入的内置字和用户字
+            const importedBuiltin = data.wordBank.filter(w => this.isBuiltinWord(w));
+            const importedUser = data.wordBank.filter(w => !this.isBuiltinWord(w));
+
+            // 2. 导入内置字（通过 importBuiltinWordBank 处理 ID 迁移和更新）
+            if (importedBuiltin.length > 0) {
+                console.log('[Storage.importSyncData] 检测到内置题库数据，尝试更新并迁移 ID');
+                this.importBuiltinWordBank(importedBuiltin, { source: 'sync' });
+            }
+
+            // 3. 导入用户字（自定义字）
+            // 重新获取当前题库（因为 importBuiltinWordBank 可能已更新了内置字）
+            const currentBank = this.getWordBank();
+            const currentBuiltin = currentBank.filter(w => this.isBuiltinWord(w));
+            const currentUser = currentBank.filter(w => !this.isBuiltinWord(w));
+
+            let finalUserWords = [...currentUser];
+
             if (merge) {
-                // 合并模式：合并题库（去重），但排除内置字
-                const userWords = existingWordBank.filter(word => !this.isBuiltinWord(word));
-                const newWordBank = [...userWords];
-                
-                data.wordBank.forEach(word => {
-                    // 跳过内置字，不允许通过同步覆盖
-                    if (this.isBuiltinWord(word)) {
-                        console.log('[Storage.importSyncData] 跳过内置字:', word.word);
-                        return;
-                    }
-                    const exists = newWordBank.find(w => 
+                // 合并模式：添加不存在的用户字
+                importedUser.forEach(word => {
+                    const exists = finalUserWords.find(w => 
                         w.word === word.word && 
                         w.grade === word.grade && 
                         w.semester === word.semester && 
                         w.unit === word.unit
                     );
                     if (!exists) {
-                        newWordBank.push(word);
+                        finalUserWords.push(word);
                     }
                 });
-                // 合并内置题库
-                this.saveWordBank([...builtinWords, ...newWordBank]);
             } else {
-                // 覆盖模式：替换用户题库，但保留内置题库
-                const userWordsFromData = data.wordBank.filter(word => !this.isBuiltinWord(word));
-                this.saveWordBank([...builtinWords, ...userWordsFromData]);
-                console.log('[Storage.importSyncData] 覆盖模式：已保留内置题库，只替换用户题库');
+                // 覆盖模式：使用导入的用户字
+                finalUserWords = [...importedUser];
+                console.log('[Storage.importSyncData] 覆盖模式：已保留内置题库，替换用户题库');
             }
             
-            // 导入后强制恢复三年级上册内置题库
+            this.saveWordBank([...currentBuiltin, ...finalUserWords]);
+            
+            // 导入后强制恢复三年级上册内置题库（双重保险）
             this._ensureGrade3UpBuiltinWordBank();
         } else if (!merge) {
             // 覆盖模式且没有题库数据，保持现有题库不变（避免清空）
