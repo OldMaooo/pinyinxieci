@@ -3,9 +3,12 @@
  * 每次重要更新时更新版本号
  */
 const APP_VERSION = {
-    version: '1.3.102',
+    version: '1.3.105',
     buildDate: '2025-12-14',
     changelog: [
+        'v1.3.105 - 修复：修复练习页面手写模块调用错误（Handwriting.resize -> resizeCanvas）；优化：使用 var 声明核心模块以确保全局可见性',
+        'v1.3.104 - 修复 Practice 模块初始化问题：将 const Practice 改为 var Practice 以确保全局可见性；在任务开始流程中添加详细调试日志',
+        'v1.3.103 - 调试任务开始问题：添加详细日志追踪 allowPracticePageOnce 和 consumePracticePageAllowance 的调用情况',
         'v1.3.102 - 修复从任务清单开始练习时的页面跳转问题：优化 allowPracticePageOnce 机制，将单次消费改为短时有效期，解决页面切换过程中多次权限检查导致的误拦截',
         'v1.3.101 - 优化 Storage 导入逻辑：在 importSyncData 中显式调用 importBuiltinWordBank 处理内置题库，确保 ID 迁移逻辑在同步时生效；修复了之前版本同步时跳过内置字更新的问题',
         'v1.3.100 - 修复导入过滤逻辑：filterImportDataByRange 优先使用导入文件中的 wordBank 构建过滤条件，解决因本地 ID 与导入 ID 不一致导致掌握状态被错误过滤的问题；导入后自动更新本地题库 ID',

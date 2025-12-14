@@ -3,7 +3,7 @@
  * 处理Canvas手写输入（支持iPad和电脑）
  */
 
-const Handwriting = {
+var Handwriting = {
     GRID_SIZE: 360, // 固定田字格边长（CSS像素）
     GRID_RATIO_IN_CANVAS: 0.95, // 田字格在画布中占比
     canvas: null,
