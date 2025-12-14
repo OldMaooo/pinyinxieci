@@ -1344,8 +1344,10 @@ const Main = {
             return { ...data, wordMastery: {}, errorWords: [] };
         }
         
-        // 获取完整题库
-        const wordBank = typeof Storage !== 'undefined' ? Storage.getWordBank() : [];
+        // 优先使用导入数据中的题库，确保 ID 匹配（解决跨设备 ID 不一致问题）
+        const wordBank = (data.wordBank && Array.isArray(data.wordBank) && data.wordBank.length > 0)
+            ? data.wordBank
+            : (typeof Storage !== 'undefined' ? Storage.getWordBank() : []);
         
         // 按学期和单元分组
         const grouped = typeof PracticeRange !== 'undefined' && PracticeRange.groupWordsBySemesterUnit 
@@ -1361,6 +1363,13 @@ const Main = {
             }
         });
         
+        // 过滤wordBank (如果使用 data.wordBank，也需要过滤以匹配 selectedWordIds)
+        // 这一步很重要，因为如果 data.wordBank 很大，我们不希望导入未选中的字覆盖本地状态
+        let filteredWordBank = undefined;
+        if (data.wordBank && Array.isArray(data.wordBank)) {
+            filteredWordBank = data.wordBank.filter(w => selectedWordIds.has(w.id));
+        }
+
         // 过滤wordMastery
         const filteredWordMastery = {};
         if (data.wordMastery) {
@@ -1383,6 +1392,7 @@ const Main = {
         
         return {
             ...data,
+            wordBank: filteredWordBank, // 明确返回过滤后的 wordBank
             wordMastery: filteredWordMastery,
             errorWords: filteredErrorWords
         };
