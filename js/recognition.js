@@ -167,6 +167,9 @@ const Recognition = {
      * @returns {Promise<{success: boolean, recognized: string, confidence: number, match: boolean}>}
      */
     async recognize(imageBase64, expectedWord) {
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/4e26bd29-6c91-4533-882c-1b2ef6d05ba3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'js/recognition.js:recognize',message:'recognize entry',data:{provider:this.apiConfig.provider,expectedWord,imageBase64Length:imageBase64?.length},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'C'})}).catch(()=>{});
+        // #endregion
         try {
             // 调试日志 - 识别开始
             if (typeof Debug !== 'undefined') {

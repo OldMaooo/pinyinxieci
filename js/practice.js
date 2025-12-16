@@ -24,7 +24,7 @@ var Practice = {
             if (this.debugEvents.length > 500) {
                 this.debugEvents = this.debugEvents.slice(-500);
             }
-        } catch (e) {
+            } catch (e) {
             console.error('[Practice] logDebugEvent error:', e);
         }
     },
@@ -99,7 +99,7 @@ var Practice = {
             alert('没有可练习的生字');
             return;
         }
-
+        
         // 清理之前的定时器和状态
         this.cleanupTimers();
 
@@ -112,7 +112,7 @@ var Practice = {
             this.currentIndex = options.startIndex;
             console.log('[Practice] 继续任务，从索引', this.currentIndex, '开始');
         } else {
-            this.currentIndex = 0;
+        this.currentIndex = 0;
         }
         
         this.totalTime = options.timeLimit || 0;
@@ -182,7 +182,7 @@ var Practice = {
         }
         
         // 禁用画布
-        if (typeof Handwriting !== 'undefined') {
+            if (typeof Handwriting !== 'undefined') {
             Handwriting.disable();
         }
         
@@ -221,7 +221,7 @@ var Practice = {
     },
 
     finish() {
-        this.isActive = false;
+            this.isActive = false;
         this.practiceLog.endTime = Date.now();
         if (this.timer) {
             clearInterval(this.timer);
@@ -282,7 +282,7 @@ var Practice = {
             this.finish();
             return;
         }
-
+        
         const word = this.currentWords[this.currentIndex];
         // 记录开始时间
         this._currentWordStartTime = Date.now();
@@ -308,7 +308,7 @@ var Practice = {
 
         // 显示词组提示
         if (hintEl) {
-            if (typeof WordGroups !== 'undefined') {
+        if (typeof WordGroups !== 'undefined') {
                 const group = WordGroups.getGroupForWord(word.word);
                 if (group) {
                     // 将目标字替换为下划线或方框
@@ -347,6 +347,9 @@ var Practice = {
         this.isSubmitting = false;
         this.isProcessingNextQuestion = false;
         this.isSkipping = false;
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/4e26bd29-6c91-4533-882c-1b2ef6d05ba3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'js/practice.js:showCurrentWord:reset',message:'Resetting error count in showCurrentWord',data:{prevErrorCount:this._submitErrorCount},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'B'})}).catch(()=>{});
+        // #endregion
         this._submitErrorCount = 0; // 重置连续错误计数
         this._isRetryingError = false; // 重置重做状态
         
@@ -364,8 +367,8 @@ var Practice = {
             this.updateTimerVisual();
             
             if (this.timeLeft <= 0) {
-                clearInterval(this.timer);
-                this.timer = null;
+            clearInterval(this.timer);
+            this.timer = null;
                 // 超时处理：自动提交或提示
                 // 这里选择自动判错并进入下一题
                 // this.handleTimeout();
@@ -388,7 +391,7 @@ var Practice = {
             // 颜色变化
             if (percentage < 0.2) {
                 circle.style.stroke = '#dc3545'; // 红色警告
-            } else {
+                    } else {
                 circle.style.stroke = '#0dcaf0'; // 正常颜色
             }
         }
@@ -413,6 +416,9 @@ var Practice = {
 
     // 提交答案
     async submitAnswer() {
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/4e26bd29-6c91-4533-882c-1b2ef6d05ba3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'js/practice.js:submitAnswer',message:'submitAnswer entry',data:{isSubmitting:this.isSubmitting,isProcessingNextQuestion:this.isProcessingNextQuestion,submitErrorCount:this._submitErrorCount},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'A/B'})}).catch(()=>{});
+        // #endregion
         this.logDebugEvent('submit_click');
         
         if (!this.isActive || this.isPaused) return;
@@ -427,9 +433,9 @@ var Practice = {
         this.logDebugEvent('submit_start');
         
         try {
-            // 停止计时
-            if (this.timer) {
-                clearInterval(this.timer);
+        // 停止计时
+        if (this.timer) {
+            clearInterval(this.timer);
                 this.timer = null;
             }
 
@@ -441,18 +447,27 @@ var Practice = {
             }
 
             // 检查是否有笔画
-            if (Handwriting.strokes.length === 0) {
+            // 使用 paths.length 检查（Handwriting 模块使用 paths 存储笔画）
+            // 兼容性：如果 paths 不存在，尝试 strokes（虽然已知 strokes 不存在，但为了保险）
+            const hasStrokes = (Handwriting.paths && Handwriting.paths.length > 0) || 
+                               (Handwriting.strokes && Handwriting.strokes.length > 0);
+            
+            if (!hasStrokes) {
                 // 空画布处理
                 this.handleEmptySubmission();
                 return; // handleEmptySubmission 会处理 isSubmitting 状态
             }
 
-            const strokes = Handwriting.getStrokes();
+            // 获取手写识别结果（Base64图片）
+            const imageBase64 = Handwriting.getSnapshot();
             // 获取当前题目的目标字
             const currentWord = this.currentWords[this.currentIndex].word;
             
             // 调用识别API
-            const result = await Recognition.recognize(strokes);
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/4e26bd29-6c91-4533-882c-1b2ef6d05ba3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'js/practice.js:submitAnswer:beforeRecognize',message:'Calling Recognition.recognize',data:{imageBase64Length:imageBase64?.length},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'E'})}).catch(()=>{});
+            // #endregion
+            const result = await Recognition.recognize(imageBase64, currentWord);
             
             // 验证结果
             // 检查识别出的候选字中是否包含目标字
@@ -461,6 +476,9 @@ var Practice = {
             
             await this.handleResult(isCorrect, result.candidates[0]); // 传入首选字用于显示（如果是错的）
         } catch (e) {
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/4e26bd29-6c91-4533-882c-1b2ef6d05ba3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'js/practice.js:submitAnswer:catch',message:'Caught error in submitAnswer',data:{errorName:e.name,errorMessage:e.message,stack:e.stack,submitErrorCount:this._submitErrorCount},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'A/C'})}).catch(()=>{});
+            // #endregion
             console.error('[Practice] Submit error:', e);
             this.logDebugEvent('submit_error', { error: e.message });
             
@@ -483,9 +501,9 @@ var Practice = {
                 const wordTime = this._currentWordStartTime ? (Date.now() - this._currentWordStartTime) / 1000 : 0;
                 
                 this.practiceLog.errorCount++;
-                this.practiceLog.wordTimes.push(wordTime);
-                this.practiceLog.totalTime += wordTime;
-                
+            this.practiceLog.wordTimes.push(wordTime);
+            this.practiceLog.totalTime += wordTime;
+            
                 this.practiceLog.details.push({
                     wordId: word.id,
                     correct: false,
@@ -516,6 +534,9 @@ var Practice = {
     
     // 处理空画布提交
     handleEmptySubmission() {
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/4e26bd29-6c91-4533-882c-1b2ef6d05ba3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'js/practice.js:handleEmptySubmission',message:'handleEmptySubmission called',data:{allowSkip:this.allowSkip},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
         this.logDebugEvent('empty_submission');
         
         // 如果允许跳过，直接算错并进入下一题（不进入重做模式）
@@ -638,7 +659,7 @@ var Practice = {
                 if (typeof Storage !== 'undefined' && Storage.setWordMasteryStatus) {
                     Storage.setWordMasteryStatus(word.id, 'mastered');
                 }
-            } else {
+        } else {
                 // 重做做对了，清除重做标记
                 this._isRetryingError = false;
             }
@@ -676,7 +697,7 @@ var Practice = {
             
             // 如果允许跳过：记录错题 -> 显示正确答案 -> 下一题
             if (this.allowSkip) {
-                 this.practiceLog.errorCount++;
+            this.practiceLog.errorCount++;
                  this.practiceLog.wordTimes.push(wordTime);
                  this.practiceLog.totalTime += wordTime;
                  
@@ -708,7 +729,7 @@ var Practice = {
                  // 1秒后下一题
                 if (this._nextWordTimer) clearTimeout(this._nextWordTimer);
                  this._nextWordTimer = setTimeout(() => {
-                     this.showNextWord();
+            this.showNextWord();
                      this.isSubmitting = false;
                  }, 1000);
                  

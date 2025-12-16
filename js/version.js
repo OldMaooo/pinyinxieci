@@ -3,9 +3,10 @@
  * 每次重要更新时更新版本号
  */
 const APP_VERSION = {
-    version: '1.3.106',
+    version: '1.3.107',
     buildDate: '2025-12-14',
     changelog: [
+        'v1.3.107 - 修复手写识别调用错误：修正了对 Handwriting 模块属性的错误访问（strokes -> paths）和方法调用（getStrokes -> getSnapshot），确保识别功能正常工作',
         'v1.3.106 - 修复识别故障处理：增加连续识别失败保护机制，当连续3次识别报错时允许强制跳过当前题目；优化状态重置逻辑',
         'v1.3.105 - 修复：修复练习页面手写模块调用错误（Handwriting.resize -> resizeCanvas）；优化：使用 var 声明核心模块以确保全局可见性',
         'v1.3.104 - 修复 Practice 模块初始化问题：将 const Practice 改为 var Practice 以确保全局可见性；在任务开始流程中添加详细调试日志',
