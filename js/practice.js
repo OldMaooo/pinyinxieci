@@ -48,6 +48,7 @@ var Practice = {
     _retryClearTimer: null,      // 重做模式清空画布定时器
     _hasClearedCanvasInRetry: false, // 重做模式是否已清空画布
     _currentWordStartTime: null, // 当前题目开始时间（用于计算单题耗时）
+    _submitErrorCount: 0,        // 当前题目提交连续报错次数（用于故障处理）
     
     // 页面访问权限控制
     _practicePageAllowanceExpiry: 0, // 允许进入练习页面的过期时间
@@ -346,6 +347,8 @@ var Practice = {
         this.isSubmitting = false;
         this.isProcessingNextQuestion = false;
         this.isSkipping = false;
+        this._submitErrorCount = 0; // 重置连续错误计数
+        this._isRetryingError = false; // 重置重做状态
         
         // 确保跳过设置UI正确
         this.updateSkipSettingUI();
@@ -459,10 +462,55 @@ var Practice = {
             await this.handleResult(isCorrect, result.candidates[0]); // 传入首选字用于显示（如果是错的）
         } catch (e) {
             console.error('[Practice] Submit error:', e);
-            alert('识别出错，请重试');
+            this.logDebugEvent('submit_error', { error: e.message });
+            
+            // 增加错误计数
+            this._submitErrorCount = (this._submitErrorCount || 0) + 1;
+            
+            let shouldSkip = false;
+            // 如果连续报错3次，提示用户是否强制跳过（即使在不可跳过模式下）
+            if (this._submitErrorCount >= 3) {
+                shouldSkip = confirm('识别服务似乎出现故障，连续识别失败。\n\n是否强制跳过此题？');
+            } else {
+                alert('识别出错，请重试');
+            }
+            
             this.isSubmitting = false;
-            // 恢复计时器
-            this.startTimer();
+            
+            if (shouldSkip) {
+                // 强制跳过逻辑：记录为错题，然后下一题
+                const word = this.currentWords[this.currentIndex];
+                const wordTime = this._currentWordStartTime ? (Date.now() - this._currentWordStartTime) / 1000 : 0;
+                
+                this.practiceLog.errorCount++;
+                this.practiceLog.wordTimes.push(wordTime);
+                this.practiceLog.totalTime += wordTime;
+                
+                this.practiceLog.details.push({
+                    wordId: word.id,
+                    correct: false,
+                    snapshot: null,
+                    displayText: '识别故障跳过'
+                });
+                
+                // 记录到错题本
+                this.recordError(word, null);
+                
+                // 显示反馈和正确答案
+                if (typeof Handwriting !== 'undefined') {
+                    Handwriting.showFeedback(false);
+                    Handwriting.showGuide(word.word);
+                }
+                
+                // 1秒后下一题
+                if (this._nextWordTimer) clearTimeout(this._nextWordTimer);
+                this._nextWordTimer = setTimeout(() => {
+                    this.showNextWord();
+                }, 1000);
+            } else {
+                // 恢复计时器
+                this.startTimer();
+            }
         }
     },
     
