@@ -214,69 +214,33 @@ const Storage = {
         return data ? JSON.parse(data) : [];
     },
 
-    saveWordBank(wordBank) {
-        // 确保保存后三年级上册内置题库仍然存在
+    saveWordBank(wordBank, force = false) {
+        // 锁定模式：除非是 force=true（通常来自 importBuiltinWordBank），否则禁止保存题库更改
+        // 这将阻止用户手动添加、删除、修改题库，也阻止 importFromFile 修改题库
+        if (!force) {
+            console.warn('[Storage.saveWordBank] 题库已锁定，禁止写入更改。');
+            // 只更新最后修改时间，不写入 wordBank
+            this.updateLocalLastModified();
+            return;
+        }
+
         const saved = wordBank || [];
         localStorage.setItem(this.KEYS.WORD_BANK, JSON.stringify(saved));
         this.updateLocalLastModified();
         
         // 异步检查并恢复三年级上册内置题库（如果缺失）
+        // 在锁定模式下，这个检查可能不再必要，因为我们总是全量覆盖，但保留作为双重保险
+        /*
         setTimeout(() => {
             this._ensureGrade3UpBuiltinWordBank();
         }, 100);
+        */
     },
 
     addWord(word) {
-        const text = (word && word.word) ? String(word.word).trim() : '';
-        if (text.length === 1) {
-            console.warn('[Storage.addWord] ⚠️ 正在写入单字词条', {
-                word: text,
-                grade: word.grade,
-                semester: word.semester,
-                unit: word.unit
-            });
-        }
-        
-        // 如果是三年级上册的字，不允许用户手动添加（只能通过内置题库加载）
-        if (word.grade === 3 && (word.semester === '上' || word.semester === '上册') && !word.isBuiltIn && word.source !== 'builtin') {
-            console.warn('[Storage.addWord] 三年级上册的字只能通过内置题库加载，不允许用户手动添加:', text);
-            // 检查是否已存在于内置题库中
-            const existingBuiltin = this.getWordBank().find(w => 
-                w.word === word.word && 
-                w.grade === 3 && 
-                (w.semester === '上' || w.semester === '上册') &&
-                this.isBuiltinWord(w)
-            );
-            if (existingBuiltin) {
-                return existingBuiltin;
-            }
-            // 如果内置题库中没有，可能是内置题库未加载，允许添加但标记为内置
-            word.isBuiltIn = true;
-            word.source = 'builtin';
-        }
-        
-        const wordBank = this.getWordBank();
-        // 检查是否已存在
-        const exists = wordBank.find(w => 
-            w.word === word.word && 
-            w.grade === word.grade && 
-            w.semester === word.semester && 
-            w.unit === word.unit
-        );
-        
-        if (!exists) {
-            const newWord = {
-                id: `word_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-                ...word,
-                isBuiltIn: !!word.isBuiltIn,
-                source: word.source || (word.isBuiltIn ? 'builtin' : 'user'),
-                addedDate: new Date().toISOString()
-            };
-            wordBank.push(newWord);
-            this.saveWordBank(wordBank);
-            return newWord;
-        }
-        return exists;
+        console.warn('[Storage.addWord] 题库已锁定，禁止添加生字');
+        this.showToast && this.showToast('warning', '题库已锁定，无法手动添加生字');
+        return null; // 返回 null 表示添加失败
     },
 
     /**

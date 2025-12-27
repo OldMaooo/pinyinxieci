@@ -20,7 +20,7 @@ const WordBank = {
         }
         
         if (!wordBank || wordBank.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">暂无数据，请先导入题库</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">暂无数据，正在从服务器加载...</td></tr>';
             return;
         }
         
@@ -32,7 +32,7 @@ const WordBank = {
                 <td>${word.semester || ''}学期</td>
                 <td>第${word.unit || ''}单元</td>
                 <td>
-                    <button class="btn btn-sm btn-danger" onclick="WordBank.deleteWord('${word.id}')">
+                    <button class="btn btn-sm btn-secondary" disabled title="题库已锁定">
                         <i class="bi bi-trash"></i>
                     </button>
                 </td>
@@ -47,6 +47,9 @@ const WordBank = {
      * 导入题库（JSON文件）- 仅导入题库
      */
     async importFromFile(file) {
+        this.showToast('warning', '题库已锁定，无法导入自定义题库。请使用同步功能同步练习记录。');
+        return;
+        /*
         try {
             const text = await file.text();
             const data = JSON.parse(text);
@@ -80,6 +83,7 @@ const WordBank = {
             console.error('导入失败:', error);
             this.showToast('danger', `导入失败: ${error.message}`);
         }
+        */
     },
     
     /**
@@ -284,6 +288,10 @@ const WordBank = {
      * 删除生字
      */
     deleteWord(wordId) {
+        this.showToast('warning', '题库已锁定，无法删除生字。');
+        return;
+
+        /*
         const wordBank = Storage.getWordBank();
         const word = wordBank.find(w => w.id === wordId);
         
@@ -299,6 +307,7 @@ const WordBank = {
             this.loadWordBank();
             this.showToast('success', '删除成功');
         }
+        */
     },
     
     /**
