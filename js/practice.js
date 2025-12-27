@@ -26,7 +26,7 @@ var Practice = {
             }
             } catch (e) {
             console.error('[Practice] logDebugEvent error:', e);
-        }
+            }
     },
 
     isActive: false,      // 是否正在练习
@@ -276,7 +276,7 @@ var Practice = {
             if (typeof Main !== 'undefined') Main.showPage('home');
         }
     },
-
+    
     showCurrentWord() {
         if (this.currentIndex >= this.currentWords.length) {
             this.finish();
@@ -347,9 +347,6 @@ var Practice = {
         this.isSubmitting = false;
         this.isProcessingNextQuestion = false;
         this.isSkipping = false;
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/4e26bd29-6c91-4533-882c-1b2ef6d05ba3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'js/practice.js:showCurrentWord:reset',message:'Resetting error count in showCurrentWord',data:{prevErrorCount:this._submitErrorCount},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'B'})}).catch(()=>{});
-        // #endregion
         this._submitErrorCount = 0; // 重置连续错误计数
         this._isRetryingError = false; // 重置重做状态
         
@@ -413,12 +410,9 @@ var Practice = {
             // 暂时不实现圆点，用 Badge 足够
         }
     },
-
+    
     // 提交答案
     async submitAnswer() {
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/4e26bd29-6c91-4533-882c-1b2ef6d05ba3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'js/practice.js:submitAnswer',message:'submitAnswer entry',data:{isSubmitting:this.isSubmitting,isProcessingNextQuestion:this.isProcessingNextQuestion,submitErrorCount:this._submitErrorCount},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'A/B'})}).catch(()=>{});
-        // #endregion
         this.logDebugEvent('submit_click');
         
         if (!this.isActive || this.isPaused) return;
@@ -437,8 +431,8 @@ var Practice = {
         if (this.timer) {
             clearInterval(this.timer);
                 this.timer = null;
-            }
-
+        }
+        
             // 获取手写识别结果
             if (typeof Handwriting === 'undefined' || typeof Recognition === 'undefined') {
                 console.error('Handwriting or Recognition module missing');
@@ -464,21 +458,39 @@ var Practice = {
             const currentWord = this.currentWords[this.currentIndex].word;
             
             // 调用识别API
-            // #region agent log
-            fetch('http://127.0.0.1:7242/ingest/4e26bd29-6c91-4533-882c-1b2ef6d05ba3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'js/practice.js:submitAnswer:beforeRecognize',message:'Calling Recognition.recognize',data:{imageBase64Length:imageBase64?.length},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'E'})}).catch(()=>{});
-            // #endregion
             const result = await Recognition.recognize(imageBase64, currentWord);
             
             // 验证结果
             // 检查识别出的候选字中是否包含目标字
             // result.candidates 是数组 ['字', '字', ...]
-            const isCorrect = result.candidates.includes(currentWord);
+            // 如果 result.candidates 不存在，使用空数组
+            const candidates = result.candidates || [];
+            // 如果 candidates 中包含目标字，或者 result.passed 为 true（置信度高），则判对
+            // 注意：Recognition.recognize 现在返回 {success, recognized, confidence, match, passed}
+            // 但旧逻辑可能还在用 candidates
             
-            await this.handleResult(isCorrect, result.candidates[0]); // 传入首选字用于显示（如果是错的）
+            // 兼容性处理：如果 result.candidates 不存在，我们构造一个
+            if (!result.candidates && result.recognized) {
+                // 如果是单个字
+                if (result.recognized.length === 1) {
+                    candidates.push(result.recognized);
+            } else {
+                    // 如果是多个字，或者是词组，尝试拆分或取第一个
+                     candidates.push(result.recognized.charAt(0));
+                }
+            }
+
+            // 新的判断逻辑：优先使用 Recognition 模块返回的 passed 字段（如果存在）
+            // 否则回退到 candidates 检查
+            let isCorrect = false;
+            if (typeof result.passed === 'boolean') {
+                isCorrect = result.passed;
+            } else {
+                isCorrect = candidates.includes(currentWord);
+            }
+            
+            await this.handleResult(isCorrect, result.recognized || candidates[0] || '?'); // 传入首选字用于显示（如果是错的）
         } catch (e) {
-            // #region agent log
-            fetch('http://127.0.0.1:7242/ingest/4e26bd29-6c91-4533-882c-1b2ef6d05ba3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'js/practice.js:submitAnswer:catch',message:'Caught error in submitAnswer',data:{errorName:e.name,errorMessage:e.message,stack:e.stack,submitErrorCount:this._submitErrorCount},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'A/C'})}).catch(()=>{});
-            // #endregion
             console.error('[Practice] Submit error:', e);
             this.logDebugEvent('submit_error', { error: e.message });
             
@@ -534,9 +546,6 @@ var Practice = {
     
     // 处理空画布提交
     handleEmptySubmission() {
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/4e26bd29-6c91-4533-882c-1b2ef6d05ba3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'js/practice.js:handleEmptySubmission',message:'handleEmptySubmission called',data:{allowSkip:this.allowSkip},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
         this.logDebugEvent('empty_submission');
         
         // 如果允许跳过，直接算错并进入下一题（不进入重做模式）
@@ -546,7 +555,7 @@ var Practice = {
             const word = this.currentWords[this.currentIndex];
             const wordTime = this._currentWordStartTime ? (Date.now() - this._currentWordStartTime) / 1000 : 0;
             
-            this.practiceLog.errorCount++;
+                    this.practiceLog.errorCount++;
             this.practiceLog.wordTimes.push(wordTime);
             this.practiceLog.totalTime += wordTime;
             
@@ -641,7 +650,7 @@ var Practice = {
             }
         }
     },
-
+    
     async handleResult(isCorrect, recognizedWord) {
         const word = this.currentWords[this.currentIndex];
         const wordTime = this._currentWordStartTime ? (Date.now() - this._currentWordStartTime) / 1000 : 0;
@@ -677,7 +686,7 @@ var Practice = {
                      snapshot: null,
                      displayText: recognizedWord
                  });
-            }
+        }
             
             // 更新任务进度
             if (this.currentTaskId && typeof TaskList !== 'undefined') {
@@ -734,7 +743,7 @@ var Practice = {
                  }, 1000);
                  
                  return;
-            }
+        }
             
             // 不允许跳过：进入重做模式
             
@@ -789,12 +798,12 @@ var Practice = {
             await Storage.addErrorWord(word, wrongContent);
         }
     },
-
+    
     showNextWord() {
         this.currentIndex++;
         this.showCurrentWord();
     },
-
+    
     showPreviousWord() {
         if (this.currentIndex > 0) {
             this.currentIndex--;
@@ -847,7 +856,7 @@ var Practice = {
         // 1. 如果允许跳过：直接算错 -> 下一题
         if (this.allowSkip) {
              this.logDebugEvent('skip_allowed_action');
-             
+        
              // 记录错题
              const wordTime = this._currentWordStartTime ? (Date.now() - this._currentWordStartTime) / 1000 : 0;
              this.practiceLog.errorCount++;
@@ -1193,8 +1202,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             Practice.practiceLog.errorCount = Math.max(0, Practice.practiceLog.errorCount - 1);
                         }
                         Practice.practiceLog.details.splice(existingIdx, 1);
-                    }
-                    
+    }
+    
                     // 随机决定对错（50%概率正确）
                     const isCorrect = Math.random() > 0.5;
                     
@@ -1253,8 +1262,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // 短暂延迟，避免UI卡顿
                     await new Promise(resolve => setTimeout(resolve, 50));
-                }
-                
+    }
+    
                 console.log('[Practice] 一键做题完成，共完成:', completed, '题');
                 
                 // 显示下一题（最后一题）

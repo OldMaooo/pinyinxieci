@@ -75,7 +75,7 @@ const PracticeRange = {
         if (totalCount === 0) {
             return `<div class="completion-pie"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="${grayColor}"/></svg></div>`;
         }
-        
+
         const percentage = masteredCount / totalCount;
         const radius = 9;
         const centerX = 10;
@@ -562,10 +562,10 @@ const PracticeRange = {
                     this.selectAll(container, options);
                 } else {
                     this.deselectAll(container, options);
-                }
+            }
                 selectAllCheckbox.checked = e.target.checked;
             });
-            
+    
             // 监听所有复选框变化，更新全选状态
             const updateSelectAllState = () => {
                 const allCheckboxes = container.querySelectorAll('.unit-checkbox');
@@ -594,7 +594,7 @@ const PracticeRange = {
                 });
             });
         }
-
+        
         if (options.showOnlyWrongToggle) {
             const toggle = container.querySelector('[data-toggle="only-wrong"]');
             if (toggle) {
@@ -614,8 +614,8 @@ const PracticeRange = {
                         this.updateHomeSelectedCount(container);
                     }
                     this.updateSelectedCount(container, options);
-                });
-            }
+            });
+        }
         }
 
         container.querySelectorAll('.semester-checkbox').forEach(checkbox => {
@@ -834,8 +834,8 @@ const PracticeRange = {
                         // 统计所有字
                         total += words.length;
                     }
-                }
-            });
+            }
+        });
             const label = container.querySelector('[data-selected-count]');
             if (label) {
                 label.textContent = `已选择: ${total} 个字`;
@@ -890,7 +890,7 @@ const PracticeRange = {
         if (onlyWrong) {
             const errorWords = Storage.getErrorWordsFiltered();
             errorWordIds = new Set(errorWords.map(ew => ew.wordId));
-        }
+            }
         
         container.querySelectorAll('.unit-checkbox:checked').forEach(cb => {
             const semester = cb.dataset.semester;
@@ -1099,8 +1099,8 @@ const PracticeRange = {
                 if (cb.checked && !exists) selection[semester].push(unit);
                 if (!cb.checked && exists) {
                     selection[semester] = selection[semester].filter(u => u !== unit);
-                }
-            });
+            }
+        });
             localStorage.setItem('practiceRangeSelection', JSON.stringify(selection));
         } catch (err) {
             console.warn('保存练习范围选择失败:', err);

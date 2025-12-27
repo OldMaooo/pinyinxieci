@@ -926,7 +926,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (data.version) {
                     // 是完整数据，提示用户使用完整数据导入功能（如果将来需要）
                     WordBank.showToast('warning', '这是完整数据文件，请使用完整数据导入功能（如果可用）');
-                } else {
+            } else {
                     // 未知格式
                     WordBank.showToast('warning', '文件格式不正确，请选择同步数据文件');
                 }

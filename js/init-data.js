@@ -22,12 +22,12 @@ const InitData = {
      * 加载默认题库数据
      */
     async loadDefaultWordBank(context = 'auto') {
-        console.log(`[InitData] (${context}) 开始加载默认题库…`);
+        console.log(`[InitData] (${context}) 开始强制加载默认题库（锁定题库模式）…`);
         try {
             await this.loadBuiltinWordBank(context);
-            console.log(`[InitData] (${context}) ✅ 内置题库加载完成`);
+            console.log(`[InitData] (${context}) ✅ 题库加载完成（已与服务器同步）`);
         } catch (error) {
-            console.warn(`[InitData] (${context}) 内置题库加载失败，回退到 legacy 文件：`, error);
+            console.warn(`[InitData] (${context}) 题库加载失败，回退到 legacy 文件：`, error);
             await this.loadLegacyWordBank(context);
         }
         
@@ -123,6 +123,9 @@ const InitData = {
         const currentSignature = typeof Storage.getBuiltinWordBankVersion === 'function'
             ? Storage.getBuiltinWordBankVersion()
             : null;
+        
+        // 强制每次都覆盖导入，不检查版本签名
+        /*
         const currentWordCount = typeof Storage.getWordBank === 'function'
             ? (Storage.getWordBank() || []).length
             : 0;
@@ -135,6 +138,8 @@ const InitData = {
             console.log('[InitData] 内置题库版本未变化，跳过导入');
             return;
         }
+        */
+        console.log('[InitData] 强制与服务器题库同步');
 
         Storage.importBuiltinWordBank(collectedWords, {
             version: signature,

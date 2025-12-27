@@ -402,7 +402,7 @@ const Storage = {
                 errorWord.handwritingSnapshots = errorWord.handwritingSnapshots || [];
                 // 只有在还没有快照的情况下，才添加快照（保留第一次写错的字迹）
                 if (errorWord.handwritingSnapshots.length === 0) {
-                    errorWord.handwritingSnapshots.push(snapshotData);
+            errorWord.handwritingSnapshots.push(snapshotData);
                 }
             }
         } else {
@@ -1055,7 +1055,7 @@ const Storage = {
     },
 
     importBuiltinWordBank(words = [], metadata = {}) {
-        console.log('[Storage] importBuiltinWordBank start', {
+        console.log('[Storage] importBuiltinWordBank start - LOCK MODE', {
             incomingCount: words.length,
             metadata
         });
@@ -1064,19 +1064,13 @@ const Storage = {
         // 构建旧内置题库的映射表，用于迁移数据 (Key: word + grade + semester -> Value: OldID)
         const oldBuiltinMap = new Map();
         current.forEach(w => {
-            if (this.isBuiltinWord(w)) {
-                // 使用 字+年级+学期 作为唯一标识
-                const key = `${w.word}_${w.grade}_${w.semester}`;
-                oldBuiltinMap.set(key, w.id);
-            }
+            // 使用 字+年级+学期 作为唯一标识
+            const key = `${w.word}_${w.grade}_${w.semester}`;
+            oldBuiltinMap.set(key, w.id);
         });
 
-        const userWords = current.filter(word => !this.isBuiltinWord(word));
-        console.log('[Storage] existing wordBank统计', {
-            total: current.length,
-            builtin: current.length - userWords.length,
-            user: userWords.length
-        });
+        // 锁定模式：只保留服务器题库，不合并本地用户添加的字
+        const userWords = []; // 强制清空本地用户题库
         
         const normalized = words.map((word, index) => {
             // 优先使用传入的ID (Server ID)，如果没有则回退到生成ID
@@ -1110,25 +1104,13 @@ const Storage = {
             };
         });
         
-        normalized.forEach(entry => {
-            const text = entry.word ? String(entry.word).trim() : '';
-            if (text.length === 1) {
-                console.warn('[Storage.importBuiltinWordBank] ⚠️ 导入单字词条', {
-                    word: text,
-                    grade: entry.grade,
-                    semester: entry.semester,
-                    unit: entry.unit,
-                    unitLabel: entry.unitLabel
-                });
-            }
-        });
-        
-        const merged = [...userWords, ...normalized];
-        this.saveWordBank(merged);
+        // 完全替换，只保留服务器数据
+        const merged = [...normalized];
+        this.saveWordBank(merged, true); // 传入 true 允许写入
         const versionToken = metadata.version || metadata.buildDate || `len-${normalized.length}`;
         this.setBuiltinWordBankVersion(versionToken);
-        console.log('[Storage] importBuiltinWordBank 完成', {
-            mergedCount: merged.length,
+        console.log('[Storage] importBuiltinWordBank 完成 - 已重置为服务器版本', {
+            count: merged.length,
             builtinVersion: versionToken
         });
     },
