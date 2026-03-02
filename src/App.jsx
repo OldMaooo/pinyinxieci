@@ -2,11 +2,31 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { LogOut, Check, X, Eye, EyeOff, Save, Volume2, Play, Pause, SkipBack, SkipForward, Plus, Minus, MousePointerClick, Loader2, Cloud, AlertCircle, RefreshCw, Monitor, VolumeX, Moon, Sun, Grid, Edit3, Type, PieChart, ChevronRight } from 'lucide-react';
 import { pinyin } from 'pinyin-pro';
 import { createClient } from '@supabase/supabase-js';
+import { clearDraft, hasUnsyncedDraft, readDraft, upsertDraft, writeDraft } from './shared/draftStore.js';
+import { commitDictationResults, verifyCommittedRows } from './shared/commitClient.js';
 
 // Supabase 配置 - 支持环境变量，默认使用正式版数据库
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://ynasoxvdalcmrrsxxmjr.supabase.co';
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_ap2IKSLCxabTzVTQNbw45Q_iFBUaNJW';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const createSessionId = () => {
+  if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+    return window.crypto.randomUUID();
+  }
+  return `session-${Date.now()}-${Math.random().toString(16).slice(2, 10)}`;
+};
+
+const createCommitId = () => {
+  if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+    return window.crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (char) => {
+    const random = Math.floor(Math.random() * 16);
+    const value = char === 'x' ? random : ((random & 0x3) | 0x8);
+    return value.toString(16);
+  });
+};
 
 // 学期列表常量
 const SEMESTERS = ["一年级上册", "一年级下册", "二年级上册", "二年级下册", "三年级上册", "三年级下册"];
@@ -262,7 +282,7 @@ const FlashCardView = ({ words, onClose, onSyncMarks, getStatus }) => {
   };
   const prev = (e) => { e.stopPropagation(); setIndex((index - 1 + words.length) % words.length); handleInteraction(); };
 
-  const toggleWrongMark = async (wordId) => {
+  const toggleWrongMark = (wordId) => {
     const isWrong = markedWrong.has(wordId);
     const newMarkedWrong = new Set(markedWrong);
     if (isWrong) {
@@ -275,21 +295,6 @@ const FlashCardView = ({ words, onClose, onSyncMarks, getStatus }) => {
     // 同步到words状态
     if (onSyncMarks) {
       onSyncMarks(newMarkedWrong);
-    }
-
-    try {
-      const { error } = await supabase
-        .from('mastery_records')
-        .upsert({
-          id: wordId,
-          temp_state: { practice: !isWrong ? 'red' : 'white' },
-          updated_at: new Date().toISOString()
-        });
-      if (error) {
-        console.error('[FlashCardView] Error syncing wrong mark:', error);
-      }
-    } catch (e) {
-      console.error('[FlashCardView] Error syncing wrong mark:', e);
     }
   };
   
@@ -518,8 +523,13 @@ function MainApp() {
   const [filterWrong, setFilterWrong] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [syncStatus, setSyncStatus] = useState('idle');
+  const [saveErrorMessage, setSaveErrorMessage] = useState('');
+  const [isSubmittingArchive, setIsSubmittingArchive] = useState(false);
   const [isShuffling, setIsShuffling] = useState(false);
   const [isFlashCardView, setIsFlashCardView] = useState([false, false, false]); // 每tab独立的闪卡视图模式
+  const [draftSessionId, setDraftSessionId] = useState(() => createSessionId());
+  const restoredDraftRef = useRef(false);
+  const draftTimerRef = useRef(null);
 
   // 动态加载词库（根据选择的学期）
   useEffect(() => {
@@ -601,6 +611,93 @@ function MainApp() {
       } catch (e) { 
         console.error('[loadCloud] Exception:', e); 
       } finally { setIsLoading(false); } } loadCloud(); }, []);
+
+  const buildDraftPayload = (extra = {}) => {
+    const existing = readDraft() || {};
+    return upsertDraft(existing, {
+      sessionId: draftSessionId,
+      startedAt: existing.startedAt || new Date().toISOString(),
+      semester: selectedSemester,
+      selectedUnits: Array.from(selectedUnits),
+      step,
+      onlyWrong,
+      filterWrong,
+      wordsSnapshot: words.map(w => ({
+        id: w.id,
+        word: w.word,
+        pinyin: w.pinyin,
+        markPractice: w.markPractice || 'white',
+        markSelf: w.markSelf || 'white',
+        markFinal: w.markFinal || 'white',
+        isWeak: Boolean(w.isWeak)
+      })),
+      retryCount: extra.retryCount ?? existing.retryCount ?? 0,
+      pendingCommit: extra.pendingCommit ?? existing.pendingCommit ?? null,
+      lastSaveAttemptAt: extra.lastSaveAttemptAt ?? existing.lastSaveAttemptAt ?? null
+    });
+  };
+
+  useEffect(() => {
+    if (restoredDraftRef.current) return;
+    const draft = readDraft();
+    if (!draft?.dirty || !Array.isArray(draft.wordsSnapshot) || draft.wordsSnapshot.length === 0) return;
+
+    restoredDraftRef.current = true;
+    setDraftSessionId(draft.sessionId || createSessionId());
+    if (draft.semester) setSelectedSemester(draft.semester);
+    if (Array.isArray(draft.selectedUnits) && draft.selectedUnits.length > 0) {
+      setSelectedUnits(new Set(draft.selectedUnits));
+    }
+    setOnlyWrong(Boolean(draft.onlyWrong));
+    setFilterWrong(Boolean(draft.filterWrong));
+    setStep(typeof draft.step === 'number' ? draft.step : 0);
+    const restoredWords = draft.wordsSnapshot.map(w => ({
+      id: w.id,
+      word: w.word,
+      pinyin: w.pinyin,
+      markPractice: w.markPractice || 'white',
+      markSelf: w.markSelf || 'white',
+      markFinal: w.markFinal || 'white',
+      isWeak: Boolean(w.isWeak)
+    }));
+    setWords(restoredWords);
+    setMastery(prev => {
+      const next = { ...prev };
+      restoredWords.forEach((w) => {
+        const m = next[w.id] || { history: [], temp: {} };
+        next[w.id] = { ...m, temp: { practice: w.markPractice, self: w.markSelf, final: w.markFinal } };
+      });
+      window.mastery = next;
+      return next;
+    });
+    setView('RUNNING');
+    if (draft.pendingCommit) {
+      setSaveErrorMessage('检测到上次保存未完成，请点击“存档并结束”重试。');
+      setSyncStatus('error');
+    }
+    alert('已自动恢复上次未完成的测试草稿。');
+  }, []);
+
+  useEffect(() => {
+    if (view !== 'RUNNING' || words.length === 0 || isSubmittingArchive) return;
+    if (draftTimerRef.current) clearTimeout(draftTimerRef.current);
+    draftTimerRef.current = setTimeout(() => {
+      writeDraft(buildDraftPayload());
+    }, 300);
+    return () => {
+      if (draftTimerRef.current) clearTimeout(draftTimerRef.current);
+    };
+  }, [view, words, step, selectedSemester, selectedUnits, onlyWrong, filterWrong, draftSessionId, isSubmittingArchive]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (!hasUnsyncedDraft() && syncStatus !== 'saving' && !isSubmittingArchive) return;
+      event.preventDefault();
+      event.returnValue = '还有未同步的听写记录，离开页面会导致进度丢失风险。';
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [syncStatus, isSubmittingArchive]);
 
   const isDevMode = useMemo(() => new URLSearchParams(window.location.search).get('dev') === '1', []);
   const toggleMode = () => { window.location.href = isDevMode ? window.location.origin : window.location.origin + '?dev=1'; };
@@ -716,13 +813,19 @@ function MainApp() {
 
   const start = () => {
     if (isLoading) return;
+    if (hasUnsyncedDraft()) {
+      alert('检测到未落库草稿，请先完成保存再开始新一轮。');
+      return;
+    }
+    setSaveErrorMessage('');
+    setSyncStatus('idle');
+    setDraftSessionId(createSessionId());
     console.log('=== START DEBUG ===');
     console.log('mastery keys:', Object.keys(mastery).slice(0, 5));
     console.log('selectedUnits:', Array.from(selectedUnits));
     let pool = []; processedUnits.forEach(u => { if (selectedUnits.has(u.name)) pool = [...pool, ...u.words]; });
     console.log('pool size:', pool.length);
     let targetWords = [];
-    const todayStr = new Date().toISOString().split('T')[0];
 
     pool.forEach(w => {
         const m = mastery[w.id];
@@ -758,57 +861,192 @@ function MainApp() {
     setWords(targetWords); setStep(0); setTime(0); setShowAnswers(false); setView('RUNNING'); setModalConfig({ isOpen: false });
   };
 
-  const save = async (isTemporary = false) => {
-    setSyncStatus('saving');
-    const upserts = []; const nextMastery = { ...mastery }; const todayStr = new Date().toISOString().split('T')[0];
+  const normalizeDateText = (value) => {
+    if (!value) return null;
+    if (typeof value === 'string') return value.slice(0, 10);
+    return String(value).slice(0, 10);
+  };
 
-    // 在终测 + 仅错题模式下，只保存用户标记过的题目
-    // 没标记的题目不保存 = 默认正确
-    const wordsToSave = (!isTemporary && step === 2 && onlyWrong)
-      ? words.filter(w => w.markFinal !== 'white')
-      : words;
+  const buildCommitPlan = (sourceWords, sourceStep) => {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const items = [];
+    const expectedById = {};
 
-    wordsToSave.forEach(w => {
-      // 如果是终测，用户标记的白色自动变绿色
-      let currentFinal = w.markFinal;
-      if (!isTemporary && step === 2 && currentFinal === 'white') currentFinal = 'green';
-      const currentTemp = { practice: w.markPractice, self: w.markSelf, final: currentFinal };
-      const m = nextMastery[w.id] || mastery[w.id] || { history: [], consecutive_green: 0, last_practice_date: null };
-      let newHistory = [...(m.history || [])]; let newLastUpdate = m.lastUpdate; let newConsecutiveGreen = m.consecutive_green || 0; let newLastPracticeDate = m.last_practice_date;
+    sourceWords.forEach((w) => {
+      const currentTemp = {
+        practice: w.markPractice || 'white',
+        self: w.markSelf || 'white',
+        final: w.markFinal || 'white',
+      };
+      const currentResult = sourceStep === 2 ? currentTemp.final : currentTemp.self;
+      const normalizedResult = currentResult === 'red' ? 'red' : 'green';
 
-      if (!isTemporary && step === 2) {
-          if (newLastPracticeDate !== todayStr) {
-            newHistory.push(currentFinal); if (newHistory.length > 10) newHistory.shift(); newLastUpdate = todayStr; newLastPracticeDate = todayStr;
+      const m = mastery[w.id] || { history: [], consecutive_green: 0, last_practice_date: null };
+      let newHistory = [...(m.history || [])];
+      let newLastUpdate = normalizeDateText(m.lastUpdate);
+      let newConsecutiveGreen = m.consecutive_green || 0;
+      let newLastPracticeDate = normalizeDateText(m.last_practice_date);
 
-            if (currentFinal === 'green') {
-              newConsecutiveGreen = (newConsecutiveGreen || 0) + 1;
-            } else {
-              newConsecutiveGreen = 0;
-            }
-          } else {
-            const lastIdx = newHistory.length - 1;
-            if (lastIdx >= 0 && currentFinal === 'red') {
-              newHistory[lastIdx] = 'red';
-              newConsecutiveGreen = 0;
-            }
-          }
+      if (newLastPracticeDate !== todayStr) {
+        newHistory.push(normalizedResult);
+        if (newHistory.length > 10) newHistory = newHistory.slice(-10);
+        newLastUpdate = todayStr;
+        newLastPracticeDate = todayStr;
+        newConsecutiveGreen = normalizedResult === 'green' ? newConsecutiveGreen + 1 : 0;
+      } else if (normalizedResult === 'red' && newHistory.length > 0) {
+        newHistory[newHistory.length - 1] = 'red';
+        newConsecutiveGreen = 0;
       }
-      nextMastery[w.id] = { history: newHistory, temp: currentTemp, lastUpdate: newLastUpdate, consecutive_green: newConsecutiveGreen, last_practice_date: newLastPracticeDate };
-      upserts.push({ id: w.id, history: newHistory, temp_state: currentTemp, last_history_update_date: newLastUpdate, consecutive_green: newConsecutiveGreen, last_practice_date: newLastPracticeDate, updated_at: new Date().toISOString() });
+
+      expectedById[w.id] = {
+        history: newHistory,
+        temp_state: currentTemp,
+        last_history_update_date: newLastUpdate,
+        consecutive_green: newConsecutiveGreen,
+        last_practice_date: newLastPracticeDate
+      };
+
+      items.push({
+        id: w.id,
+        mark_practice: currentTemp.practice,
+        mark_self: currentTemp.self,
+        mark_final: currentTemp.final,
+        only_wrong: onlyWrong,
+        step: sourceStep
+      });
     });
-    setMastery(nextMastery); window.mastery = nextMastery;
-    if (upserts.length > 0) { const { error } = await supabase.from('mastery_records').upsert(upserts); if (error) setSyncStatus('error'); else setSyncStatus('idle'); }
-    if (!isTemporary) { setView('SETUP'); window.scrollTo(0,0); }
+
+    return { todayStr, items, expectedById };
+  };
+
+  const applyExpectedMastery = (expectedById) => {
+    setMastery((prev) => {
+      const next = { ...prev };
+      Object.entries(expectedById).forEach(([id, expected]) => {
+        next[id] = {
+          history: expected.history,
+          temp: expected.temp_state,
+          lastUpdate: expected.last_history_update_date,
+          consecutive_green: expected.consecutive_green,
+          last_practice_date: expected.last_practice_date
+        };
+      });
+      window.mastery = next;
+      return next;
+    });
+  };
+
+  const retryPendingCommit = async () => {
+    const draft = readDraft();
+    const pendingCommit = draft?.pendingCommit;
+    if (!pendingCommit) return false;
+
+    setIsSubmittingArchive(true);
+    setSyncStatus('saving');
+    setSaveErrorMessage('');
+    try {
+      const rpcResult = await commitDictationResults({
+        supabase,
+        commitId: pendingCommit.commitId,
+        today: pendingCommit.today,
+        items: pendingCommit.items,
+        context: pendingCommit.context || {}
+      });
+      const verifyResult = await verifyCommittedRows({
+        supabase,
+        appliedIds: rpcResult.applied_ids || [],
+        expectedById: pendingCommit.expectedById || {}
+      });
+      if (!verifyResult.ok) {
+        throw new Error(`回读校验失败，异常词条数：${verifyResult.mismatchedIds.length}`);
+      }
+
+      applyExpectedMastery(pendingCommit.expectedById || {});
+      clearDraft();
+      setSyncStatus('synced');
+      return true;
+    } catch (error) {
+      const message = error?.message || '保存失败，请重试';
+      setSaveErrorMessage(message);
+      setSyncStatus('error');
+      writeDraft(buildDraftPayload({
+        pendingCommit,
+        lastSaveAttemptAt: new Date().toISOString(),
+        retryCount: (draft?.retryCount || 0) + 1
+      }));
+      return false;
+    } finally {
+      setIsSubmittingArchive(false);
+    }
+  };
+
+  const commitAndArchive = async () => {
+    const { todayStr, items, expectedById } = buildCommitPlan(words, step);
+    if (items.length === 0) return true;
+
+    const commitId = createCommitId();
+    const pendingCommit = {
+      commitId,
+      today: todayStr,
+      items,
+      context: {
+        step,
+        onlyWrong,
+        semester: selectedSemester,
+        selectedUnits: Array.from(selectedUnits)
+      },
+      expectedById
+    };
+
+    setIsSubmittingArchive(true);
+    setSyncStatus('saving');
+    setSaveErrorMessage('');
+    writeDraft(buildDraftPayload({
+      pendingCommit,
+      lastSaveAttemptAt: new Date().toISOString()
+    }));
+
+    try {
+      const rpcResult = await commitDictationResults({
+        supabase,
+        commitId,
+        today: todayStr,
+        items,
+        context: pendingCommit.context
+      });
+      const verifyResult = await verifyCommittedRows({
+        supabase,
+        appliedIds: rpcResult.applied_ids || [],
+        expectedById
+      });
+      if (!verifyResult.ok) {
+        throw new Error(`回读校验失败，异常词条数：${verifyResult.mismatchedIds.length}`);
+      }
+
+      applyExpectedMastery(expectedById);
+      clearDraft();
+      setSyncStatus('synced');
+      return true;
+    } catch (error) {
+      const message = error?.message || '保存失败，请重试';
+      setSaveErrorMessage(message);
+      setSyncStatus('error');
+      writeDraft(buildDraftPayload({
+        pendingCommit,
+        lastSaveAttemptAt: new Date().toISOString(),
+        retryCount: (readDraft()?.retryCount || 0) + 1
+      }));
+      return false;
+    } finally {
+      setIsSubmittingArchive(false);
+    }
   };
 
   const markAs = (status) => {
     if (activeVoiceIndex !== -1 && activeVoiceIndex < words.length) {
-      setWords(prev => {
-        const nextWords = prev.map((w, idx) => (idx === activeVoiceIndex) ? { ...w, markPractice: step===0?status:w.markPractice, markSelf: step===1?status:w.markSelf, markFinal: step===2?status:w.markFinal } : w);
-        const cur = nextWords[activeVoiceIndex];
-        supabase.from('mastery_records').upsert({ id: cur.id, history: mastery[cur.id]?.history || [], temp_state: { practice: cur.markPractice, self: cur.markSelf, final: cur.markFinal }, updated_at: new Date().toISOString() });
-        return nextWords;
-      });
+      setWords(prev => prev.map((w, idx) => (idx === activeVoiceIndex)
+        ? { ...w, markPractice: step === 0 ? status : w.markPractice, markSelf: step === 1 ? status : w.markSelf, markFinal: step === 2 ? status : w.markFinal }
+        : w));
       if (status === 'red') {
         handleShowAnswer(words[activeVoiceIndex]);
       } else {
@@ -830,48 +1068,15 @@ function MainApp() {
 
   const stopVoice = () => { window.speechSynthesis.cancel(); setIsVoiceActive(false); setIsPaused(false); setActiveVoiceIndex(-1); setProgress(0); if (timerRef.current) clearInterval(timerRef.current); };
 
-  const saveSelfTest = async () => {
-    console.log('=== SAVE SELFTEST ===');
-    console.log('words to save:', words.map(w => ({id: w.id, markSelf: w.markSelf, markPractice: w.markPractice, markFinal: w.markFinal})));
-    console.log('mastery before:', Object.keys(mastery).slice(0,3).map(k => ({k, v: mastery[k]})));
-    setSyncStatus('saving');
-    const upserts = []; const nextMastery = { ...mastery }; const todayStr = new Date().toISOString().split('T')[0];
-    words.forEach(w => {
-      const currentResult = step === 2 ? w.markFinal : w.markSelf;
-      const currentTemp = { practice: w.markPractice, self: w.markSelf, final: w.markFinal };
-      console.log(`Saving ${w.id}: step=${step}, result=${currentResult}, temp=`, currentTemp);
-      const m = nextMastery[w.id] || mastery[w.id] || { history: [], consecutive_green: 0, last_practice_date: null };
-      let newHistory = [...(m.history || [])]; let newLastUpdate = m.lastUpdate; let newConsecutiveGreen = m.consecutive_green || 0; let newLastPracticeDate = m.last_practice_date;
-      
-      if (newLastPracticeDate !== todayStr) {
-        newHistory.push(currentResult === 'red' ? 'red' : 'green');
-        if (newHistory.length > 10) newHistory.shift();
-        newLastUpdate = todayStr;
-        newLastPracticeDate = todayStr;
-        if (currentResult === 'green') {
-          newConsecutiveGreen = (newConsecutiveGreen || 0) + 1;
-        } else {
-          newConsecutiveGreen = 0;
-        }
-      } else {
-        const lastIdx = newHistory.length - 1;
-        if (lastIdx >= 0 && currentResult === 'red') {
-          newHistory[lastIdx] = 'red';
-          newConsecutiveGreen = 0;
-        }
-      }
-      nextMastery[w.id] = { history: newHistory, temp: currentTemp, lastUpdate: newLastUpdate, consecutive_green: newConsecutiveGreen, last_practice_date: newLastPracticeDate };
-      upserts.push({ id: w.id, history: newHistory, temp_state: currentTemp, last_history_update_date: newLastUpdate, consecutive_green: newConsecutiveGreen, last_practice_date: newLastPracticeDate, updated_at: new Date().toISOString() });
-    });
-    
-    setMastery(nextMastery); window.mastery = nextMastery;
-    console.log('upserts:', upserts);
-    if (upserts.length > 0) {
-      const { error } = await supabase.from('mastery_records').upsert(upserts);
-      console.log('save result:', error ? 'error:' + error : 'success');
-      if (error) setSyncStatus('error'); else setSyncStatus('idle');
-    }
-  };
+  useEffect(() => {
+    const handleOnline = () => {
+      const draft = readDraft();
+      if (!draft?.pendingCommit || isSubmittingArchive) return;
+      retryPendingCommit();
+    };
+    window.addEventListener('online', handleOnline);
+    return () => window.removeEventListener('online', handleOnline);
+  }, [isSubmittingArchive]);
 
   const handleTabChange = (idx) => {
     if (idx === 2 && step < 2) setModalConfig({ isOpen: true, type: 'TO_FINAL', title: "确认进入终测？", content: "确认进入终测吗？" });
@@ -1010,10 +1215,49 @@ const calculateStats = () => {
   }, [activeVoiceIndex, voiceInterval, isVoiceActive, isPaused]);
 
   const isDictationFinished = isVoiceActive && activeVoiceIndex >= words.length;
+  const pendingDraft = readDraft();
+  const hasPendingCommit = Boolean(pendingDraft?.pendingCommit);
+
+  const handleExitToSetup = () => {
+    if (syncStatus === 'saving' || hasUnsyncedDraft()) {
+      alert('还有未落库的听写记录，暂时不能退出。请先完成保存。');
+      return;
+    }
+    setView('SETUP');
+  };
+
+  const syncStatusNode = (
+    <div className="fixed top-3 right-4 z-[3500]">
+      {syncStatus === 'saving' && (
+        <div className="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 shadow">
+          云端保存中...
+        </div>
+      )}
+      {syncStatus === 'error' && (
+        <div className="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-50 text-red-700 border border-red-200 shadow flex items-center gap-2">
+          <span>保存失败：{saveErrorMessage || '请重试'}</span>
+          {hasPendingCommit && (
+            <button
+              onClick={retryPendingCommit}
+              className="px-2 py-0.5 rounded bg-red-600 text-white text-[11px] font-black"
+            >
+              立即重试
+            </button>
+          )}
+        </div>
+      )}
+      {syncStatus === 'synced' && (
+        <div className="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow">
+          云端已同步
+        </div>
+      )}
+    </div>
+  );
 
   if (view === 'SETUP') {
     return (
       <div className="h-screen flex flex-col bg-white font-sans text-black overflow-hidden relative">
+        {syncStatusNode}
         {isDevMode && <div className="fixed top-0 left-0 w-full h-1 bg-red-600 animate-pulse z-[1000]" />}
         {isAdminMode && <div className="fixed top-0 left-0 w-full h-8 bg-purple-600 z-[1000] flex items-center justify-center text-white text-xs font-bold shadow-lg animate-in slide-in-from-top">🔧 数据修正模式：点击词组调整状态</div>}
         <header className="max-w-5xl w-full mx-auto px-8 py-2 flex justify-between items-baseline shrink-0 border-b border-slate-100 relative">
@@ -1078,12 +1322,15 @@ const calculateStats = () => {
 
   return (
     <div className="h-screen flex flex-col bg-white font-sans text-black overflow-hidden relative" onKeyDown={(e) => { if (e.shiftKey && e.key === 'S') { e.preventDefault(); testMasteryStatus(); } }}>
+      {syncStatusNode}
       {isFlashCardView[step] && <FlashCardView
         words={words}
         onClose={() => toggleFlashCardView(step)}
         onSyncMarks={(markedIds) => {
           setWords(prev => prev.map(w =>
-            markedIds.has(w.id) ? { ...w, [getMarkType(step)]: 'red' } : w
+            markedIds.has(w.id)
+              ? { ...w, [getMarkType(step)]: 'red' }
+              : { ...w, [getMarkType(step)]: 'white' }
           ));
         }}
         getStatus={getStatus}
@@ -1092,7 +1339,7 @@ const calculateStats = () => {
       {isDevMode && <div className="fixed top-0 left-0 w-full h-1 bg-red-600 z-[2000]" />}
       <header className="fixed top-0 left-0 w-full bg-white border-b z-[100]">
         <div className="flex justify-between items-center px-8 h-[54px]">
-          <button onClick={() => setView('SETUP')} className="text-slate-400 font-bold text-xs flex items-center gap-1 hover:text-black transition-colors uppercase">
+          <button onClick={handleExitToSetup} className="text-slate-400 font-bold text-xs flex items-center gap-1 hover:text-black transition-colors uppercase">
             <LogOut size={14}/> 退出
           </button>
           <div className="flex items-center gap-2">
@@ -1134,10 +1381,55 @@ const calculateStats = () => {
           {isDictationFinished ? (<div className="w-full flex items-center justify-center gap-4 relative"><button onClick={() => { setIsVoiceActive(true); setActiveVoiceIndex(-1); }} className="w-10 h-10 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center"><MousePointerClick size={20}/></button>{step !== 2 && <><button onClick={restartWrong} className="px-6 h-10 rounded-lg bg-red-50 text-red-600 font-bold text-xs border border-red-100">重听错题</button><button onClick={() => handleTabChange(step + 1)} className="px-6 h-10 rounded-lg bg-black text-white font-bold text-xs shadow-lg">进入{step === 0 ? '自测' : '家长终测'}</button></>}<button onClick={stopVoice} className="absolute right-0 px-6 h-10 rounded-lg border border-slate-200 text-slate-400 font-bold text-xs">退出听写</button></div>) : (<><div className="flex items-center gap-3 w-[20%]"><span className="text-[10px] font-bold text-black">间隔</span><div className="flex items-center gap-1 bg-slate-50 px-2 py-1.5 rounded-lg border border-slate-100"><button onClick={() => setVoiceInterval(Math.max(5, voiceInterval-5))}><Minus size={14}/></button><span className="text-sm font-mono font-bold w-10 text-center">{voiceInterval}s</span><button onClick={() => setVoiceInterval(Math.min(60, voiceInterval+5))}><Plus size={14}/></button></div></div><div className="flex items-center gap-2 flex-1 justify-center"><button onClick={() => { stopVoice(); setIsVoiceActive(true); setActiveVoiceIndex(-1); }} className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 mr-2"><MousePointerClick size={20}/></button><button onClick={() => setIsPaused(!isPaused)} className="w-[80px] h-10 rounded-lg bg-slate-100 text-black flex items-center justify-center border border-slate-200">{isPaused ? <Play size={20} fill="black"/> : <Pause size={20} fill="black"/>}</button><button onClick={() => speak(activeVoiceIndex - 1)} className="w-[80px] h-10 rounded-lg bg-black text-white flex items-center justify-center font-bold text-xs uppercase">上一题</button><button onClick={() => speak(activeVoiceIndex + 1)} className="w-[150px] h-10 rounded-lg bg-black text-white flex items-center justify-center font-bold active:scale-95 transition-all text-xs uppercase">下一题</button><div className="w-4" /><button onClick={() => markAs('red')} className="w-[80px] h-10 rounded-lg border-2 border-red-500 text-red-500 flex items-center justify-center font-bold text-xs">不会</button>{step === 2 && <button onClick={() => markAs('green')} className="w-[80px] h-10 rounded-lg border-2 border-emerald-500 text-emerald-500 flex items-center justify-center font-bold text-xs ml-2">掌握</button>}</div><div className="w-[20%] flex justify-end"><button onClick={stopVoice} className="px-6 py-2 bg-slate-100 text-slate-400 rounded-lg font-bold text-[10px] uppercase">退出听写</button></div></>)}
         </div>
       )}
-      <main className="flex-1 overflow-y-auto p-[36px] bg-slate-50 pt-[110px] pb-32"><div className="max-w-full grid grid-cols-4 gap-x-8 gap-y-0">{words.map((item, index) => <WordRow key={`${step}-${item.id}`} item={item} index={index} step={step} onUpdate={(id, type, val) => { console.log('=== ONUPDATE ===', id, type, val); setWords(prev => prev.map(w => w.id === id ? { ...w, [type]: val } : w)); const m = mastery[id] || { history: [], temp: {} }; const newTemp = { ...m.temp, [type]: val }; const nextMastery = { ...mastery, [id]: { ...m, temp: newTemp } }; console.log('nextMastery:', nextMastery[id]); setMastery(nextMastery); window.mastery = nextMastery; }} setHintWord={setHintWord} showAnswer={showAnswers} activeIndex={activeVoiceIndex} progress={progress} isVoiceActive={isVoiceActive} onStartVoice={speak} isShuffling={isShuffling} onShowStroke={(w) => showStrokeOrder && setStrokeTarget(w)} onShowAnswer={handleShowAnswer} status={getStatus(item.id)} />)}</div>{hintWord && (<div className="fixed inset-0 z-[500] bg-black/40 flex items-center justify-center p-10 pointer-events-none animate-in fade-in"><div className="bg-white p-12 px-20 w-fit rounded-lg shadow-2xl flex items-center justify-center animate-in zoom-in-90 border-8 border-slate-100"><span className="text-[12rem] font-black font-kaiti text-black leading-none">{hintWord}</span></div></div>)}</main>
+      <main className="flex-1 overflow-y-auto p-[36px] bg-slate-50 pt-[110px] pb-32"><div className="max-w-full grid grid-cols-4 gap-x-8 gap-y-0">{words.map((item, index) => <WordRow key={`${step}-${item.id}`} item={item} index={index} step={step} onUpdate={(id, type, val) => { setWords(prev => prev.map(w => w.id === id ? { ...w, [type]: val } : w)); setMastery(prev => { const m = prev[id] || { history: [], temp: {} }; const newTemp = { ...m.temp, [type]: val }; const nextMastery = { ...prev, [id]: { ...m, temp: newTemp } }; window.mastery = nextMastery; return nextMastery; }); }} setHintWord={setHintWord} showAnswer={showAnswers} activeIndex={activeVoiceIndex} progress={progress} isVoiceActive={isVoiceActive} onStartVoice={speak} isShuffling={isShuffling} onShowStroke={(w) => showStrokeOrder && setStrokeTarget(w)} onShowAnswer={handleShowAnswer} status={getStatus(item.id)} />)}</div>{hintWord && (<div className="fixed inset-0 z-[500] bg-black/40 flex items-center justify-center p-10 pointer-events-none animate-in fade-in"><div className="bg-white p-12 px-20 w-fit rounded-lg shadow-2xl flex items-center justify-center animate-in zoom-in-90 border-8 border-slate-100"><span className="text-[12rem] font-black font-kaiti text-black leading-none">{hintWord}</span></div></div>)}</main>
       {step >= 1 && (step === 2 ? (<div className={`fixed left-0 w-full flex justify-center z-[300] transition-all duration-500 pointer-events-none ${isVoiceActive && !isDictationFinished ? 'bottom-24' : 'bottom-4'}`}><button onClick={() => setModalConfig({ isOpen: true, type: 'FINISH_STATS', title: "本次练习统计", content: "" })} className="px-12 py-4 rounded-lg font-black text-white shadow-2xl pointer-events-auto bg-emerald-600">存档并结束 <Save size={20} className="inline ml-2"/></button></div>) : step === 1 ? (<div className={`fixed left-0 w-full flex justify-center z-[300] transition-all duration-500 pointer-events-none ${isVoiceActive && !isDictationFinished ? 'bottom-24' : 'bottom-4'}`}><button onClick={() => setModalConfig({ isOpen: true, type: 'FINISH_SELF_TEST', title: "本次自测统计", content: "" })} className="px-12 py-4 rounded-lg font-black text-white shadow-2xl pointer-events-auto bg-emerald-600">存档并结束 <Save size={20} className="inline ml-2"/></button></div>) : null)}
       {answerCardVisible && <AnswerCard word={answerCardWord} onClose={handleAnswerCardClose} onAutoNext={handleAnswerCardAutoNext} />}
-      <Modal isOpen={modalConfig.isOpen} onClose={() => setModalConfig({ isOpen: false })} isLoading={isModalLoading} onConfirm={async () => { if (modalConfig.type === 'TO_FINAL') { stopVoice(); setStep(2); setWords(prev => prev.map(w => (!mastery[w.id]?.history?.length && (w.markPractice==='red' || w.markSelf==='red')) ? {...w, markFinal:'red'} : w)); setModalConfig({ isOpen: false }); } else if (modalConfig.type === 'FINISH_STATS') { setIsModalLoading(true); await saveSelfTest(); setIsModalLoading(false); setModalConfig({ isOpen: false }); setView('SETUP'); } else if (modalConfig.type === 'FINISH_SELF_TEST') { setIsModalLoading(true); await saveSelfTest(); setIsModalLoading(false); setModalConfig({ isOpen: false }); setView('SETUP'); } else if (modalConfig.type === 'ENTER_FINAL_FROM_SELF') { setStep(2); setWords(prev => prev.map(w => (!mastery[w.id]?.history?.length && (w.markPractice==='red' || w.markSelf==='red' || w.markFinal==='red')) ? {...w, markFinal:'red'} : w)); setModalConfig({ isOpen: false }); } }} title={modalConfig.title} content={modalConfig.type === 'FINISH_STATS' || modalConfig.type === 'FINISH_SELF_TEST' ? (<div className="flex flex-col gap-4 py-4 text-left"><div className="flex justify-between border-b pb-2"><span className="text-slate-400 font-bold">词组总数</span><span className="font-mono font-black text-lg text-black">{(modalConfig.type === 'FINISH_STATS' ? calculateStats() : calculateStatsForTab2()).total}</span></div><div className="flex justify-between border-b pb-2"><span className="text-red-500 font-bold">错题 (需复习)</span><span className="font-mono font-black text-lg text-red-500">{(modalConfig.type === 'FINISH_STATS' ? calculateStats() : calculateStatsForTab2()).wrong}</span></div><div className="flex justify-between border-b pb-2"><span className="text-emerald-600 font-bold">已掌握</span><span className="font-mono font-black text-lg text-emerald-600">{(modalConfig.type === 'FINISH_STATS' ? calculateStats() : calculateStatsForTab2()).mastered}</span></div><div className="flex justify-between pb-4"><span className="text-slate-400 font-bold">未标记</span><span className="font-mono font-black text-lg text-slate-300">0</span></div></div>) : modalConfig.content} />
+      <Modal
+        isOpen={modalConfig.isOpen}
+        onClose={() => {
+          if (isModalLoading) return;
+          setModalConfig({ isOpen: false });
+        }}
+        isLoading={isModalLoading}
+        onConfirm={async () => {
+          if (modalConfig.type === 'TO_FINAL') {
+            stopVoice();
+            setStep(2);
+            setWords(prev => prev.map(w => (!mastery[w.id]?.history?.length && (w.markPractice === 'red' || w.markSelf === 'red')) ? { ...w, markFinal: 'red' } : w));
+            setModalConfig({ isOpen: false });
+            return;
+          }
+
+          if (modalConfig.type === 'FINISH_STATS' || modalConfig.type === 'FINISH_SELF_TEST') {
+            setIsModalLoading(true);
+            const hasPending = Boolean(readDraft()?.pendingCommit);
+            const ok = hasPending ? await retryPendingCommit() : await commitAndArchive();
+            setIsModalLoading(false);
+            if (ok) {
+              setModalConfig({ isOpen: false });
+              setView('SETUP');
+              window.scrollTo(0, 0);
+            }
+            return;
+          }
+
+          if (modalConfig.type === 'ENTER_FINAL_FROM_SELF') {
+            setStep(2);
+            setWords(prev => prev.map(w => (!mastery[w.id]?.history?.length && (w.markPractice === 'red' || w.markSelf === 'red' || w.markFinal === 'red')) ? { ...w, markFinal: 'red' } : w));
+            setModalConfig({ isOpen: false });
+          }
+        }}
+        title={modalConfig.title}
+        content={modalConfig.type === 'FINISH_STATS' || modalConfig.type === 'FINISH_SELF_TEST' ? (
+          <div className="flex flex-col gap-4 py-4 text-left">
+            <div className="flex justify-between border-b pb-2"><span className="text-slate-400 font-bold">词组总数</span><span className="font-mono font-black text-lg text-black">{(modalConfig.type === 'FINISH_STATS' ? calculateStats() : calculateStatsForTab2()).total}</span></div>
+            <div className="flex justify-between border-b pb-2"><span className="text-red-500 font-bold">错题 (需复习)</span><span className="font-mono font-black text-lg text-red-500">{(modalConfig.type === 'FINISH_STATS' ? calculateStats() : calculateStatsForTab2()).wrong}</span></div>
+            <div className="flex justify-between border-b pb-2"><span className="text-emerald-600 font-bold">已掌握</span><span className="font-mono font-black text-lg text-emerald-600">{(modalConfig.type === 'FINISH_STATS' ? calculateStats() : calculateStatsForTab2()).mastered}</span></div>
+            <div className="flex justify-between pb-4"><span className="text-slate-400 font-bold">未标记</span><span className="font-mono font-black text-lg text-slate-300">0</span></div>
+            {saveErrorMessage && <div className="rounded-lg border border-red-200 bg-red-50 text-red-700 text-sm font-bold p-3">{saveErrorMessage}</div>}
+          </div>
+        ) : modalConfig.content}
+      />
     </div>
   );
 }
