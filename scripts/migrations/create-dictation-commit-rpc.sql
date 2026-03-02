@@ -44,8 +44,7 @@ declare
   v_history jsonb;
   v_last_update date;
   v_consecutive int;
-  v_last_practice text;
-  v_today_text text := p_today::text;
+  v_last_practice date;
   v_updated_count int := 0;
   v_applied_ids text[] := array[]::text[];
   v_existing_ids text[] := array[]::text[];
@@ -121,9 +120,7 @@ begin
 
     v_history := coalesce(v_history, '[]'::jsonb);
     v_consecutive := coalesce(v_consecutive, 0);
-    v_last_practice := nullif(v_last_practice, '');
-
-    if coalesce(v_last_practice, '') <> v_today_text then
+    if v_last_practice is distinct from p_today then
       v_history := v_history || to_jsonb(v_current_result);
       v_history_len := jsonb_array_length(v_history);
       if v_history_len > 10 then
@@ -137,7 +134,7 @@ begin
       end if;
 
       v_last_update := p_today;
-      v_last_practice := v_today_text;
+      v_last_practice := p_today;
 
       if v_current_result = 'green' then
         v_consecutive := v_consecutive + 1;
