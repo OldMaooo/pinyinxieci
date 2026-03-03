@@ -2,8 +2,17 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { LogOut, Check, X, Eye, EyeOff, Save, Volume2, Play, Pause, SkipBack, SkipForward, Plus, Minus, MousePointerClick, Loader2, Cloud, AlertCircle, RefreshCw, Monitor, VolumeX, Moon, Sun, Grid, Edit3, Type, PieChart, ChevronRight } from 'lucide-react';
 import { pinyin } from 'pinyin-pro';
 import { createClient } from '@supabase/supabase-js';
-import { clearDraft, hasUnsyncedDraft, readDraft, upsertDraft, writeDraft } from './shared/draftStore.js';
-import { commitDictationResults, verifyCommittedRows } from './shared/commitClient.js';
+import {
+  clearDraft,
+  hasUnsyncedDraft,
+  readDraft,
+  upsertDraft,
+  writeDraft,
+  normalizeDraftNamespace,
+  DRAFT_NAMESPACE_DEV,
+  DRAFT_NAMESPACE_PROD,
+} from './shared/draftStore.js';
+import { commitDictationResults, verifyCommittedByPayload } from './shared/commitClient.js';
 
 // Supabase 配置 - 支持环境变量，默认使用正式版数据库
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://ynasoxvdalcmrrsxxmjr.supabase.co';
@@ -26,6 +35,34 @@ const createCommitId = () => {
     const value = char === 'x' ? random : ((random & 0x3) | 0x8);
     return value.toString(16);
   });
+};
+
+const isTestWordId = (id) => typeof id === 'string' && id.endsWith('-test');
+const DATA_MODE_STORAGE_KEY = 'pinyin_data_mode_v1';
+
+const readPersistedDataMode = () => {
+  try {
+    const mode = localStorage.getItem(DATA_MODE_STORAGE_KEY);
+    if (mode === DRAFT_NAMESPACE_DEV || mode === DRAFT_NAMESPACE_PROD) return mode;
+  } catch (error) {
+    console.warn('[mode] read persisted mode failed:', error);
+  }
+  return DRAFT_NAMESPACE_PROD;
+};
+
+const writePersistedDataMode = (mode) => {
+  try {
+    const safeMode = mode === DRAFT_NAMESPACE_DEV ? DRAFT_NAMESPACE_DEV : DRAFT_NAMESPACE_PROD;
+    localStorage.setItem(DATA_MODE_STORAGE_KEY, safeMode);
+  } catch (error) {
+    console.warn('[mode] write persisted mode failed:', error);
+  }
+};
+
+const resolveMode = (queryDevParam) => {
+  if (queryDevParam === '1') return DRAFT_NAMESPACE_DEV;
+  if (queryDevParam === '0') return DRAFT_NAMESPACE_PROD;
+  return readPersistedDataMode();
 };
 
 // 学期列表常量
@@ -102,11 +139,20 @@ const AnalogClock = () => {
   );
 };
 
-const Modal = ({ isOpen, onClose, onConfirm, title, content, isLoading = false }) => {
+const Modal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  title,
+  content,
+  isLoading = false,
+  cancelText = '取消',
+  confirmText = '确定',
+}) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white rounded-lg shadow-2xl max-w-sm w-full p-6"><h3 className="text-xl font-black text-black mb-2 text-center">{title}</h3><div className="text-slate-500 mb-6 font-medium leading-relaxed text-center">{content}</div><div className="flex gap-3"><button onClick={onClose} disabled={isLoading} className="flex-1 py-3 rounded-lg font-bold text-slate-500 bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed">取消</button><button onClick={onConfirm} disabled={isLoading} className="flex-1 py-3 rounded-lg font-bold text-white bg-black disabled:opacity-70 disabled:cursor-wait flex items-center justify-center gap-2">{isLoading ? <><Loader2 className="animate-spin" size={18} /> 提交中...</> : '确定'}</button></div></div>
+      <div className="bg-white rounded-lg shadow-2xl max-w-sm w-full p-6"><h3 className="text-xl font-black text-black mb-2 text-center">{title}</h3><div className="text-slate-500 mb-6 font-medium leading-relaxed text-center">{content}</div><div className="flex gap-3"><button onClick={onClose} disabled={isLoading} className="flex-1 py-3 rounded-lg font-bold text-slate-500 bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed">{cancelText}</button><button onClick={onConfirm} disabled={isLoading} className="flex-1 py-3 rounded-lg font-bold text-white bg-black disabled:opacity-70 disabled:cursor-wait flex items-center justify-center gap-2">{isLoading ? <><Loader2 className="animate-spin" size={18} /> 提交中...</> : confirmText}</button></div></div>
     </div>
   );
 };
@@ -816,6 +862,7 @@ function MainApp() {
   const [isShuffling, setIsShuffling] = useState(false);
   const [isFlashCardView, setIsFlashCardView] = useState([false, false, false]); // 每tab独立的闪卡视图模式
   const [draftSessionId, setDraftSessionId] = useState(() => createSessionId());
+  const [pendingRestoreDraft, setPendingRestoreDraft] = useState(null);
   const restoredDraftRef = useRef(false);
   const draftTimerRef = useRef(null);
 
@@ -902,30 +949,169 @@ function MainApp() {
 
   const timerRef = useRef(null);
   const progressRef = useRef(0);
+  const queryDevParam = useMemo(() => new URLSearchParams(window.location.search).get('dev'), []);
+  const allowDevDataMode = import.meta.env.VITE_ALLOW_DEV_DATA_MODE === '1';
+  const canUseDevDataMode = import.meta.env.DEV || allowDevDataMode;
+  const isDeployedEnv = !canUseDevDataMode;
+  const requestedMode = useMemo(() => resolveMode(queryDevParam), [queryDevParam]);
+  const isDevMode = canUseDevDataMode && requestedMode === DRAFT_NAMESPACE_DEV;
+  const idNamespace = isDevMode ? DRAFT_NAMESPACE_DEV : DRAFT_NAMESPACE_PROD;
+  const toggleMode = () => {
+    if (!canUseDevDataMode) return;
+    const nextMode = isDevMode ? DRAFT_NAMESPACE_PROD : DRAFT_NAMESPACE_DEV;
+    writePersistedDataMode(nextMode);
+    const url = new URL(window.location.href);
+    if (nextMode === DRAFT_NAMESPACE_DEV) {
+      url.searchParams.set('dev', '1');
+    } else {
+      url.searchParams.delete('dev');
+    }
+    window.location.href = url.toString();
+  };
+
+  useEffect(() => {
+    if (canUseDevDataMode) {
+      writePersistedDataMode(isDevMode ? DRAFT_NAMESPACE_DEV : DRAFT_NAMESPACE_PROD);
+      return;
+    }
+
+    writePersistedDataMode(DRAFT_NAMESPACE_PROD);
+    if (queryDevParam !== '1') return;
+    const url = new URL(window.location.href);
+    url.searchParams.delete('dev');
+    const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+    window.history.replaceState({}, '', nextUrl);
+    alert('线上禁用测试数据模式，已切回正式模式。');
+  }, [queryDevParam, canUseDevDataMode, isDevMode]);
+
+  // 动态加载词库（根据选择的学期动态生成单元数据）
+  const processedUnits = useMemo(() => {
+    const unitsMap = {};
+    wordBank.forEach(item => {
+      if (!unitsMap[item.unit]) {
+        unitsMap[item.unit] = [];
+      }
+      unitsMap[item.unit].push(item);
+    });
+
+    return Object.entries(unitsMap).map(([unitKey, items]) => {
+      const unitNum = items[0]?.unit;
+      const name = (typeof unitNum === 'number' || (typeof unitNum === 'string' && /^\d+$/.test(unitNum))) ? `单元${unitNum}` : unitNum;
+      const words = items.map((w, idx) => {
+        const prefix = selectedSemester === '三年级上册' ? '3up' : selectedSemester;
+        const wordId = `${prefix}-${name}-${w.word}-${idx}`;
+        return { id: isDevMode ? `${wordId}-test` : wordId, word: w.word, pinyin: pinyin(String(w.word), { toneType: 'symbol' }) || '' };
+      });
+      return { name, words };
+    });
+  }, [wordBank, selectedSemester, isDevMode]);
+
+  const logMasteryLoadTrace = ({ mode, semester, expectedIdCount, fetchedRowCount, missingIds }) => {
+    console.info('[mastery-load-trace]', {
+      mode,
+      semester,
+      expected_id_count: expectedIdCount,
+      fetched_row_count: fetchedRowCount,
+      missing_id_count: missingIds.length,
+      missing_id_sample: missingIds.slice(0, 5)
+    });
+  };
+
+  const logCommitTrace = ({ phase, commitId, verifyOk, appliedIdsCount, mismatchSample = [], errorMessage = null }) => {
+    console.info('[commit-trace]', {
+      phase,
+      mode: isDevMode ? 'dev' : 'prod',
+      namespace: idNamespace,
+      commit_id: commitId,
+      verify_ok: verifyOk,
+      applied_ids_count: appliedIdsCount,
+      mismatch_sample: mismatchSample,
+      error: errorMessage
+    });
+  };
 
   useEffect(() => { localStorage.setItem('pinyin_selected_units', JSON.stringify(Array.from(selectedUnits))); }, [selectedUnits]);
-  useEffect(() => { async function loadCloud() { 
-      setIsLoading(true); 
-      try { 
-        const result = await supabase.from('mastery_records').select('*').range(0, 9999);
-        const { data, error } = result;
-        if (error) { console.error('[loadCloud] Supabase error:', error); }
-        if (data) { 
-          const m = {}; 
-          data.forEach(r => {
-            m[r.id] = { history: r.history, temp: r.temp_state, lastUpdate: r.last_history_update_date, consecutive_green: r.consecutive_green || 0, last_practice_date: r.last_practice_date };
-          });
-          setMastery(m); window.mastery = m;
+  useEffect(() => {
+    let isCancelled = false;
+    async function loadCloud() {
+      setIsLoading(true);
+      setMastery({});
+      window.mastery = {};
+      try {
+        const semesterIdSet = new Set();
+        processedUnits.forEach((unit) => {
+          unit.words.forEach((word) => semesterIdSet.add(word.id));
+        });
+        const expectedIds = Array.from(semesterIdSet);
+
+        const allRows = [];
+        const pageSize = 500;
+        let offset = 0;
+        while (!isCancelled) {
+          const { data, error } = await supabase
+            .from('mastery_records')
+            .select('id,history,temp_state,last_history_update_date,consecutive_green,last_practice_date')
+            .order('id', { ascending: true })
+            .range(offset, offset + pageSize - 1);
+          if (error) {
+            console.error('[loadCloud] Supabase error:', error, { offset, pageSize });
+            break;
+          }
+          const rows = data || [];
+          allRows.push(...rows);
+          if (rows.length < pageSize) break;
+          offset += pageSize;
         }
-      } catch (e) { 
-        console.error('[loadCloud] Exception:', e); 
-      } finally { setIsLoading(false); } } loadCloud(); }, []);
+
+        if (isCancelled) return;
+
+        const rowsById = {};
+        allRows.forEach((row) => {
+          if (!semesterIdSet.has(row.id)) return;
+          rowsById[row.id] = row;
+        });
+
+        const missingIds = expectedIds.filter((id) => !rowsById[id]);
+        logMasteryLoadTrace({
+          mode: isDevMode ? 'dev' : 'prod',
+          semester: selectedSemester,
+          expectedIdCount: expectedIds.length,
+          fetchedRowCount: Object.keys(rowsById).length,
+          missingIds
+        });
+
+        const m = {};
+        Object.values(rowsById).forEach((r) => {
+          m[r.id] = {
+            history: Array.isArray(r.history) ? r.history : [],
+            temp: r.temp_state || {},
+            lastUpdate: r.last_history_update_date,
+            consecutive_green: r.consecutive_green || 0,
+            last_practice_date: r.last_practice_date
+          };
+        });
+        setMastery(m);
+        window.mastery = m;
+      } catch (e) {
+        console.error('[loadCloud] Exception:', e);
+      } finally {
+        if (isCancelled) return;
+        setIsLoading(false);
+      }
+    }
+    loadCloud();
+    return () => {
+      isCancelled = true;
+    };
+  }, [processedUnits, selectedSemester, isDevMode]);
 
   const buildDraftPayload = (extra = {}) => {
-    const existing = readDraft() || {};
+    const existing = readDraft({ targetNamespace: idNamespace }) || {};
     return upsertDraft(existing, {
+      version: 3,
       sessionId: draftSessionId,
       startedAt: existing.startedAt || new Date().toISOString(),
+      idNamespace,
       semester: selectedSemester,
       selectedUnits: Array.from(selectedUnits),
       step,
@@ -942,16 +1128,14 @@ function MainApp() {
       })),
       retryCount: extra.retryCount ?? existing.retryCount ?? 0,
       pendingCommit: extra.pendingCommit ?? existing.pendingCommit ?? null,
-      lastSaveAttemptAt: extra.lastSaveAttemptAt ?? existing.lastSaveAttemptAt ?? null
+      lastSaveAttemptAt: extra.lastSaveAttemptAt ?? existing.lastSaveAttemptAt ?? null,
+      restorePromptDismissedAt: extra.restorePromptDismissedAt ?? existing.restorePromptDismissedAt ?? null,
+      lastVerifyMode: extra.lastVerifyMode ?? existing.lastVerifyMode ?? null
     });
   };
 
-  useEffect(() => {
-    if (restoredDraftRef.current) return;
-    const draft = readDraft();
-    if (!draft?.dirty || !Array.isArray(draft.wordsSnapshot) || draft.wordsSnapshot.length === 0) return;
-
-    restoredDraftRef.current = true;
+  const restoreDraftToRunning = (draft) => {
+    if (!draft || !Array.isArray(draft.wordsSnapshot) || draft.wordsSnapshot.length === 0) return;
     setDraftSessionId(draft.sessionId || createSessionId());
     if (draft.semester) setSelectedSemester(draft.semester);
     if (Array.isArray(draft.selectedUnits) && draft.selectedUnits.length > 0) {
@@ -983,8 +1167,39 @@ function MainApp() {
     if (draft.pendingCommit) {
       setSaveErrorMessage('检测到上次保存未完成，请点击“存档并结束”重试。');
       setSyncStatus('error');
+    } else {
+      setSaveErrorMessage('');
+      if (syncStatus === 'error') setSyncStatus('idle');
     }
-    alert('已自动恢复上次未完成的测试草稿。');
+  };
+
+  useEffect(() => {
+    if (restoredDraftRef.current) return;
+    const rawDraft = readDraft();
+    if (!rawDraft?.dirty || !Array.isArray(rawDraft.wordsSnapshot) || rawDraft.wordsSnapshot.length === 0) return;
+
+    let draft = rawDraft;
+    if (draft.idNamespace !== idNamespace) {
+      if (draft.idNamespace === DRAFT_NAMESPACE_DEV && idNamespace === DRAFT_NAMESPACE_PROD && isDeployedEnv) {
+        const migrated = normalizeDraftNamespace(draft, DRAFT_NAMESPACE_PROD);
+        if (!migrated) return;
+        draft = migrated;
+        writeDraft(draft);
+        setSaveErrorMessage('检测到测试模式草稿，已自动迁移到正式模式，请点击“存档并结束”补交。');
+        setSyncStatus('error');
+      } else {
+        return;
+      }
+    }
+
+    restoredDraftRef.current = true;
+    setPendingRestoreDraft(draft);
+    setModalConfig({
+      isOpen: true,
+      type: 'RESTORE_DRAFT_DECISION',
+      title: '检测到未完成的听写草稿',
+      content: '',
+    });
   }, []);
 
   useEffect(() => {
@@ -996,20 +1211,17 @@ function MainApp() {
     return () => {
       if (draftTimerRef.current) clearTimeout(draftTimerRef.current);
     };
-  }, [view, words, step, selectedSemester, selectedUnits, onlyWrong, filterWrong, draftSessionId, isSubmittingArchive]);
+  }, [view, words, step, selectedSemester, selectedUnits, onlyWrong, filterWrong, draftSessionId, isSubmittingArchive, idNamespace]);
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
-      if (!hasUnsyncedDraft() && syncStatus !== 'saving' && !isSubmittingArchive) return;
+      if (!hasUnsyncedDraft(idNamespace) && syncStatus !== 'saving' && !isSubmittingArchive) return;
       event.preventDefault();
       event.returnValue = '还有未同步的听写记录，离开页面会导致进度丢失风险。';
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [syncStatus, isSubmittingArchive]);
-
-  const isDevMode = useMemo(() => new URLSearchParams(window.location.search).get('dev') === '1', []);
-  const toggleMode = () => { window.location.href = isDevMode ? window.location.origin : window.location.origin + '?dev=1'; };
+  }, [syncStatus, isSubmittingArchive, idNamespace]);
 
   const handleTitleClick = () => {
     setAdminClickCount(prev => prev + 1);
@@ -1048,29 +1260,6 @@ function MainApp() {
     window.mastery = newMastery;
     setIsAdminMode(false);
   };
-
-  // 动态加载词库（根据选择的学期动态生成单元数据）
-  const processedUnits = useMemo(() => {
-    const unitsMap = {};
-    wordBank.forEach(item => {
-      if (!unitsMap[item.unit]) {
-        unitsMap[item.unit] = [];
-      }
-      unitsMap[item.unit].push(item);
-    });
-    
-    return Object.entries(unitsMap).map(([unitKey, items]) => {
-      const unitNum = items[0]?.unit;
-      // 只有数字单元才加"单元"前缀，语文园地等特殊单元保持原样
-      const name = (typeof unitNum === 'number' || (typeof unitNum === 'string' && /^\d+$/.test(unitNum))) ? `单元${unitNum}` : unitNum;
-      const words = items.map((w, idx) => {
-        const prefix = selectedSemester === '三年级上册' ? '3up' : selectedSemester;
-        const wordId = `${prefix}-${name}-${w.word}-${idx}`;
-        return { id: isDevMode ? `${wordId}-test` : wordId, word: w.word, pinyin: pinyin(String(w.word), { toneType: 'symbol' }) || '' };
-      });
-      return { name, words };
-    });
-  }, [wordBank, selectedSemester, isDevMode]);
 
   const getStatus = (id, useTemp = false) => {
     if (isLoading) return null;
@@ -1120,12 +1309,7 @@ function MainApp() {
     return pool.length;
   }, [selectedUnits, processedUnits, onlyWrong, mastery]);
 
-  const start = () => {
-    if (isLoading) return;
-    if (hasUnsyncedDraft()) {
-      alert('检测到未落库草稿，请先完成保存再开始新一轮。');
-      return;
-    }
+  const launchPractice = () => {
     setSaveErrorMessage('');
     setSyncStatus('idle');
     setDraftSessionId(createSessionId());
@@ -1168,6 +1352,38 @@ function MainApp() {
     });
     if (targetWords.length === 0) return alert('没有符合条件的词语');
     setWords(targetWords); setStep(0); setTime(0); setShowAnswers(false); setView('RUNNING'); setModalConfig({ isOpen: false });
+  };
+
+  const continueUnsyncedDraftFromSetup = () => {
+    const draft = readDraft({ targetNamespace: idNamespace });
+    setModalConfig({ isOpen: false });
+    if (draft?.dirty && Array.isArray(draft.wordsSnapshot) && draft.wordsSnapshot.length > 0) {
+      restoreDraftToRunning(draft);
+      return;
+    }
+    launchPractice();
+  };
+
+  const discardUnsyncedDraftAndStart = () => {
+    clearDraft();
+    setSaveErrorMessage('');
+    if (syncStatus !== 'saving') setSyncStatus('idle');
+    setModalConfig({ isOpen: false });
+    launchPractice();
+  };
+
+  const start = () => {
+    if (isLoading) return;
+    if (hasUnsyncedDraft(idNamespace)) {
+      setModalConfig({
+        isOpen: true,
+        type: 'UNSYNCED_START_DECISION',
+        title: '检测到未完成草稿',
+        content: ''
+      });
+      return;
+    }
+    launchPractice();
   };
 
   const normalizeDateText = (value) => {
@@ -1228,16 +1444,16 @@ function MainApp() {
     return { todayStr, items, expectedById };
   };
 
-  const applyExpectedMastery = (expectedById) => {
+  const applyCommittedRows = (rowsById = {}) => {
     setMastery((prev) => {
       const next = { ...prev };
-      Object.entries(expectedById).forEach(([id, expected]) => {
+      Object.entries(rowsById).forEach(([id, row]) => {
         next[id] = {
-          history: expected.history,
-          temp: expected.temp_state,
-          lastUpdate: expected.last_history_update_date,
-          consecutive_green: expected.consecutive_green,
-          last_practice_date: expected.last_practice_date
+          history: Array.isArray(row.history) ? row.history : [],
+          temp: row.temp_state || {},
+          lastUpdate: normalizeDateText(row.last_history_update_date),
+          consecutive_green: row.consecutive_green || 0,
+          last_practice_date: normalizeDateText(row.last_practice_date)
         };
       });
       window.mastery = next;
@@ -1245,43 +1461,116 @@ function MainApp() {
     });
   };
 
+  const buildVerifyFailure = (verifyResult) => {
+    const reasonsById = verifyResult?.reasonsById || {};
+    const mismatchedIds = verifyResult?.mismatchedIds || [];
+    const reasonCounts = {};
+    mismatchedIds.forEach((id) => {
+      const reason = reasonsById[id] || 'verify_unknown';
+      reasonCounts[reason] = (reasonCounts[reason] || 0) + 1;
+    });
+    const sampleIds = mismatchedIds.slice(0, 3);
+    const reasonSummary = Object.entries(reasonCounts)
+      .map(([reason, count]) => `${reason}:${count}`)
+      .join(', ');
+    const message = `回读校验失败，异常词条数：${mismatchedIds.length}${sampleIds.length ? `，示例：${sampleIds.join(', ')}` : ''}${reasonSummary ? `，原因：${reasonSummary}` : ''}`;
+    return { message, sampleIds, reasonCounts };
+  };
+
+  const logVerifyMismatch = ({ phase, commitId, verifyResult }) => {
+    const sampleIds = (verifyResult?.mismatchedIds || []).slice(0, 3);
+    const reasons = verifyResult?.reasonsById || {};
+    const sampleReasons = {};
+    sampleIds.forEach((id) => {
+      sampleReasons[id] = reasons[id] || 'verify_unknown';
+    });
+    console.error('[commit-verify] mismatch', {
+      phase,
+      commitId,
+      mode: isDevMode ? 'dev' : 'prod',
+      namespace: idNamespace,
+      mismatchedCount: verifyResult?.mismatchedIds?.length || 0,
+      sampleIds,
+      sampleReasons
+    });
+  };
+
+  const assertNoTestIdsInDeployedEnv = (items = []) => {
+    if (!isDeployedEnv) return;
+    const testIds = items
+      .map((item) => item?.id)
+      .filter((id) => isTestWordId(id));
+    if (testIds.length === 0) return;
+    const preview = testIds.slice(0, 5).join(', ');
+    throw new Error(`线上环境禁止写入测试ID，请切回正式模式后重试。异常ID: ${preview}`);
+  };
+
   const retryPendingCommit = async () => {
-    const draft = readDraft();
-    const pendingCommit = draft?.pendingCommit;
-    if (!pendingCommit) return false;
+    const draft = readDraft({ targetNamespace: idNamespace });
+    const pendingCommitSnapshot = draft?.pendingCommit;
+    if (!pendingCommitSnapshot) return false;
 
     setIsSubmittingArchive(true);
     setSyncStatus('saving');
     setSaveErrorMessage('');
     try {
+      assertNoTestIdsInDeployedEnv(pendingCommitSnapshot.items || []);
       const rpcResult = await commitDictationResults({
         supabase,
-        commitId: pendingCommit.commitId,
-        today: pendingCommit.today,
-        items: pendingCommit.items,
-        context: pendingCommit.context || {}
+        commitId: pendingCommitSnapshot.commitId,
+        today: pendingCommitSnapshot.today,
+        items: pendingCommitSnapshot.items,
+        context: pendingCommitSnapshot.context || {}
       });
-      const verifyResult = await verifyCommittedRows({
+      const appliedIds = rpcResult.applied_ids || [];
+      const verifyResult = await verifyCommittedByPayload({
         supabase,
-        appliedIds: rpcResult.applied_ids || [],
-        expectedById: pendingCommit.expectedById || {}
+        appliedIds,
+        submittedItems: pendingCommitSnapshot.items || [],
+        today: pendingCommitSnapshot.today
       });
       if (!verifyResult.ok) {
-        throw new Error(`回读校验失败，异常词条数：${verifyResult.mismatchedIds.length}`);
+        logCommitTrace({
+          phase: 'retry',
+          commitId: pendingCommitSnapshot.commitId,
+          verifyOk: false,
+          appliedIdsCount: appliedIds.length,
+          mismatchSample: verifyResult.mismatchedIds.slice(0, 3)
+        });
+        logVerifyMismatch({
+          phase: 'retry',
+          commitId: pendingCommitSnapshot.commitId,
+          verifyResult
+        });
+        const failure = buildVerifyFailure(verifyResult);
+        throw new Error(failure.message);
       }
-
-      applyExpectedMastery(pendingCommit.expectedById || {});
+      logCommitTrace({
+        phase: 'retry',
+        commitId: pendingCommitSnapshot.commitId,
+        verifyOk: true,
+        appliedIdsCount: appliedIds.length
+      });
+      applyCommittedRows(verifyResult.rowsById);
       clearDraft();
       setSyncStatus('synced');
       return true;
     } catch (error) {
+      logCommitTrace({
+        phase: 'retry',
+        commitId: pendingCommitSnapshot.commitId,
+        verifyOk: false,
+        appliedIdsCount: pendingCommitSnapshot.items?.length || 0,
+        errorMessage: error?.message || '保存失败'
+      });
       const message = error?.message || '保存失败，请重试';
       setSaveErrorMessage(message);
       setSyncStatus('error');
       writeDraft(buildDraftPayload({
-        pendingCommit,
+        pendingCommit: pendingCommitSnapshot,
         lastSaveAttemptAt: new Date().toISOString(),
-        retryCount: (draft?.retryCount || 0) + 1
+        retryCount: (draft?.retryCount || 0) + 1,
+        lastVerifyMode: 'payload'
       }));
       return false;
     } finally {
@@ -1292,6 +1581,7 @@ function MainApp() {
   const commitAndArchive = async () => {
     const { todayStr, items, expectedById } = buildCommitPlan(words, step);
     if (items.length === 0) return true;
+    assertNoTestIdsInDeployedEnv(items);
 
     const commitId = createCommitId();
     const pendingCommit = {
@@ -1312,7 +1602,8 @@ function MainApp() {
     setSaveErrorMessage('');
     writeDraft(buildDraftPayload({
       pendingCommit,
-      lastSaveAttemptAt: new Date().toISOString()
+      lastSaveAttemptAt: new Date().toISOString(),
+      lastVerifyMode: 'payload'
     }));
 
     try {
@@ -1323,27 +1614,55 @@ function MainApp() {
         items,
         context: pendingCommit.context
       });
-      const verifyResult = await verifyCommittedRows({
+      const verifyResult = await verifyCommittedByPayload({
         supabase,
         appliedIds: rpcResult.applied_ids || [],
-        expectedById
+        submittedItems: items,
+        today: todayStr
       });
       if (!verifyResult.ok) {
-        throw new Error(`回读校验失败，异常词条数：${verifyResult.mismatchedIds.length}`);
+        logCommitTrace({
+          phase: 'commit',
+          commitId,
+          verifyOk: false,
+          appliedIdsCount: (rpcResult.applied_ids || []).length,
+          mismatchSample: verifyResult.mismatchedIds.slice(0, 3)
+        });
+        logVerifyMismatch({
+          phase: 'commit',
+          commitId,
+          verifyResult
+        });
+        const failure = buildVerifyFailure(verifyResult);
+        throw new Error(failure.message);
       }
 
-      applyExpectedMastery(expectedById);
+      logCommitTrace({
+        phase: 'commit',
+        commitId,
+        verifyOk: true,
+        appliedIdsCount: (rpcResult.applied_ids || []).length
+      });
+      applyCommittedRows(verifyResult.rowsById);
       clearDraft();
       setSyncStatus('synced');
       return true;
     } catch (error) {
+      logCommitTrace({
+        phase: 'commit',
+        commitId,
+        verifyOk: false,
+        appliedIdsCount: items.length,
+        errorMessage: error?.message || '保存失败'
+      });
       const message = error?.message || '保存失败，请重试';
       setSaveErrorMessage(message);
       setSyncStatus('error');
       writeDraft(buildDraftPayload({
         pendingCommit,
         lastSaveAttemptAt: new Date().toISOString(),
-        retryCount: (readDraft()?.retryCount || 0) + 1
+        retryCount: (readDraft({ targetNamespace: idNamespace })?.retryCount || 0) + 1,
+        lastVerifyMode: 'payload'
       }));
       return false;
     } finally {
@@ -1379,13 +1698,13 @@ function MainApp() {
 
   useEffect(() => {
     const handleOnline = () => {
-      const draft = readDraft();
+      const draft = readDraft({ targetNamespace: idNamespace });
       if (!draft?.pendingCommit || isSubmittingArchive) return;
       retryPendingCommit();
     };
     window.addEventListener('online', handleOnline);
     return () => window.removeEventListener('online', handleOnline);
-  }, [isSubmittingArchive]);
+  }, [isSubmittingArchive, idNamespace]);
 
   const handleTabChange = (idx) => {
     if (idx === 2 && step < 2) setModalConfig({ isOpen: true, type: 'TO_FINAL', title: "确认进入终测？", content: "确认进入终测吗？" });
@@ -1524,19 +1843,57 @@ const calculateStats = () => {
   }, [activeVoiceIndex, voiceInterval, isVoiceActive, isPaused]);
 
   const isDictationFinished = isVoiceActive && activeVoiceIndex >= words.length;
-  const pendingDraft = readDraft();
+  const pendingDraft = readDraft({ targetNamespace: idNamespace });
   const hasPendingCommit = Boolean(pendingDraft?.pendingCommit);
 
+  const exitToSetupKeepDraft = () => {
+    setModalConfig({ isOpen: false });
+    setView('SETUP');
+  };
+
+  const exitToSetupDiscardDraft = () => {
+    clearDraft();
+    setSaveErrorMessage('');
+    if (syncStatus !== 'saving') setSyncStatus('idle');
+    setModalConfig({ isOpen: false });
+    setView('SETUP');
+  };
+
   const handleExitToSetup = () => {
-    if (syncStatus === 'saving' || hasUnsyncedDraft()) {
-      alert('还有未落库的听写记录，暂时不能退出。请先完成保存。');
+    if (syncStatus === 'saving' || hasUnsyncedDraft(idNamespace)) {
+      setModalConfig({
+        isOpen: true,
+        type: 'UNSAVED_EXIT_DECISION',
+        title: '退出听写',
+        content: ''
+      });
       return;
     }
     setView('SETUP');
   };
 
+  const discardPendingRestoreDraft = () => {
+    clearDraft();
+    setPendingRestoreDraft(null);
+    setSaveErrorMessage('');
+    setSyncStatus('idle');
+    setModalConfig({ isOpen: false });
+  };
+
+  const continuePendingRestoreDraft = () => {
+    const draftToRestore = pendingRestoreDraft;
+    setPendingRestoreDraft(null);
+    setModalConfig({ isOpen: false });
+    restoreDraftToRunning(draftToRestore);
+  };
+
   const syncStatusNode = (
     <div className="fixed top-3 right-4 z-[3500]">
+      {isDevMode && (
+        <div className="mb-2 px-3 py-1.5 rounded-lg text-xs font-black bg-amber-50 text-amber-700 border border-amber-200 shadow">
+          TEST DATA MODE（写入 -test 命名空间）
+        </div>
+      )}
       {syncStatus === 'saving' && (
         <div className="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 shadow">
           云端保存中...
@@ -1572,7 +1929,11 @@ const calculateStats = () => {
         <header className="max-w-5xl w-full mx-auto px-8 py-2 flex justify-between items-baseline shrink-0 border-b border-slate-100 relative">
           <div className="flex items-center gap-3">
             <h1 onClick={handleTitleClick} className="text-3xl font-black tracking-tighter text-black uppercase cursor-pointer active:scale-95 transition-transform">听写练习</h1>
-            <span onClick={toggleMode} className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 border rounded-lg italic cursor-pointer active:scale-95 transition-all ${isDevMode ? 'text-red-600 border-red-100 bg-red-50' : 'text-emerald-600 border-emerald-100 bg-emerald-50'}`}>{isDevMode ? 'TEST DATA MODE V3.13.0' : 'Cloud V3.13.0'}</span>
+            {canUseDevDataMode ? (
+              <span onClick={toggleMode} className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 border rounded-lg italic cursor-pointer active:scale-95 transition-all ${isDevMode ? 'text-red-600 border-red-100 bg-red-50' : 'text-emerald-600 border-emerald-100 bg-emerald-50'}`}>{isDevMode ? 'TEST DATA MODE V3.13.1' : 'Cloud V3.13.1'}</span>
+            ) : (
+              <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 border rounded-lg italic text-slate-400 border-slate-200 bg-slate-50 cursor-not-allowed">Cloud Locked V3.13.1</span>
+            )}
           </div>
             <div className="flex items-center gap-2 text-xs font-bold text-slate-400">
               <span>{termStats.masteredWords}/{termStats.totalWords} {termStats.masteredPercentage}%</span>
@@ -1625,6 +1986,53 @@ const calculateStats = () => {
             </>
           )}
         </div>
+        {modalConfig.isOpen && modalConfig.type === 'RESTORE_DRAFT_DECISION' && (
+          <Modal
+            isOpen={true}
+            onClose={discardPendingRestoreDraft}
+            onConfirm={continuePendingRestoreDraft}
+            title={modalConfig.title}
+            cancelText="放弃草稿"
+            confirmText="继续恢复"
+            content={(
+              <div className="flex flex-col gap-3 py-2 text-left text-sm">
+                <div className="rounded-lg border border-amber-200 bg-amber-50 text-amber-700 p-3 font-bold">
+                  检测到上次未完成的听写草稿。
+                </div>
+                <div className="text-slate-600">
+                  <div>学期：{pendingRestoreDraft?.semester || '未知'}</div>
+                  <div>题量：{Array.isArray(pendingRestoreDraft?.wordsSnapshot) ? pendingRestoreDraft.wordsSnapshot.length : 0}</div>
+                  <div>会话：{pendingRestoreDraft?.sessionId ? String(pendingRestoreDraft.sessionId).slice(0, 8) : '未知'}</div>
+                </div>
+                {pendingRestoreDraft?.pendingCommit && (
+                  <div className="rounded-lg border border-red-200 bg-red-50 text-red-700 p-3 font-bold">
+                    该草稿包含未完成补交。若放弃，未补交结果会丢失。
+                  </div>
+                )}
+              </div>
+            )}
+          />
+        )}
+        {modalConfig.isOpen && modalConfig.type === 'UNSYNCED_START_DECISION' && (
+          <Modal
+            isOpen={true}
+            onClose={discardUnsyncedDraftAndStart}
+            onConfirm={continueUnsyncedDraftFromSetup}
+            title={modalConfig.title}
+            cancelText="放弃草稿并开始"
+            confirmText="继续当前草稿"
+            content={(
+              <div className="flex flex-col gap-3 py-2 text-left text-sm">
+                <div className="rounded-lg border border-amber-200 bg-amber-50 text-amber-700 p-3 font-bold">
+                  检测到当前模式下有未落库草稿。
+                </div>
+                <div className="text-slate-600">
+                  你可以继续之前的练习，或放弃该草稿后开始新的练习。
+                </div>
+              </div>
+            )}
+          />
+        )}
       </div>
     );
   }
@@ -1697,10 +2105,27 @@ const calculateStats = () => {
         isOpen={modalConfig.isOpen}
         onClose={() => {
           if (isModalLoading) return;
+          if (modalConfig.type === 'RESTORE_DRAFT_DECISION') {
+            discardPendingRestoreDraft();
+            return;
+          }
+          if (modalConfig.type === 'UNSAVED_EXIT_DECISION') {
+            exitToSetupDiscardDraft();
+            return;
+          }
           setModalConfig({ isOpen: false });
         }}
         isLoading={isModalLoading}
         onConfirm={async () => {
+          if (modalConfig.type === 'RESTORE_DRAFT_DECISION') {
+            continuePendingRestoreDraft();
+            return;
+          }
+          if (modalConfig.type === 'UNSAVED_EXIT_DECISION') {
+            exitToSetupKeepDraft();
+            return;
+          }
+
           if (modalConfig.type === 'TO_FINAL') {
             stopVoice();
             setStep(2);
@@ -1711,7 +2136,7 @@ const calculateStats = () => {
 
           if (modalConfig.type === 'FINISH_STATS' || modalConfig.type === 'FINISH_SELF_TEST') {
             setIsModalLoading(true);
-            const hasPending = Boolean(readDraft()?.pendingCommit);
+            const hasPending = Boolean(readDraft({ targetNamespace: idNamespace })?.pendingCommit);
             const ok = hasPending ? await retryPendingCommit() : await commitAndArchive();
             setIsModalLoading(false);
             if (ok) {
@@ -1728,14 +2153,58 @@ const calculateStats = () => {
             setModalConfig({ isOpen: false });
           }
         }}
+        cancelText={
+          modalConfig.type === 'RESTORE_DRAFT_DECISION'
+            ? '放弃草稿'
+            : modalConfig.type === 'UNSAVED_EXIT_DECISION'
+              ? '放弃草稿并退出'
+              : '取消'
+        }
+        confirmText={
+          modalConfig.type === 'RESTORE_DRAFT_DECISION'
+            ? '继续恢复'
+            : modalConfig.type === 'UNSAVED_EXIT_DECISION'
+              ? '退出并保留草稿'
+              : '确定'
+        }
         title={modalConfig.title}
-        content={modalConfig.type === 'FINISH_STATS' || modalConfig.type === 'FINISH_SELF_TEST' ? (
+        content={modalConfig.type === 'RESTORE_DRAFT_DECISION' ? (
+          <div className="flex flex-col gap-3 py-2 text-left text-sm">
+            <div className="rounded-lg border border-amber-200 bg-amber-50 text-amber-700 p-3 font-bold">
+              检测到上次未完成的听写草稿。
+            </div>
+            <div className="text-slate-600">
+              <div>学期：{pendingRestoreDraft?.semester || '未知'}</div>
+              <div>题量：{Array.isArray(pendingRestoreDraft?.wordsSnapshot) ? pendingRestoreDraft.wordsSnapshot.length : 0}</div>
+              <div>会话：{pendingRestoreDraft?.sessionId ? String(pendingRestoreDraft.sessionId).slice(0, 8) : '未知'}</div>
+            </div>
+            {pendingRestoreDraft?.pendingCommit && (
+              <div className="rounded-lg border border-red-200 bg-red-50 text-red-700 p-3 font-bold">
+                该草稿包含未完成补交。若放弃，未补交结果会丢失。
+              </div>
+            )}
+          </div>
+        ) : modalConfig.type === 'FINISH_STATS' || modalConfig.type === 'FINISH_SELF_TEST' ? (
           <div className="flex flex-col gap-4 py-4 text-left">
             <div className="flex justify-between border-b pb-2"><span className="text-slate-400 font-bold">词组总数</span><span className="font-mono font-black text-lg text-black">{(modalConfig.type === 'FINISH_STATS' ? calculateStats() : calculateStatsForTab2()).total}</span></div>
             <div className="flex justify-between border-b pb-2"><span className="text-red-500 font-bold">错题 (需复习)</span><span className="font-mono font-black text-lg text-red-500">{(modalConfig.type === 'FINISH_STATS' ? calculateStats() : calculateStatsForTab2()).wrong}</span></div>
             <div className="flex justify-between border-b pb-2"><span className="text-emerald-600 font-bold">已掌握</span><span className="font-mono font-black text-lg text-emerald-600">{(modalConfig.type === 'FINISH_STATS' ? calculateStats() : calculateStatsForTab2()).mastered}</span></div>
             <div className="flex justify-between pb-4"><span className="text-slate-400 font-bold">未标记</span><span className="font-mono font-black text-lg text-slate-300">0</span></div>
             {saveErrorMessage && <div className="rounded-lg border border-red-200 bg-red-50 text-red-700 text-sm font-bold p-3">{saveErrorMessage}</div>}
+          </div>
+        ) : modalConfig.type === 'UNSAVED_EXIT_DECISION' ? (
+          <div className="flex flex-col gap-3 py-2 text-left text-sm">
+            <div className="rounded-lg border border-amber-200 bg-amber-50 text-amber-700 p-3 font-bold">
+              当前有未落库草稿。
+            </div>
+            <div className="text-slate-600">
+              你可以退出并保留草稿，之后继续；也可以放弃草稿直接退出。
+            </div>
+            {syncStatus === 'saving' && (
+              <div className="rounded-lg border border-blue-200 bg-blue-50 text-blue-700 p-3 font-bold">
+                当前仍在保存中，退出后保存会在后台继续。
+              </div>
+            )}
           </div>
         ) : modalConfig.content}
       />

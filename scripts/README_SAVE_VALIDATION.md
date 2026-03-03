@@ -32,3 +32,21 @@ node scripts/validate-mastery-readonly.mjs \
 
 - `--include-updated-at`：把 `updated_at` 纳入摘要。默认不纳入（避免仅时间字段变化导致误报）。
 
+## ID 命名空间核对（`-test` 合并前后）
+
+先执行只读核对脚本，确认 `-test` 数据规模与冲突样本：
+
+```bash
+node scripts/validate-id-namespace.mjs --sample-size 20
+```
+
+脚本会输出：
+- `total_test_rows`
+- `target_exists_rows` / `target_missing_rows`
+- `test_wins_on_conflict` / `prod_wins_on_conflict`
+- 冲突样本与缺失目标样本
+
+执行合并 SQL：
+- `scripts/migrations/merge-test-id-namespace.sql`
+
+合并后再次执行同一核对脚本，确认正式 ID 已覆盖历史数据。
