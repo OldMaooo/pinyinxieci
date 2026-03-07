@@ -1012,19 +1012,32 @@ function MainApp() {
       semester,
       expected_id_count: expectedIdCount,
       fetched_row_count: fetchedRowCount,
+      load_missing_count: missingIds.length,
       missing_id_count: missingIds.length,
       missing_id_sample: missingIds.slice(0, 5)
     });
   };
 
-  const logCommitTrace = ({ phase, commitId, verifyOk, appliedIdsCount, mismatchSample = [], errorMessage = null }) => {
+  const logCommitTrace = ({
+    phase,
+    commitId,
+    verifyOk,
+    submittedCount = 0,
+    appliedIdsCount = 0,
+    verifyMismatchCount = 0,
+    mismatchSample = [],
+    errorMessage = null
+  }) => {
     console.info('[commit-trace]', {
       phase,
       mode: isDevMode ? 'dev' : 'prod',
       namespace: idNamespace,
       commit_id: commitId,
       verify_ok: verifyOk,
+      submitted_count: submittedCount,
+      applied_count: appliedIdsCount,
       applied_ids_count: appliedIdsCount,
+      verify_mismatch_count: verifyMismatchCount,
       mismatch_sample: mismatchSample,
       error: errorMessage
     });
@@ -1054,8 +1067,7 @@ function MainApp() {
             .order('id', { ascending: true })
             .range(offset, offset + pageSize - 1);
           if (error) {
-            console.error('[loadCloud] Supabase error:', error, { offset, pageSize });
-            break;
+            throw new Error(`[loadCloud] page fetch failed: ${error.message || 'unknown error'} (offset=${offset}, pageSize=${pageSize})`);
           }
           const rows = data || [];
           allRows.push(...rows);
@@ -1392,12 +1404,28 @@ function MainApp() {
     return String(value).slice(0, 10);
   };
 
-  const buildCommitPlan = (sourceWords, sourceStep) => {
+  const getDirtyWordIdSet = (sourceWords) => {
+    const dirty = new Set();
+    sourceWords.forEach((w) => {
+      const m = mastery[w.id] || {};
+      const temp = m.temp || {};
+      const practice = w.markPractice || 'white';
+      const self = w.markSelf || 'white';
+      const final = w.markFinal || 'white';
+      if (practice !== (temp.practice || 'white') || self !== (temp.self || 'white') || final !== (temp.final || 'white')) {
+        dirty.add(w.id);
+      }
+    });
+    return dirty;
+  };
+
+  const buildCommitPlan = (sourceWords, sourceStep, dirtyIdSet = null) => {
     const todayStr = new Date().toISOString().split('T')[0];
     const items = [];
     const expectedById = {};
 
     sourceWords.forEach((w) => {
+      if (dirtyIdSet && !dirtyIdSet.has(w.id)) return;
       const currentTemp = {
         practice: w.markPractice || 'white',
         self: w.markSelf || 'white',
@@ -1534,7 +1562,9 @@ function MainApp() {
           phase: 'retry',
           commitId: pendingCommitSnapshot.commitId,
           verifyOk: false,
+          submittedCount: pendingCommitSnapshot.items?.length || 0,
           appliedIdsCount: appliedIds.length,
+          verifyMismatchCount: verifyResult.mismatchedIds.length,
           mismatchSample: verifyResult.mismatchedIds.slice(0, 3)
         });
         logVerifyMismatch({
@@ -1549,6 +1579,7 @@ function MainApp() {
         phase: 'retry',
         commitId: pendingCommitSnapshot.commitId,
         verifyOk: true,
+        submittedCount: pendingCommitSnapshot.items?.length || 0,
         appliedIdsCount: appliedIds.length
       });
       applyCommittedRows(verifyResult.rowsById);
@@ -1560,6 +1591,7 @@ function MainApp() {
         phase: 'retry',
         commitId: pendingCommitSnapshot.commitId,
         verifyOk: false,
+        submittedCount: pendingCommitSnapshot.items?.length || 0,
         appliedIdsCount: pendingCommitSnapshot.items?.length || 0,
         errorMessage: error?.message || '保存失败'
       });
@@ -1579,8 +1611,13 @@ function MainApp() {
   };
 
   const commitAndArchive = async () => {
-    const { todayStr, items, expectedById } = buildCommitPlan(words, step);
-    if (items.length === 0) return true;
+    const dirtyIdSet = getDirtyWordIdSet(words);
+    const { todayStr, items, expectedById } = buildCommitPlan(words, step, dirtyIdSet);
+    if (items.length === 0) {
+      clearDraft();
+      setSyncStatus('synced');
+      return true;
+    }
     assertNoTestIdsInDeployedEnv(items);
 
     const commitId = createCommitId();
@@ -1592,7 +1629,8 @@ function MainApp() {
         step,
         onlyWrong,
         semester: selectedSemester,
-        selectedUnits: Array.from(selectedUnits)
+        selectedUnits: Array.from(selectedUnits),
+        dirty_ids_count: dirtyIdSet.size
       },
       expectedById
     };
@@ -1625,7 +1663,9 @@ function MainApp() {
           phase: 'commit',
           commitId,
           verifyOk: false,
+          submittedCount: items.length,
           appliedIdsCount: (rpcResult.applied_ids || []).length,
+          verifyMismatchCount: verifyResult.mismatchedIds.length,
           mismatchSample: verifyResult.mismatchedIds.slice(0, 3)
         });
         logVerifyMismatch({
@@ -1641,6 +1681,7 @@ function MainApp() {
         phase: 'commit',
         commitId,
         verifyOk: true,
+        submittedCount: items.length,
         appliedIdsCount: (rpcResult.applied_ids || []).length
       });
       applyCommittedRows(verifyResult.rowsById);
@@ -1652,6 +1693,7 @@ function MainApp() {
         phase: 'commit',
         commitId,
         verifyOk: false,
+        submittedCount: items.length,
         appliedIdsCount: items.length,
         errorMessage: error?.message || '保存失败'
       });
